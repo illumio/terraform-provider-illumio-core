@@ -1,0 +1,1 @@
+# terraform-provider-illumio-core

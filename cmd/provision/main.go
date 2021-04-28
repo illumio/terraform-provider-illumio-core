@@ -52,6 +52,7 @@ func main() {
 		rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), // limits API calls 125/min
 		10,
 		3,
+		os.Getenv("ILLUMIO_PROXY_URL"),
 	)
 	if err != nil {
 		fmt.Printf("Error: %v", err)

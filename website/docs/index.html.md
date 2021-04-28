@@ -64,7 +64,7 @@ go build -o provision  # provision.exe for windows
 ```
 
 Move the provision binary to the root dir of your tf module.
-To use provision command, The required environment variables must be set  (`ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_PCE_HOST`). 
+To use provision command, The required environment variables must be set  (`ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_PCE_HOST`).
 Note that same environment variables can be used to configure provider.
 
 
@@ -89,3 +89,4 @@ terraform apply && provision
 - **max_retries** (Number) Maximum retries for an API request. Default value: 3
 - **org_id** (Number) ID of the Organization. Default value: 1
 - **request_timeout** (Number) Timeout for HTTP requests. Default value: 30
+- **proxy_url** (String) Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`

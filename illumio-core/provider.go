@@ -88,7 +88,7 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("ILLUMIO_PROXY_URL", nil),
-				Description: "Proxy Server URL with port number",
+				Description: "Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

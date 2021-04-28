@@ -46,15 +46,19 @@ func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int,
 	// if trailing slash present, remove it
 	hostURL = strings.TrimSuffix(hostURL, "/")
 	baseURL := fmt.Sprintf("%s/api/v2", hostURL)
+	transport := http.DefaultTransport.(*http.Transport)
+	if proxyURL != "" {
+		pUrl, err := url.Parse(proxyURL)
+		if err != nil {
+			return nil, err
+		}
+		transport.Proxy = http.ProxyURL(pUrl)
+	}
 
 	httpClient := &http.Client{
 		Timeout: time.Second * time.Duration(defaultTimeout),
+		Transport: transport,
 	}
-	pUrl, err := url.Parse(proxyURL)
-	if err != nil {
-		return nil, err
-	}
-	httpClient.Transport.(*http.Transport).Proxy = http.ProxyURL(pUrl)
 
 	return &V2{
 		pceHostURL:   baseURL,

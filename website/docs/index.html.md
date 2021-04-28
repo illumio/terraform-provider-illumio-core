@@ -1,0 +1,91 @@
+---
+layout: "illumio-core"
+page_title: "Provider: Illumio Core"
+sidebar_current: "docs-illumio-core-index"
+description: |-
+  The Illumio Core provider is used to interact with the resources provided by Illumio Core APIs.
+---
+
+
+Overview
+--------------------------------------------------
+Terraform provider Illumio Core is a Terraform plugin which can be used to manage the Illumio resources on the Illumio PCE platform with leveraging advantages of Terraform. 
+Illumio Core Terraform provider lets users represent the infrastructure as a code and provides a way to enforce state on the infrastructure managed by the Terraform provider. 
+Customers can use this provider to integrate the Terraform configuration with the DevOps pipeline to manage the Illumio Resource in a more flexible, consistent and reliable way.
+
+Illumio Core Provider
+------------
+The Illumio Core provider is used to interact with the resources provided by Illumio Core APIs.
+The provider needs to be configured with the pce host and api key details before it can be used.
+
+Example Usage
+------------
+
+```hcl
+
+#configure provider with your illumio host and api key details.
+provider "illumio" {
+    pce_host              = "https://pce.my-company.com:8443"
+    api_username          = "api_xxxxxx"
+    api_secret            = "big-secret"
+    org_id                = 1
+    request_timeout       = 30
+    backoff_time          = 10
+    max_retries           = 3
+}
+
+resource "illumio-core_label" "env_dev" {
+  key     = "env"
+  value   = "dev"
+}
+
+resource "illumio-core_label_group" "env_lg" {
+  key           = "env"
+  name          = "Dev Group"
+  description   = "Label group for dev environments"
+  labels {
+    href = illumio-core_label.env_dev.href
+  }
+}
+```
+
+Some of the attributes can be specified via environment variables. Refer to schema for attributes which can be configured via environment variables.
+
+
+Provisioning
+------------
+Currently terraform does not support post-processing of resources. To provision changes, provision command can be used.
+
+To run provision, clone the provider repo and follow the commands.
+
+```bash
+cd cmd/provision
+go build -o provision  # provision.exe for windows
+```
+
+Move the provision binary to the root dir of your tf module.
+To use provision command, The required environment variables must be set  (`ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_PCE_HOST`). 
+Note that same environment variables can be used to configure provider.
+
+
+Now provision command can be used with terraform apply
+
+```bash
+terraform apply && provision
+```
+
+
+## Schema
+
+### Required
+
+- **api_secret** (String, Sensitive) Secret of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_SECRET`
+- **api_username** (String) Username of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_USERNAME`
+- **pce_host** (String) Host URL of Illumio PCE. This can also be set by environment variable `ILLUMIO_PCE_HOST`
+
+### Optional
+
+- **backoff_time** (Number) Backoff Time (in seconds) on getting 429 (Too Many Requests). Default value: 10. Note: A default rate limit of 125 requests/min is already in place. A jitter of 1-5 seconds will be added to backoff time to randomize backoff.
+- **max_retries** (Number) Maximum retries for an API request. Default value: 3
+- **org_id** (Number) ID of the Organization. Default value: 1
+- **request_timeout** (Number) Timeout for HTTP requests. Default value: 30

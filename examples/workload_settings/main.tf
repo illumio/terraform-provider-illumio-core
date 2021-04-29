@@ -1,13 +1,13 @@
 terraform {
   required_providers {
-    illumio = {
+    illumio-core = {
       version = "0.1"
-      source  = "illumio.com/labs/illumio"
+      source  = "illumio.com/labs/illumio-core"
     }
   }
 }
 
-provider "illumio" {
+provider "illumio-core" {
   pce_host        = "https://2x2devtest59.ilabs.io:8443/"
   api_username    = "api_15ee563a713f544b2"
   api_secret      = "a4a5a60d8d68bb22d9ab2e5b68337d3b12784e2b8a45c13118e5098a9d4638c9"

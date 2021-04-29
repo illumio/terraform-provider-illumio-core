@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     illumio-core = {
-      # version = "0.1"
+      version = "0.1"
       source = "illumio.com/labs/illumio-core"
     }
   }
@@ -19,7 +19,7 @@ data "illumio-core_label" "label_1" {
   label_id  = 1
 }
 
-# resource "illumio-core_label" "test_label" {
-#   key     = "role"
-#   value   = "test_role_2"
-# }
+resource "illumio-core_label" "test_label" {
+  key     = "role"
+  value   = "test_role_2"
+}

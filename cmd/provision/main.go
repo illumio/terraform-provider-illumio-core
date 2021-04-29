@@ -43,6 +43,10 @@ func main() {
 		log.Printf("[ERROR] Missing one of the required env. variable. ")
 		log.Printf("[INFO] Please set env vars ILLUMIO_PCE_HOST, ILLUMIO_API_KEY_USERNAME, ILLUMIO_API_KEY_SECRET")
 	}
+	insecure := false
+	if os.Getenv("ILLUMIO_ALLOW_INSECURE_TLS") == "yes" {
+		insecure = true
+	}
 
 	illumioV2Client, err := client.NewV2(
 		os.Getenv("ILLUMIO_PCE_HOST"),
@@ -52,6 +56,8 @@ func main() {
 		rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), // limits API calls 125/min
 		10,
 		3,
+		insecure,
+		os.Getenv("ILLUMIO_CA_FILE"),
 		os.Getenv("ILLUMIO_PROXY_URL"),
 	)
 	if err != nil {
@@ -98,6 +104,7 @@ func main() {
 	_, cont, err := illumioV2Client.Get(fmt.Sprintf("/orgs/%s/sec_policy/pending", orgID), nil)
 	if err != nil {
 		log.Printf("[ERROR] Error in fetching pending security policy : %v", err)
+		os.Exit(1)
 	}
 	// populates pending href set
 	setPendingHref(cont)

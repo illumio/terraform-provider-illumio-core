@@ -34,6 +34,8 @@ func GetTestClient() (*V2, error) {
 		rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), // 125 requests per 60 seconds
 		10,
 		3,
+		false,
+		"",
 		"",
 	)
 }

@@ -3,15 +3,18 @@ package client
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
-	"math/rand"
 	"strings"
 	"time"
+
 	"github.com/Jeffail/gabs/v2"
 	"golang.org/x/time/rate"
 )
@@ -36,9 +39,9 @@ type V2 struct {
 // NewV2 Constructor for V2 Client
 //
 // defaultTimeout (in seconds)
-// e.g. NewV2("https://pce.my-company.com:8443", "api_xxxxxx", "big-secret", 30, rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), 10, 3)
-func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int,
-	rateLimiter *rate.Limiter, waitTime, maxRetries int, proxyURL string) (*V2, error) {
+// e.g. NewV2("https://pce.my-company.com:8443", "api_xxxxxx", "big-secret", 30, rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), 10, 3, false, "", "")
+func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLimiter *rate.Limiter, 
+	waitTime, maxRetries int, insecure bool, caFile, proxyURL string) (*V2, error) {
 	if !strings.HasPrefix(hostURL, "http") {
 		return nil, errors.New("hostURL scheme must be 'http(s)'")
 	}
@@ -54,9 +57,26 @@ func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int,
 		}
 		transport.Proxy = http.ProxyURL(pUrl)
 	}
+	tlsConfig := &tls.Config{InsecureSkipVerify: insecure}
+	if len(caFile) > 0 {
+		caCert, err := ioutil.ReadFile(caFile)
+		if err != nil {
+			return nil, err
+		}
+		caCertPool, _ := x509.SystemCertPool()
+		if caCertPool == nil {
+			caCertPool = x509.NewCertPool()
+		}
 
+		if ok := caCertPool.AppendCertsFromPEM(caCert); !ok {
+			return nil, fmt.Errorf("could not append CA file to CA Cert pool")
+		}
+
+		tlsConfig.RootCAs = caCertPool
+	}
+	transport.TLSClientConfig = tlsConfig
 	httpClient := &http.Client{
-		Timeout: time.Second * time.Duration(defaultTimeout),
+		Timeout:   time.Second * time.Duration(defaultTimeout),
 		Transport: transport,
 	}
 
@@ -94,8 +114,8 @@ func (c *V2) Do(req *http.Request) (*http.Response, error) {
 			log.Printf("[DEBUG] Retrying DO method %s", req.URL.String())
 			retryCount++
 			// Sleep for configured time and retry
-			jitter := rand.Intn(5 - 1) + 1  // jitter in 1-5 seconds
-			time.Sleep(time.Duration(c.backoffTime + jitter) * time.Second)
+			jitter := rand.Intn(5-1) + 1 // jitter in 1-5 seconds
+			time.Sleep(time.Duration(c.backoffTime+jitter) * time.Second)
 		} else {
 			// No indication of rate limit from server, we can proceed
 			break

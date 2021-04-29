@@ -22,6 +22,8 @@ const (
 	maxRetriesKey  = "max_retries"
 	proxyURLKey    = "proxy_url"
 	orgIDKey       = "org_id"
+	insecureKey    = "insecure"
+	caFileKey      = "ca_file"
 
 	version = 1
 
@@ -57,6 +59,18 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("ILLUMIO_API_KEY_SECRET", nil),
 				Description: "Secret of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_SECRET`",
+			},
+			insecureKey: {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ILLUMIO_ALLOW_INSECURE_TLS", nil),
+				Description: "Allow insecure TLS. Only `yes` will mark it insecure. This can also be set by environment variable `ILLUMIO_ALLOW_INSECURE_TLS`",
+			},
+			caFileKey: {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ILLUMIO_CA_FILE", nil),
+				Description: "The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`",
 			},
 			orgIDKey: {
 				Type:        schema.TypeInt,
@@ -158,6 +172,10 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	if diagnostics = validateInput(d); diagnostics.HasError() {
 		return nil, diagnostics
 	}
+	insecure := false
+	if d.Get(insecureKey).(string) == "yes" {
+		insecure = true
+	}
 	illumioV2Client, err := client.NewV2(
 		d.Get(pceHostKey).(string),
 		d.Get(apiUsernameKey).(string),
@@ -166,6 +184,8 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), // limits API calls 125/min
 		d.Get(backoffTimeKey).(int),
 		d.Get(maxRetriesKey).(int),
+		insecure,
+		d.Get(caFileKey).(string),
 		d.Get(proxyURLKey).(string),
 	)
 	if err != nil {

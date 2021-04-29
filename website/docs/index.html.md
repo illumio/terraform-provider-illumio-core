@@ -90,3 +90,5 @@ terraform apply && provision
 - **org_id** (Number) ID of the Organization. Default value: 1
 - **request_timeout** (Number) Timeout for HTTP requests. Default value: 30
 - **proxy_url** (String) Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`
+- **ca_file** (String) The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`
+- **insecure** (String) Allow insecure TLS. Only `yes` will mark it insecure. This can also be set by environment variable `ILLUMIO_ALLOW_INSECURE_TLS`

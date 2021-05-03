@@ -3,7 +3,6 @@ package illumiocore
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -17,7 +16,8 @@ var (
 		"broadcast",
 		"multicast",
 	}
-	protoTCSValidValues = []int{6, 17, 1, 58}
+	tcsActionValidValues = []string{"drop", "aggregate"}
+	protoTCSValidValues  = []int{6, 17, 1, 58}
 )
 
 func resourceIllumioTrafficCollectorSettings() *schema.Resource {
@@ -37,35 +37,45 @@ func resourceIllumioTrafficCollectorSettings() *schema.Resource {
 				Description: "URI of traffic collecter settings",
 			},
 			"transmission": {
-				Type:             schema.TypeString,
-				Required:         true,
-				Description:      `transmission type. Allowed values are "broadcast" and "multicast"`,
-				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(tcsTransmissionValidValues, false)),
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `transmission type. Allowed values are "broadcast" and "multicast"`,
+				ValidateDiagFunc: validation.ToDiagFunc(
+					validation.StringInSlice(tcsTransmissionValidValues, false),
+				),
 			},
 			"action": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: `action for target traffic. Allowed values are "drop" or "aggregate"`,
+				ValidateDiagFunc: validation.ToDiagFunc(
+					validation.StringInSlice(tcsActionValidValues, false),
+				),
 			},
 			"target": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
-				Description: "target for traffic collector settings",
+				Computed:    true,
+				Description: `target for traffic collector settings. Required if value of action is "drop"`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dst_port": {
-							Type:             schema.TypeInt,
-							Optional:         true,
-							Default:          -1,
-							Description:      "destination port for target. Allowed range is -1 to 65535. Default value: -1",
-							ValidateDiagFunc: validation.ToDiagFunc(validation.Any(validation.IntBetween(-1, 65535))),
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     -1,
+							Description: "destination port for target. Allowed range is -1 to 65535. Default value: -1",
+							ValidateDiagFunc: validation.ToDiagFunc(
+								validation.Any(validation.IntBetween(-1, 65535)),
+							),
 						},
 						"proto": {
-							Type:             schema.TypeInt,
-							Required:         true,
-							ValidateDiagFunc: validation.ToDiagFunc(validation.IntInSlice(protoTCSValidValues)),
-							Description:      "protocol for target. Allowed values are 6 (TCP), 17 (UDP), 1 (ICMP) and 58 (ICMPv6)",
+							Type:     schema.TypeInt,
+							Required: true,
+							ValidateDiagFunc: validation.ToDiagFunc(
+								validation.IntInSlice(protoTCSValidValues),
+							),
+							Description: "protocol for target. Allowed values are 6 (TCP), 17 (UDP), 1 (ICMP) and 58 (ICMPv6)",
 						},
 						"dst_ip": {
 							Type:        schema.TypeString,
@@ -91,6 +101,24 @@ func resourceIllumioTrafficCollectorSettingsCreate(ctx context.Context, d *schem
 
 	tcs := expandIllumioTrafficCollectorSettings(d)
 
+	if tcs.Action == "drop" && tcs.Target == nil {
+		return diag.Diagnostics{
+			diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "expected target block",
+				Detail:   "target block must be specified if action is \"drop\"",
+			},
+		}
+	} else if tcs.Action == "aggregate" && tcs.Target != nil {
+		return diag.Diagnostics{
+			diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unexpected target block",
+				Detail:   "target block cannot be specified if action is \"aggregate\"",
+			},
+		}
+	}
+
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%v/settings/traffic_collector", orgID), tcs)
 	if err != nil {
 		return diag.FromErr(err)
@@ -109,7 +137,7 @@ func expandIllumioTrafficCollectorSettings(d *schema.ResourceData) *models.Traff
 }
 
 func expandIllumioTrafficCollectorSettingsTarget(v interface{}) *models.TrafficCollectorSettingsTarget {
-	if v != nil {
+	if v != nil && len(v.([]interface{})) > 0 {
 		t := v.([]interface{})[0].(map[string]interface{})
 		return &models.TrafficCollectorSettingsTarget{
 			DstPort: t["dst_port"].(int),
@@ -180,18 +208,31 @@ func resourceIllumioTrafficCollectorSettingsUpdate(ctx context.Context, d *schem
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
+	if d.HasChange("action") {
+		return diag.Diagnostics{
+			diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unexpectade update: action is not updatable",
+			},
+		}
+	}
+
 	tcs := &models.TrafficCollectorSettings{
 		Transmission: d.Get("transmission").(string),
 	}
 
-	if d.HasChange("target") {
-		if v, ok := d.GetOk("target"); ok {
-			tcs.Target = expandIllumioTrafficCollectorSettingsTarget(v)
-		} else {
-			tcs.Target = &models.TrafficCollectorSettingsTarget{
-				IsSetToEmptyBody: true,
-			}
-			log.Print("[WARN] [Resource] Traffic Collector Settings: API don't support removal of target attribute. In-place updates will appear everytime when plan/apply is executed.")
+	if v, ok := d.GetOk("target"); ok {
+		tcs.Target = expandIllumioTrafficCollectorSettingsTarget(v)
+	}
+
+	action := d.Get("action").(string)
+	if action == "aggregate" && tcs.Target != nil {
+		return diag.Diagnostics{
+			diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unexpected target block",
+				Detail:   "target block cannot be specified if action is \"aggregate\"",
+			},
 		}
 	}
 

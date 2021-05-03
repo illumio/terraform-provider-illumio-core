@@ -10,8 +10,6 @@ type TrafficCollectorSettingsTarget struct {
 	DstPort int    `json:"dst_port"`
 	Proto   int    `json:"proto"`
 	DstIP   string `json:"dst_ip"`
-
-	IsSetToEmptyBody bool
 }
 
 func (o *TrafficCollectorSettings) ToMap() (map[string]interface{}, error) {
@@ -33,13 +31,9 @@ func (o *TrafficCollectorSettings) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *TrafficCollectorSettingsTarget) ToMAP() map[string]interface{} {
-	if o.IsSetToEmptyBody {
-		return map[string]interface{}{}
-	} else {
-		return map[string]interface{}{
-			"dst_port": o.DstPort,
-			"proto":    o.Proto,
-			"dst_ip":   o.DstIP,
-		}
+	return map[string]interface{}{
+		"dst_port": o.DstPort,
+		"proto":    o.Proto,
+		"dst_ip":   o.DstIP,
 	}
 }

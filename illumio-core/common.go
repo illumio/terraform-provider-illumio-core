@@ -326,3 +326,36 @@ func handleUnpairAndUpgradeOperationErrors(e error, res *http.Response, op, r st
 
 	return diags
 }
+
+func getRuleActors(data *gabs.Container) []map[string]interface{} {
+	actors := []map[string]interface{}{}
+
+	validRuleActors := []string{
+		"label",
+		"label_group",
+		"workload",
+		"virtual_service",
+		"virtual_server",
+		"ip_list",
+	}
+
+	for _, actorArray := range data.Children() {
+
+		actor := map[string]interface{}{}
+		for k, v := range actorArray.ChildrenMap() {
+			if k == "actors" {
+				actor[k] = v.Data().(string)
+			} else if contains(validRuleActors, k) {
+				vM := v.Data().(map[string]interface{})
+
+				hrefs := map[string]string{}
+				hrefs["href"] = vM["href"].(string)
+
+				actor[k] = []map[string]string{hrefs}
+			}
+		}
+		actors = append(actors, actor)
+	}
+
+	return actors
+}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -195,7 +194,9 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 						Optional:    true,
 						MaxItems:    1,
 						Description: "Href of Virtual Server",
-						Elem:        hrefSchemaRequired("Virtual Server", isVirtualServerHref),
+						Elem: hrefSchemaRequired("Virtual Server", validation.ToDiagFunc(
+							validation.StringIsNotEmpty,
+						)),
 					},
 					"ip_list": {
 						Type:        schema.TypeList,
@@ -596,39 +597,6 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 	d.Set("consumer", getRuleActors(data.S("consumers")))
 
 	return diagnostics
-}
-
-func getRuleActors(data *gabs.Container) []map[string]interface{} {
-	actors := []map[string]interface{}{}
-
-	validRuleActors := []string{
-		"label",
-		"label_group",
-		"workload",
-		"virtual_service",
-		"virtual_server",
-		"ip_list",
-	}
-
-	for _, actorArray := range data.Children() {
-
-		actor := map[string]interface{}{}
-		for k, v := range actorArray.ChildrenMap() {
-			if k == "actors" {
-				actor[k] = v.Data().(string)
-			} else if contains(validRuleActors, k) {
-				vM := v.Data().(map[string]interface{})
-
-				hrefs := map[string]string{}
-				hrefs["href"] = vM["href"].(string)
-
-				actor[k] = []map[string]string{hrefs}
-			}
-		}
-		actors = append(actors, actor)
-	}
-
-	return actors
 }
 
 func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

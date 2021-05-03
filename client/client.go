@@ -40,7 +40,7 @@ type V2 struct {
 //
 // defaultTimeout (in seconds)
 // e.g. NewV2("https://pce.my-company.com:8443", "api_xxxxxx", "big-secret", 30, rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), 10, 3, false, "", "")
-func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLimiter *rate.Limiter, 
+func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLimiter *rate.Limiter,
 	waitTime, maxRetries int, insecure bool, caFile, proxyURL string) (*V2, error) {
 	if !strings.HasPrefix(hostURL, "http") {
 		return nil, errors.New("hostURL scheme must be 'http(s)'")
@@ -193,7 +193,7 @@ func checkForErrors(resp *http.Response) error {
 			return fmt.Errorf("not-acceptable: %v", err)
 		}
 
-		return fmt.Errorf("not-acceptable: %v", container)
+		return fmt.Errorf("not-acceptable: %v", formatNotAcceptableErrors(container))
 
 	// server side errors
 	case http.StatusInternalServerError, http.StatusServiceUnavailable, http.StatusBadGateway:
@@ -212,4 +212,23 @@ func checkForErrors(resp *http.Response) error {
 	log.Printf("[DEBUG] HTTP REQUEST FAILED [%s] %s %d - response: %s",
 		method, resourcePath, resp.StatusCode, bodyString)
 	return fmt.Errorf("failed: status code: %d - error: %v", resp.StatusCode, bodyString)
+}
+
+func formatNotAcceptableErrors(data *gabs.Container) string {
+	var errString string
+	
+	if data.Exists("token") {
+		errString += fmt.Sprintf("Token: %s: %s", data.S("token").Data(), data.S("message").Data())
+	} else {
+		for _, child := range data.Children() {
+			errString += fmt.Sprintf("\nToken: %s\nMessage: %s\n", child.S("token").Data(), child.S("message").Data())
+			for k, v := range child.ChildrenMap() {
+				if k != "message" && k != "token" {
+					errString += fmt.Sprintf("%s: %s\n", k, v.String())
+				}
+			}
+		}
+	}
+
+	return errString
 }

@@ -2,6 +2,7 @@ package illumiocore
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strconv"
 	s "strings"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/illumio/terraform-provider-illumio-core/client"
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
@@ -30,9 +32,7 @@ var isVirtualServiceHref = validation.ToDiagFunc(validation.StringMatch(regexp.M
 var isWorklaodHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/workloads/"+uuidV4RegEx), "Workload href is not in the correct format"))
 var isPairingProfileHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/pairing_profiles/[1-9][0-9]*"), "Pairing Profile href is not in the correct format"))
 var isVulnerabilityHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile(`/orgs/[1-9][0-9]*/vulnerabilities/[\S]*`), "Vulnerability href is not in the correct format"))
-
-// TODO: find correct href (ID) for virtual servers
-var isVirtualServerHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile(`/orgs/[1-9][0-9]*/sec_policy/(draft|active|[0-9]*)/virtual_server/[\S]*`), "Virtual Server href is not in the correct format"))
+var isVENHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/vens/"+uuidV4RegEx), "VEN href is not in the correct format"))
 
 // hrefSchemaRequired returns Href resource as required
 func hrefSchemaRequired(rName string, diagValid schema.SchemaValidateDiagFunc) *schema.Resource {
@@ -306,4 +306,23 @@ func resourceDataToMap(d *schema.ResourceData, keys []string) map[string]string 
 	}
 
 	return m
+}
+
+func handleUnpairAndUpgradeOperationErrors(e error, res *http.Response, op, r string) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if e != nil {
+		diags = append(diags, diag.FromErr(e)...)
+	} else {
+		container, err := client.GetContainer(res)
+		if err == nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Warning,
+				Summary:  fmt.Sprintf("[resource_%v_%v] Got failure/s in responce", r, op),
+				Detail:   container.String(),
+			})
+		}
+	}
+
+	return diags
 }

@@ -165,6 +165,7 @@ func Provider() *schema.Provider {
 			"illumio-core_organization_settings":              datasourceIllumioOrganizationSettings(),
 			"illumio-core_service_binding":                    datasourceIllumioServiceBinding(),
 			"illumio-core_enforcement_boundary":               datasourceIllumioEnforcementBoundary(),
+			"illumio-core_container_cluster_service_backends":  datasourceIllumioContainerClusterServiceBackends(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

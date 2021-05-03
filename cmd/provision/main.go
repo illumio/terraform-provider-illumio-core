@@ -29,8 +29,7 @@ var (
 		"rule_sets",
 		"ip_lists",
 		"virtual_services",
-		// "selective_enforcement_rules",
-		// TODO confirm if this resource is removed in 21.2
+		"enforcement_boundaries",
 	}
 )
 

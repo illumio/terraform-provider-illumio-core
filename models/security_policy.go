@@ -44,7 +44,7 @@ package models
         "href": "string"
       }
     ],
-    "selective_enforcement_rules": [
+    "enforcement_boundaries": [
       {
         "href": "string"
       }
@@ -60,7 +60,7 @@ type SecurityPolicyChangeSubset struct {
 	RuleSets         []Href `json:"rule_sets"`
 	IPLists          []Href `json:"ip_lists"`
 	VirtualServices  []Href `json:"virtual_services"`
-	SER              []Href `json:"selective_enforcement_rules"`
+	EBoundaries      []Href `json:"enforcement_boundaries"`
 	FirewallSettings []Href `json:"firewall_settings"`
 }
 
@@ -76,10 +76,10 @@ func (cs *SecurityPolicyChangeSubset) AppendHref(rtype, href string) {
 		cs.IPLists = append(cs.IPLists, Href{Href: href})
 	case "virtual_services":
 		cs.VirtualServices = append(cs.VirtualServices, Href{Href: href})
-	case "selective_enforcement_rules":
-		cs.SER = append(cs.SER, Href{Href: href})
+	case "enforcement_boundaries":
+		cs.EBoundaries = append(cs.EBoundaries, Href{Href: href})
 	case "firewall_settings":
-	cs.SER = append(cs.FirewallSettings, Href{Href: href})
+		cs.FirewallSettings = append(cs.FirewallSettings, Href{Href: href})
 	}
 }
 
@@ -99,8 +99,7 @@ func (s *SecurityPolicy) ToMap() (map[string]interface{}, error) {
 	spAttrMap["change_subset"].(map[string]interface{})["rule_sets"] = GetHrefMaps(s.ChangeSubset.RuleSets)
 	spAttrMap["change_subset"].(map[string]interface{})["ip_lists"] = GetHrefMaps(s.ChangeSubset.IPLists)
 	spAttrMap["change_subset"].(map[string]interface{})["virtual_services"] = GetHrefMaps(s.ChangeSubset.VirtualServices)
-	// spAttrMap["change_subset"].(map[string]interface{})["selective_enforcement_rules"] = GetHrefMaps(s.ChangeSubset.SER)
-	// TODO Confirm removal
-	spAttrMap["change_subset"].(map[string]interface{})["firewall_settings"] = GetHrefMaps(s.ChangeSubset.SER)
+	spAttrMap["change_subset"].(map[string]interface{})["enforcement_boundaries"] = GetHrefMaps(s.ChangeSubset.EBoundaries)
+	spAttrMap["change_subset"].(map[string]interface{})["firewall_settings"] = GetHrefMaps(s.ChangeSubset.FirewallSettings)
 	return spAttrMap, nil
 }

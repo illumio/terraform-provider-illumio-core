@@ -18,19 +18,19 @@ func TestAccIllumioIPList_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerIPList),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerIPList, "illumio_ip_list", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerIPList, "illumio-core_ip_list", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioIPListConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioIPListExists("illumio_ip_list.test", ipAttr),
+					testAccCheckIllumioIPListExists("illumio-core_ip_list.test", ipAttr),
 					testAccCheckIllumioIPListAttributes("creation from terraform", ipAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioIPListConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioIPListExists("illumio_ip_list.test", ipAttr),
+					testAccCheckIllumioIPListExists("illumio-core_ip_list.test", ipAttr),
 					testAccCheckIllumioIPListAttributes("updation from terraform", ipAttr),
 				),
 			},
@@ -40,11 +40,11 @@ func TestAccIllumioIPList_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioIPListConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_ip_list" "test" {
+	resource "illumio-core_ip_list" "test" {
 		name        = "acc. test iplist"
 		description = "%s"
-		external_data_set = "illumio_ip_list_external_data_set_1"
-		external_data_reference = "illumio_ip_list_external_data_reference_1"
+		external_data_set = "illumio-core_ip_list_external_data_set_1"
+		external_data_reference = "illumio-core_ip_list_external_data_reference_1"
 		ip_ranges {
 		  from_ip = "1.1.0.0"
 		  to_ip = "1.10.0.0"
@@ -100,8 +100,8 @@ func testAccCheckIllumioIPListAttributes(val string, ipAttr map[string]interface
 		expectation := map[string]interface{}{
 			"name":                    "acc. test iplist",
 			"description":             val,
-			"external_data_set":       "illumio_ip_list_external_data_set_1",
-			"external_data_reference": "illumio_ip_list_external_data_reference_1",
+			"external_data_set":       "illumio-core_ip_list_external_data_set_1",
+			"external_data_reference": "illumio-core_ip_list_external_data_reference_1",
 			"ip_ranges.0.from_ip":     "1.1.0.0",
 			"ip_ranges.0.to_ip":       "1.10.0.0",
 			"ip_ranges.0.description": "test ip_ranges description",

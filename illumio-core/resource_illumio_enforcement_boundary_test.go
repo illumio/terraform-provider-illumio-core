@@ -19,19 +19,19 @@ func TestAccIllumioEnforcementBoundary_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerEnforcementBoundary),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerEnforcementBoundary, "illumio_enforcement_boundary", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerEnforcementBoundary, "illumio-core_enforcement_boundary", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioEnforcementBoundaryConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioEnforcementBoundaryExists("illumio_enforcement_boundary.test", ebAttr),
+					testAccCheckIllumioEnforcementBoundaryExists("illumio-core_enforcement_boundary.test", ebAttr),
 					testAccCheckIllumioEnforcementBoundaryAttributes("creation from terraform", ebAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioEnforcementBoundaryConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioEnforcementBoundaryExists("illumio_enforcement_boundary.test", ebAttr),
+					testAccCheckIllumioEnforcementBoundaryExists("illumio-core_enforcement_boundary.test", ebAttr),
 					testAccCheckIllumioEnforcementBoundaryAttributes("updation from terraform", ebAttr),
 				),
 			},
@@ -41,7 +41,7 @@ func TestAccIllumioEnforcementBoundary_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioEnforcementBoundaryConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_enforcement_boundary" "test" {
+	resource "illumio-core_enforcement_boundary" "test" {
 		name = "acc. test Enforcement Boundary %s"
 		ingress_service {
 		  href = "/orgs/1/sec_policy/draft/services/3"

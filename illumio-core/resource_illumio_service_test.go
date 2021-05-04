@@ -18,19 +18,19 @@ func TestAccIllumioService_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerSer),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSer, "illumio_service", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSer, "illumio-core_service", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioServiceConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioServiceExists("illumio_service.test", serAttr),
+					testAccCheckIllumioServiceExists("illumio-core_service.test", serAttr),
 					testAccCheckIllumioServiceAttributes("creation from terraform", serAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioServiceConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioServiceExists("illumio_service.test", serAttr),
+					testAccCheckIllumioServiceExists("illumio-core_service.test", serAttr),
 					testAccCheckIllumioServiceAttributes("updation from terraform", serAttr),
 				),
 			},
@@ -40,11 +40,11 @@ func TestAccIllumioService_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioServiceConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_service" "test" {
+	resource "illumio-core_service" "test" {
 		name          = "acc test service"
 		description   = "%s"
-		external_data_set = "illumio_service_external_data_set_1"
-		external_data_reference = "illumio_service_external_data_reference_1"
+		external_data_set = "illumio-core_service_external_data_set_1"
+		external_data_reference = "illumio-core_service_external_data_reference_1"
 		service_port {
 			proto = 6
 			port = 10
@@ -108,8 +108,8 @@ func testAccCheckIllumioServiceAttributes(val string, serAttr map[string]interfa
 		expectation := map[string]interface{}{
 			"name":                      "acc test service",
 			"description":               val,
-			"external_data_set":         "illumio_service_external_data_set_1",
-			"external_data_reference":   "illumio_service_external_data_reference_1",
+			"external_data_set":         "illumio-core_service_external_data_set_1",
+			"external_data_reference":   "illumio-core_service_external_data_reference_1",
 			"service_ports.0.proto":     6,
 			"service_ports.0.port":      10,
 			"service_ports.0.to_port":   100,

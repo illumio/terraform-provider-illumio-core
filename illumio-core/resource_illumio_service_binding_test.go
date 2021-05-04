@@ -18,19 +18,19 @@ func TestAccIllumioServiceBinding_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerServiceBinding),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerServiceBinding, "illumio_service_binding", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerServiceBinding, "illumio-core_service_binding", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioServiceBindingConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioServiceBindingExists("illumio_service_binding.test", ipAttr),
+					testAccCheckIllumioServiceBindingExists("illumio-core_service_binding.test", ipAttr),
 					testAccCheckIllumioServiceBindingAttributes(ipAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioServiceBindingConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioServiceBindingExists("illumio_service_binding.test", ipAttr),
+					testAccCheckIllumioServiceBindingExists("illumio-core_service_binding.test", ipAttr),
 					testAccCheckIllumioServiceBindingAttributes(ipAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioServiceBinding_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioServiceBindingConfig_basic() string {
 	return `
-	resource "illumio_service_binding" "test" {
+	resource "illumio-core_service_binding" "test" {
 		virtual_service {
 		  href = "/orgs/1/sec_policy/active/virtual_services/69f1fcc7-94f0-4e42-b9a8-e722038e6dda"
 		}

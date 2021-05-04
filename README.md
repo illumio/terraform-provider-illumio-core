@@ -9,7 +9,7 @@ Provider to maintain Illumio Resource with terraform.
 ## Commands to build and use plugin in terraform
 
 - `go build -o terraform-provider-illumio-core.exe`
-- `move terraform-provider-illumio.exe %APPDATA%\terraform.d\plugins\illumio.com\labs\illumio-core\0.1\windows_amd64`
+- `move terraform-provider-illumio-core.exe %APPDATA%\terraform.d\plugins\illumio.com\labs\illumio-core\0.1\windows_amd64`
 
 
 ## To run terraform on any examples

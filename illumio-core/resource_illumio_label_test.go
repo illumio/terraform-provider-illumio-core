@@ -17,19 +17,19 @@ func TestAccIllumioLabel_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerLabel),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerLabel, "illumio_label", true),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerLabel, "illumio-core_label", true),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioLabelConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioLabelExists("illumio_label.test", labelAttr),
+					testAccCheckIllumioLabelExists("illumio-core_label.test", labelAttr),
 					testAccCheckIllumioLabelAttributes("creation from terraform", labelAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioLabelConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioLabelExists("illumio_label.test", labelAttr),
+					testAccCheckIllumioLabelExists("illumio-core_label.test", labelAttr),
 					testAccCheckIllumioLabelAttributes("updation from terraform", labelAttr),
 				),
 			},
@@ -39,11 +39,11 @@ func TestAccIllumioLabel_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioLabelConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_label" "test" {
+	resource "illumio-core_label" "test" {
 		key = "role"
 		value = "%s"
-		external_data_set = "illumio_label_external_data_set_1"
-		external_data_reference = "illumio_label_external_data_reference_1"
+		external_data_set = "illumio-core_label_external_data_set_1"
+		external_data_reference = "illumio-core_label_external_data_reference_1"
 	}
 	`, val)
 }
@@ -86,8 +86,8 @@ func testAccCheckIllumioLabelAttributes(val string, labelAttr map[string]interfa
 		expectation := map[string]interface{}{
 			"key":                     "role",
 			"value":                   val,
-			"external_data_set":       "illumio_label_external_data_set_1",
-			"external_data_reference": "illumio_label_external_data_reference_1",
+			"external_data_set":       "illumio-core_label_external_data_set_1",
+			"external_data_reference": "illumio-core_label_external_data_reference_1",
 		}
 		for k, v := range expectation {
 			if labelAttr[k] != v {

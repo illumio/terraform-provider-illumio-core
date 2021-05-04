@@ -18,19 +18,19 @@ func TestAccIllumioLabelGroup_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerLG),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerLG, "illumio_label_group", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerLG, "illumio-core_label_group", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioLabelGroupConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioLabelGroupExists("illumio_label_group.test", lgAttr),
+					testAccCheckIllumioLabelGroupExists("illumio-core_label_group.test", lgAttr),
 					testAccCheckIllumioLabelGroupAttributes("creation from terraform", lgAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioLabelGroupConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioLabelGroupExists("illumio_label_group.test", lgAttr),
+					testAccCheckIllumioLabelGroupExists("illumio-core_label_group.test", lgAttr),
 					testAccCheckIllumioLabelGroupAttributes("updation from terraform", lgAttr),
 				),
 			},
@@ -40,12 +40,12 @@ func TestAccIllumioLabelGroup_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioLabelGroupConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_label_group" "test" {
+	resource "illumio-core_label_group" "test" {
 		key           = "role"
 		name          = "acc. test label group"
 		description   = "%s"
-		external_data_set = "illumio_label_group_external_data_set_1"
-		external_data_reference = "illumio_label_group_external_data_reference_1"
+		external_data_set = "illumio-core_label_group_external_data_set_1"
+		external_data_reference = "illumio-core_label_group_external_data_reference_1"
 		labels {
 			href = "/orgs/1/labels/7147"
 		}
@@ -99,8 +99,8 @@ func testAccCheckIllumioLabelGroupAttributes(val string, lgAttr map[string]inter
 			"description":             val,
 			"labels.0.href":           "/orgs/1/labels/7147",
 			"sub_groups.0.href":       "/orgs/1/sec_policy/draft/label_groups/4dcfedff-6236-454b-acb7-92827c9a7a2f",
-			"external_data_set":       "illumio_label_group_external_data_set_1",
-			"external_data_reference": "illumio_label_group_external_data_reference_1",
+			"external_data_set":       "illumio-core_label_group_external_data_set_1",
+			"external_data_reference": "illumio-core_label_group_external_data_reference_1",
 		}
 		for k, v := range expectation {
 			if lgAttr[k] != v {

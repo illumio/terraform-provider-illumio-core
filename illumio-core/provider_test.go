@@ -17,10 +17,10 @@ var testAccProviderFactories map[string]func() (*schema.Provider, error)
 func init() {
 	testAccProvider = Provider()
 	testAccProviders = map[string]*schema.Provider{
-		"illumio": testAccProvider,
+		"illumio-core": testAccProvider,
 	}
 	testAccProviderFactories = map[string]func() (*schema.Provider, error){
-		"illumio": func() (*schema.Provider, error) { return Provider(), nil },
+		"illumio-core": func() (*schema.Provider, error) { return Provider(), nil },
 	}
 }
 
@@ -41,7 +41,7 @@ func testAccProviderFactoriesInit(provider **schema.Provider, providerName strin
 }
 
 func testAccProviderFactoriesInternal(provider **schema.Provider) map[string]func() (*schema.Provider, error) {
-	return testAccProviderFactoriesInit(provider, "illumio")
+	return testAccProviderFactoriesInit(provider, "illumio-core")
 }
 
 func TestProvider(t *testing.T) {

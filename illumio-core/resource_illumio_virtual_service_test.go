@@ -18,19 +18,19 @@ func TestAccIllumioVirtualService_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerVService),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVService, "illumio_virtual_service", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVService, "illumio-core_virtual_service", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioVirtualServiceConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVirtualServiceExists("illumio_virtual_service.test", vsAttr),
+					testAccCheckIllumioVirtualServiceExists("illumio-core_virtual_service.test", vsAttr),
 					testAccCheckIllumioVirtualServiceAttributes("creation from terraform", vsAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioVirtualServiceConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVirtualServiceExists("illumio_virtual_service.test", vsAttr),
+					testAccCheckIllumioVirtualServiceExists("illumio-core_virtual_service.test", vsAttr),
 					testAccCheckIllumioVirtualServiceAttributes("updation from terraform", vsAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioVirtualService_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioVirtualServiceConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_virtual_service" "test" {
+	resource "illumio-core_virtual_service" "test" {
 		name = "Acc. Test Virtual Service"
 		description = "%s"
 		apply_to = "host_only"

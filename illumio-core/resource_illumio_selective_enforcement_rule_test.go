@@ -18,19 +18,19 @@ func TestAccIllumioSelectiveEnforcementRule_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerSER),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSER, "illumio_selective_enforcement_rule", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSER, "illumio-core_selective_enforcement_rule", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioSelectiveEnforcementRuleConfig_basic("/orgs/1/labels/69"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioSelectiveEnforcementRuleExists("illumio_selective_enforcement_rule.test", serAttr),
+					testAccCheckIllumioSelectiveEnforcementRuleExists("illumio-core_selective_enforcement_rule.test", serAttr),
 					testAccCheckIllumioSelectiveEnforcementRuleAttributes("/orgs/1/labels/69", serAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioSelectiveEnforcementRuleConfig_basic("/orgs/1/labels/715"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioSelectiveEnforcementRuleExists("illumio_selective_enforcement_rule.test", serAttr),
+					testAccCheckIllumioSelectiveEnforcementRuleExists("illumio-core_selective_enforcement_rule.test", serAttr),
 					testAccCheckIllumioSelectiveEnforcementRuleAttributes("/orgs/1/labels/715", serAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioSelectiveEnforcementRule_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioSelectiveEnforcementRuleConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_selective_enforcement_rule" "test" {
+	resource "illumio-core_selective_enforcement_rule" "test" {
 		name = "SER test 1"
 		scope {
 		  label {

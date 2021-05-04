@@ -18,19 +18,19 @@ func TestAccIllumioWorkloadInterface_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerWorkloadInterface),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerWorkloadInterface, "illumio_workload_interface", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerWorkloadInterface, "illumio-core_workload_interface", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioWorkloadInterfaceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioWorkloadInterfaceExists("illumio_workload_interface.test", ipAttr),
+					testAccCheckIllumioWorkloadInterfaceExists("illumio-core_workload_interface.test", ipAttr),
 					testAccCheckIllumioWorkloadInterfaceAttributes(ipAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioWorkloadInterfaceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioWorkloadInterfaceExists("illumio_workload_interface.test", ipAttr),
+					testAccCheckIllumioWorkloadInterfaceExists("illumio-core_workload_interface.test", ipAttr),
 					testAccCheckIllumioWorkloadInterfaceAttributes(ipAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioWorkloadInterface_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioWorkloadInterfaceConfig_basic() string {
 	return `
-	resource "illumio_workload_interface" "test" {
+	resource "illumio-core_workload_interface" "test" {
 		workload_id = "d42a430e-b20b-4b2d-853f-2d39fa4cea22"
 		name = "acc. test Workload Interface"
 		link_state = "up"

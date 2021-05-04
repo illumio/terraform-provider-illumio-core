@@ -18,19 +18,19 @@ func TestAccIllumioRuleSet_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerRS),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerRS, "illumio_rule_set", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerRS, "illumio-core_rule_set", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioRuleSetConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioRuleSetExists("illumio_rule_set.test", srAttr),
+					testAccCheckIllumioRuleSetExists("illumio-core_rule_set.test", srAttr),
 					testAccCheckIllumioRuleSetAttributes("creation from terraform", srAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioRuleSetConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioRuleSetExists("illumio_rule_set.test", srAttr),
+					testAccCheckIllumioRuleSetExists("illumio-core_rule_set.test", srAttr),
 					testAccCheckIllumioRuleSetAttributes("updation from terraform", srAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioRuleSet_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioRuleSetConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_rule_set" "test" {
+	resource "illumio-core_rule_set" "test" {
 		name = "terraform-test-1"
 		description = "%s"
 		

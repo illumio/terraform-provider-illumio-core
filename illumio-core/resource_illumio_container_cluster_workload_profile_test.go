@@ -18,19 +18,19 @@ func TestAccIllumioContainerClusterWorkloadProfileWorkloadProfile_CreateUpdate(t
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerContainerClusterWorkloadProfile),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerContainerClusterWorkloadProfile, "illumio_container_cluster_workload_profile", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerContainerClusterWorkloadProfile, "illumio-core_container_cluster_workload_profile", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioContainerClusterWorkloadProfileConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioContainerClusterWorkloadProfileExists("illumio_container_cluster_workload_profile.test", ccAttr),
+					testAccCheckIllumioContainerClusterWorkloadProfileExists("illumio-core_container_cluster_workload_profile.test", ccAttr),
 					testAccCheckIllumioContainerClusterWorkloadProfileAttributes("creation from terraform", ccAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioContainerClusterWorkloadProfileConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioContainerClusterWorkloadProfileExists("illumio_container_cluster_workload_profile.test", ccAttr),
+					testAccCheckIllumioContainerClusterWorkloadProfileExists("illumio-core_container_cluster_workload_profile.test", ccAttr),
 					testAccCheckIllumioContainerClusterWorkloadProfileAttributes("updation from terraform", ccAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioContainerClusterWorkloadProfileWorkloadProfile_CreateUpdate(t
 
 func testAccCheckIllumioContainerClusterWorkloadProfileConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_container_cluster_workload_profile" "test" {
+	resource "illumio-core_container_cluster_workload_profile" "test" {
 		container_cluster_id = "deb48c70-e9d2-4101-ab7e-1f48de922ff4"
 		name = "acc. test Container Cluster Workload Profile"
 		description = "%s"

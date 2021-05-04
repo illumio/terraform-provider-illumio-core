@@ -18,25 +18,25 @@ func TestAccIllumioVEN_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerVEN),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVEN, "illumio_ven", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVEN, "illumio-core_ven", false),
 		Steps: []resource.TestStep{
 			{
-				// Config:            `resource "illumio_ven" "test" { status = "active" }`,
-				ResourceName:  "illumio_ven.test",
+				// Config:            `resource "illumio-core_ven" "test" { status = "active" }`,
+				ResourceName:  "illumio-core_ven.test",
 				ImportStateId: "/orgs/1/vens/e6eec907-85c0-4ca7-8607-1b35c27501d7",
 				ImportState:   true,
 				// ImportStateVerify: true,
 			},
 			// {
 			// 	Check: resource.ComposeTestCheckFunc(
-			// 		testAccCheckIllumioVENExists("illumio_ven.test", srAttr),
+			// 		testAccCheckIllumioVENExists("illumio-core_ven.test", srAttr),
 			// 		testAccCheckIllumioVENAttributes("creation from terraform", srAttr),
 			// 	),
 			// },
 			{
 				Config: testAccCheckIllumioVENConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVENExists("illumio_ven.test", srAttr),
+					testAccCheckIllumioVENExists("illumio-core_ven.test", srAttr),
 					testAccCheckIllumioVENAttributes("updation from terraform", srAttr),
 				),
 			},
@@ -46,7 +46,7 @@ func TestAccIllumioVEN_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioVENConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_ven" "test" {
+	resource "illumio-core_ven" "test" {
 		status = "suspended"
 		description = "%s"
 	  }

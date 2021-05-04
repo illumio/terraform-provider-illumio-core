@@ -18,19 +18,19 @@ func TestAccIllumioSecurityRule_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerSR),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSR, "illumio_security_rule", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSR, "illumio-core_security_rule", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioSecurityRuleConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioSecurityRuleExists("illumio_security_rule.test", srAttr),
+					testAccCheckIllumioSecurityRuleExists("illumio-core_security_rule.test", srAttr),
 					testAccCheckIllumioSecurityRuleAttributes("creation from terraform", srAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioSecurityRuleConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioSecurityRuleExists("illumio_security_rule.test", srAttr),
+					testAccCheckIllumioSecurityRuleExists("illumio-core_security_rule.test", srAttr),
 					testAccCheckIllumioSecurityRuleAttributes("updation from terraform", srAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioSecurityRule_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioSecurityRuleConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_security_rule" "test" {
+	resource "illumio-core_security_rule" "test" {
 		rule_set_id = 81
 		enabled = true
 		description = "%s"

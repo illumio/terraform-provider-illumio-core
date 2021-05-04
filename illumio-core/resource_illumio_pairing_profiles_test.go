@@ -18,19 +18,19 @@ func TestAccIllumioPairingProfile_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerPairingProfile),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerPairingProfile, "illumio_pairing_profile", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerPairingProfile, "illumio-core_pairing_profile", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioPairingProfileConfig_basic("full"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingProfileExists("illumio_pairing_profile.test", ppAttr),
+					testAccCheckIllumioPairingProfileExists("illumio-core_pairing_profile.test", ppAttr),
 					testAccCheckIllumioPairingProfileAttributes("full", ppAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioPairingProfileConfig_basic("idle"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingProfileExists("illumio_pairing_profile.test", ppAttr),
+					testAccCheckIllumioPairingProfileExists("illumio-core_pairing_profile.test", ppAttr),
 					testAccCheckIllumioPairingProfileAttributes("idle", ppAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioPairingProfile_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioPairingProfileConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_pairing_profile" "test" {
+	resource "illumio-core_pairing_profile" "test" {
 		name    = "test_code_example"
 		enabled = false
 		label {

@@ -18,19 +18,19 @@ func TestAccIllumioVulnerabilities_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerVul),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVul, "illumio_vulnerabilities", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVul, "illumio-core_vulnerabilities", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioVulnerabilitiesConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVulnerabilitiesExists("illumio_vulnerabilities.test", serAttr),
+					testAccCheckIllumioVulnerabilitiesExists("illumio-core_vulnerabilities.test", serAttr),
 					testAccCheckIllumioVulnerabilitiesAttributes("creation from terraform", serAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioVulnerabilitiesConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVulnerabilitiesExists("illumio_vulnerabilities.test", serAttr),
+					testAccCheckIllumioVulnerabilitiesExists("illumio-core_vulnerabilities.test", serAttr),
 					testAccCheckIllumioVulnerabilitiesAttributes("updation from terraform", serAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioVulnerabilities_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioVulnerabilitiesConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_vulnerabilities" "test" {
+	resource "illumio-core_vulnerabilities" "test" {
 		vulnerability {
 		  reference_id = "go-test-id"
 		  name         = "test"

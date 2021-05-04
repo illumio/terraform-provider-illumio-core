@@ -18,19 +18,19 @@ func TestAccIllumioContainerCluster_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerContainerCluster),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerContainerCluster, "illumio_container_cluster", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerContainerCluster, "illumio-core_container_cluster", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioContainerClusterConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioContainerClusterExists("illumio_container_cluster.test", ccAttr),
+					testAccCheckIllumioContainerClusterExists("illumio-core_container_cluster.test", ccAttr),
 					testAccCheckIllumioContainerClusterAttributes("creation from terraform", ccAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioContainerClusterConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioContainerClusterExists("illumio_container_cluster.test", ccAttr),
+					testAccCheckIllumioContainerClusterExists("illumio-core_container_cluster.test", ccAttr),
 					testAccCheckIllumioContainerClusterAttributes("updation from terraform", ccAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioContainerCluster_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioContainerClusterConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_container_cluster" "test" {
+	resource "illumio-core_container_cluster" "test" {
 		name = "acc. test Container Cluster"
 		description = "%s"
 	}

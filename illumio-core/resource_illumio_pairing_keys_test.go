@@ -17,26 +17,26 @@ func TestAccIllumioPairingKeys_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerPKs),
-		// CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerPKs, "illumio_pairing_keys", true),
+		// CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerPKs, "illumio-core_pairing_keys", true),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioPairingKeysConfig_basic(2),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingKeysExists("illumio_pairing_keys.test", pksAttr),
+					testAccCheckIllumioPairingKeysExists("illumio-core_pairing_keys.test", pksAttr),
 					testAccCheckIllumioPairingKeysAttributes(2, pksAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioPairingKeysConfig_basic(3),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingKeysExists("illumio_pairing_keys.test", pksAttr),
+					testAccCheckIllumioPairingKeysExists("illumio-core_pairing_keys.test", pksAttr),
 					testAccCheckIllumioPairingKeysAttributes(3, pksAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioPairingKeysConfig_basic(1),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingKeysExists("illumio_pairing_keys.test", pksAttr),
+					testAccCheckIllumioPairingKeysExists("illumio-core_pairing_keys.test", pksAttr),
 					testAccCheckIllumioPairingKeysAttributes(1, pksAttr),
 				),
 			},
@@ -46,7 +46,7 @@ func TestAccIllumioPairingKeys_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioPairingKeysConfig_basic(val int) string {
 	return fmt.Sprintf(`
-	resource "illumio_pairing_keys" "test" {
+	resource "illumio-core_pairing_keys" "test" {
 		pairing_profile_href = "/orgs/1/pairing_profiles/1"
 		token_count = %d
 	}

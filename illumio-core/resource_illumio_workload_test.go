@@ -18,19 +18,19 @@ func TestAccIllumioWorkload_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerW),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerW, "illumio_workload", true),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerW, "illumio-core_workload", true),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioWorkloadConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioWorkloadExists("illumio_workload.test", lgAttr),
+					testAccCheckIllumioWorkloadExists("illumio-core_workload.test", lgAttr),
 					testAccCheckIllumioWorkloadAttributes("creation from terraform", lgAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioWorkloadConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioWorkloadExists("illumio_workload.test", lgAttr),
+					testAccCheckIllumioWorkloadExists("illumio-core_workload.test", lgAttr),
 					testAccCheckIllumioWorkloadAttributes("updation from terraform", lgAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioWorkload_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioWorkloadConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_workload" "test" {
+	resource "illumio-core_workload" "test" {
 		name                   = "acc. test workload"
 		description            = "%s"
 		hostname               = "acc. test workload hostname"

@@ -18,19 +18,19 @@ func TestAccIllumioWorkloadSettings_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerWorkloadSettings),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerWorkloadSettings, "illumio_workload_settings", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerWorkloadSettings, "illumio-core_workload_settings", false),
 		Steps: []resource.TestStep{
 			// TODO: Check for the import thingy not working without config and the resource cannot be created.
 			{
 				Config:        testAccCheckIllumioWorkloadSettingsConfig_basic(),
-				ResourceName:  "illumio_workload_settings.test",
+				ResourceName:  "illumio-core_workload_settings.test",
 				ImportStateId: "/orgs/1/settings/workloads",
 				ImportState:   true,
 			},
 			{
 				Config: testAccCheckIllumioWorkloadSettingsConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioWorkloadSettingsExists("illumio_workload_settings.test", wsAttr),
+					testAccCheckIllumioWorkloadSettingsExists("illumio-core_workload_settings.test", wsAttr),
 					testAccCheckIllumioWorkloadSettingsAttributes(wsAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioWorkloadSettings_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioWorkloadSettingsConfig_basic() string {
 	return `
-	resource "illumio_workload_settings" "test" {
+	resource "illumio-core_workload_settings" "test" {
 		workload_disconnected_timeout_seconds {
 		  value = -1
 		}

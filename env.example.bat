@@ -1,3 +1,3 @@
 export ILLUMIO_PCE_HOST=https://2x2devtest59.ilabs.io:8443
 export ILLUMIO_API_KEY_USERNAME=api_xxxxxxxxxxxxx
-export ILLUMIO_API_KEY_SECRET=yyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+set ILLUMIO_API_KEY_SECRET=yyyyyyyyyyyyyyyyyyyyyyyyyyyyy

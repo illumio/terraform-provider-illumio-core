@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -31,19 +30,9 @@ func datasourceIllumioWorkloadInterface() *schema.Resource {
 		Description:   "Represents Illumio Workload Interface",
 
 		Schema: map[string]*schema.Schema{
-			"workload_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Numerical ID of Workload",
-			},
-			"workload_interface_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Alphanumeric name of Workload Interface",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the Workload Interface",
 			},
 			"name": {
@@ -103,11 +92,10 @@ func datasourceIllumioWorkloadInterfaceRead(ctx context.Context, d *schema.Resou
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	wID := d.Get("workload_id").(string)
-	wiName := d.Get("workload_interface_name").(string)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/workloads/%v/interfaces/%v", orgID, wID, wiName), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

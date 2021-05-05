@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -59,14 +58,9 @@ func datasourceIllumioService() *schema.Resource {
 		SchemaVersion: version,
 		Description:   "Represents Illumio Service",
 		Schema: map[string]*schema.Schema{
-			"service_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Numerical ID of service",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of Service",
 			},
 			"name": {
@@ -229,9 +223,9 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	sid := d.Get("service_id").(int)
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/services/%d", pConfig.OrgID, sid), nil)
+	_, data, err := illumioClient.Get(href, nil)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -245,8 +239,6 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 		"description",
 		"description_url",
 		"process_name",
-		"service_ports",
-		"windows_services",
 		"external_data_set",
 		"external_data_reference",
 		"created_at",
@@ -260,7 +252,33 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
+	}
+
+	if data.Exists("service_ports") {
+		sps := data.S("service_ports")
+		spI := []map[string]interface{}{}
+
+		for _, sp := range sps.Children() {
+			spI = append(spI, gabsToMap(sp, []string{"port", "to_port", "proto", "icmp_type", "icmp_code"}))
+		}
+		d.Set("service_ports", spI)
+	} else {
+		d.Set("service_ports", nil)
+	}
+
+	if data.Exists("windows_services") {
+		wss := data.S("windows_services")
+		wsI := []map[string]interface{}{}
+
+		for _, ws := range wss.Children() {
+			wsI = append(wsI, gabsToMap(ws, []string{"port", "to_port", "proto", "icmp_type", "icmp_code", "service_name", "process_name"}))
+		}
+		d.Set("windows_services", wsI)
+	} else {
+		d.Set("windows_services", nil)
 	}
 
 	return diagnostics

@@ -13,7 +13,7 @@ Represents Illumio Enforcement Boundary
 
 ```hcl
 data "illumio-core_enforcement_boundary" "test" {
-  enforcement_boundary_id = 1
+  href = "/orgs/1/sec_policy/draft/enforcement_boundaries/57"
 }
 ```
 
@@ -21,8 +21,7 @@ data "illumio-core_enforcement_boundary" "test" {
 
 ### Required
 
-- **enforcement_boundary_id** (Number) Numerical ID of Enforcement Boundary
-
+- **href** (String) URI of this Enforcement Boundary
 
 ### Read-Only
 
@@ -32,7 +31,6 @@ data "illumio-core_enforcement_boundary" "test" {
 - **created_by** (Map of String) User who originally created this Enforcement Boundary
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
-- **href** (String) URI of this Enforcement Boundary
 - **illumio_provider** (Block Set) providers for Enforcement Boundary. Only one actor can be specified in one illumio_provider block (see [below for nested schema](#nestedblock--illumio_provider))
 - **ingress_service** (Set of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_service))
 - **name** (String) Name of the Enforcement Boundary

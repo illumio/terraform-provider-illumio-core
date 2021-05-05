@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_container_cluster" "test" {
-    container_cluster_id = "e9af6d1c-ce13-4c4d-8aa8-5ff0a3a1f378"
+    href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
 }
 ```
 
@@ -24,7 +24,7 @@ data "illumio-core_container_cluster" "test" {
 
 ### Required
 
-- **container_cluster_id** (String) Numerical ID of Container Cluster
+- **href** (String) URI of the Cluster
 
 ### Read-Only
 
@@ -32,7 +32,6 @@ data "illumio-core_container_cluster" "test" {
 - **container_runtime** (String) The Container Runtime used in this Cluster
 - **description** (String) Description of the Cluster
 - **errors** (List of Object) Errors for Cluster (see [below for nested schema](#nestedatt--errors))
-- **href** (String) URI of the Cluster
 - **kubelink_version** (String) Kubelink software version string for Cluster
 - **last_connected** (String) Time the Cluster last connected to
 - **manager_type** (String) Manager for this Cluster (and version)

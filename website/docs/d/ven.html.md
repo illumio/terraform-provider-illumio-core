@@ -14,8 +14,8 @@ Represents Illumio VEN
 Example Usage
 ------------
 ```hcl
-data "illumio-core_ven" "example" {
-  ven_id = "be310e96-7486-4de5-8068-61cd1e2298a1"
+data "illumio-core_ven" "ven" {
+  href = "/orgs/1/vens/80ec4e0a-e628-41c2-b79a-866f72a6b070"
 }
 ```
 
@@ -23,7 +23,7 @@ data "illumio-core_ven" "example" {
 
 ### Required
 
-- **ven_id** (String)
+- **href** (String) URI of VEN
 
 ### Read-Only
 
@@ -36,7 +36,6 @@ data "illumio-core_ven" "example" {
 - **created_by** (Map of String) The href of the user who created this VEN
 - **description** (String) The description of the VEN
 - **hostname** (String) The hostname of the host managed by the VEN
-- **href** (String) URI of VEN
 - **interfaces** (List of Object) Network interfaces of the host managed by the VEN (see [below for nested schema](#nestedatt--interfaces))
 - **labels** (List of Object) Labels assigned to the host managed by the VEN (see [below for nested schema](#nestedatt--labels))
 - **last_goodbye_at** (String) The time (rfc3339 timestamp) of the last goodbye from the VEN

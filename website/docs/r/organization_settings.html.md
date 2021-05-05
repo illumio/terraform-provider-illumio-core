@@ -39,6 +39,6 @@ Ref: https://www.terraform.io/docs/import/index.html
 
 
 ```
-terraform import illumio-core_organization_settings.example <ANYTHING>
+terraform import illumio-core_organization_settings.example <URI>
 ```
 

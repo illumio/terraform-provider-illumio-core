@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -34,14 +33,9 @@ func datasourceIllumioLabel() *schema.Resource {
 		Description:   "Represents Illumio Label",
 
 		Schema: map[string]*schema.Schema{
-			"label_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Numerical ID of label",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of this label",
 			},
 			"deleted": {
@@ -104,10 +98,10 @@ func dataSourceIllumioLabelRead(ctx context.Context, d *schema.ResourceData, m i
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	labelID := d.Get("label_id").(int)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/labels/%d", orgID, labelID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -127,6 +121,8 @@ func dataSourceIllumioLabelRead(ctx context.Context, d *schema.ResourceData, m i
 	} {
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
 	}
 	return diagnostics

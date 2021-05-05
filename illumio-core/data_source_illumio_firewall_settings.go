@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -84,7 +83,7 @@ func datasourceIllumioFirewallSettings() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of Firewall Settings",
 			},
 			"update_type": {
@@ -289,9 +288,11 @@ func datasourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.Resour
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	// orgID := pConfig.OrgID
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/firewall_settings", orgID), nil)
+	href := d.Get("href").(string)
+
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

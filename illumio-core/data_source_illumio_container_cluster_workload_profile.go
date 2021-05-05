@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -51,19 +50,9 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 		Description:   "Represents Illumio Container Cluster Workload Profile",
 
 		Schema: map[string]*schema.Schema{
-			"container_cluster_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Numerical ID of Container Cluster",
-			},
-			"container_workload_profile_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Numerical ID of Container Workload Profile",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the container workload profile",
 			},
 			"name": {
@@ -202,11 +191,10 @@ func datasourceIllumioContainerClusterWorkloadProfileRead(ctx context.Context, d
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	ccID := d.Get("container_cluster_id").(string)
-	ccwpID := d.Get("container_workload_profile_id").(string)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/container_clusters/%v/container_workload_profiles/%v", orgID, ccID, ccwpID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,14 +18,9 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 		Description:   "Represents Illumio Service Binding",
 
 		Schema: map[string]*schema.Schema{
-			"sb_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of Service Binding",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the Service Binding",
 			},
 			"bound_service": {
@@ -130,10 +124,10 @@ func datasourceIllumioServiceBindingRead(ctx context.Context, d *schema.Resource
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	SBID := d.Get("sb_id").(string)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/service_bindings/%s", orgID, SBID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

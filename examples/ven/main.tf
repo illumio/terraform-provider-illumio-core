@@ -16,11 +16,7 @@ provider "illumio-core" {
 }
 
 data "illumio-core_ven" "ven" {
-  ven_id = "be310e96-7486-4de5-8068-61cd1e2298a1"
-}
-
-output "name" {
-  value = data.illumio-core_ven.ven
+  href = "/orgs/1/vens/80ec4e0a-e628-41c2-b79a-866f72a6b070"
 }
 
 resource "illumio-core_ven" "name" {

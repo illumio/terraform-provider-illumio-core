@@ -15,8 +15,8 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_workload" "example"  {
-  workload_id = "c078947c-15ec-4451-a758-e9a5be3d2fa7"
+data "illumio-core_workload" "test" {
+  href = "/orgs/1/workloads/e683b686-8afe-4675-88a1-4463395f0482"
 }
 ```
 
@@ -24,9 +24,7 @@ data "illumio-core_workload" "example"  {
 
 ### Required
 
-- **workload_id** (String) Numerical ID of workload
-
-
+- **href** (String) URI of the Workload
 ### Read-Only
 
 - **agent_to_pce_certificate_authentication_id** (String) PKI Certificate identifier to be used by the PCE for authenticating the VEN
@@ -49,7 +47,6 @@ data "illumio-core_workload" "example"  {
 - **external_data_set** (String) The data source from which a resource originates
 - **firewall_coexistence** (List of Object) Firewall coexistence mode (see [below for nested schema](#nestedatt--firewall_coexistence))
 - **hostname** (String) The hostname of this workload
-- **href** (String) URI of the Workload
 - **ignored_interface_names** (List of String) Ignored Interface Names for Workload
 - **interfaces** (List of Object) A unque identifier within the external data source (see [below for nested schema](#nestedatt--interfaces))
 - **labels** (List of Object) List of lists of label URIs (see [below for nested schema](#nestedatt--labels))

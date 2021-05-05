@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -45,14 +44,9 @@ func datasourceIllumioVirtualService() *schema.Resource {
 		Description:   "Represents Illumio Virtual Services",
 
 		Schema: map[string]*schema.Schema{
-			"virtual_service_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the virtual service",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the virtual service",
 			},
 			"name": {
@@ -248,10 +242,10 @@ func dataSourceIllumioVirtualServiceRead(ctx context.Context, d *schema.Resource
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
+	// orgID := pConfig.OrgID
 
-	vsid := d.Get("virtual_service_id").(string)
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/virtual_services/%s", orgID, vsid), nil)
+	href := d.Get("href").(string)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -270,19 +264,79 @@ func dataSourceIllumioVirtualServiceRead(ctx context.Context, d *schema.Resource
 		"description",
 		"external_data_set",
 		"external_data_reference",
-		"service_ports",
 		"pce_fqdn",
-		"service",
 		"labels",
 		"ip_overrides",
 		"apply_to",
 		"caps",
-		"service_addresses",
 	} {
 
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
 	}
+
+	key := "service"
+	if data.Exists(key) {
+		l := []map[string]string{}
+		l = append(l, map[string]string{"href": data.S(key, "href").Data().(string)})
+		d.Set(key, l)
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "service_addresses"
+	if data.Exists(key) {
+		l := []map[string]interface{}{}
+		for _, child := range data.S(key).Children() {
+			val := map[string]interface{}{}
+
+			if v := child.S("fqdn").Data(); v != nil {
+				val["fqdn"] = v.(string)
+			}
+			if v := child.S("description").Data(); v != nil {
+				val["description"] = v.(string)
+			}
+			if v := child.S("port").Data(); v != nil {
+				val["port"] = v
+			}
+			if v := child.S("ip").Data(); v != nil {
+				val["ip"] = v.(string)
+			}
+			if v := child.S("network").Data(); v != nil {
+				val["network"] = v
+			}
+			l = append(l, val)
+		}
+		d.Set(key, l)
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "service_ports"
+	if data.Exists(key) {
+		sps := []map[string]interface{}{}
+
+		for _, serPort := range data.S(key).Children() {
+			sp := map[string]interface{}{}
+
+			for k, v := range serPort.ChildrenMap() {
+				if k == "proto" {
+					sp[k] = v.Data()
+				} else if k == "port" || k == "to_port" {
+					sp[k] = v.Data()
+				}
+
+				sps = append(sps, sp)
+			}
+		}
+
+		d.Set(key, sps)
+	} else {
+		d.Set(key, nil)
+	}
+
 	return diagnostics
 }

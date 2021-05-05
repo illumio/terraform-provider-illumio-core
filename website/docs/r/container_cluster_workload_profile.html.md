@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 resource "illumio-core_container_cluster_workload_profile" "test" {
-  container_cluster_id = "deb48c70-e9d2-4101-ab7e-1f48de922ff4"
+  container_cluster_href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
   name = "testing it"
   managed = true
   assign_labels {
@@ -30,14 +30,14 @@ resource "illumio-core_container_cluster_workload_profile" "test" {
 
 ### Required
 
-- **container_cluster_id** (String) Numerical ID of Container Cluster
+- **container_cluster_href** (String) URI of Container Cluster
 - **name** (String) A friendly name given to a profile if the namespace is not user friendly. The name should be upto 255 characters.
 
 ### Optional
 
 - **assign_labels** (Block Set) Assigned labels container workload profile (see [below for nested schema](#nestedblock--assign_labels))
 - **description** (String) Description of the container workload profile
-- **enforcement_mode** (String) Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are "idle","visibility_only","full", and "selective". Default value: "visibility_only"
+- **enforcement_mode** (String) Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are "idle","visibility_only","full", and "selective". Default value: "idle"
 - **labels** (Block Set) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedblock--labels))
 - **managed** (Boolean) If the namespace is managed or not.
 

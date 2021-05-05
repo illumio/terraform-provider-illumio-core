@@ -17,9 +17,9 @@ Example Usage
 
 ```hcl
 resource "illumio-core_workload_interface" "test" {
-    workload_id = "d42a430e-b20b-4b2d-853f-2d39fa4cea22"
-    name = "testing it itit"
-    link_state = "down"
+    workload_href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
+    name = "wow amazing"
+    link_state = "up"
     friendly_name = "test friendly name"
 }
 ```
@@ -30,7 +30,7 @@ resource "illumio-core_workload_interface" "test" {
 
 - **link_state** (String) Link State for Workload Interface. Allowed values are "up", "down", and "unknown"
 - **name** (String) Name of the Workload Interface
-- **workload_id** (String) Numerical ID of Workload
+- **workload_href** (String) URI of Workload
 
 ### Optional
 

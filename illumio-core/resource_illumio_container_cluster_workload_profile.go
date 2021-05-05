@@ -21,10 +21,10 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 		Description:   "Manages Illumio Container Cluster",
 
 		Schema: map[string]*schema.Schema{
-			"container_cluster_id": {
+			"container_cluster_href": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Numerical ID of Container Cluster",
+				Description: "URI of Container Cluster",
 			},
 			"href": {
 				Type:        schema.TypeString,
@@ -35,7 +35,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Type:             schema.TypeString,
 				Required:         true,
 				Description:      "A friendly name given to a profile if the namespace is not user friendly. The name should be upto 255 characters.",
-				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
+				ValidateDiagFunc: nameValidation,
 			},
 			"namespace": {
 				Type:        schema.TypeString,
@@ -122,7 +122,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "idle",
-				Description: "Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are \"idle\",\"visibility_only\",\"full\", and \"selective\". Default value: \"visibility_only\" ",
+				Description: "Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are \"idle\",\"visibility_only\",\"full\", and \"selective\". Default value: \"idle\" ",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice(ValidWorkloadEnforcementModeValues, false),
 				),
@@ -178,9 +178,9 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	// orgID := pConfig.OrgID
 
-	ccID := d.Get("container_cluster_id").(string)
+	cchref := d.Get("container_cluster_href").(string)
 
 	ccwp := &models.ContainerClusterWorkloadProfile{
 		Name:            d.Get("name").(string),
@@ -241,7 +241,7 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 		return diags
 	}
 
-	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/container_clusters/%v/container_workload_profiles", orgID, ccID), ccwp)
+	_, data, err := illumioClient.Create(fmt.Sprintf("%v/container_workload_profiles", cchref), ccwp)
 	if err != nil {
 		return diag.FromErr(err)
 	}

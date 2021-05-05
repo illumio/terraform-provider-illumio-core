@@ -21,10 +21,10 @@ func resourceIllumioWorkloadInterface() *schema.Resource {
 		Description:   "Manages Illumio Workload Interface",
 
 		Schema: map[string]*schema.Schema{
-			"workload_id": {
+			"workload_href": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Numerical ID of Workload",
+				Description: "URI of Workload",
 			},
 			"href": {
 				Type:        schema.TypeString,
@@ -98,7 +98,7 @@ func resourceIllumioWorkloadInterfaceCreate(ctx context.Context, d *schema.Resou
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	// orgID := pConfig.OrgID
 
 	WorkloadInterface := &models.WorkloadInterface{
 		Name:                  d.Get("name").(string),
@@ -109,8 +109,8 @@ func resourceIllumioWorkloadInterfaceCreate(ctx context.Context, d *schema.Resou
 		FriendlyName:          d.Get("friendly_name").(string),
 	}
 
-	wID := d.Get("workload_id").(string)
-	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads/%v/interfaces", orgID, wID), WorkloadInterface)
+	wHref := d.Get("workload_href").(string)
+	_, data, err := illumioClient.Create(fmt.Sprintf("%v/interfaces", wHref), WorkloadInterface)
 	if err != nil {
 		return diag.FromErr(err)
 	}

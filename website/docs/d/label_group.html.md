@@ -17,7 +17,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_label_group" "lg1"{
-  label_group_id = "731fca37-7f57-4852-96ac-753ddfd359d3"
+  href = "/orgs/1/sec_policy/draft/label_groups/db3fc597-e0ee-4391-8a8b-31a0d1acb3b5"
 }
 ```
 
@@ -27,7 +27,7 @@ data "illumio-core_label_group" "lg1"{
 
 ### Required
 
-- **label_group_id** (String) UUID of Label group
+- **href** (String) URI of Label Group
 
 ### Read-Only
 
@@ -38,7 +38,6 @@ data "illumio-core_label_group" "lg1"{
 - **description** (String) The long description of the Label Group
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data set Identifier
-- **href** (String) URI of Label Group
 - **key** (String) Key in key-value pair of contained labels or Label Groups
 - **labels** (Set of Object) Contained labels (see [below for nested schema](#nestedatt--labels))
 - **name** (String) Name of the Label Group

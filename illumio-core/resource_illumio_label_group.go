@@ -188,8 +188,6 @@ func resourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData, 
 		"name",
 		"description",
 		"key",
-		"sub_groups",
-		"labels",
 		"external_data_set",
 		"external_data_reference",
 		"created_at",
@@ -206,6 +204,33 @@ func resourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData, 
 			d.Set(key, nil)
 		}
 	}
+
+	if data.Exists("labels") {
+		labels := data.S("labels")
+		labelI := []map[string]interface{}{}
+
+		for _, l := range labels.Children() {
+			labelI = append(labelI, gabsToMap(l, []string{"href", "key", "value"}))
+		}
+
+		d.Set("labels", labelI)
+	} else {
+		d.Set("labels", nil)
+	}
+
+	if data.Exists("sub_groups") {
+		sub_groups := data.S("sub_groups")
+		sub_groupI := []map[string]interface{}{}
+
+		for _, sg := range sub_groups.Children() {
+			sub_groupI = append(sub_groupI, gabsToMap(sg, []string{"href", "name"}))
+		}
+
+		d.Set("sub_groups", sub_groupI)
+	} else {
+		d.Set("sub_groups", nil)
+	}
+
 	return diagnostics
 }
 

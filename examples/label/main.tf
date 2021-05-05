@@ -16,7 +16,7 @@ provider "illumio-core" {
 }
 
 data "illumio-core_label" "label_1" {
-  label_id  = 1
+  href = "/orgs/1/labels/1"
 }
 
 resource "illumio-core_label" "test_label" {

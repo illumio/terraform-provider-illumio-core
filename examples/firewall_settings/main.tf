@@ -18,6 +18,7 @@ provider "illumio-core" {
 
 
 data "illumio-core_firewall_settings" "current" {
+    href = "/orgs/1/sec_policy/draft/firewall_settings"
 }
 
 

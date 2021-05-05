@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -69,14 +68,9 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 		Description:   "Represents Illumio Enforcement Boundary",
 
 		Schema: map[string]*schema.Schema{
-			"enforcement_boundary_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Numerical ID of Enforcement Boundary",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of this Enforcement Boundary",
 			},
 			"name": {
@@ -231,10 +225,10 @@ func datasourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Res
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	EnforcementBoundaryID := d.Get("enforcement_boundary_id").(int)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/draft/enforcement_boundaries/%v", orgID, EnforcementBoundaryID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

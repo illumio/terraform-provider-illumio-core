@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -178,14 +177,9 @@ func datasourceIllumioWorkload() *schema.Resource {
 		Description:   "Represents Illumio Workload",
 
 		Schema: map[string]*schema.Schema{
-			"workload_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Numerical ID of workload",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the Workload",
 			},
 			"deleted": {
@@ -249,7 +243,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 				Description: "A unque identifier within the external data source",
 			},
 			"interfaces": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "A unque identifier within the external data source",
 				Elem: &schema.Resource{
@@ -350,7 +344,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 				},
 			},
 			"labels": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "List of lists of label URIs",
 				Elem: &schema.Resource{
@@ -489,6 +483,25 @@ func datasourceIllumioWorkload() *schema.Resource {
 							Computed:    true,
 							Description: "The ip address of the host where the vulnerability is found",
 						},
+						"port_wide_exposure": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "High end of an IP range",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"any": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "The boolean value representing if at least one port is exposed to internet (any rule) on the workload",
+									},
+									"ip_list": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "The boolean value representing if at least one port is exposed to ip_list(s) on the workload",
+									},
+								},
+							},
+						},
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -519,7 +532,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 							},
 						},
 						"vulnerability": {
-							Type:        schema.TypeBool,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Vulnerability",
 							Elem: &schema.Resource{
@@ -543,7 +556,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 							},
 						},
 						"vulnerability_report": {
-							Type:        schema.TypeBool,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Vulnerability Report for Workload",
 							Elem: &schema.Resource{
@@ -633,7 +646,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 				Description: "Blocked Connection Action for Workload",
 			},
 			"ven": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeMap,
 				Computed:    true,
 				Description: "VENS for Workload",
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -692,19 +705,201 @@ func dataSourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	workloadID := d.Get("workload_id").(string)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/workloads/%v", orgID, workloadID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(data.S("href").Data().(string))
-	for _, key := range []string{"href", "deleted", "name", "description", "hostname", "service_principal_name", "agent_to_pce_certificate_authentication_id", "distinguished_name", "enforcement_mode", "visibility_level", "public_ip", "interfaces", "ignored_interface_names", "service_provider", "data_center", "data_center_zone", "os_id", "selectively_enforced_services", "container_cluster", "os_detail", "online", "labels", "vulnerabilities_summary", "detected_vulnerabilities", "firewall_coexistence", "containers_inherit_host_policy", "blocked_connection_action", "ven", "caps", "external_data_set", "external_data_reference", "created_at", "updated_at", "created_by", "updated_by", "deleted_by", "deleted_at", "ike_authentication_certificate"} {
-		d.Set(key, data.S(key).Data())
+	for _, key := range []string{
+		"href",
+		"deleted",
+		"name",
+		"description",
+		"hostname",
+		"service_principal_name",
+		"agent_to_pce_certificate_authentication_id",
+		"distinguished_name",
+		"enforcement_mode",
+		"visibility_level",
+		"public_ip",
+		"ignored_interface_names",
+		"service_provider",
+		"data_center",
+		"data_center_zone",
+		"os_id", "os_detail",
+		"online",
+		"labels",
+		"containers_inherit_host_policy",
+		"blocked_connection_action",
+		"ven",
+		"caps",
+		"external_data_set",
+		"external_data_reference",
+		"created_at",
+		"updated_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+		"deleted_at",
+		"ike_authentication_certificate",
+	} {
+		if data.Exists(key) {
+			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
+		}
 	}
-	d.Set("services", []interface{}{data.S("services").Data()})
+
+	key := "interfaces"
+	if data.Exists(key) {
+		d.Set("interfaces", gabsToMapArray(data.S(key), []string{
+			"name",
+			"loopback",
+			"link_state",
+			"address",
+			"cidr_block",
+			"default_gateway_address",
+			"network",
+			"network_detection_mode",
+			"friendly_name",
+		}))
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "services"
+	if data.Exists(key) {
+		services := data.S(key)
+		srs := []map[string]interface{}{}
+
+		for _, service := range services.Children() {
+			sr := gabsToMap(service, []string{
+				"uptime_seconds",
+				"created_at",
+				"open_service_ports",
+			})
+			if service.Exists("open_service_ports") {
+				sr["open_service_ports"] = gabsToMapArray(service.S("open_service_ports"), []string{
+					"protocol",
+					"address",
+					"port",
+					"process_name",
+					"user",
+					"package",
+					"win_service_name",
+				})
+			} else {
+				sr["open_service_ports"] = nil
+			}
+
+			srs = append(srs, sr)
+
+			d.Set(key, srs)
+		}
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "vulnerabilities_summary"
+	if data.Exists(key) {
+		vss := data.S(key)
+		srs := []map[string]interface{}{}
+
+		for _, vs := range vss.Children() {
+			sr := gabsToMap(vs, []string{
+				"num_vulnerabilities",
+				"vulnerable_port_exposure",
+				"vulnerable_port_wide_exposure",
+				"vulnerability_exposure_score",
+				"vulnerability_score",
+				"max_vulnerability_score",
+			})
+			if vs.Exists("vulnerable_port_wide_exposure") {
+				sr["vulnerable_port_wide_exposure"] = gabsToMapArray(vs.S("vulnerable_port_wide_exposure"), []string{
+					"any",
+					"ip_list",
+				})
+			} else {
+				sr["vulnerable_port_wide_exposure"] = nil
+			}
+
+			srs = append(srs, sr)
+
+			d.Set(key, srs)
+		}
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "detected_vulnerabilities"
+	if data.Exists(key) {
+		vss := data.S(key)
+		srs := []map[string]interface{}{}
+
+		for _, vs := range vss.Children() {
+			sr := gabsToMap(vs, []string{
+				"ip_address",
+				"port",
+				"proto",
+				"port_exposure",
+				"workload",
+				"vulnerability",
+				"port_wide_exposure",
+				"vulnerability",
+				"vulnerability_report",
+			})
+			if vs.Exists("port_wide_exposure") {
+				sr["port_wide_exposure"] = gabsToMapArray(vs.S("port_wide_exposure"), []string{
+					"any",
+					"ip_list",
+				})
+			} else {
+				sr["port_wide_exposure"] = nil
+			}
+
+			if vs.Exists("vulnerability") {
+				sr["vulnerability"] = gabsToMapArray(vs.S("vulnerability"), []string{
+					"href",
+					"score",
+					"name",
+				})
+			} else {
+				sr["vulnerability"] = nil
+			}
+
+			srs = append(srs, sr)
+
+			d.Set(key, srs)
+		}
+	} else {
+		d.Set(key, nil)
+	}
+
+	if data.Exists("firewall_coexistence") {
+		d.Set("firewall_coexistence", gabsToMapArray(data.S("firewall_coexistence"), []string{
+			"illumio_primary",
+		}))
+	}
+
+	if data.Exists("selectively_enforced_services") {
+		d.Set("selectively_enforced_services", gabsToMapArray(data.S("selectively_enforced_services"), []string{
+			"href",
+			"proto",
+			"port",
+			"to_port",
+		}))
+	}
+
+	if data.Exists("container_cluster") {
+		d.Set("container_cluster", gabsToMapArray(data.S("container_cluster"), []string{
+			"href",
+			"name",
+		}))
+	}
 
 	return diagnostics
 }

@@ -34,5 +34,5 @@ resource "illumio-core_enforcement_boundary" "test" {
 }
 
 data "illumio-core_enforcement_boundary" "test" {
-  enforcement_boundary_id = 1
+  href = "/orgs/1/sec_policy/draft/enforcement_boundaries/57"
 }

@@ -40,10 +40,6 @@ resource "illumio-core_enforcement_boundary" "test" {
 - **ingress_service** (Block Set, Min: 1) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedblock--ingress_service))
 - **name** (String) Name of the Enforcement Boundary
 
-### Optional
-
-- **id** (String) The ID of this resource.
-
 ### Read-Only
 
 - **caps** (List of String) CAPS for Enforcement Boundary

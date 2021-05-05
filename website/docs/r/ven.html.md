@@ -13,6 +13,7 @@ Manages Illumio VEN
 
 Example Usage
 ------------
+
 ```hcl
 resource "illumio-core_ven" "name" {
   status = "suspended"

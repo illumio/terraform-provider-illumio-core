@@ -43,6 +43,7 @@ resource "illumio-core_syslog_destination" "example" {
     tls_enabled     = false
     tls_verify_cert = false
   }
+}
 ```
 
 ## Schema

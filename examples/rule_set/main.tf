@@ -15,12 +15,12 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_rule_set" "d_rs" {
-  rule_set_id = 122
+data "illumio-core_rule_set" "example" {
+  href = "/orgs/1/sec_policy/draft/rule_sets/70"
 }
 
-resource "illumio-core_rule_set" "rs" {
-  name = "terraform-rs4"
+resource "illumio-core_rule_set" "example" {
+  name = "example"
 
   ip_tables_rule {
     description = "some des"
@@ -46,7 +46,7 @@ resource "illumio-core_rule_set" "rs" {
   scope {
     label {
       href = "/orgs/1/labels/69"
-    }    
+    }
   }
 
   scope {

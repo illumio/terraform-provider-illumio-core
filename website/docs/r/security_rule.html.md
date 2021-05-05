@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 resource "illumio-core_security_rule" "resoruce_example" {
-  rule_set_id = 81
+  rule_set_href = "/orgs/1/sec_policy/draft/rule_sets/70"
 
   enabled = true
   resolve_labels_as {
@@ -65,7 +65,7 @@ resource "illumio-core_security_rule" "resoruce_example" {
 - **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in rule set or not
 - **illumio_provider** (Block Set, Min: 1) providers for Security Rule. Only one actor can be specified in one illumio_provider block (see [below for nested schema](#nestedblock--illumio_provider))
 - **resolve_labels_as** (Block List, Min: 1, Max: 1) resolve label as for Security rule (see [below for nested schema](#nestedblock--resolve_labels_as))
-- **rule_set_id** (Number) Numerical ID of Rule set, in which security rule will be added.
+- **rule_set_href** (String) URI of Rule set, in which security rule will be added.
 
 ### Optional
 

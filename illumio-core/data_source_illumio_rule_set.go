@@ -2,8 +2,8 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -155,14 +155,9 @@ func datasourceIllumioRuleSet() *schema.Resource {
 		SchemaVersion: version,
 		Description:   "Represents Illumio Rule Set",
 		Schema: map[string]*schema.Schema{
-			"rule_set_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Numerical ID of rule set",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of Rule Set",
 			},
 			"created_at": {
@@ -239,8 +234,7 @@ func datasourceIllumioRuleSet() *schema.Resource {
 				Computed:    true,
 				Description: "scopes for Rule Set",
 				Elem: &schema.Schema{
-					Type:     schema.TypeList,
-					MinItems: 1,
+					Type: schema.TypeList,
 					Elem: &schema.Resource{
 						Schema: map[string]*schema.Schema{
 							"label": {
@@ -268,7 +262,7 @@ func datasourceIllumioRuleSet() *schema.Resource {
 				Computed:    true,
 				Description: "Collection of Security Rules",
 				Elem: &schema.Resource{
-					Schema: securityRuleDatasourceBaseSchemaMap(),
+					Schema: securityRuleDatasourceSchema(false),
 				},
 			},
 			"ip_tables_rules": {
@@ -408,19 +402,17 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
 
-	secrutiyRuleID := d.Get("rule_set_id").(int)
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/draft/rule_sets/%v", orgID, secrutiyRuleID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
+	d.SetId(href)
 
 	for _, key := range []string{
-		"href",
 		"created_at",
 		"updated_at",
 		"deleted_at",
@@ -433,7 +425,6 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 		"external_data_set",
 		"external_data_reference",
 		"enabled",
-		"ip_tables_rules",
 	} {
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
@@ -443,58 +434,156 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 	if data.Exists("rules") {
 		rls := []map[string]interface{}{}
 
-		for _, data := range data.S("rules").Children() {
-			r := map[string]interface{}{}
-			for _, key := range []string{
-				"href",
-				"enabled",
-				"description",
-				"external_data_set",
-				"external_data_reference",
-				"sec_connect",
-				"stateless",
-				"machine_auth",
-				"unscoped_consumers",
-				"update_type",
-				"created_at",
-				"updated_at",
-				"deleted_at",
-				"created_by",
-				"updated_by",
-				"deleted_by",
-				"ingress_services",
-				"consumers",
-				"providers",
-			} {
-				if data.Exists(key) {
-					r[key] = data.S(key).Data()
+		rlKeys := []string{
+			"href",
+			"enabled",
+			"description",
+			"external_data_set",
+			"external_data_reference",
+			"sec_connect",
+			"stateless",
+			"machine_auth",
+			"unscoped_consumers",
+			"update_type",
+			"created_at",
+			"updated_at",
+			"deleted_at",
+			"created_by",
+			"updated_by",
+			"deleted_by",
+		}
+
+		for _, ruleData := range data.S("rules").Children() {
+			rl := map[string]interface{}{}
+			for _, key := range rlKeys {
+				if ruleData.Exists(key) && ruleData.S(key).Data() != nil {
+					rl[key] = ruleData.S(key).Data()
+				} else {
+					rl[key] = nil
 				}
 			}
 
-			if data.Exists("resolve_labels_as") {
-				rs := data.S("resolve_labels_as")
+			rlaKey := "resolve_labels_as"
+			if ruleData.Exists(rlaKey) {
+				resLableAs := ruleData.S(rlaKey)
 
 				tm := make(map[string][]interface{})
-				tm["providers"] = rs.S("providers").Data().([]interface{})
-				tm["consumers"] = rs.S("consumers").Data().([]interface{})
+				tm["providers"] = resLableAs.S("providers").Data().([]interface{})
+				tm["consumers"] = resLableAs.S("consumers").Data().([]interface{})
 
-				r["resolve_labels_as"] = []interface{}{tm}
+				rl[rlaKey] = []interface{}{tm}
 			}
 
-			rls = append(rls, r)
+			isKey := "ingress_services"
+			if ruleData.Exists(isKey) {
+				isKeys := []string{
+					"href",
+					"proto",
+					"port",
+					"to_port",
+				}
+
+				rl[isKey] = gabsToMapArray(ruleData.S(isKey), isKeys)
+			}
+
+			providersKey := "providers"
+			if ruleData.Exists(providersKey) {
+				rl[providersKey] = extractActors(ruleData.S(providersKey))
+			}
+
+			consumerKey := "consumers"
+			if ruleData.Exists(consumerKey) {
+				rl[consumerKey] = extractActors(ruleData.S(consumerKey))
+			}
+
+			rls = append(rls, rl)
 		}
 
 		d.Set("rules", rls)
 	}
 
-	if data.Exists("scopes") {
+	key := "scopes"
+	if data.Exists(key) {
 		scps := []interface{}{}
-		for _, v := range data.S("scopes").Children() {
-			scps = append(scps, v.Data())
+		for _, scope := range data.S(key).Children() {
+			scopeKeys := []string{"label", "label_group"}
+			scps = append(scps, gabsToMapArray(scope, scopeKeys))
 		}
 
-		d.Set("scopes", scps)
+		d.Set(key, scps)
+	}
+
+	key = "ip_table_rules"
+	if data.Exists(key) {
+		iptrKeys := []string{
+			"href",
+			"enabled",
+			"description",
+			"ip_version",
+			"update_type",
+			"created_at",
+			"updated_at",
+			"deleted_at",
+			"created_by",
+			"updated_by",
+			"deleted_by",
+		}
+
+		statKey := "statements"
+		statKeys := []string{
+			"table_name",
+			"chain_name",
+			"parameters",
+		}
+
+		actorsKey := "actors"
+
+		iptrs := []map[string]interface{}{}
+		for _, iptRule := range data.S(key).Children() {
+
+			iptr := gabsToMap(iptRule, iptrKeys)
+
+			if iptRule.Exists(statKey) {
+				iptr[statKey] = gabsToMapArray(iptRule.S(statKey), statKeys)
+			}
+
+			if iptRule.Exists(actorsKey) {
+				iptr[actorsKey] = extractActors(iptRule.S(actorsKey))
+			}
+
+			iptrs = append(iptrs, iptr)
+		}
+
+		d.Set(key, iptrs)
 	}
 
 	return diagnostics
+}
+
+func extractActors(data *gabs.Container) []map[string]interface{} {
+	actors := []map[string]interface{}{}
+
+	validRuleActors := []string{
+		"label",
+		"label_group",
+		"workload",
+		"virtual_service",
+		"virtual_server",
+		"ip_list",
+	}
+
+	for _, actorArray := range data.Children() {
+
+		actor := map[string]interface{}{}
+		for k, v := range actorArray.ChildrenMap() {
+			if k == "actors" {
+				actor[k] = v.Data().(string)
+			} else if contains(validRuleActors, k) {
+				actor[k] = v.Data().(map[string]interface{})
+			}
+		}
+		actors = append(actors, actor)
+	}
+
+	return actors
 }

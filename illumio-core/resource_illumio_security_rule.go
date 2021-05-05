@@ -32,11 +32,11 @@ func resourceIllumioSecurityRule() *schema.Resource {
 
 func securityRuleResourceSchemaMap() map[string]*schema.Schema {
 	securityRuleSchema := securityRuleResourceBaseSchemaMap()
-	securityRuleSchema["rule_set_id"] = &schema.Schema{
-		Type:        schema.TypeInt,
+	securityRuleSchema["rule_set_href"] = &schema.Schema{
+		Type:        schema.TypeString,
 		Required:    true,
 		ForceNew:    true,
-		Description: "Numerical ID of Rule set, in which security rule will be added.",
+		Description: "URI of Rule set, in which security rule will be added",
 	}
 	return securityRuleSchema
 }
@@ -315,9 +315,7 @@ func resourceIllumioSecurityRuleCreate(ctx context.Context, d *schema.ResourceDa
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-
-	ruleSetID := d.Get("rule_set_id").(int)
+	hrefRuleSet := d.Get("rule_set_href").(string)
 
 	secRule, diags := expandIllumioSecurityRule(d)
 
@@ -325,13 +323,13 @@ func resourceIllumioSecurityRuleCreate(ctx context.Context, d *schema.ResourceDa
 		return *diags
 	}
 
-	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/rule_sets/%v/sec_rules", orgID, ruleSetID), secRule)
+	_, data, err := illumioClient.Create(hrefRuleSet, secRule)
 	if err != nil {
 		return diag.Errorf(err.Error())
 	}
 
 	// After creating security rule, we have to provision rule set
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", fmt.Sprintf("/orgs/%d/sec_policy/draft/rule_sets/%v", orgID, ruleSetID))
+	pConfig.StoreHref(pConfig.OrgID, "rule_sets", hrefRuleSet)
 
 	d.SetId(data.S("href").Data().(string))
 

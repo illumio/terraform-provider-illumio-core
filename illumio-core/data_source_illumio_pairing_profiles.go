@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -57,14 +56,9 @@ func datasourceIllumioPairingProfile() *schema.Resource {
 		Description:   "Represents Illumio Pairing Profile",
 
 		Schema: map[string]*schema.Schema{
-			"pairing_profile_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Numerical ID of pairing profile",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of this pairing profile",
 			},
 			"name": {
@@ -238,14 +232,14 @@ func dataSourceIllumioPairingProfileRead(ctx context.Context, d *schema.Resource
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	pid := d.Get("pairing_profile_id").(int)
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/pairing_profiles/%d", pConfig.OrgID, pid), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	d.SetId(href)
 
-	d.SetId(data.S("href").Data().(string))
 	for _, key := range []string{
 		"href",
 		"name",
@@ -264,7 +258,6 @@ func dataSourceIllumioPairingProfileRead(ctx context.Context, d *schema.Resource
 		"created_by",
 		"updated_by",
 		"is_default",
-		"labels",
 		"env_label_lock",
 		"loc_label_lock",
 		"role_label_lock",
@@ -278,10 +271,18 @@ func dataSourceIllumioPairingProfileRead(ctx context.Context, d *schema.Resource
 		"agent_software_release",
 		"caps",
 	} {
-
-		if data.Exists(key) {
+		if data.Exists(key) && data.S(key).Data() != nil {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
 	}
+
+	if data.Exists("labels") {
+		d.Set("labels", gabsToMapArray(data.S("labels"), []string{"href"}))
+	} else {
+		d.Set("labels", nil)
+	}
+
 	return diagnostics
 }

@@ -16,8 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_security_rule" "example" {
-  rule_set_id      = 81
-  security_rule_id = 143
+  href = "/orgs/1/sec_policy/draft/rule_sets/6/sec_rules/7"
 }
 ```
 
@@ -25,8 +24,7 @@ data "illumio-core_security_rule" "example" {
 
 ### Required
 
-- **rule_set_id** (Number) Numerical ID of rule set
-- **security_rule_id** (Number) Numerical ID of security rule under rule set
+- **href** (String) URI of of security rule
 
 ### Read-Only
 
@@ -39,7 +37,6 @@ data "illumio-core_security_rule" "example" {
 - **enabled** (Boolean) Enabled flag. Determines whether this rule will be enabled in rule set or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **href** (String) URI of Security Rule
 - **ingress_services** (List of Object) Collection of Ingress Services (see [below for nested schema](#nestedatt--ingress_services))
 - **machine_auth** (Boolean) Determines whether machine authentication is enabled
 - **providers** (Set of Object) providers for Security Rule (see [below for nested schema](#nestedatt--providers))

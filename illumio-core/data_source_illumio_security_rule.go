@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -84,31 +83,16 @@ func datasourceIllumioSecurityRule() *schema.Resource {
 		ReadContext:   datasourceIllumioSecurityRuleRead,
 		SchemaVersion: version,
 		Description:   "Represents Illumio Security Rule",
-		Schema:        securityRuleDatasourceSchemaMap(),
+		Schema:        securityRuleDatasourceSchema(true),
 	}
 }
 
-func securityRuleDatasourceSchemaMap() map[string]*schema.Schema {
-	baseSchema := securityRuleDatasourceBaseSchemaMap()
-	baseSchema["rule_set_id"] = &schema.Schema{
-		Type:        schema.TypeInt,
-		Required:    true,
-		Description: "Numerical ID of rule set",
-	}
-	baseSchema["security_rule_id"] = &schema.Schema{
-		Type:        schema.TypeInt,
-		Required:    true,
-		Description: "Numerical ID of security rule under rule set",
-	}
-
-	return baseSchema
-}
-
-func securityRuleDatasourceBaseSchemaMap() map[string]*schema.Schema {
+func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"href": {
 			Type:        schema.TypeString,
-			Computed:    true,
+			Computed:    !hrefRequired,
+			Required:    hrefRequired,
 			Description: "URI of Security Rule",
 		},
 		"enabled": {
@@ -351,19 +335,16 @@ func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceDa
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	ruleSetID := d.Get("rule_set_id").(int)
-	securityRuleID := d.Get("security_rule_id").(int)
-
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/draft/rule_sets/%v/sec_rules/%v", orgID, ruleSetID, securityRuleID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
+	d.SetId(href)
 
-	for _, key := range []string{
+	rlKeys := []string{
 		"href",
 		"enabled",
 		"description",
@@ -380,23 +361,47 @@ func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceDa
 		"created_by",
 		"updated_by",
 		"deleted_by",
-		"ingress_services",
-		"consumers",
-		"providers",
-	} {
-		if data.Exists(key) {
+	}
+
+	for _, key := range rlKeys {
+		if data.Exists(key) && data.S(key).Data() != nil {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
 	}
 
-	if data.Exists("resolve_labels_as") {
-		rs := data.S("resolve_labels_as")
+	rlaKey := "resolve_labels_as"
+	if data.Exists(rlaKey) {
+		resLableAs := data.S(rlaKey)
 
 		tm := make(map[string][]interface{})
-		tm["providers"] = rs.S("providers").Data().([]interface{})
-		tm["consumers"] = rs.S("consumers").Data().([]interface{})
+		tm["providers"] = resLableAs.S("providers").Data().([]interface{})
+		tm["consumers"] = resLableAs.S("consumers").Data().([]interface{})
 
-		d.Set("resolve_labels_as", []interface{}{tm})
+		d.Set(rlaKey, []interface{}{tm})
+	}
+
+	isKey := "ingress_services"
+	if data.Exists(isKey) {
+		isKeys := []string{
+			"href",
+			"proto",
+			"port",
+			"to_port",
+		}
+
+		d.Set(isKey, gabsToMapArray(data.S(isKey), isKeys))
+	}
+
+	providersKey := "providers"
+	if data.Exists(providersKey) {
+		d.Set(providersKey, extractActors(data.S(providersKey)))
+	}
+
+	consumerKey := "consumers"
+	if data.Exists(consumerKey) {
+		d.Set(consumerKey, extractActors(data.S(consumerKey)))
 	}
 
 	return diagnostics

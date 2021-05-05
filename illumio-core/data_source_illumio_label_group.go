@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -59,14 +58,9 @@ func datasourceIllumioLabelGroup() *schema.Resource {
 		Description:   "Represents Illumio Label Group",
 
 		Schema: map[string]*schema.Schema{
-			"label_group_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "UUID of Label group",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of Label Group",
 			},
 			"name": {
@@ -190,11 +184,11 @@ func datasourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	// orgID := pConfig.OrgID
 
-	lgID := d.Get("label_group_id").(string)
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/label_groups/%s", orgID, lgID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -206,8 +200,6 @@ func datasourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData
 		"name",
 		"description",
 		"key",
-		"labels",
-		"sub_groups",
 		"external_data_set",
 		"external_data_reference",
 		"update_type",
@@ -221,7 +213,36 @@ func datasourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData
 
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
+
+		if data.Exists("labels") {
+			labels := data.S("labels")
+			labelI := []map[string]interface{}{}
+
+			for _, l := range labels.Children() {
+				labelI = append(labelI, gabsToMap(l, []string{"href", "key", "value"}))
+			}
+
+			d.Set("labels", labelI)
+		} else {
+			d.Set("labels", nil)
+		}
+
+		if data.Exists("sub_groups") {
+			sub_groups := data.S("sub_groups")
+			sub_groupI := []map[string]interface{}{}
+
+			for _, sg := range sub_groups.Children() {
+				sub_groupI = append(sub_groupI, gabsToMap(sg, []string{"href", "name"}))
+			}
+
+			d.Set("sub_groups", sub_groupI)
+		} else {
+			d.Set("sub_groups", nil)
+		}
+
 	}
 	return diagnostics
 }

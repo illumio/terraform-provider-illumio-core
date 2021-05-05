@@ -15,7 +15,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_ip_list" "example" {
-  ip_list_id  = 15
+  href = "/orgs/1/sec_policy/draft/ip_lists/1"
 }
 ```
 
@@ -23,7 +23,7 @@ data "illumio-core_ip_list" "example" {
 
 ### Required
 
-- **ip_list_id** (Number) Numerical ID of IP List
+- **href** (String) URI of the IPList
 
 ### Read-Only
 
@@ -35,7 +35,6 @@ data "illumio-core_ip_list" "example" {
 - **external_data_reference** (String) A unque identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **fqdns** (List of Object) Collection of Fully Qualified Domain Names for IP List (see [below for nested schema](#nestedatt--fqdns))
-- **href** (String) URI of the IPList
 - **ip_ranges** (List of Object) IP addresses or ranges for IP List (see [below for nested schema](#nestedatt--ip_ranges))
 - **name** (String) Name of the IPList
 - **updated_at** (String) Timestamp when this IP List was last updated

@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -49,14 +48,9 @@ func datasourceIllumioSyslogDestination() *schema.Resource {
 		Description:   "Represents Illumio Syslog Destination",
 
 		Schema: map[string]*schema.Schema{
-			"syslog_destination_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the destination",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the destination",
 			},
 			"pce_scope": {
@@ -187,9 +181,9 @@ func datasourceIllumioSyslogDestinationRead(ctx context.Context, d *schema.Resou
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	hrefID := d.Get("syslog_destination_id").(string)
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/1/settings/syslog/destinations/%s", hrefID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

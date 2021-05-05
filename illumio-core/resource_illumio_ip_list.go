@@ -189,8 +189,6 @@ func resourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m in
 		"href",
 		"name",
 		"description",
-		"ip_ranges",
-		"fqdns",
 		"external_data_set",
 		"external_data_reference",
 		"created_at",
@@ -206,6 +204,32 @@ func resourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m in
 			d.Set(key, nil)
 		}
 	}
+
+	if data.Exists("ip_ranges") {
+		ip_ranges := data.S("ip_ranges")
+		ip_rangeI := []map[string]interface{}{}
+
+		for _, ip := range ip_ranges.Children() {
+			ip_rangeI = append(ip_rangeI, gabsToMap(ip, []string{"description", "from_ip", "to_ip", "exclusion"}))
+		}
+		d.Set("ip_ranges", ip_rangeI)
+	} else {
+		d.Set("ip_ranges", nil)
+	}
+
+	if data.Exists("fqdns") {
+		fqdns := data.S("fqdns")
+		fqdnI := []map[string]interface{}{}
+
+		for _, ip := range fqdns.Children() {
+			fqdnI = append(fqdnI, gabsToMap(ip, []string{"fqdn", "description"}))
+		}
+
+		d.Set("fqdns", fqdnI)
+	} else {
+		d.Set("fqdns", nil)
+	}
+
 	return diagnostics
 }
 

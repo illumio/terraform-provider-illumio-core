@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_label" "example" {
-  label_id  = 1
+  href = "/orgs/1/labels/1"
 }
 ```
 
@@ -24,7 +24,7 @@ data "illumio-core_label" "example" {
 
 ### Required
 
-- **label_id** (Number) Numerical ID of label
+- **href** (String) URI of this label
 
 ### Read-Only
 
@@ -33,7 +33,6 @@ data "illumio-core_label" "example" {
 - **deleted** (Boolean) Flag to indicate whether deleted or not
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
-- **href** (String) URI of this label
 - **key** (String) Key in key-value pair
 - **updated_at** (String) Timestamp when this label was last updated
 - **updated_by** (Map of String) User who last updated this label

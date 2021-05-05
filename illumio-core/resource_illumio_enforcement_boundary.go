@@ -290,7 +290,7 @@ func expandIllumioEnforcementBoundaryConsumers(consumers []interface{}) ([]*mode
 		}
 
 		if !con.HasOneActor() {
-			return nil, diag.Errorf("consumer block can have only one Enforcement Boundary actor")
+			return nil, diag.Errorf("consumer block can have only one rule actor")
 		}
 		cons = append(cons, con)
 	}
@@ -310,7 +310,7 @@ func expandIllumioEnforcementBoundaryProviders(providers []interface{}) ([]*mode
 			IPList:     getHrefObj(p["ip_list"]),
 		}
 		if !prov.HasOneActor() {
-			return nil, diag.Errorf("provider block can Enforcement Boundary one rule actor")
+			return nil, diag.Errorf("provider block can only have one rule actor")
 		}
 
 		provs = append(provs, prov)

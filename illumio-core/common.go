@@ -285,18 +285,6 @@ func paramsString(p map[string]string) string {
 	return b.String()
 }
 
-func extractHrefs(data *gabs.Container) []map[string]string {
-	m := []map[string]string{}
-
-	for _, child := range data.Children() {
-		m = append(m, map[string]string{
-			"href": child.S("href").Data().(string),
-		})
-	}
-
-	return m
-}
-
 func resourceDataToMap(d *schema.ResourceData, keys []string) map[string]string {
 	m := map[string]string{}
 	for _, k := range keys {

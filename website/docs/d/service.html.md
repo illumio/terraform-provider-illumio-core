@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_service" "example" {
-  service_id = 1
+  href = "/orgs/1/sec_policy/draft/services/3"
 }
 ```
 
@@ -24,7 +24,7 @@ data "illumio-core_service" "example" {
 
 ### Required
 
-- **service_id** (Number) Numerical ID of service
+- **href** (String) URI of Service
 
 ### Read-Only
 
@@ -36,7 +36,6 @@ data "illumio-core_service" "example" {
 - **description_url** (String) Description URL Read-only to prevent XSS attacks
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **href** (String) URI of Service
 - **name** (String) The short friendly name of the service
 - **process_name** (String) The process name
 - **service_ports** (List of Object) Service ports of Illumio Service (see [below for nested schema](#nestedatt--service_ports))

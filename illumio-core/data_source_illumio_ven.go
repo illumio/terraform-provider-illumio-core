@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -125,14 +124,9 @@ func datasourceIllumioVEN() *schema.Resource {
 		Description:   "Manages Illumio VEN",
 
 		Schema: map[string]*schema.Schema{
-			"ven_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of VEN",
 			},
 			"name": {
@@ -229,6 +223,11 @@ func datasourceIllumioVEN() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Interface URI",
+						},
+						"loopback": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Loopback for Workload Interface",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -572,9 +571,9 @@ func datasourceIllumioVENRead(ctx context.Context, d *schema.ResourceData, m int
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	ven_id := d.Get("ven_id").(string)
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/1/vens/%s", ven_id), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -623,6 +622,7 @@ func setIllumioVENState(data *gabs.Container, d *schema.ResourceData) {
 		"name",
 		"link_state",
 		"address",
+		"loopback",
 		"cidr_block",
 		"default_gateway_address",
 		"network",

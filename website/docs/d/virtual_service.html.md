@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_virtual_service" "vs_1"{
-  virtual_service_id = "69f1fcc7-94f0-4e42-b9a8-e722038e6dda"
+  href = "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
 }
 
 ```
@@ -25,7 +25,7 @@ data "illumio-core_virtual_service" "vs_1"{
 
 ### Required
 
-- **virtual_service_id** (String) ID of the virtual service
+- **href** (String) URI of the virtual service
 
 ### Read-Only
 
@@ -38,7 +38,6 @@ data "illumio-core_virtual_service" "vs_1"{
 - **description** (String) The long description of this virtual service
 - **external_data_reference** (String) A unque identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
-- **href** (String) URI of the virtual service
 - **ip_overrides** (List of String) Array of IPs or CIDRs as IP overrides
 - **labels** (List of Object) Assigned labels (see [below for nested schema](#nestedatt--labels))
 - **name** (String) Name of the virtual service

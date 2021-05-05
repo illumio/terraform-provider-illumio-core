@@ -16,12 +16,8 @@ provider "illumio-core" {
 }
 
 data "illumio-core_syslog_destination" "name" {
-  syslog_destination_id = "04bdf118-c898-4dcb-8c74-b44a59cc1e02"
+  href = "/orgs/1/settings/syslog/destinations/11a4cfdf-a78e-4144-bbbc-67faec728df1"
 }
-
-# output "name" {
-#   value = data.illumio-core_syslog_destination.name
-# }
 
 resource "illumio-core_syslog_destination" "syslog" {
   type        = "remote_syslog"

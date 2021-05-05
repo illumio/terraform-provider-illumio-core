@@ -15,8 +15,8 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_syslog_destination" "example" {
-  syslog_destination_id = "04bdf118-c898-4dcb-8c74-b44a59cc1e02"
+data "illumio-core_syslog_destination" "name" {
+  href = "/orgs/1/settings/syslog/destinations/11a4cfdf-a78e-4144-bbbc-67faec728df1"
 }
 ```
 
@@ -24,13 +24,12 @@ data "illumio-core_syslog_destination" "example" {
 
 ### Required
 
-- **syslog_destination_id** (String) ID of the destination
+- **href** (String) URI of the destination
 
 ### Read-Only
 
 - **audit_event_logger** (List of Object) audit_event_logger details for destination. Single element list (see [below for nested schema](#nestedatt--audit_event_logger))
 - **description** (String) Description of the destination
-- **href** (String) URI of the destination
 - **node_status_logger** (List of Object) node_status_logger details for destination. Single element list (see [below for nested schema](#nestedatt--node_status_logger))
 - **pce_scope** (List of String)
 - **remote_syslog** (List of Object) remote_syslog details for destination. Single element list (see [below for nested schema](#nestedatt--remote_syslog))

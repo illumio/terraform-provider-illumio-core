@@ -16,13 +16,12 @@ provider "illumio-core" {
 }
 
 resource "illumio-core_workload_interface" "test" {
-    workload_id = "d42a430e-b20b-4b2d-853f-2d39fa4cea22"
-    name = "testing it itit"
+    workload_href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
+    name = "testing it"
     link_state = "up"
     friendly_name = "test friendly name"
 }
 
 data "illumio-core_workload_interface" "test" {
-    workload_id = "d42a430e-b20b-4b2d-853f-2d39fa4cea22"
-    workload_interface_name = "testing workload"
+    href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22/interfaces/testing it itit"
 }

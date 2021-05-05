@@ -18,7 +18,7 @@ provider "illumio-core" {
 
 
 resource "illumio-core_container_cluster_workload_profile" "test" {
-  container_cluster_id = "deb48c70-e9d2-4101-ab7e-1f48de922ff4"
+  container_cluster_href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
   name = "testing it"
   managed = true
   assign_labels {
@@ -28,6 +28,5 @@ resource "illumio-core_container_cluster_workload_profile" "test" {
 
 
 data "illumio-core_container_cluster_workload_profile" "test" {
-    container_cluster_id = "deb48c70-e9d2-4101-ab7e-1f48de922ff4"
-    container_workload_profile_id = "0a7ed380-bc2e-4be6-99ad-741baf77fb91"
+    href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43/container_workload_profiles/598888c7-a625-4507-a5c8-14f4a3c4c1d6"
 }

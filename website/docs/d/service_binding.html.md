@@ -13,7 +13,7 @@ Represents Illumio Service Binding
 
 ```hcl
 data "illumio-core_service_binding" "test" {
-    sb_id = "6be6fe7f-c612-4b72-899c-bf63234c9106" 
+   href = "/orgs/1/service_bindings/ad730105-d913-4859-b240-857ac4b8621d"
 }
 ```
 
@@ -21,8 +21,7 @@ data "illumio-core_service_binding" "test" {
 
 ### Required
 
-- **sb_id** (String) ID of Service Binding
-
+- **href** (String) URI of the Service Binding
 
 ### Read-Only
 
@@ -30,7 +29,6 @@ data "illumio-core_service_binding" "test" {
 - **container_workload** (Map of String) Container Workload href
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data Set identifier
-- **href** (String) URI of the Service Binding
 - **port_overrides** (Set of Object) Port Overrides for Service Bindings (see [below for nested schema](#nestedatt--port_overrides))
 - **virtual_service** (Map of String) Virtual service href
 - **workload** (Set of Object) Workload Object for Service Bindings (see [below for nested schema](#nestedatt--workload))

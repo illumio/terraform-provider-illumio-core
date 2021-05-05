@@ -16,7 +16,7 @@ provider "illumio-core" {
 }
 
 data "illumio-core_label_group" "datalg1"{
-  label_group_id = "731fca37-7f57-4852-96ac-753ddfd359d3"
+  href = "/orgs/1/sec_policy/draft/label_groups/db3fc597-e0ee-4391-8a8b-31a0d1acb3b5"
 }
 
 data "illumio-core_label" "label_1" {

@@ -16,7 +16,7 @@ provider "illumio-core" {
 }
 
 data "illumio-core_virtual_service" "vs_1"{
-  virtual_service_id = "69f1fcc7-94f0-4e42-b9a8-e722038e6dda"
+  href = "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
 }
 
 resource "illumio-core_virtual_service" "vs_2" {

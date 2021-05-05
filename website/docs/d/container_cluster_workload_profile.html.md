@@ -16,8 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_container_cluster_workload_profile" "test" {
-    container_cluster_id = "deb48c70-e9d2-4101-ab7e-1f48de922ff4"
-    container_workload_profile_id = "0a7ed380-bc2e-4be6-99ad-741baf77fb91"
+    href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43/container_workload_profiles/598888c7-a625-4507-a5c8-14f4a3c4c1d6"
 }
 ```
 
@@ -25,9 +24,7 @@ data "illumio-core_container_cluster_workload_profile" "test" {
 
 ### Required
 
-- **container_cluster_id** (String) Numerical ID of Container Cluster
-- **container_workload_profile_id** (String) Numerical ID of Container Workload Profile
-
+- **href** (String) URI of the container workload profile
 
 ### Read-Only
 
@@ -36,7 +33,6 @@ data "illumio-core_container_cluster_workload_profile" "test" {
 - **created_by** (Map of String) User who originally created this label group
 - **description** (String) Description of the container workload profile
 - **enforcement_mode** (String) Enforcement mode of container workload profiles to return.
-- **href** (String) URI of the container workload profile
 - **labels** (Set of Object) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedatt--labels))
 - **linked** (Boolean) True if the namespace exists in the cluster and is reported by kubelink.
 - **managed** (Boolean) If the namespace is managed or not.

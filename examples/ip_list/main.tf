@@ -32,5 +32,5 @@ resource "illumio-core_ip_list" "iplist_1" {
 }
 
 data "illumio-core_ip_list" "iplist_1" {
-  ip_list_id = 1
+  href = "/orgs/1/sec_policy/draft/ip_lists/1"
 }

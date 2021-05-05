@@ -22,5 +22,5 @@ resource "illumio-core_container_cluster" "test" {
 }
 
 data "illumio-core_container_cluster" "test" {
-    container_cluster_id = "e9af6d1c-ce13-4c4d-8aa8-5ff0a3a1f378"
+    href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
 }

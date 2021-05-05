@@ -16,7 +16,7 @@ provider "illumio-core" {
 }
 
 data "illumio-core_service" "example" {
-  service_id = 49
+  href = "/orgs/1/sec_policy/draft/services/3"
 }
 
 resource "illumio-core_service" "example_with_service_port_1" {

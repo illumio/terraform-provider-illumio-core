@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -51,14 +50,9 @@ func datasourceIllumioIPList() *schema.Resource {
 		Description:   "Represents Illumio IP List",
 
 		Schema: map[string]*schema.Schema{
-			"ip_list_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Numerical ID of IP List",
-			},
 			"href": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "URI of the IPList",
 			},
 			"name": {
@@ -72,7 +66,7 @@ func datasourceIllumioIPList() *schema.Resource {
 				Description: "Description of the IPList",
 			},
 			"ip_ranges": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "IP addresses or ranges",
 				Elem: &schema.Resource{
@@ -101,7 +95,7 @@ func datasourceIllumioIPList() *schema.Resource {
 				},
 			},
 			"fqdns": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Collection of Fully Qualified Domain Names",
 				Elem: &schema.Resource{
@@ -177,10 +171,10 @@ func datasourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
-	ipListID := d.Get("ip_list_id").(int)
+	// orgID := pConfig.OrgID
+	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/draft/ip_lists/%v", orgID, ipListID), nil)
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -190,8 +184,6 @@ func datasourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m 
 		"href",
 		"name",
 		"description",
-		"ip_ranges",
-		"fqdns",
 		"external_data_set",
 		"external_data_reference",
 		"created_at",
@@ -207,5 +199,31 @@ func datasourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m 
 			d.Set(key, nil)
 		}
 	}
+
+	if data.Exists("ip_ranges") {
+		ip_ranges := data.S("ip_ranges")
+		ip_rangeI := []map[string]interface{}{}
+
+		for _, ip := range ip_ranges.Children() {
+			ip_rangeI = append(ip_rangeI, gabsToMap(ip, []string{"description", "from_ip", "to_ip", "exclusion"}))
+		}
+		d.Set("ip_ranges", ip_rangeI)
+	} else {
+		d.Set("ip_ranges", nil)
+	}
+
+	if data.Exists("fqdns") {
+		fqdns := data.S("fqdns")
+		fqdnI := []map[string]interface{}{}
+
+		for _, ip := range fqdns.Children() {
+			fqdnI = append(fqdnI, gabsToMap(ip, []string{"fqdn", "description"}))
+		}
+
+		d.Set("fqdns", fqdnI)
+	} else {
+		d.Set("fqdns", nil)
+	}
+
 	return diagnostics
 }

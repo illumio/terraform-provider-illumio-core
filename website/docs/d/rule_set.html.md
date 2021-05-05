@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_rule_set" "example" {
-  rule_set_id = 81
+    href = "/orgs/1/sec_policy/draft/rule_sets/70"
 }
 ```
 
@@ -24,7 +24,7 @@ data "illumio-core_rule_set" "example" {
 
 ### Required
 
-- **rule_set_id** (Number) Numerical ID of rule set
+- **href** (String) URI of rule set
 
 
 ### Read-Only
@@ -37,7 +37,6 @@ data "illumio-core_rule_set" "example" {
 - **enabled** (Boolean) Enabled flag. Determines wheter the Rule Set is enabled or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **href** (String) URI of Rule Set
 - **ip_tables_rules** (List of Object) Collection of IP Tables Rules (see [below for nested schema](#nestedatt--ip_tables_rules))
 - **name** (String) Name of Rule Set
 - **rules** (List of Object) Collection of Security Rules (see [below for nested schema](#nestedatt--rules))

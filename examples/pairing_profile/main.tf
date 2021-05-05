@@ -16,12 +16,12 @@ provider "illumio-core" {
 }
 
 data "illumio-core_pairing_profile" "example" {
-  pairing_profile_id = 8
+  href = "/orgs/1/pairing_profiles/9"
 }
 
 resource "illumio-core_pairing_profile" "example" {
-  name    = "example1234"
-  enabled = false
+  name    = "pairing_profile_name"
+  enabled = true
   label {
     href = "/orgs/1/labels/1"
   }
@@ -38,18 +38,4 @@ resource "illumio-core_pairing_profile" "example" {
   log_traffic_lock      = true
   visibility_level      = "flow_off"
   visibility_level_lock = false
-}
-
-resource "illumio-core_pairing_profile" "example1" {
-  name    = "example123"
-  enabled = true
-  label {
-    href = "/orgs/1/labels/4"
-  }
-  env_label_lock        = true
-  loc_label_lock        = true
-  role_label_lock       = true
-  app_label_lock        = false
-  visibility_level      = "flow_summary"
-  visibility_level_lock = true
 }

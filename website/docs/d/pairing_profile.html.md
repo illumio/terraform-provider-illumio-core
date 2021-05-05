@@ -15,8 +15,8 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_pairing_profile" "example"{
-    pairing_profile_id = 1
+data "illumio-core_pairing_profile" "example" {
+  href = "/orgs/1/pairing_profiles/9"
 }
 ```
 
@@ -24,7 +24,7 @@ data "illumio-core_pairing_profile" "example"{
 
 ### Required
 
-- **pairing_profile_id** (Number) Numerical ID of pairing profile
+- **href** (String) URI of pairing profile
 
 ### Read-Only
 
@@ -41,7 +41,6 @@ data "illumio-core_pairing_profile" "example"{
 - **env_label_lock** (Boolean) Flag that controls whether env label can be overridden from pairing script
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
-- **href** (String) URI of this pairing profile
 - **is_default** (Boolean) Flag indicating this is default auto-created pairing profile
 - **key_lifespan** (String) Number of seconds pairing profile keys will be valid for
 - **labels** (List of Object) Assigned labels (see [below for nested schema](#nestedatt--labels))

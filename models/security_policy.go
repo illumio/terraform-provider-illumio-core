@@ -79,7 +79,7 @@ func (cs *SecurityPolicyChangeSubset) AppendHref(rtype, href string) {
 	case "selective_enforcement_rules":
 		cs.SER = append(cs.SER, Href{Href: href})
 	case "firewall_settings":
-	cs.SER = append(cs.FirewallSettings, Href{Href: href})
+		cs.FirewallSettings = append(cs.FirewallSettings, Href{Href: href})
 	}
 }
 
@@ -93,14 +93,27 @@ type SecurityPolicy struct {
 func (s *SecurityPolicy) ToMap() (map[string]interface{}, error) {
 	spAttrMap := make(map[string]interface{})
 	spAttrMap["update_description"] = s.UpdateDesc
-	spAttrMap["change_subset"] = make(map[string]interface{})
-	spAttrMap["change_subset"].(map[string]interface{})["label_groups"] = GetHrefMaps(s.ChangeSubset.LabelGroups)
-	spAttrMap["change_subset"].(map[string]interface{})["services"] = GetHrefMaps(s.ChangeSubset.Services)
-	spAttrMap["change_subset"].(map[string]interface{})["rule_sets"] = GetHrefMaps(s.ChangeSubset.RuleSets)
-	spAttrMap["change_subset"].(map[string]interface{})["ip_lists"] = GetHrefMaps(s.ChangeSubset.IPLists)
-	spAttrMap["change_subset"].(map[string]interface{})["virtual_services"] = GetHrefMaps(s.ChangeSubset.VirtualServices)
-	// spAttrMap["change_subset"].(map[string]interface{})["selective_enforcement_rules"] = GetHrefMaps(s.ChangeSubset.SER)
+	changeSubset := make(map[string]interface{})
+	if v := GetHrefMaps(s.ChangeSubset.LabelGroups); len(v) > 0 {
+		changeSubset["label_groups"] = v
+	}
+	if v := GetHrefMaps(s.ChangeSubset.Services); len(v) > 0 {
+		changeSubset["services"] = v
+	}
+	if v := GetHrefMaps(s.ChangeSubset.RuleSets); len(v) > 0 {
+		changeSubset["rule_sets"] = v
+	}
+	if v := GetHrefMaps(s.ChangeSubset.IPLists); len(v) > 0 {
+		changeSubset["ip_lists"] = v
+	}
+	if v := GetHrefMaps(s.ChangeSubset.VirtualServices); len(v) > 0 {
+		changeSubset["virtual_services"] = v
+	}
+	if v := GetHrefMaps(s.ChangeSubset.FirewallSettings); len(v) > 0 {
+		changeSubset["firewall_settings"] = v
+	}
+	spAttrMap["change_subset"] = changeSubset
+	// changeSubset["selective_enforcement_rules"] = GetHrefMaps(s.ChangeSubset.SER)
 	// TODO Confirm removal
-	spAttrMap["change_subset"].(map[string]interface{})["firewall_settings"] = GetHrefMaps(s.ChangeSubset.SER)
 	return spAttrMap, nil
 }

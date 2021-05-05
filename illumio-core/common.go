@@ -14,6 +14,10 @@ import (
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
+const (
+	provisionOnDeleteKey = "provision_on_delete"
+)
+
 // for all resource, name attribute has character limit from 1 to 255
 var nameValidation = validation.ToDiagFunc(validation.StringLenBetween(1, 255))
 
@@ -45,6 +49,15 @@ func hrefSchemaRequired(rName string, diagValid schema.SchemaValidateDiagFunc) *
 				Description:      fmt.Sprintf("URI of %v", rName),
 			},
 		},
+	}
+}
+
+func provisionOnDeleteSchema() *schema.Schema {
+	return &schema.Schema{
+		Type: schema.TypeBool,
+		Optional: true,
+		Default: false,
+		Description: "Whether to provision the resource on deletion. Default: false",
 	}
 }
 

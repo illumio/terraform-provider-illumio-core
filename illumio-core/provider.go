@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/illumio/terraform-provider-illumio-core/client"
+	"github.com/illumio/terraform-provider-illumio-core/models"
 	"golang.org/x/time/rate"
 )
 
@@ -248,6 +250,15 @@ type Config struct {
 	HrefFilename  string
 }
 
+func (c Config) ProvisionOrStoreHref(d *schema.ResourceData, orgId int, resourceType, href string) {
+	if d.Get(provisionOnDeleteKey).(bool) {
+		log.Printf("[DEBUG] Provisioning %v", href)
+		_ = c.ProvisionResource(orgId, resourceType, href)
+		return
+	}
+	c.StoreHref(orgId, resourceType, href)
+}
+
 // StoreHref - Writes href to hrefs.csv file for provisioning of resource
 func (c Config) StoreHref(orgID int, resourceType, href string) {
 	fileMutex.Lock()
@@ -262,4 +273,20 @@ func (c Config) StoreHref(orgID int, resourceType, href string) {
 	} else {
 		panic(errors.New("couldn't create file"))
 	}
+}
+
+// ProvisionResource - Provision a resource
+func (c Config) ProvisionResource(orgId int, rtype, href string) error {
+	cs := &models.SecurityPolicyChangeSubset{}
+	cs.AppendHref(rtype, href)
+	secPolicy := &models.SecurityPolicy{
+		UpdateDesc:   "Provisioned by terraform",
+		ChangeSubset: *cs,
+	}
+	_, _, err := c.IllumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy", orgId), secPolicy)
+	if err != nil {
+		log.Printf("[ERROR] Error while provisioning a resource - %v", err)
+		return err
+	}
+	return nil
 }

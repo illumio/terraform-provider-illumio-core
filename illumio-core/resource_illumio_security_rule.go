@@ -44,6 +44,7 @@ func securityRuleResourceSchemaMap() map[string]*schema.Schema {
 
 func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		provisionOnDeleteKey: provisionOnDeleteSchema(),
 		"href": {
 			Type:        schema.TypeString,
 			Computed:    true,

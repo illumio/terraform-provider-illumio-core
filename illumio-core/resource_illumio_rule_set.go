@@ -39,6 +39,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 		SchemaVersion: version,
 		Description:   "Manages Illumio Rule Set",
 		Schema: map[string]*schema.Schema{
+			provisionOnDeleteKey: provisionOnDeleteSchema(),
 			"href": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -702,7 +703,7 @@ func resourceIllumioRuleSetDelete(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", href)
+	pConfig.ProvisionOrStoreHref(d, pConfig.OrgID, "rule_sets", href)
 
 	d.SetId("")
 	return diagnostics

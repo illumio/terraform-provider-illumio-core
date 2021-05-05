@@ -54,6 +54,7 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 		Description:   "Manages Illumio Firewall Settings",
 
 		Schema: map[string]*schema.Schema{
+			provisionOnDeleteKey: provisionOnDeleteSchema(),
 			"href": {
 				Type:        schema.TypeString,
 				Computed:    true,

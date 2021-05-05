@@ -27,6 +27,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 		Description:   "Manages Illumio Virtual Service",
 
 		Schema: map[string]*schema.Schema{
+			provisionOnDeleteKey: provisionOnDeleteSchema(),
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -518,7 +519,7 @@ func resourceIllumioVirtualServiceDelete(ctx context.Context, d *schema.Resource
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "virtual_services", href)
+	pConfig.ProvisionOrStoreHref(d, pConfig.OrgID, "virtual_services", href)
 	d.SetId("")
 	return diagnostics
 }

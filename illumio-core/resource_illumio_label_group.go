@@ -20,6 +20,7 @@ func resourceIllumioLabelGroup() *schema.Resource {
 		Description:   "Manages Illumio Label Group",
 
 		Schema: map[string]*schema.Schema{
+			provisionOnDeleteKey: provisionOnDeleteSchema(),
 			"href": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -241,7 +242,7 @@ func resourceIllumioLabelGroupDelete(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "label_groups", href)
+	pConfig.ProvisionOrStoreHref(d, pConfig.OrgID, "label_groups", href)
 	d.SetId("")
 	return diagnostics
 }

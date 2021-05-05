@@ -471,8 +471,8 @@ func resourceIllumioVENCreate(ctx context.Context, d *schema.ResourceData, m int
 	return diag.Diagnostics{
 		diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  " [illumio_ven] Resource can not be created. Please use import",
-			Detail:   "Cannot create a new resource of VEN with Terraform, please use import functionality of Terraform",
+			Detail:   "[illumio-core_ven] Cannot use Create Operation.",
+			Summary:  "Please use terrform import...",
 		},
 	}
 }
@@ -521,5 +521,10 @@ func resourceIllumioVENUpdate(ctx context.Context, d *schema.ResourceData, m int
 
 func resourceIllumioVENDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	d.SetId("")
-	return diag.Diagnostics{}
+	return diag.Diagnostics{
+		diag.Diagnostic{
+			Severity: diag.Warning,
+			Detail:   "[illumio-core_ven] Ignoring Delete Operation...",
+		},
+	}
 }

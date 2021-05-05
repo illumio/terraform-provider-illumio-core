@@ -216,7 +216,7 @@ func checkForErrors(resp *http.Response) error {
 
 func formatNotAcceptableErrors(data *gabs.Container) string {
 	var errString string
-	
+
 	if data.Exists("token") {
 		errString += fmt.Sprintf("Token: %s: %s", data.S("token").Data(), data.S("message").Data())
 	} else {
@@ -230,5 +230,9 @@ func formatNotAcceptableErrors(data *gabs.Container) string {
 		}
 	}
 
-	return errString
+	if errString == "" {
+		return data.String()
+	} else {
+		return errString
+	}
 }

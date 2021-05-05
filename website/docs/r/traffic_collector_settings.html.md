@@ -35,7 +35,7 @@ resource "illumio-core_traffic_collector_settings" "example" {
 
 ### Optional
 
-- **target** (Block List, Max: 1) target for traffic collector settings (see [below for nested schema](#nestedblock--target))
+- **target** (Block List, Max: 1) target for traffic collector settings. Required if value of action is "drop" (see [below for nested schema](#nestedblock--target))
 
 ### Read-Only
 

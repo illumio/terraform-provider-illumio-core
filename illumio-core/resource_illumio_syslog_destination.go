@@ -25,7 +25,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 		DeleteContext: resourceIllumioSyslogDestinationDelete,
 
 		SchemaVersion: version,
-		Description:   "Manages Illumio SyslogDestination",
+		Description:   "Manages Illumio Syslog Destination",
 
 		Schema: map[string]*schema.Schema{
 			"href": {
@@ -278,7 +278,7 @@ func resourceIllumioSyslogDestinationUpdate(ctx context.Context, d *schema.Resou
 	}
 
 	if d.HasChange("pce_scope") {
-		syslogDest.PceScope = d.Get("pce_scope").([]string)
+		syslogDest.PceScope = getStringList(d.Get("pce_scope").(*schema.Set).List())
 	}
 
 	if d.HasChange("type") {

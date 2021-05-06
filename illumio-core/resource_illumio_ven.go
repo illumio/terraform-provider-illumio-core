@@ -131,6 +131,11 @@ func resourceIllumioVEN() *schema.Resource {
 							Computed:    true,
 							Description: "Interface name",
 						},
+						"loopback": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Loopback for Workload Interface",
+						},
 						"link_state": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -242,6 +247,11 @@ func resourceIllumioVEN() *schema.Resource {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Name of Interface",
+									},
+									"loopback": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Loopback for Workload Interface",
 									},
 									"link_state": {
 										Type:        schema.TypeString,

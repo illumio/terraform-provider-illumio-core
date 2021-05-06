@@ -31,7 +31,7 @@ data "illumio-core_ip_list" "example" {
 - **created_by** (Map of String) User who originally created this IP List
 - **deleted_at** (String) Timestamp when this IP List was deleted
 - **deleted_by** (Map of String) User who deleted this IP List
-- **description** (String) URI of this IPList
+- **description** (String) description of this IPList
 - **external_data_reference** (String) A unque identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **fqdns** (List of Object) Collection of Fully Qualified Domain Names for IP List (see [below for nested schema](#nestedatt--fqdns))

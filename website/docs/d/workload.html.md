@@ -48,7 +48,7 @@ data "illumio-core_workload" "test" {
 - **firewall_coexistence** (List of Object) Firewall coexistence mode (see [below for nested schema](#nestedatt--firewall_coexistence))
 - **hostname** (String) The hostname of this workload
 - **ignored_interface_names** (List of String) Ignored Interface Names for Workload
-- **interfaces** (List of Object) A unque identifier within the external data source (see [below for nested schema](#nestedatt--interfaces))
+- **interfaces** (List of Object) List of interfaces for workload (see [below for nested schema](#nestedatt--interfaces))
 - **labels** (List of Object) List of lists of label URIs (see [below for nested schema](#nestedatt--labels))
 - **name** (String) Name of the Workload
 - **online** (Boolean) Determines if this workload is online
@@ -118,6 +118,7 @@ Read-Only:
 - **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0.
 - **default_gateway_address** (String) Default Gateaway Address of the Interface
 - **friendly_name** (String) Friendly name of the Interface
+- **loopback** (Boolean) Loopback for workload interfaces
 - **link_state** (String) Link State of the Interface
 - **name** (String) Name of the Interface
 - **network** (Map of String) Network of the Interface

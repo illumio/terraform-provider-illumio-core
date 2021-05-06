@@ -109,6 +109,7 @@ Read-Only:
 - **friendly_name** (String) User-friendly name for interface
 - **href** (String) Interface URI
 - **link_state** (String) Link State
+- **loopback** (Boolean) loopback for interface
 - **name** (String) Interface name
 - **network** (Map of String) Network that the interface belongs to
 - **network_detection_mode** (String) Network Detection Mode
@@ -162,6 +163,7 @@ Read-Only:
 - **default_gateway_address** (String) The IP Address of the default gateway
 - **friendly_name** (String) User-friendly name for interface
 - **link_state** (String) Link State
+- **loopback** (Boolean) loopback for interface
 - **name** (String) Interface name
 - **network** (Map of String) Network that the interface belongs to
 - **network_detection_mode** (String) Network Detection Mode

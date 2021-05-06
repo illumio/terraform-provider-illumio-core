@@ -40,7 +40,7 @@ data "illumio-core_enforcement_boundaries" "example" {
 
 ### Read-Only
 
-- **items** (List of Object) List of Container Cluster Workload Profile hrefs (see [below for nested schema](#nestedatt--items))
+- **items** (List of Object) List of Container Cluster Workload Profiles (see [below for nested schema](#nestedatt--items))
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

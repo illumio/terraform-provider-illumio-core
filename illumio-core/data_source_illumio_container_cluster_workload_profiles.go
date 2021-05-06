@@ -25,7 +25,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of Container Cluster Workload Profile hrefs",
+				Description: "List of Container Cluster Workload Profiles",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

@@ -16,5 +16,5 @@ provider "illumio-core" {
 }
 
 data "illumio-core_ip_lists" "name" {
-    max_results = "2"
+    max_results = "5"
 }  

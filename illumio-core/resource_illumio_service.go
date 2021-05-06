@@ -51,7 +51,7 @@ func resourceIllumioService() *schema.Resource {
 				Optional:         true,
 				Description:      "The process name",
 			},
-			"service_port": {
+			"service_ports": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Service ports",
@@ -90,11 +90,11 @@ func resourceIllumioService() *schema.Resource {
 					},
 				},
 			},
-			"windows_service": {
+			"windows_services": {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				Description:   "Windows services",
-				ConflictsWith: []string{"service_port"},
+				ConflictsWith: []string{"service_ports"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"service_name": {
@@ -217,7 +217,7 @@ func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m
 		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
 
-	if val, exists := d.GetOk("service_port"); exists {
+	if val, exists := d.GetOk("service_ports"); exists {
 		sps, errs := expandIllumioServiceServicePorts(val.(*schema.Set).List())
 		if errs.HasError() {
 			diags = append(diags, errs...)
@@ -227,7 +227,7 @@ func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 
-	if val, exists := d.GetOk("windows_service"); exists {
+	if val, exists := d.GetOk("windows_services"); exists {
 		wss, errs := expandIllumioWindowServices(val.(*schema.Set).List())
 
 		if errs.HasError() {
@@ -260,7 +260,7 @@ func expandIllumioServiceServicePorts(serPorts []interface{}) ([]map[string]inte
 					m["port"] = vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
-							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside service_port")...)
+							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside service_ports")...)
 						} else {
 							m["to_port"] = vToPort
 						}
@@ -341,7 +341,7 @@ func expandIllumioWindowServices(winServs []interface{}) ([]map[string]interface
 					m["port"] = vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
-							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside windows_service")...)
+							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside windows_services")...)
 						} else {
 							m["to_port"] = vToPort
 						}
@@ -412,9 +412,9 @@ func resourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m i
 			}
 		}
 
-		d.Set("service_port", sps)
+		d.Set("service_ports", sps)
 	} else {
-		d.Set("service_port", nil)
+		d.Set("service_ports", nil)
 	}
 
 	if data.Exists("windows_services") {
@@ -439,9 +439,9 @@ func resourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m i
 			}
 		}
 
-		d.Set("windows_service", wss)
+		d.Set("windows_services", wss)
 	} else {
-		d.Set("windows_service", nil)
+		d.Set("windows_services", nil)
 	}
 
 	return diags
@@ -469,8 +469,8 @@ func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m
 	service.ExternalDataSet = d.Get("external_data_set").(string)
 	service.ExternalDataReference = d.Get("external_data_reference").(string)
 
-	if d.HasChange("service_port") {
-		sps, errs := expandIllumioServiceServicePorts(d.Get("service_port").(*schema.Set).List())
+	if d.HasChange("service_ports") {
+		sps, errs := expandIllumioServiceServicePorts(d.Get("service_ports").(*schema.Set).List())
 		if errs.HasError() {
 			diags = append(diags, errs...)
 		} else {
@@ -480,8 +480,8 @@ func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m
 		service.ServicePorts = nil
 	}
 
-	if d.HasChange("windows_service") {
-		wss, errs := expandIllumioWindowServices(d.Get("windows_service").(*schema.Set).List())
+	if d.HasChange("windows_services") {
+		wss, errs := expandIllumioWindowServices(d.Get("windows_services").(*schema.Set).List())
 		if errs.HasError() {
 			diags = append(diags, errs...)
 		} else {

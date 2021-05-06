@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/Jeffail/gabs/v2"
-	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -117,7 +116,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Default:     true,
 				Description: "Enabled flag. Determines wheter the Rule Set is enabled or not. Default value: true",
 			},
-			"scope": {
+			"scopes": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
@@ -139,7 +138,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 					},
 				},
 			},
-			"rule": {
+			"rules": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Collection of Security Rules",
@@ -147,7 +146,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 					Schema: securityRuleResourceBaseSchemaMap(),
 				},
 			},
-			"ip_tables_rule": {
+			"ip_tables_rules": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Collection of IP Tables Rules",
@@ -322,15 +321,15 @@ func expandIllumioRuleSet(d *schema.ResourceData) (*models.RuleSet, *diag.Diagno
 		Enabled:               d.Get("enabled").(bool),
 	}
 
-	scopes, errs := expandIllumioRuleSetScopes(d.Get("scope").([]interface{}))
+	scopes, errs := expandIllumioRuleSetScopes(d.Get("scopes").([]interface{}))
 	diags = append(diags, *errs...)
 	ruleSet.Scopes = scopes
 
-	rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rule").(*schema.Set).List())
+	rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
 	diags = append(diags, *errs...)
 	ruleSet.Rules = rules
 
-	ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rule").(*schema.Set).List())
+	ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rules").(*schema.Set).List())
 	diags = append(diags, *errs...)
 	ruleSet.IPTablesRules = ipTableRules
 
@@ -342,7 +341,7 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 
 	sps := [][]*models.RuleSetScope{}
 
-	for i, scope := range scopes {
+	for _, scope := range scopes {
 		sp := []*models.RuleSetScope{}
 
 		scopeObj := scope.(map[string]interface{})
@@ -352,9 +351,8 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 
 		if len(labels)+len(labelGroups) > 3 {
 			diags = append(diags, diag.Diagnostic{
-				Severity:      diag.Error,
-				Summary:       "at most 3 blocks of label/label_group are allowed inside scope",
-				AttributePath: cty.Path{cty.GetAttrStep{Name: "scope"}, cty.IndexStep{Key: cty.NumberIntVal(int64(i))}},
+				Severity: diag.Error,
+				Summary:  "at most 3 blocks of label/label_group are allowed inside scope",
 			})
 		} else {
 
@@ -404,17 +402,17 @@ func expandIllumioRuleSetSecurityRules(rules []interface{}) ([]*models.SecurityR
 		rl.ResolveLabelsAs = resLabelAs
 
 		ingServs, errs := expandIllumioSecurityRuleIngressService(
-			r["ingress_service"].(*schema.Set).List(),
+			r["ingress_services"].(*schema.Set).List(),
 			rl.ResolveLabelsAs.ProviderIsVirtualService(),
 		)
 		diags = append(diags, errs...)
 		rl.IngressServices = ingServs
 
-		povs, errs := expandIllumioSecurityRuleProviders(r["illumio_provider"].(*schema.Set).List())
+		povs, errs := expandIllumioSecurityRuleProviders(r["providers"].(*schema.Set).List())
 		diags = append(diags, errs...)
 		rl.Providers = povs
 
-		cons, errs := expandIllumioSecurityRuleConsumers(r["consumer"].(*schema.Set).List())
+		cons, errs := expandIllumioSecurityRuleConsumers(r["consumers"].(*schema.Set).List())
 		diags = append(diags, errs...)
 		rl.Consumers = cons
 
@@ -539,21 +537,21 @@ func resourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	if data.Exists("scopes") {
-		d.Set("scope", extractResourceScopes(data.S("scopes")))
+		d.Set("scopes", extractResourceScopes(data.S("scopes")))
 	} else {
-		d.Set("scope", nil)
+		d.Set("scopes", nil)
 	}
 
 	if data.Exists("rules") {
-		d.Set("rule", resourceIllumioRuleSetReadSecurityRules(data.S("rules")))
+		d.Set("rules", resourceIllumioRuleSetReadSecurityRules(data.S("rules")))
 	} else {
-		d.Set("rule", nil)
+		d.Set("rules", nil)
 	}
 
 	if data.Exists("ip_tables_rules") {
-		d.Set("ip_tables_rule", resourceIllumioRuleSetReadIPTablesRules(data.S("ip_tables_rules")))
+		d.Set("ip_tables_rules", resourceIllumioRuleSetReadIPTablesRules(data.S("ip_tables_rules")))
 	} else {
-		d.Set("ip_tables_rule", nil)
+		d.Set("ip_tables_rules", nil)
 	}
 
 	return diagnostics
@@ -615,10 +613,10 @@ func resourceIllumioRuleSetReadSecurityRules(data *gabs.Container) []map[string]
 		m["resolve_labels_as"] = resLabAs
 
 		// Req param, Will be present in JSON responce
-		m["illumio_provider"] = getRuleActors(data.S("providers"))
+		m["providers"] = getRuleActors(data.S("providers"))
 
 		// Req param, Will be present in JSON responce
-		m["consumer"] = getRuleActors(data.S("consumers"))
+		m["consumers"] = getRuleActors(data.S("consumers"))
 
 		ingServs := data.S("ingress_services").Data().([]interface{})
 
@@ -639,7 +637,7 @@ func resourceIllumioRuleSetReadSecurityRules(data *gabs.Container) []map[string]
 		}
 
 		// Req param, Will be present in JSON responce
-		m["ingress_service"] = iss
+		m["ingress_services"] = iss
 
 		ms = append(ms, m)
 	}
@@ -663,18 +661,18 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 		IPTablesRules:         nil,
 	}
 
-	scopes, errs := expandIllumioRuleSetScopes(d.Get("scope").([]interface{}))
+	scopes, errs := expandIllumioRuleSetScopes(d.Get("scopes").([]interface{}))
 	diags = append(diags, *errs...)
 	ruleSet.Scopes = scopes
 
-	if d.HasChange("rule") {
-		rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rule").(*schema.Set).List())
+	if d.HasChange("rules") {
+		rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
 		ruleSet.Rules = rules
 		diags = append(diags, *errs...)
 	}
 
-	if d.HasChange("ip_tables_rule") {
-		ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rule").(*schema.Set).List())
+	if d.HasChange("ip_tables_rules") {
+		ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rules").(*schema.Set).List())
 		ruleSet.IPTablesRules = ipTableRules
 		diags = append(diags, *errs...)
 	}
@@ -698,7 +696,7 @@ func resourceIllumioRuleSetDelete(ctx context.Context, d *schema.ResourceData, m
 	illumioClient := pConfig.IllumioClient
 	href := d.Id()
 
-	_, err := illumioClient.Delete(d.Id())
+	_, err := illumioClient.Delete(href)
 	if err != nil {
 		return diag.FromErr(err)
 	}

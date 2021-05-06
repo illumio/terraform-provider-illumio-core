@@ -20,7 +20,7 @@ data "illumio-core_security_rule" "example" {
 }
 
 resource "illumio-core_security_rule" "example" {
-  rule_set_id = 81
+  rule_set_href = "/orgs/1/sec_policy/draft/rule_sets/6"
 
   enabled = true
 
@@ -29,19 +29,28 @@ resource "illumio-core_security_rule" "example" {
     providers = ["virtual_services"]
   }
 
-  consumer {
+  consumers {
     actors = "ams"
   }
 
-  illumio_provider {
+  providers {
     label {
       href = "/orgs/1/labels/715"
     }
   }
 
-  illumio_provider {
-    label {
-      href = "/orgs/1/labels/294"
-    }
+  ingress_services {
+    href = "/orgs/1/sec_policy/draft/services/19"
+  }
+
+  ingress_services {
+    proto = 6
+    port  = 1
+  }
+
+  ingress_services {
+    proto   = 6
+    port    = 1
+    to_port = 12
   }
 }

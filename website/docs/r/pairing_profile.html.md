@@ -18,10 +18,10 @@ Example Usage
 resource "illumio-core_pairing_profile" "example" {
     name = "example"
     enabled = false
-    label {
+    labels {
       href = "/orgs/1/labels/1"
     }
-    label{
+    labels{
       href = "/orgs/1/labels/7"
     }
     allowed_uses_per_key = "50"
@@ -56,7 +56,7 @@ resource "illumio-core_pairing_profile" "example" {
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **key_lifespan** (String) Number of seconds pairing profile keys will be valid for. Allowed values are range(1-2147483647) and "unlimited". Default value: "unlimited"
-- **label** (Block Set) Assigned labels (see [below for nested schema](#nestedblock--label))
+- **labels** (Block Set) Assigned labels (see [below for nested schema](#nestedblock--labels))
 - **loc_label_lock** (Boolean) Flag that controls whether loc label can be overridden from pairing script. Default value: "true"
 - **log_traffic** (Boolean) Status of VEN(alternative of status). Default value: false
 - **log_traffic_lock** (Boolean) Flag that controls whether log_traffic can be overridden from pairing script. Default value: true
@@ -77,8 +77,8 @@ resource "illumio-core_pairing_profile" "example" {
 - **updated_at** (String) Timestamp when this pairing profile was last updated
 - **updated_by** (Map of String) User who last updated this pairing profile
 
-<a id="nestedblock--label"></a>
-### Nested Schema for `label`
+<a id="nestedblock--labels"></a>
+### Nested Schema for `labels`
 
 Required:
 

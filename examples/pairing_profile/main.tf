@@ -22,10 +22,10 @@ data "illumio-core_pairing_profile" "example" {
 resource "illumio-core_pairing_profile" "example" {
   name    = "pairing_profile_name"
   enabled = true
-  label {
+  labels {
     href = "/orgs/1/labels/1"
   }
-  label {
+  labels {
     href = "/orgs/1/labels/7"
   }
   allowed_uses_per_key  = "50"

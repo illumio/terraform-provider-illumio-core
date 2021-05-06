@@ -38,7 +38,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 				Description:      "Name of the Enforcement Boundary",
 				ValidateDiagFunc: nameValidation,
 			},
-			"ingress_service": {
+			"ingress_services": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Collection of Ingress Service. Only one of the {\"href\"} or {\"proto\", \"port\", \"to_port\"} parameter combination is allowed",
@@ -71,7 +71,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 					},
 				},
 			},
-			"illumio_provider": {
+			"providers": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "providers for Enforcement Boundary. Only one actor can be specified in one illumio_provider block",
@@ -107,7 +107,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 					},
 				},
 			},
-			"consumer": {
+			"consumers": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block",
@@ -222,15 +222,15 @@ func expandIllumioEnforcementBoundary(d *schema.ResourceData) (*models.Enforceme
 		Name: d.Get("name").(string),
 	}
 
-	ingServs, errs := expandIllumioEnforcementBoundaryIngressService(d.Get("ingress_service").(*schema.Set).List())
+	ingServs, errs := expandIllumioEnforcementBoundaryIngressService(d.Get("ingress_services").(*schema.Set).List())
 	diags = append(diags, errs...)
 	enB.IngressServices = ingServs
 
-	povs, errs := expandIllumioEnforcementBoundaryProviders(d.Get("illumio_provider").(*schema.Set).List())
+	povs, errs := expandIllumioEnforcementBoundaryProviders(d.Get("providers").(*schema.Set).List())
 	diags = append(diags, errs...)
 	enB.Providers = povs
 
-	cons, errs := expandIllumioEnforcementBoundaryConsumers(d.Get("consumer").(*schema.Set).List())
+	cons, errs := expandIllumioEnforcementBoundaryConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
 	enB.Consumers = cons
 
@@ -364,13 +364,13 @@ func resourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Resou
 			}
 		}
 
-		d.Set("ingress_service", iss)
+		d.Set("ingress_services", iss)
 	} else {
-		d.Set("ingress_service", nil)
+		d.Set("ingress_services", nil)
 	}
 
-	d.Set("illumio_provider", getEBActors(data.S("providers")))
-	d.Set("consumer", getEBActors(data.S("consumers")))
+	d.Set("providers", getEBActors(data.S("providers")))
+	d.Set("consumers", getEBActors(data.S("consumers")))
 
 	return diagnostics
 }
@@ -411,13 +411,13 @@ func resourceIllumioEnforcementBoundaryUpdate(ctx context.Context, d *schema.Res
 
 	var diags diag.Diagnostics
 
-	ingServs, errs := expandIllumioEnforcementBoundaryIngressService(d.Get("ingress_service").(*schema.Set).List())
+	ingServs, errs := expandIllumioEnforcementBoundaryIngressService(d.Get("ingress_services").(*schema.Set).List())
 	diags = append(diags, errs...)
 
-	povs, errs := expandIllumioEnforcementBoundaryProviders(d.Get("illumio_provider").(*schema.Set).List())
+	povs, errs := expandIllumioEnforcementBoundaryProviders(d.Get("providers").(*schema.Set).List())
 	diags = append(diags, errs...)
 
-	cons, errs := expandIllumioEnforcementBoundaryConsumers(d.Get("consumer").(*schema.Set).List())
+	cons, errs := expandIllumioEnforcementBoundaryConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
 
 	EB := &models.EnforcementBoundary{

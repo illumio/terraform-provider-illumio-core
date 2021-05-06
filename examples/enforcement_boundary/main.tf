@@ -17,20 +17,20 @@ provider "illumio-core" {
 }
 
 resource "illumio-core_enforcement_boundary" "test" {
-    name = "testing eb"
-    ingress_service {
-      href = "/orgs/1/sec_policy/draft/services/3"
+  name = "testing eb"
+  ingress_services {
+    href = "/orgs/1/sec_policy/draft/services/3"
+  }
+  consumers {
+    ip_list {
+      href = "/orgs/1/sec_policy/draft/ip_lists/1"
     }
-    consumer {
-      ip_list {
-        href = "/orgs/1/sec_policy/draft/ip_lists/1"
-      }
+  }
+  providers {
+    label {
+      href = "/orgs/1/labels/1"
     }
-    illumio_provider {
-      label {
-        href = "/orgs/1/labels/1"
-      }
-    }
+  }
 }
 
 data "illumio-core_enforcement_boundary" "test" {

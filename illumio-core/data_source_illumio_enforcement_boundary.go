@@ -78,7 +78,7 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 				Computed:    true,
 				Description: "Name of the Enforcement Boundary",
 			},
-			"ingress_service": {
+			"ingress_services": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Collection of Ingress Service. Only one of the {\"href\"} or {\"proto\", \"port\", \"to_port\"} parameter combination is allowed",
@@ -107,7 +107,7 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 					},
 				},
 			},
-			"illumio_provider": {
+			"providers": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "providers for Enforcement Boundary. Only one actor can be specified in one illumio_provider block",
@@ -139,7 +139,7 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 					},
 				},
 			},
-			"consumer": {
+			"consumers": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block",
@@ -270,13 +270,13 @@ func datasourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Res
 			}
 		}
 
-		d.Set("ingress_service", iss)
+		d.Set("ingress_services", iss)
 	} else {
-		d.Set("ingress_service", nil)
+		d.Set("ingress_services", nil)
 	}
 
-	d.Set("illumio_provider", getEBActors(data.S("providers")))
-	d.Set("consumer", getEBActors(data.S("consumers")))
+	d.Set("providers", getEBActors(data.S("providers")))
+	d.Set("consumers", getEBActors(data.S("consumers")))
 
 	return diagnostics
 }

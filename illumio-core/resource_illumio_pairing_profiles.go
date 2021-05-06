@@ -86,7 +86,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				ValidateDiagFunc: isUnlimitedOrValidRange(1, 2147483647),
 				Default:          "unlimited",
 			},
-			"label": {
+			"labels": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Assigned labels",
@@ -242,7 +242,7 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 		KeyLifespan:           d.Get("key_lifespan").(string),
 	}
 
-	if items, ok := d.GetOk("label"); ok {
+	if items, ok := d.GetOk("labels"); ok {
 		pairingProfile.Labels = models.GetHrefs(items.(*schema.Set).List())
 	}
 
@@ -331,9 +331,9 @@ func resourceIllumioPairingProfileRead(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if data.Exists("labels") {
-		d.Set("label", data.S("labels").Data())
+		d.Set("labels", data.S("labels").Data())
 	} else {
-		d.Set("label", nil)
+		d.Set("labels", nil)
 	}
 
 	return diagnostics
@@ -358,7 +358,7 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		Labels:                models.GetHrefs(d.Get("label").(*schema.Set).List()),
+		Labels:                models.GetHrefs(d.Get("labels").(*schema.Set).List()),
 	}
 
 	if d.HasChange("name") {

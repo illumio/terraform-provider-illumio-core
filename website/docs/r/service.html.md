@@ -15,19 +15,19 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_service" "example_with_service_port" {
+resource "illumio-core_service" "example_with_service_ports" {
   name = "example"
   
-  service_port {
+  service_ports {
     proto = "-1"
   }
 
-  service_port {
+  service_ports {
     proto = "6"
     port = "15"
   }
 
-  service_port {
+  service_ports {
     proto = "1"
     icmp_type = "5"
 	  icmp_code = "5"
@@ -35,19 +35,19 @@ resource "illumio-core_service" "example_with_service_port" {
 
 }
 
-resource "illumio-core_service" "example_with_windows_service" {
+resource "illumio-core_service" "example_with_windows_services" {
   name="example"
   
-  windows_service {
+  windows_services {
     service_name = "example"
   }
 
-  windows_service {
+  windows_services {
     proto = "6"
     process_name = "example"
   }
 
-  windows_service {
+  windows_services {
     proto="1"
     icmp_type="5"
     icmp_code="5"
@@ -69,8 +69,8 @@ resource "illumio-core_service" "example_with_windows_service" {
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **process_name** (String) The process name
-- **service_port** (Block Set) Service ports (see [below for nested schema](#nestedblock--service_port))
-- **windows_service** (Block Set) Windows services (see [below for nested schema](#nestedblock--windows_service))
+- **service_ports** (Block Set) Service ports (see [below for nested schema](#nestedblock--service_ports))
+- **windows_services** (Block Set) Windows services (see [below for nested schema](#nestedblock--windows_services))
 
 ### Read-Only
 
@@ -84,8 +84,8 @@ resource "illumio-core_service" "example_with_windows_service" {
 - **updated_at** (String) Time stamp when this Service was last updated
 - **updated_by** (Map of String) User who last updated this Service
 
-<a id="nestedblock--service_port"></a>
-### Nested Schema for `service_port`
+<a id="nestedblock--service_ports"></a>
+### Nested Schema for `service_ports`
 
 Required:
 
@@ -99,8 +99,8 @@ Optional:
 - **to_port** (String) High end of port range inclusive if specifying a range. Allowed range is 0 - 65535 inclusive
 
 
-<a id="nestedblock--windows_service"></a>
-### Nested Schema for `windows_service`
+<a id="nestedblock--windows_services"></a>
+### Nested Schema for `windows_services`
 
 Optional:
 

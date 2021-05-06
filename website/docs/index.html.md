@@ -49,6 +49,15 @@ resource "illumio-core_label_group" "env_lg" {
 }
 ```
 
+```hcl
+# Configure provider with proxy (authentication)
+provider "illumio-core" {
+    # ... other configuration parameters
+    proxy_url = "http:10.0.1.111:3128"
+    proxy_creds = "root:password"
+}
+```
+
 Some of the attributes can be specified via environment variables. Refer to schema for attributes which can be configured via environment variables.
 
 
@@ -90,5 +99,6 @@ terraform apply && provision
 - **org_id** (Number) ID of the Organization. Default value: 1
 - **request_timeout** (Number) Timeout for HTTP requests. Default value: 30
 - **proxy_url** (String) Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`
+- **proxy_creds** (String) Proxy credential in format `username:password`. This can also be set by environment variable `ILLUMIO_PROXY_CREDENTIALS`
 - **ca_file** (String) The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`
 - **insecure** (String) Allow insecure TLS. Only `yes` will mark it insecure. This can also be set by environment variable `ILLUMIO_ALLOW_INSECURE_TLS`

@@ -21,6 +21,7 @@ const (
 	backoffTimeKey = "backoff_time"
 	maxRetriesKey  = "max_retries"
 	proxyURLKey    = "proxy_url"
+	proxyCredsKey  = "proxy_creds"
 	orgIDKey       = "org_id"
 	insecureKey    = "insecure"
 	caFileKey      = "ca_file"
@@ -103,6 +104,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("ILLUMIO_PROXY_URL", nil),
 				Description: "Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`",
+			},
+			proxyCredsKey: {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ILLUMIO_PROXY_CREDENTIALS", nil),
+				Description: "Proxy credential in format `username:password`. This can also be set by environment variable `ILLUMIO_PROXY_CREDENTIALS`",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -193,6 +200,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		insecure,
 		d.Get(caFileKey).(string),
 		d.Get(proxyURLKey).(string),
+		d.Get(proxyCredsKey).(string),
 	)
 	if err != nil {
 		diagnostics = append(diagnostics, diag.Diagnostic{

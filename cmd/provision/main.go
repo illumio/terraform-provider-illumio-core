@@ -58,6 +58,7 @@ func main() {
 		insecure,
 		os.Getenv("ILLUMIO_CA_FILE"),
 		os.Getenv("ILLUMIO_PROXY_URL"),
+		os.Getenv("ILLUMIO_PROXY_CREDENTIALS"),
 	)
 	if err != nil {
 		fmt.Printf("Error: %v", err)

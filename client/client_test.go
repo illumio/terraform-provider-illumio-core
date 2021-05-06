@@ -37,6 +37,7 @@ func GetTestClient() (*V2, error) {
 		false,
 		"",
 		"",
+		"",
 	)
 }
 

@@ -33,6 +33,7 @@ var isWorklaodHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCom
 var isPairingProfileHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/pairing_profiles/[1-9][0-9]*"), "Pairing Profile href is not in the correct format"))
 var isVulnerabilityHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile(`/orgs/[1-9][0-9]*/vulnerabilities/[\S]*`), "Vulnerability href is not in the correct format"))
 var isVENHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/vens/"+uuidV4RegEx), "VEN href is not in the correct format"))
+var isContainerClusterHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/container_clusters/"+uuidV4RegEx), "Container Cluster href is not in the correct format"))
 
 // hrefSchemaRequired returns Href resource as required
 func hrefSchemaRequired(rName string, diagValid schema.SchemaValidateDiagFunc) *schema.Resource {
@@ -42,6 +43,19 @@ func hrefSchemaRequired(rName string, diagValid schema.SchemaValidateDiagFunc) *
 				Type:             schema.TypeString,
 				Required:         true,
 				ValidateDiagFunc: diagValid,
+				Description:      fmt.Sprintf("URI of %v", rName),
+			},
+		},
+	}
+}
+
+// hrefSchemaComputed returns Href resource as computed
+func hrefSchemaComputed(rName string, diagValid schema.SchemaValidateDiagFunc) *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"href": {
+				Type:             schema.TypeString,
+				Computed:         true,
 				Description:      fmt.Sprintf("URI of %v", rName),
 			},
 		},
@@ -346,4 +360,18 @@ func getRuleActors(data *gabs.Container) []map[string]interface{} {
 	}
 
 	return actors
+}
+
+// extractDataSourceAttrs - extracts list of objects from container using element keys
+func extractDataSourceAttrs(data *gabs.Container, key string, elementKeys []string) []map[string]interface{} {
+	if data.Exists(key) {
+		elements := []map[string]interface{}{}
+
+		for _, elem := range data.S(key).Children() {
+			elements = append(elements, gabsToMap(elem, elementKeys))
+		}
+
+		return elements
+	}
+	return nil
 }

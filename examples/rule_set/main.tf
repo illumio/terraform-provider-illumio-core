@@ -22,7 +22,7 @@ data "illumio-core_rule_set" "example" {
 resource "illumio-core_rule_set" "example" {
   name = "example"
 
-  ip_tables_rule {
+  ip_tables_rules {
     description = "some des"
     actors {
       actors = "ams"
@@ -43,48 +43,39 @@ resource "illumio-core_rule_set" "example" {
     }
   }
 
-  scope {
+  scopes {
     label {
       href = "/orgs/1/labels/69"
     }
-  }
-
-  scope {
-    label {
-      href = "/orgs/1/labels/94"
-    }
-  }
-
-  scope {
     label_group {
       href = "/orgs/1/sec_policy/draft/label_groups/65d0ad0f-329a-4ddc-8919-bd0220051fc7"
     }
   }
 
-  rule {
+  scopes {
+    label {
+      href = "/orgs/1/labels/94"
+    }
+  }
+
+  rules {
     enabled = false
     resolve_labels_as {
       consumers = ["workloads", "workloads"]
       providers = ["workloads"]
     }
 
-    consumer {
+    consumers {
       actors = "ams"
     }
 
-    illumio_provider {
+    providers {
       label {
         href = "/orgs/1/labels/715"
       }
     }
 
-    illumio_provider {
-      label {
-        href = "/orgs/1/labels/294"
-      }
-    }
-
-    ingress_service {
+    ingress_services {
       proto = 6
       port  = 4
     }

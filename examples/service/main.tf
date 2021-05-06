@@ -19,37 +19,37 @@ data "illumio-core_service" "example" {
   href = "/orgs/1/sec_policy/draft/services/3"
 }
 
-resource "illumio-core_service" "example_with_service_port_1" {
+resource "illumio-core_service" "example_with_service_ports" {
   name = "example"
-  service_port {
+  service_ports {
     proto = "-1"
   }
 
-  service_port {
+  service_ports {
     proto = "6"
     port  = "15"
   }
 
-  service_port {
+  service_ports {
     proto     = "1"
     icmp_type = "5"
     icmp_code = "5"
   }
 }
 
-resource "illumio-core_service" "example_with_windows_service" {
+resource "illumio-core_service" "example_with_windows_services" {
   name         = "example"
   process_name = "value"
-  windows_service {
+  windows_services {
     proto = "-1"
   }
 
-  windows_service {
+  windows_services {
     proto        = "6"
     process_name = "example"
   }
 
-  windows_service {
+  windows_services {
     proto     = "1"
     icmp_type = "5"
     icmp_code = "5"

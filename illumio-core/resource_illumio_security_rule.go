@@ -70,7 +70,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
 			Description:      "External data reference identifier",
 		},
-		"ingress_service": {
+		"ingress_services": {
 			Type:        schema.TypeSet,
 			Optional:    true,
 			Description: "Collection of Ingress Service. If resolve_label_as.providers list includes \"workloads\" then ingress_service is required. Only one of the {\"href\"} or {\"proto\", \"port\", \"to_port\"} parameter combination is allowed",
@@ -149,7 +149,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			Default:     false,
 			Description: "Determines whether machine authentication is enabled",
 		},
-		"illumio_provider": {
+		"providers": {
 			Type:        schema.TypeSet,
 			Required:    true,
 			Description: "providers for Security Rule. Only one actor can be specified in one illumio_provider block",
@@ -208,7 +208,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 				},
 			},
 		},
-		"consumer": {
+		"consumers": {
 			Type:        schema.TypeSet,
 			Required:    true,
 			Description: "Consumers for Security Rule. Only one actor can be specified in one consumer block",
@@ -323,12 +323,11 @@ func resourceIllumioSecurityRuleCreate(ctx context.Context, d *schema.ResourceDa
 		return *diags
 	}
 
-	_, data, err := illumioClient.Create(hrefRuleSet, secRule)
+	_, data, err := illumioClient.Create(fmt.Sprintf("%s/sec_rules", hrefRuleSet), secRule)
 	if err != nil {
 		return diag.Errorf(err.Error())
 	}
 
-	// After creating security rule, we have to provision rule set
 	pConfig.StoreHref(pConfig.OrgID, "rule_sets", hrefRuleSet)
 
 	d.SetId(data.S("href").Data().(string))
@@ -358,17 +357,17 @@ func expandIllumioSecurityRule(d *schema.ResourceData) (*models.SecurityRule, *d
 	secRule.ResolveLabelsAs = resLabelAs
 
 	ingServs, errs := expandIllumioSecurityRuleIngressService(
-		d.Get("ingress_service").(*schema.Set).List(),
+		d.Get("ingress_services").(*schema.Set).List(),
 		secRule.ResolveLabelsAs.ProviderIsVirtualService(),
 	)
 	diags = append(diags, errs...)
 	secRule.IngressServices = ingServs
 
-	povs, errs := expandIllumioSecurityRuleProviders(d.Get("illumio_provider").(*schema.Set).List())
+	povs, errs := expandIllumioSecurityRuleProviders(d.Get("providers").(*schema.Set).List())
 	diags = append(diags, errs...)
 	secRule.Providers = povs
 
-	cons, errs := expandIllumioSecurityRuleConsumers(d.Get("consumer").(*schema.Set).List())
+	cons, errs := expandIllumioSecurityRuleConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
 	secRule.Consumers = cons
 
@@ -405,12 +404,12 @@ func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty 
 
 	// Throw error if virtual_services is the only value set in resolve_label_as.provider and ingress_service's resource is non empty
 	if setEmpty && len(inServices) > 0 {
-		diags = append(diags, diag.Errorf("If the only value for the providers resolve_labels field is \"virtual_services\", then setting ingress_services is not allowed")...)
+		diags = append(diags, diag.Errorf("If the only value in the providers of resolve_label_as block is \"virtual_services\", then setting ingress_services is not allowed")...)
 	}
 
 	if !setEmpty {
 		if len(inServices) == 0 {
-			diags = append(diags, diag.Errorf("At least one ingress_service must be specified if providers resolve_labels field has \"workloads\"")...)
+			diags = append(diags, diag.Errorf("At least one ingress_service must be specified if providers of resolve_label_as block has \"workloads\"")...)
 		}
 		for _, service := range inServices {
 			s := service.(map[string]interface{})
@@ -578,9 +577,9 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 			}
 		}
 
-		d.Set("ingress_service", iss)
+		d.Set("ingress_services", iss)
 	} else {
-		d.Set("ingress_service", nil)
+		d.Set("ingress_services", nil)
 	}
 
 	obj := map[string]interface{}{}
@@ -591,8 +590,8 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 
 	// Required params and will be present in JSON responce
 	d.Set("resolve_labels_as", resLabAs)
-	d.Set("illumio_provider", getRuleActors(data.S("providers")))
-	d.Set("consumer", getRuleActors(data.S("consumers")))
+	d.Set("providers", getRuleActors(data.S("providers")))
+	d.Set("consumers", getRuleActors(data.S("consumers")))
 
 	return diagnostics
 }
@@ -600,7 +599,6 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
 
 	var diags diag.Diagnostics
 
@@ -608,15 +606,15 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 	diags = append(diags, errs...)
 
 	ingServs, errs := expandIllumioSecurityRuleIngressService(
-		d.Get("ingress_service").(*schema.Set).List(),
+		d.Get("ingress_services").(*schema.Set).List(),
 		resLabelAs.ProviderIsVirtualService(),
 	)
 	diags = append(diags, errs...)
 
-	povs, errs := expandIllumioSecurityRuleProviders(d.Get("illumio_provider").(*schema.Set).List())
+	povs, errs := expandIllumioSecurityRuleProviders(d.Get("providers").(*schema.Set).List())
 	diags = append(diags, errs...)
 
-	cons, errs := expandIllumioSecurityRuleConsumers(d.Get("consumer").(*schema.Set).List())
+	cons, errs := expandIllumioSecurityRuleConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
 
 	secRule := &models.SecurityRule{
@@ -647,10 +645,9 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 		return diag.FromErr(err)
 	}
 
-	ruleSetID := d.Get("rule_set_id").(int)
+	ruleSetHREF := d.Get("rule_set_href").(string)
 
-	// After updating security rule, we have to provision rule set
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", fmt.Sprintf("/orgs/%d/sec_policy/draft/rule_sets/%v", orgID, ruleSetID))
+	pConfig.StoreHref(pConfig.OrgID, "rule_sets", ruleSetHREF)
 
 	return resourceIllumioSecurityRuleRead(ctx, d, m)
 }
@@ -659,16 +656,15 @@ func resourceIllumioSecurityRuleDelete(ctx context.Context, d *schema.ResourceDa
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
 
-	href := d.Id()
+	ruleSetHREF := d.Get("rule_set_href").(string)
 
 	_, err := illumioClient.Delete(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", fmt.Sprintf("/orgs/%d/sec_policy/draft/rule_sets/%v", orgID, getRuleSetID(href)))
+	pConfig.StoreHref(pConfig.OrgID, "rule_sets", ruleSetHREF)
 
 	d.SetId("")
 	return diagnostics

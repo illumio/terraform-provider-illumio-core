@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -41,7 +42,7 @@ type V2 struct {
 // defaultTimeout (in seconds)
 // e.g. NewV2("https://pce.my-company.com:8443", "api_xxxxxx", "big-secret", 30, rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), 10, 3, false, "", "")
 func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLimiter *rate.Limiter,
-	waitTime, maxRetries int, insecure bool, caFile, proxyURL string) (*V2, error) {
+	waitTime, maxRetries int, insecure bool, caFile, proxyURL, proxyCreds string) (*V2, error) {
 	if !strings.HasPrefix(hostURL, "http") {
 		return nil, errors.New("hostURL scheme must be 'http(s)'")
 	}
@@ -56,6 +57,12 @@ func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLi
 			return nil, err
 		}
 		transport.Proxy = http.ProxyURL(pUrl)
+		if proxyCreds != "" {
+			basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(proxyCreds))
+			transport.ProxyConnectHeader = http.Header{}
+			transport.ProxyConnectHeader.Add("Proxy-Authorization", basicAuth)
+		}
+
 	}
 	tlsConfig := &tls.Config{InsecureSkipVerify: insecure}
 	if len(caFile) > 0 {

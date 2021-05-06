@@ -31,9 +31,9 @@ data "illumio-core_enforcement_boundaries" "example" {
 
 - **assign_labels** (String) List of label URIs, encoded as a JSON string
 - **enforcement_mode** (String) Filter by enforcement mode.
-- **linked** (Boolean) Filter by linked container workload profiles.
-- **managed** (Boolean) Filter by managed state
-- **max_results** (Number) Maximum number of container workloads to return.
+- **linked** (String) Filter by linked container workload profiles. Allowed values are "true" and "false".
+- **managed** (String) Filter by managed state. Allowed values are "true" and "false".
+- **max_results** (String) Maximum number of container workloads to return.
 - **name** (String) Name string to match.Supports partial matches.
 - **namespace** (String) Namespace string to match.Supports partial matches.
 - **visibility_level** (String) Filter by visibility level

@@ -25,7 +25,7 @@ data "illumio-core_container_clusters" "test" {
 
 ### Optional
 
-- **max_results** (Number) Maximum number of container clusters to return
+- **max_results** (String) Maximum number of container clusters to return
 - **name** (String) Name of the container cluster(s) to return. Supports partial matches
 
 ### Read-Only

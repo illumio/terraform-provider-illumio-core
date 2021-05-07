@@ -275,8 +275,8 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Maximum number of Virtual Services to return.",
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of Virtual Services to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -352,7 +352,7 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 		params["service_address.proto"] = value.(string)
 	}
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/virtual_services", pConfig.OrgID, pversion), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/%v/virtual_services", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

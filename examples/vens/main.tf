@@ -15,6 +15,6 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_vens" "name" {
+data "illumio-core_vens" "example" {
     max_results = "5"
 }  

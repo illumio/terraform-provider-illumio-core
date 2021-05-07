@@ -15,6 +15,6 @@ provider "illumio-core" {
     org_id                = 1
 }
 
-data "illumio-core_workload_interfaces" "name" {
+data "illumio-core_workload_interfaces" "example" {
   workload_href = "/orgs/1/workloads/63bf19d1-1efa-49ec-b712-c51d5c0aa552"
 }

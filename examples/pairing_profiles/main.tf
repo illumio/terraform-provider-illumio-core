@@ -16,6 +16,6 @@ provider "illumio-core" {
 }
 
 data "illumio-core_pairing_profiles" "example" {
-  max_results = 5
+  max_results = "5"
 }
 

@@ -15,6 +15,6 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_label_groups" "name" {
+data "illumio-core_label_groups" "example" {
   max_results = "5"
 }

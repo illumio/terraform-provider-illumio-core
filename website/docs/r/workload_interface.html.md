@@ -16,7 +16,7 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_workload_interface" "test" {
+resource "illumio-core_workload_interface" "example" {
     workload_href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
     name = "wow amazing"
     link_state = "up"

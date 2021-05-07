@@ -15,7 +15,7 @@ Represents Illumio VENs
 Example Usage
 ------------
 ```hcl
-data "illumio-core_vens" "name" {
+data "illumio-core_vens" "example" {
     max_results = "5"
 }  
 ```
@@ -38,7 +38,7 @@ data "illumio-core_vens" "name" {
 - **last_goodbye_at_lte** (String) Greater than or equal to value for last goodbye at timestamp
 - **last_heartbeat_at_gte** (String) Greater than or equal to value for last heartbeat timestamp
 - **last_heartbeat_at_lte** (String) Less than or equal to value for last heartbeat timestamp
-- **max_results** (String) Maximum number of VENs to return.
+- **max_results** (String) Maximum number of VENs to return. The integer should be a non-zero positive integer. 
 - **name** (String) Name of VEN(s) to return. Supports partial matches
 - **os** (String) Operating System of VEN(s) to return. Supports partial matches.
 - **status** (String) The current status of the VEN. Allowed values are "active", "suspended", "stopped" and "uninstalled"

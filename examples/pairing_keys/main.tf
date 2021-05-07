@@ -15,7 +15,7 @@ provider "illumio-core" {
   org_id                = 1
 }
 
-resource "illumio-core_pairing_keys" "test" {
+resource "illumio-core_pairing_keys" "example" {
     pairing_profile_href = "/orgs/1/pairing_profiles/1"
     token_count = 3
 }

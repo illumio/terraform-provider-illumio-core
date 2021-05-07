@@ -124,8 +124,8 @@ func datasourceIllumioContainerClusters() *schema.Resource {
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Maximum number of container clusters to return",
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of container clusters to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,

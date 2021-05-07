@@ -95,7 +95,7 @@ func resourceIllumioWorkloadSettingsCreate(ctx context.Context, d *schema.Resour
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Error,
-		Detail:   "Cannot use Create Operation on Workload Settings Resource. Only Read and Update is allowed.",
+		Detail:   "[illumio-core_workload_settings] Cannot use Create Operation.",
 		Summary:  "Please use terrform import...",
 	})
 
@@ -199,8 +199,7 @@ func resourceIllumioWorkloadSettingsDelete(ctx context.Context, d *schema.Resour
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Detail:   "Cannot use Delete Operation on Workload Settings Resource. Only Read and Update is allowed.",
-		Summary:  "Setting the ID of Workload Settings to null. Ignoring the Deletion...",
+		Detail:   "[illumio-core_workload_settings] Ignoring Delete Operation...",
 	})
 
 	return diags

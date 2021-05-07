@@ -16,11 +16,11 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-resource "illumio-core_container_cluster" "test" {
+resource "illumio-core_container_cluster" "example" {
     name = "test cc"
     description = "test desc"
 }
 
-data "illumio-core_container_cluster" "test" {
+data "illumio-core_container_cluster" "example" {
     href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
 }

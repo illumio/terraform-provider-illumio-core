@@ -16,7 +16,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_vulnerabilities" "name" {
+data "illumio-core_vulnerabilities" "example" {
   max_results = "5"
 }
 ```
@@ -26,7 +26,7 @@ data "illumio-core_vulnerabilities" "name" {
 
 ### Optional
 
-- **max_results** (String) Maximum number of vulnerabilities to return.
+- **max_results** (String) Maximum number of vulnerabilities to return. The integer should be a non-zero positive integer. 
 
 ### Read-Only
 

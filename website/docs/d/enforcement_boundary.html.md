@@ -12,7 +12,7 @@ description: |-
 Represents Illumio Enforcement Boundary
 
 ```hcl
-data "illumio-core_enforcement_boundary" "test" {
+data "illumio-core_enforcement_boundary" "example" {
   href = "/orgs/1/sec_policy/draft/enforcement_boundaries/57"
 }
 ```

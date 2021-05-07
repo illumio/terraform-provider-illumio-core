@@ -3,7 +3,6 @@ package illumiocore
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -197,14 +196,13 @@ func resourceIllumioServiceBindingCreate(ctx context.Context, d *schema.Resource
 
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Detail:   "Error occured while creating the Service Binding ",
+			Detail:   "[illumio-core_service_binding] Error occured while creating the Service Binding",
 			Summary:  fmt.Sprintln("Error Status: ", status),
 		})
 
 		return diags
 	}
 
-	log.Println("[INFO] Service Binding status: ", status)
 	return resourceIllumioServiceBindingRead(ctx, d, m)
 }
 

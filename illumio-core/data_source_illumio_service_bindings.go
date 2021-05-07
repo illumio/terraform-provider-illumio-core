@@ -170,8 +170,8 @@ func datasourceIllumioServiceBindings() *schema.Resource {
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Maximum number of virtual service bindings to return.",
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of virtual service bindings to return. The integer should be a non-zero positive integer.",
 			},
 			"virtual_service": {
 				Type:        schema.TypeString,

@@ -16,6 +16,6 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_service_bindings" "name" {
+data "illumio-core_service_bindings" "example" {
     max_results = "5"
 }

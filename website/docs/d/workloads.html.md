@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_workloads" "name" {
+data "illumio-core_workloads" "example" {
     max_results = "5"
 }
 ```
@@ -39,7 +39,7 @@ data "illumio-core_workloads" "name" {
 - **last_heartbeat_on_lte** (String) Less than or equal to value for last heartbeat on timestamp
 - **log_traffic** (String) Whether we want to log traffic events from this workload
 - **managed** (String) Return managed or unmanaged workloads using this filter
-- **max_results** (String) Maximum number of workloads to return.
+- **max_results** (String) Maximum number of workloads to return. The integer should be a non-zero positive integer. 
 - **name** (String) Name of workload(s) to return. Supports partial matches
 - **online** (String) Return online/offline workloads using this filter
 - **os_id** (String) Operating System of workload(s) to return. Supports partial matches

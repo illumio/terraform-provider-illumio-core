@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func datasourceIllumioEnforcementBoundaries() *schema.Resource {
@@ -186,10 +187,10 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 				Description: "List of label URIs, encoded as a JSON string",
 			},
 			"max_results": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ValidateDiagFunc: isStringABoolean(),
-				Description: "Maximum number of enforcement boundaries to return.",
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -202,15 +203,16 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 				Description: "Service URI",
 			},
 			"service_ports_port": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Specify port or port range to filter results. The range is from -1 to 65535.",
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: isStringInRange(-1, 65535),
+				Description:      "Specify port or port range to filter results. The range is from -1 to 65535.",
 			},
 			"service_ports_proto": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ValidateDiagFunc: isStringANumber(),
-				Description: "Protocol to filter on",
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validENIngSerProtos, true)),
+				Description:      "Protocol to filter on. Allowed values are 6 and 17",
 			},
 		},
 	}
@@ -259,7 +261,7 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 	}
 	for _, child := range data.Children() {
 		m := extractMap(child, keys)
-		
+
 		if child.Exists("ingress_services") {
 			ingServs := child.S("ingress_services").Data().([]interface{})
 			iss := []map[string]interface{}{}

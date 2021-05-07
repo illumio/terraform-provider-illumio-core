@@ -15,7 +15,7 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-resource "illumio-core_workload_settings" "test" {
+resource "illumio-core_workload_settings" "example" {
   workload_disconnected_timeout_seconds {
     value = -1
   }
@@ -24,6 +24,6 @@ resource "illumio-core_workload_settings" "test" {
   }
 }
 
-data "illumio-core_workload_settings" "test" {
+data "illumio-core_workload_settings" "example" {
 
 }

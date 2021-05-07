@@ -88,8 +88,8 @@ func datasourceIllumioIPLists() *schema.Resource {
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Maximum number of IP Lists to return.",
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of IP Lists to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -241,7 +241,7 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/ip_lists", orgID, pversion), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/%v/ip_lists", orgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
@@ -168,9 +169,12 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 				Description: "List of label URIs, encoded as a JSON string",
 			},
 			"enforcement_mode": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Filter by enforcement mode.",
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateDiagFunc: validation.ToDiagFunc(
+					validation.StringInSlice(ValidWorkloadEnforcementModeValues, false),
+				),
+				Description: "Filter by enforcement mode. Allowed values for enforcement modes are \"idle\",\"visibility_only\",\"full\", and \"selective\".",
 			},
 			"linked": {
 				Type:             schema.TypeString,
@@ -187,8 +191,8 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Maximum number of container workloads to return.",
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -201,9 +205,12 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 				Description: "Namespace string to match.Supports partial matches.",
 			},
 			"visibility_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Filter by visibility level",
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateDiagFunc: validation.ToDiagFunc(
+					validation.StringInSlice(validVisibilityLevels, false),
+				),
+				Description: `Filter by visibility level. Allowed values are "flow_full_detail", "flow_summary", "flow_drops", "flow_off" and "enhanced_data_collection"`,
 			},
 		},
 	}

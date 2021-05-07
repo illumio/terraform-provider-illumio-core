@@ -222,13 +222,13 @@ func resourceIllumioVirtualService() *schema.Resource {
 
 func validateServiceAddress(v map[string]interface{}) error {
 	if v["fqdn"] != "" && v["ip"] != "" {
-		return errors.New(`for service address, "fqdn" and "ip" cannot be set simultaneously`)
+		return errors.New("[illumio-core_virtual_service] Exactly One of [fqdn, ip] is allowed inside service address")
 	}
 	if v["fqdn"] == "" && v["ip"] == "" {
-		return errors.New(`for service address, "fqdn" or "ip" is required`)
+		return errors.New(`[illumio-core_virtual_service] Exactly One of [fqdn, ip] is required inside service address`)
 	}
 	if v["ip"] != "" && v["port"] == "" && v["network_href"] == "" {
-		return errors.New(`for service address, set combination of "ip" and "network_href" OR "ip" and "port"`)
+		return errors.New(`[illumio-core_virtual_service] Combination of [network_href, ip] or [ip, port] is required inside service address`)
 	}
 	return nil
 }

@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_container_cluster" "test" {
+data "illumio-core_container_cluster" "example" {
     href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
 }
 ```

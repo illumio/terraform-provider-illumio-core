@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/hashicorp/go-cty/cty"
@@ -20,7 +19,7 @@ import (
 func getAESGCMKeyFromEnv() (string, error) {
 	key := os.Getenv("ILLUMIO_AES_GCM_KEY")
 	if key == "" {
-		return "", errors.New("ILLUMIO_AES_GCM_KEY environment variable is not set")
+		return "", errors.New("[illumio-core_pairing_keys] ILLUMIO_AES_GCM_KEY environment variable is not set")
 	}
 	return key, nil
 }
@@ -44,7 +43,7 @@ func pairingKeyPrequisiteValidation() schema.SchemaValidateDiagFunc {
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "could not decode AES GCM key",
+				Summary:  "[illumio-core_pairing_keys] Could not decode AES GCM key",
 				Detail:   "Key should be 128/192/256 bit in hex format",
 			})
 		}
@@ -52,7 +51,7 @@ func pairingKeyPrequisiteValidation() schema.SchemaValidateDiagFunc {
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "invalid key",
+				Summary:  "[illumio-core_pairing_keys] Invalid AES GCM key",
 				Detail:   err.Error(),
 			})
 		}
@@ -116,13 +115,12 @@ func resourceIllumioPairingKeysCommon(activationTokens []interface{}, addCount i
 	href := d.Get("pairing_profile_href").(string)
 
 	atLeastOneSuccess := false
-	log.Printf("[DEBUG] Pairing Profile - No. of keys to generate: %d", addCount)
 	for i := 1; i <= addCount; i++ {
 		_, data, err := illumioClient.Create(href+"/pairing_key", &models.PairingKey{})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Warning,
-				Summary:  fmt.Sprintf("could not generate activation token - Error: %v", err),
+				Summary:  fmt.Sprintf("[illumio-core_pairing_keys] Could not generate activation token - Error: %v", err),
 			})
 		} else {
 			key, _ := getAESGCMKeyFromEnv() // suppressing error as it should hit error in validation phase
@@ -131,7 +129,7 @@ func resourceIllumioPairingKeysCommon(activationTokens []interface{}, addCount i
 			if err != nil {
 				diags = append(diags, diag.Diagnostic{
 					Severity: diag.Warning,
-					Summary:  fmt.Sprintf("could not encrypt activation token - Error: %v", err),
+					Summary:  fmt.Sprintf("[illumio-core_pairing_keys] Could not encrypt activation token - Error: %v", err),
 				})
 			} else {
 				activationTokens = append(activationTokens, map[string]string{
@@ -151,7 +149,7 @@ func resourceIllumioPairingKeysCommon(activationTokens []interface{}, addCount i
 			newDiags := diag.Diagnostics{}
 			newDiags = append(newDiags, diag.Diagnostic{
 				Severity: diag.Warning, // was able to generate some tokens, so warning
-				Summary:  "Could not generate required tokens",
+				Summary:  "[illumio-core_pairing_keys] Could not generate required tokens",
 				Detail:   "Generated tokens are saved, please do terraform apply to try again",
 			})
 			newDiags = append(newDiags, diags...)
@@ -163,7 +161,7 @@ func resourceIllumioPairingKeysCommon(activationTokens []interface{}, addCount i
 	newDiags := diag.Diagnostics{}
 	newDiags = append(newDiags, diag.Diagnostic{
 		Severity: diag.Error, // could not generate single token, so error
-		Summary:  "Could not generate required tokens",
+		Summary:  "[illumio-core_pairing_keys] Could not generate required tokens",
 		Detail:   "Generated tokens are saved, please do terraform apply to try again",
 	})
 	newDiags = append(newDiags, diags...)
@@ -180,7 +178,7 @@ func resourceIllumioPairingKeysCreate(ctx context.Context, d *schema.ResourceDat
 
 func resourceIllumioPairingKeysUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if d.HasChange("pairing_profile_href") {
-		return diag.Errorf("can not change pairing_profile_href once set")
+		return diag.Errorf("[illumio-core_pairing_keys] Can not change pairing_profile_href once set")
 	}
 	activationTokens := d.Get("activation_tokens").([]interface{})
 	oldv, newv := d.GetChange("token_count")

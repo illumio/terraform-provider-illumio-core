@@ -17,6 +17,5 @@ provider "illumio-core" {
 }
 
 data "illumio-core_enforcement_boundaries" "example" {
-  max_results = 5
-  name = "testing eb"
+  max_results = "5"
 }

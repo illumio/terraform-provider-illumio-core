@@ -357,13 +357,13 @@ func handleUnpairAndUpgradeOperationErrors(e error, res *http.Response, op, r st
 	var diags diag.Diagnostics
 
 	if e != nil {
-		diags = append(diags, diag.FromErr(e)...)
+		diags = append(diags, diag.Errorf(fmt.Sprintf("[illumio-core_%v_%v] %v", r, op, e.Error()))...)
 	} else {
 		container, err := client.GetContainer(res)
 		if err == nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Warning,
-				Summary:  fmt.Sprintf("[resource_%v_%v] Got failure/s in responce", r, op),
+				Summary:  fmt.Sprintf("[illumio-core_%v_%v] Got failure/s in responce", r, op),
 				Detail:   container.String(),
 			})
 		}
@@ -431,6 +431,18 @@ func isValidPversion() schema.SchemaValidateDiagFunc {
 			} else {
 				diags = append(diags, diag.Errorf(`expected an integer greater than 0 or one of ["active", "draft"], got %v`, v)...)
 			}
+		}
+
+		return diags
+	}
+}
+
+func isStringGreaterThanZero() schema.SchemaValidateDiagFunc {
+	return func(v interface{}, path cty.Path) diag.Diagnostics {
+		var diags diag.Diagnostics
+
+		if i, k := getInt(v); !k || i < 1 {
+			diags = append(diags, diag.Errorf("expected non-zero positive integer, got %v", v)...)
 		}
 
 		return diags

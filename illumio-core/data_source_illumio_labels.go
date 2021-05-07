@@ -64,9 +64,10 @@ func datasourceIllumioLabels() *schema.Resource {
 				Description: `Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env"`,
 			},
 			"max_results": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Maximum number of Labels to return",
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of Labels to return. The integer should be a non-zero positive integer.",
 			},
 			"usage": {
 				Type:             schema.TypeString,
@@ -167,7 +168,7 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/labels", orgID), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%d/labels", orgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -186,7 +187,6 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 		"created_by",
 		"updated_by",
 	}
-
 
 	d.Set("items", extractMapArray(data, keys))
 

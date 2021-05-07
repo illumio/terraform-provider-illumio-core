@@ -89,9 +89,10 @@ func datasourceIllumioServices() *schema.Resource {
 				Description:      "External data set identifier",
 			},
 			"max_results": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Maximum number of Services to return",
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of Services to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -298,7 +299,7 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/%v/services", pConfig.OrgID, pversion), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%d/sec_policy/%v/services", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

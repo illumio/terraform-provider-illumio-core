@@ -534,7 +534,7 @@ func resourceIllumioVENDelete(ctx context.Context, d *schema.ResourceData, m int
 	return diag.Diagnostics{
 		diag.Diagnostic{
 			Severity: diag.Warning,
-			Detail:   "[illumio-core_ven] Ignoring Delete Operation...",
+			Summary:  "[illumio-core_ven] Ignoring Delete Operation...",
 		},
 	}
 }

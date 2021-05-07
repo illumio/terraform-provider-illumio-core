@@ -325,7 +325,7 @@ func syslogValidation(destType string, isRemoteSyslogSet bool) diag.Diagnostics 
 		if !isRemoteSyslogSet {
 			diags = append(diags, diag.Diagnostic{
 				Severity:      diag.Error,
-				Summary:       "remote_syslog block expected",
+				Summary:       "[illumio-core_syslog_destination] remote_syslog block expected",
 				Detail:        `When type is set to "remote_syslog", remote_syslog block is required`,
 				AttributePath: cty.Path{cty.GetAttrStep{Name: "type"}},
 			})
@@ -334,7 +334,7 @@ func syslogValidation(destType string, isRemoteSyslogSet bool) diag.Diagnostics 
 		if isRemoteSyslogSet {
 			diags = append(diags, diag.Diagnostic{
 				Severity:      diag.Error,
-				Summary:       "remote_syslog block not allowed",
+				Summary:       "[illumio-core_syslog_destination] remote_syslog block not allowed",
 				Detail:        `When type is set to "local_syslog", remote_syslog block is not allowed`,
 				AttributePath: cty.Path{cty.GetAttrStep{Name: "type"}},
 			})

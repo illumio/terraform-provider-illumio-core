@@ -13,7 +13,7 @@ Manages Illumio Enforcement Boundary
 
 
 ```hcl
-resource "illumio-core_enforcement_boundary" "test" {
+resource "illumio-core_enforcement_boundary" "example" {
     name = "testing eb 122"
     ingress_services {
       href = "/orgs/1/sec_policy/draft/services/3"

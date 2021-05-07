@@ -15,6 +15,6 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_vulnerabilities" "name" {
-  max_results = 5
+data "illumio-core_vulnerabilities" "example" {
+  max_results = "5"
 }

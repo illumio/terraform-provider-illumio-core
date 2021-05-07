@@ -159,7 +159,7 @@ func dataSourceIllumioSyslogDestinationsRead(ctx context.Context, d *schema.Reso
 
 	orgID := pConfig.OrgID
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/syslog/destinations", orgID), nil)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/settings/syslog/destinations", orgID), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -191,7 +191,7 @@ func dataSourceIllumioSyslogDestinationsRead(ctx context.Context, d *schema.Reso
 			"min_severity",
 		}
 		if child.Exists(key) {
-			m[key] = []interface{}{gabsToMap(child.S(key), aelKeys)}
+			m[key] = []interface{}{extractMap(child.S(key), aelKeys)}
 		} else {
 			m[key] = nil
 		}
@@ -203,7 +203,7 @@ func dataSourceIllumioSyslogDestinationsRead(ctx context.Context, d *schema.Reso
 			"traffic_flow_blocked_event_included",
 		}
 		if child.Exists(key) {
-			m[key] = []interface{}{gabsToMap(child.S(key), telKey)}
+			m[key] = []interface{}{extractMap(child.S(key), telKey)}
 		} else {
 			m[key] = nil
 		}
@@ -213,7 +213,7 @@ func dataSourceIllumioSyslogDestinationsRead(ctx context.Context, d *schema.Reso
 			"node_status_included",
 		}
 		if child.Exists(key) {
-			m[key] = []interface{}{gabsToMap(child.S(key), nslKeys)}
+			m[key] = []interface{}{extractMap(child.S(key), nslKeys)}
 		} else {
 			m[key] = nil
 		}
@@ -228,7 +228,7 @@ func dataSourceIllumioSyslogDestinationsRead(ctx context.Context, d *schema.Reso
 			"tls_verify_cert",
 		}
 		if child.Exists(key) {
-			m[key] = []interface{}{gabsToMap(child.S(key), rsKeys)}
+			m[key] = []interface{}{extractMap(child.S(key), rsKeys)}
 		} else {
 			m[key] = nil
 		}

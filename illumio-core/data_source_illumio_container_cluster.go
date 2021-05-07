@@ -185,7 +185,7 @@ func datasourceIllumioContainerClusterRead(ctx context.Context, d *schema.Resour
 		nodeI := []map[string]interface{}{}
 
 		for _, node := range nodes.Children() {
-			nodeI = append(nodeI, gabsToMap(node, nodeKeys))
+			nodeI = append(nodeI, extractMap(node, nodeKeys))
 		}
 
 		d.Set("nodes", nodeI)
@@ -203,9 +203,9 @@ func datasourceIllumioContainerClusterRead(ctx context.Context, d *schema.Resour
 		errorI := []map[string]interface{}{}
 
 		for _, error := range errors.Children() {
-			errorMap := gabsToMap(error, errorKeys)
+			errorMap := extractMap(error, errorKeys)
 			if error.Exists("audit_events") {
-				errorMap["audit_events"] = gabsToMap(error.S("audit_events"), []string{"href"})
+				errorMap["audit_events"] = extractMap(error.S("audit_events"), []string{"href"})
 			} else {
 				errorMap["audit_events"] = nil
 			}

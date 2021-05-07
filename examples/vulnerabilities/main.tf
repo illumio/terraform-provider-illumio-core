@@ -14,7 +14,7 @@ provider "illumio-core" {
   request_timeout = 30
   org_id          = 1
 }
-  
+
 data "illumio-core_vulnerabilities" "name" {
-  max_results = "5"
+  max_results = 5
 }

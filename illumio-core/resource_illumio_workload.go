@@ -675,7 +675,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 
 	key := "interfaces"
 	if data.Exists(key) {
-		d.Set("interfaces", gabsToMapArray(data.S(key), []string{
+		d.Set("interfaces", extractMapArray(data.S(key), []string{
 			"name",
 			"loopback",
 			"link_state",
@@ -696,13 +696,13 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 		srs := []map[string]interface{}{}
 
 		for _, service := range services.Children() {
-			sr := gabsToMap(service, []string{
+			sr := extractMap(service, []string{
 				"uptime_seconds",
 				"created_at",
 				"open_service_ports",
 			})
 			if service.Exists("open_service_ports") {
-				sr["open_service_ports"] = gabsToMapArray(service.S("open_service_ports"), []string{
+				sr["open_service_ports"] = extractMapArray(service.S("open_service_ports"), []string{
 					"protocol",
 					"address",
 					"port",
@@ -729,7 +729,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 		srs := []map[string]interface{}{}
 
 		for _, vs := range vss.Children() {
-			sr := gabsToMap(vs, []string{
+			sr := extractMap(vs, []string{
 				"num_vulnerabilities",
 				"vulnerable_port_exposure",
 				"vulnerable_port_wide_exposure",
@@ -738,7 +738,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 				"max_vulnerability_score",
 			})
 			if vs.Exists("vulnerable_port_wide_exposure") {
-				sr["vulnerable_port_wide_exposure"] = gabsToMapArray(vs.S("vulnerable_port_wide_exposure"), []string{
+				sr["vulnerable_port_wide_exposure"] = extractMapArray(vs.S("vulnerable_port_wide_exposure"), []string{
 					"any",
 					"ip_list",
 				})
@@ -760,7 +760,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 		srs := []map[string]interface{}{}
 
 		for _, vs := range vss.Children() {
-			sr := gabsToMap(vs, []string{
+			sr := extractMap(vs, []string{
 				"ip_address",
 				"port",
 				"proto",
@@ -772,7 +772,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 				"vulnerability_report",
 			})
 			if vs.Exists("port_wide_exposure") {
-				sr["port_wide_exposure"] = gabsToMapArray(vs.S("port_wide_exposure"), []string{
+				sr["port_wide_exposure"] = extractMapArray(vs.S("port_wide_exposure"), []string{
 					"any",
 					"ip_list",
 				})
@@ -781,7 +781,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			}
 
 			if vs.Exists("vulnerability") {
-				sr["vulnerability"] = gabsToMapArray(vs.S("vulnerability"), []string{
+				sr["vulnerability"] = extractMapArray(vs.S("vulnerability"), []string{
 					"href",
 					"score",
 					"name",
@@ -799,13 +799,13 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	if data.Exists("firewall_coexistence") {
-		d.Set("firewall_coexistence", gabsToMapArray(data.S("firewall_coexistence"), []string{
+		d.Set("firewall_coexistence", extractMapArray(data.S("firewall_coexistence"), []string{
 			"illumio_primary",
 		}))
 	}
 
 	if data.Exists("selectively_enforced_services") {
-		d.Set("selectively_enforced_services", gabsToMapArray(data.S("selectively_enforced_services"), []string{
+		d.Set("selectively_enforced_services", extractMapArray(data.S("selectively_enforced_services"), []string{
 			"href",
 			"proto",
 			"port",
@@ -814,7 +814,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	if data.Exists("container_cluster") {
-		d.Set("container_cluster", gabsToMapArray(data.S("container_cluster"), []string{
+		d.Set("container_cluster", extractMapArray(data.S("container_cluster"), []string{
 			"href",
 			"name",
 		}))

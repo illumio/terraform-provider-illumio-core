@@ -120,9 +120,9 @@ func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resource
 		wdtsI := []map[string]interface{}{}
 
 		for _, wdts := range wdtsS.Children() {
-			wdtsMap := gabsToMap(wdts, []string{"scope", "value"})
+			wdtsMap := extractMap(wdts, []string{"scope", "value"})
 			if wdts.Exists("scope") {
-				wdtsMap["scope"] = gabsToMapArray(wdts.S("scope"), []string{"href"})
+				wdtsMap["scope"] = extractMapArray(wdts.S("scope"), []string{"href"})
 			} else {
 				wdtsMap["scope"] = []map[string]interface{}{}
 			}
@@ -139,9 +139,9 @@ func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resource
 		wgtsI := []map[string]interface{}{}
 
 		for _, wgts := range wgtsS.Children() {
-			wgtsMap := gabsToMap(wgts, []string{"scope", "value"})
+			wgtsMap := extractMap(wgts, []string{"scope", "value"})
 			if wgts.Exists("scope") {
-				wgtsMap["scope"] = gabsToMapArray(wgts.S("scope"), []string{"href"})
+				wgtsMap["scope"] = extractMapArray(wgts.S("scope"), []string{"href"})
 			} else {
 				wgtsMap["scope"] = []map[string]interface{}{}
 			}

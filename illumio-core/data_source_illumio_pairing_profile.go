@@ -280,7 +280,7 @@ func dataSourceIllumioPairingProfileRead(ctx context.Context, d *schema.Resource
 	}
 
 	if data.Exists("labels") {
-		d.Set("labels", gabsToMapArray(data.S("labels"), []string{"href"}))
+		d.Set("labels", extractMapArray(data.S("labels"), []string{"href"}))
 	} else {
 		d.Set("labels", nil)
 	}

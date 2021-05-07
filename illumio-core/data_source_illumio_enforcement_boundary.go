@@ -275,8 +275,8 @@ func datasourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Res
 		d.Set("ingress_services", nil)
 	}
 
-	d.Set("providers", getEBActors(data.S("providers")))
-	d.Set("consumers", getEBActors(data.S("consumers")))
+	d.Set("providers", extractEBActors(data.S("providers")))
+	d.Set("consumers", extractEBActors(data.S("consumers")))
 
 	return diagnostics
 }

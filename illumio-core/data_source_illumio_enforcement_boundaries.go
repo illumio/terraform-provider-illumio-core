@@ -21,7 +21,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
 			},
 			"items": {
 				Type:        schema.TypeList,
@@ -258,7 +258,7 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 		"caps",
 	}
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 		
 		if child.Exists("ingress_services") {
 			ingServs := child.S("ingress_services").Data().([]interface{})
@@ -282,8 +282,8 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 		} else {
 			m["ingress_service"] = nil
 		}
-		m["illumio_provider"] = getEBActors(child.S("providers"))
-		m["consumer"] = getEBActors(child.S("consumers"))
+		m["illumio_provider"] = extractEBActors(child.S("providers"))
+		m["consumer"] = extractEBActors(child.S("consumers"))
 
 		dataMap = append(dataMap, m)
 	}

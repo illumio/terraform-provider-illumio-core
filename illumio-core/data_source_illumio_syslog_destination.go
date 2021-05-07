@@ -217,7 +217,7 @@ func setIllumioSyslogDestinationState(data *gabs.Container, d *schema.ResourceDa
 		"min_severity",
 	}
 	if data.Exists(key) {
-		d.Set(key, []interface{}{gabsToMap(data.S(key), aelKeys)})
+		d.Set(key, []interface{}{extractMap(data.S(key), aelKeys)})
 	} else {
 		d.Set(key, nil)
 	}
@@ -230,7 +230,7 @@ func setIllumioSyslogDestinationState(data *gabs.Container, d *schema.ResourceDa
 		"traffic_flow_blocked_event_included",
 	}
 	if data.Exists(key) {
-		d.Set(key, []interface{}{gabsToMap(data.S(key), telKey)})
+		d.Set(key, []interface{}{extractMap(data.S(key), telKey)})
 	} else {
 		d.Set(key, nil)
 	}
@@ -241,7 +241,7 @@ func setIllumioSyslogDestinationState(data *gabs.Container, d *schema.ResourceDa
 		"node_status_included",
 	}
 	if data.Exists(key) {
-		d.Set(key, []interface{}{gabsToMap(data.S(key), nslKeys)})
+		d.Set(key, []interface{}{extractMap(data.S(key), nslKeys)})
 	} else {
 		d.Set(key, nil)
 	}
@@ -257,7 +257,7 @@ func setIllumioSyslogDestinationState(data *gabs.Container, d *schema.ResourceDa
 		"tls_verify_cert",
 	}
 	if data.Exists(key) {
-		d.Set(key, []interface{}{gabsToMap(data.S(key), rsKeys)})
+		d.Set(key, []interface{}{extractMap(data.S(key), rsKeys)})
 	} else {
 		d.Set(key, nil)
 	}

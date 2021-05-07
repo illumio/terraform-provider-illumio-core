@@ -28,7 +28,7 @@ data "illumio-core_container_cluster_workload_profiles" "example" {
 - **labels** (String) List of label URIs, encoded as a JSON string
 - **max_results** (String) Maximum number of enforcement boundaries to return.
 - **name** (String) Filter by name supports partial matching
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
 - **service** (String) Service URI
 - **service_ports_port** (String) Specify port or port range to filter results. The range is from -1 to 65535.
 - **service_ports_proto** (String) Protocol to filter on

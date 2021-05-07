@@ -31,7 +31,7 @@ data "illumio-core_ip_lists" "name" {
 - **ip_address** (String) IP address matching IP list(s) to return. Supports partial matches
 - **max_results** (String) Maximum number of IP Lists to return.
 - **name** (String) Name of IP list(s) to return. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
 
 ### Read-Only
 

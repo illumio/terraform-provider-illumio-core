@@ -93,7 +93,7 @@ func dataSourceIllumioWorkloadInterfacesRead(ctx context.Context, d *schema.Reso
 
 	wHref := d.Get("workload_href").(string)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("%v/interfaces", wHref), nil)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("%v/interfaces", wHref), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

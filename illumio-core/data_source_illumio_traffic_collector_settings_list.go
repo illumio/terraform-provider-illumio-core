@@ -90,7 +90,7 @@ func datasourceIllumioTrafficCollectorSettingsListRead(ctx context.Context, d *s
 
 	href := fmt.Sprintf("/orgs/%v/settings/traffic_collector", pConfig.OrgID)
 
-	_, data, err := illumioClient.Get(href, nil)
+	_, data, err := illumioClient.AsyncGet(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -104,7 +104,7 @@ func datasourceIllumioTrafficCollectorSettingsListRead(ctx context.Context, d *s
 	tcss := []map[string]interface{}{}
 
 	for _, trafficCS := range data.Children() {
-		tcs := gabsToMap(trafficCS, tcsKeys)
+		tcs := extractMap(trafficCS, tcsKeys)
 
 		key := "transmission"
 		if trafficCS.Exists(key) {
@@ -126,7 +126,7 @@ func datasourceIllumioTrafficCollectorSettingsListRead(ctx context.Context, d *s
 				"dst_ip",
 			}
 			tcs[key] = []interface{}{
-				gabsToMap(trafficCS.S(key), targetKeys),
+				extractMap(trafficCS.S(key), targetKeys),
 			}
 		} else {
 			tcs[key] = nil

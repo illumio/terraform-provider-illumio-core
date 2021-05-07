@@ -637,7 +637,7 @@ func setIllumioVENState(data *gabs.Container, d *schema.ResourceData) {
 
 	key := "interfaces"
 	if data.Exists(key) && data.S(key).Data() != nil {
-		d.Set("interfaces", gabsToMapArray(data.S(key), intfKeys))
+		d.Set("interfaces", extractMapArray(data.S(key), intfKeys))
 	} else {
 		d.Set(key, nil)
 	}
@@ -665,9 +665,9 @@ func setIllumioVENState(data *gabs.Container, d *schema.ResourceData) {
 		wrs := []map[string]interface{}{}
 
 		for _, workload := range workloads.Children() {
-			wr := gabsToMap(workload, workloadKeys)
+			wr := extractMap(workload, workloadKeys)
 			if workload.Exists("interfaces") {
-				wr["interfaces"] = gabsToMapArray(workload.S("interface"), intfKeys)
+				wr["interfaces"] = extractMapArray(workload.S("interface"), intfKeys)
 			} else {
 				wr["interfaces"] = nil
 			}
@@ -687,7 +687,7 @@ func setIllumioVENState(data *gabs.Container, d *schema.ResourceData) {
 			"name",
 		}
 
-		d.Set(key, []interface{}{gabsToMap(data.S(key), ccKeys)})
+		d.Set(key, []interface{}{extractMap(data.S(key), ccKeys)})
 	} else {
 		d.Set(key, nil)
 	}
@@ -698,7 +698,7 @@ func setIllumioVENState(data *gabs.Container, d *schema.ResourceData) {
 			"matching_issuer_name",
 		}
 
-		d.Set(key, []interface{}{gabsToMap(data.S(key), ccKeys)})
+		d.Set(key, []interface{}{extractMap(data.S(key), ccKeys)})
 
 	} else {
 		d.Set(key, nil)
@@ -724,11 +724,11 @@ func setIllumioVENState(data *gabs.Container, d *schema.ResourceData) {
 					}
 
 					if v.Data() != nil {
-						t := gabsToMap(v, eventKeys)
+						t := extractMap(v, eventKeys)
 
 						if v.Exists("info", "agent") {
 							info := make(map[string]interface{})
-							info["agent"] = gabsToMap(v.S("info", "agent"), []string{"name", "hostname", "href"})
+							info["agent"] = extractMap(v.S("info", "agent"), []string{"name", "hostname", "href"})
 
 							t["info"] = []interface{}{info}
 						}

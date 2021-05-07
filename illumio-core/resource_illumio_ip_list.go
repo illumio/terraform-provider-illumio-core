@@ -210,7 +210,7 @@ func resourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m in
 		ip_rangeI := []map[string]interface{}{}
 
 		for _, ip := range ip_ranges.Children() {
-			ip_rangeI = append(ip_rangeI, gabsToMap(ip, []string{"description", "from_ip", "to_ip", "exclusion"}))
+			ip_rangeI = append(ip_rangeI, extractMap(ip, []string{"description", "from_ip", "to_ip", "exclusion"}))
 		}
 		d.Set("ip_ranges", ip_rangeI)
 	} else {
@@ -222,7 +222,7 @@ func resourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m in
 		fqdnI := []map[string]interface{}{}
 
 		for _, ip := range fqdns.Children() {
-			fqdnI = append(fqdnI, gabsToMap(ip, []string{"fqdn", "description"}))
+			fqdnI = append(fqdnI, extractMap(ip, []string{"fqdn", "description"}))
 		}
 
 		d.Set("fqdns", fqdnI)

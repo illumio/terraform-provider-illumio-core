@@ -262,7 +262,7 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 		spI := []map[string]interface{}{}
 
 		for _, sp := range sps.Children() {
-			spI = append(spI, gabsToMap(sp, []string{"port", "to_port", "proto", "icmp_type", "icmp_code"}))
+			spI = append(spI, extractMap(sp, []string{"port", "to_port", "proto", "icmp_type", "icmp_code"}))
 		}
 		d.Set("service_ports", spI)
 	} else {
@@ -274,7 +274,7 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 		wsI := []map[string]interface{}{}
 
 		for _, ws := range wss.Children() {
-			wsI = append(wsI, gabsToMap(ws, []string{"port", "to_port", "proto", "icmp_type", "icmp_code", "service_name", "process_name"}))
+			wsI = append(wsI, extractMap(ws, []string{"port", "to_port", "proto", "icmp_type", "icmp_code", "service_name", "process_name"}))
 		}
 		d.Set("windows_services", wsI)
 	} else {

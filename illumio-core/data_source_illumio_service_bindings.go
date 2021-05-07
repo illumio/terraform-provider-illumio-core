@@ -204,7 +204,7 @@ func dataSourceIllumioServiceBindingsRead(ctx context.Context, d *schema.Resourc
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/service_bindings", orgID), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/service_bindings", orgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -241,7 +241,7 @@ func dataSourceIllumioServiceBindingsRead(ctx context.Context, d *schema.Resourc
 			poI := []map[string]interface{}{}
 
 			for _, po := range poS.Children() {
-				poI = append(poI, gabsToMap(po, []string{"port", "proto", "new_port", "new_to_port"}))
+				poI = append(poI, extractMap(po, []string{"port", "proto", "new_port", "new_to_port"}))
 			}
 
 			m["port_overrides"] = poI
@@ -250,7 +250,7 @@ func dataSourceIllumioServiceBindingsRead(ctx context.Context, d *schema.Resourc
 		}
 
 		if child.Exists("workload") {
-			m["workload"] = []interface{}{gabsToMap(child.S("workload"), []string{"href", "name", "hostname", "deleted"})}
+			m["workload"] = []interface{}{extractMap(child.S("workload"), []string{"href", "name", "hostname", "deleted"})}
 		} else {
 			m["workload"] = nil
 		}

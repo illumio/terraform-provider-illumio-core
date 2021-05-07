@@ -205,8 +205,8 @@ func resourceIllumioRuleSet() *schema.Resource {
 										Type:        schema.TypeList,
 										Optional:    true,
 										MaxItems:    1,
-										Description: "Href of Worklaod",
-										Elem:        hrefSchemaRequired("Workload", isWorklaodHref),
+										Description: "Href of Workload",
+										Elem:        hrefSchemaRequired("Workload", isWorkloadHref),
 									},
 								},
 							},
@@ -563,9 +563,9 @@ func extractResourceRuleSetIPTablesRules(data *gabs.Container) []map[string]inte
 	}
 
 	for _, ipTableRuleData := range data.Children() {
-		m := gabsToMap(ipTableRuleData, iptrKeys)
-		m["actors"] = getRuleActors(ipTableRuleData.S("actors"))
-		m["statements"] = gabsToMapArray(ipTableRuleData.S("statements"), statKeys)
+		m := extractMap(ipTableRuleData, iptrKeys)
+		m["actors"] = extractResourceRuleActors(ipTableRuleData.S("actors"))
+		m["statements"] = extractMapArray(ipTableRuleData.S("statements"), statKeys)
 
 		ms = append(ms, m)
 	}
@@ -595,7 +595,7 @@ func extractResourceRuleSetSecurityRules(data *gabs.Container) []map[string]inte
 
 	srs := []map[string]interface{}{}
 	for _, secRuleData := range data.Children() {
-		sr := gabsToMap(secRuleData, srKeys)
+		sr := extractMap(secRuleData, srKeys)
 
 		rlaKey := "resolve_labels_as"
 		if secRuleData.Exists(rlaKey) {
@@ -604,12 +604,12 @@ func extractResourceRuleSetSecurityRules(data *gabs.Container) []map[string]inte
 
 		prkey := "providers"
 		if secRuleData.Exists(prkey) {
-			sr[prkey] = getRuleActors(secRuleData.S(prkey))
+			sr[prkey] = extractResourceRuleActors(secRuleData.S(prkey))
 		}
 
 		cnKeys := "consumers"
 		if secRuleData.Exists(cnKeys) {
-			sr[cnKeys] = getRuleActors(secRuleData.S(cnKeys))
+			sr[cnKeys] = extractResourceRuleActors(secRuleData.S(cnKeys))
 		}
 
 		isKey := "ingress_services"

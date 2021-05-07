@@ -27,7 +27,7 @@ data "illumio-core_rule_sets" "example" {
 - **labels** (String) List of lists of label URIs, encoded as a JSON string
 - **max_results** (String) Maximum number of Rule Sets to return.
 - **name** (String) Name of Rule Set(s) to return. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
 
 ### Read-Only
 
@@ -83,7 +83,7 @@ Read-Only:
 - **actors** (String) actors of IP table Rule actors
 - **label** (Map of String) Href of Label
 - **label_group** (Map of String) Href of Label Group
-- **workload** (Map of String) Href of Worklaod
+- **workload** (Map of String) Href of Workload
 
 
 <a id="nestedobjatt--items--ip_tables_rules--statements"></a>
@@ -133,7 +133,7 @@ Read-Only:
 - **label** (Map of String) Href of Label
 - **label_group** (Map of String) Href of Label Group
 - **virtual_service** (Map of String) Href of Virtual Service
-- **workload** (Map of String) Href of Worklaod
+- **workload** (Map of String) Href of Workload
 
 
 <a id="nestedobjatt--items--rules--ingress_services"></a>

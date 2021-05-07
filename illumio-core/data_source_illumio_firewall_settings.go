@@ -290,7 +290,7 @@ func datasourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.Resour
 
 	href := d.Get("href").(string)
 
-	_, data, err := illumioClient.Get(href, nil)
+	_, data, err := illumioClient.AsyncGet(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

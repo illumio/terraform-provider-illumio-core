@@ -210,7 +210,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 					"workload": {
 						Type:        schema.TypeMap,
 						Computed:    true,
-						Description: "Href of Worklaod",
+						Description: "Href of Workload",
 						Elem:        &schema.Schema{Type: schema.TypeString},
 					},
 					"virtual_service": {
@@ -260,7 +260,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 					"workload": {
 						Type:        schema.TypeMap,
 						Computed:    true,
-						Description: "Href of Worklaod",
+						Description: "Href of Workload",
 						Elem:        &schema.Schema{Type: schema.TypeString},
 					},
 					"virtual_service": {
@@ -391,7 +391,7 @@ func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceDa
 			"to_port",
 		}
 
-		d.Set(isKey, gabsToMapArray(data.S(isKey), isKeys))
+		d.Set(isKey, extractMapArray(data.S(isKey), isKeys))
 	}
 
 	providersKey := "providers"

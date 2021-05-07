@@ -15,6 +15,4 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_syslog_destinations" "name" {
-
-}
+data "illumio-core_syslog_destinations" "name" {}

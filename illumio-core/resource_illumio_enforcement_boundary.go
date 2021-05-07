@@ -369,13 +369,13 @@ func resourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Resou
 		d.Set("ingress_services", nil)
 	}
 
-	d.Set("providers", getEBActors(data.S("providers")))
-	d.Set("consumers", getEBActors(data.S("consumers")))
+	d.Set("providers", extractEBActors(data.S("providers")))
+	d.Set("consumers", extractEBActors(data.S("consumers")))
 
 	return diagnostics
 }
 
-func getEBActors(data *gabs.Container) []map[string]interface{} {
+func extractEBActors(data *gabs.Container) []map[string]interface{} {
 	actors := []map[string]interface{}{}
 
 	validActors := []string{

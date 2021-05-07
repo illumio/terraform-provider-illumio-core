@@ -222,7 +222,7 @@ func datasourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData
 			labelI := []map[string]interface{}{}
 
 			for _, l := range labels.Children() {
-				labelI = append(labelI, gabsToMap(l, []string{"href", "key", "value"}))
+				labelI = append(labelI, extractMap(l, []string{"href", "key", "value"}))
 			}
 
 			d.Set("labels", labelI)
@@ -235,7 +235,7 @@ func datasourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData
 			sub_groupI := []map[string]interface{}{}
 
 			for _, sg := range sub_groups.Children() {
-				sub_groupI = append(sub_groupI, gabsToMap(sg, []string{"href", "name"}))
+				sub_groupI = append(sub_groupI, extractMap(sg, []string{"href", "name"}))
 			}
 
 			d.Set("sub_groups", sub_groupI)

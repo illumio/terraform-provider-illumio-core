@@ -239,7 +239,7 @@ func resourceIllumioServiceBindingRead(ctx context.Context, d *schema.ResourceDa
 		poI := []map[string]interface{}{}
 
 		for _, po := range poS.Children() {
-			poI = append(poI, gabsToMap(po, []string{"port", "proto", "new_port", "new_to_port"}))
+			poI = append(poI, extractMap(po, []string{"port", "proto", "new_port", "new_to_port"}))
 		}
 
 		d.Set("port_overrides", poI)
@@ -248,14 +248,14 @@ func resourceIllumioServiceBindingRead(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if data.Exists("workload") {
-		d.Set("workload", []interface{}{gabsToMap(data.S("workload"), []string{"href", "name", "hostname", "deleted"})})
+		d.Set("workload", []interface{}{extractMap(data.S("workload"), []string{"href", "name", "hostname", "deleted"})})
 	} else {
 		d.Set("workload", nil)
 	}
 
 	for _, x := range []string{"virtual_service", "container_workload"} {
 		if data.Exists(x) {
-			d.Set(x, []interface{}{gabsToMap(data.S(x), []string{"href"})})
+			d.Set(x, []interface{}{extractMap(data.S(x), []string{"href"})})
 		} else {
 			d.Set(x, nil)
 		}

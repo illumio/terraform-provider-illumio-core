@@ -188,7 +188,7 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 
-	d.Set("items", gabsToMapArray(data, keys))
+	d.Set("items", extractMapArray(data, keys))
 
 	return diagnostics
 }

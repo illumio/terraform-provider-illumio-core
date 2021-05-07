@@ -157,7 +157,7 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 
 	srs := []map[string]interface{}{}
 	for _, rule := range data.Children() {
-		sr := gabsToMap(rule, rlKeys)
+		sr := extractMap(rule, rlKeys)
 
 		rlaKey := "resolve_labels_as"
 		if rule.Exists(rlaKey) {
@@ -173,7 +173,7 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 				"to_port",
 			}
 
-			sr[isKey] = gabsToMapArray(rule.S(isKey), isKeys)
+			sr[isKey] = extractMapArray(rule.S(isKey), isKeys)
 		}
 
 		providersKey := "providers"

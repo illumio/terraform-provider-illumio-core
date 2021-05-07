@@ -785,7 +785,7 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 	}
 
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		intfKeys := []string{
 			"href",
@@ -802,7 +802,7 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 
 		key := "interfaces"
 		if child.Exists(key) && child.S(key).Data() != nil {
-			m["interfaces"] = gabsToMapArray(child.S(key), intfKeys)
+			m["interfaces"] = extractMapArray(child.S(key), intfKeys)
 		} else {
 			m["interfaces"] = nil
 		}
@@ -830,9 +830,9 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 			wrs := []map[string]interface{}{}
 
 			for _, workload := range workloads.Children() {
-				wr := gabsToMap(workload, workloadKeys)
+				wr := extractMap(workload, workloadKeys)
 				if workload.Exists("interfaces") {
-					wr["interfaces"] = gabsToMapArray(workload.S("interface"), intfKeys)
+					wr["interfaces"] = extractMapArray(workload.S("interface"), intfKeys)
 				} else {
 					wr["interfaces"] = nil
 				}
@@ -852,7 +852,7 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 				"name",
 			}
 
-			m[key] = []interface{}{gabsToMap(child.S(key), ccKeys)}
+			m[key] = []interface{}{extractMap(child.S(key), ccKeys)}
 		} else {
 			m[key] = nil
 		}
@@ -863,7 +863,7 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 				"matching_issuer_name",
 			}
 
-			m[key] = []interface{}{gabsToMap(child.S(key), ccKeys)}
+			m[key] = []interface{}{extractMap(child.S(key), ccKeys)}
 
 		} else {
 			m[key] = nil
@@ -889,11 +889,11 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 						}
 
 						if v.Data() != nil {
-							t := gabsToMap(v, eventKeys)
+							t := extractMap(v, eventKeys)
 
 							if v.Exists("info", "agent") {
 								info := make(map[string]interface{})
-								info["agent"] = gabsToMap(v.S("info", "agent"), []string{"name", "hostname", "href"})
+								info["agent"] = extractMap(v.S("info", "agent"), []string{"name", "hostname", "href"})
 
 								t["info"] = []interface{}{info}
 							}

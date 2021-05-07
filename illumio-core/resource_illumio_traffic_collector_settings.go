@@ -197,7 +197,7 @@ func setIllumioTrafficCollectorSettingState(d *schema.ResourceData, data *gabs.C
 			"dst_ip",
 		}
 		d.Set(key, []interface{}{
-			gabsToMap(data.S(key), targetKeys),
+			extractMap(data.S(key), targetKeys),
 		})
 	} else {
 		d.Set(key, nil)

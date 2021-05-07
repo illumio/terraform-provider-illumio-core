@@ -69,7 +69,7 @@ func datasourceIllumioServices() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -324,14 +324,14 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		if child.Exists("service_ports") {
 			sps := child.S("service_ports")
 			spI := []map[string]interface{}{}
 
 			for _, sp := range sps.Children() {
-				spI = append(spI, gabsToMap(sp, []string{"port", "to_port", "proto", "icmp_type", "icmp_code"}))
+				spI = append(spI, extractMap(sp, []string{"port", "to_port", "proto", "icmp_type", "icmp_code"}))
 			}
 			m["service_ports"] = spI
 		} else {
@@ -343,7 +343,7 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 			wsI := []map[string]interface{}{}
 
 			for _, ws := range wss.Children() {
-				wsI = append(wsI, gabsToMap(ws, []string{"port", "to_port", "proto", "icmp_type", "icmp_code", "service_name", "process_name"}))
+				wsI = append(wsI, extractMap(ws, []string{"port", "to_port", "proto", "icmp_type", "icmp_code", "service_name", "process_name"}))
 			}
 			m["windows_services"] = wsI
 		} else {

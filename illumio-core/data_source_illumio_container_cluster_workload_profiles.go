@@ -251,7 +251,7 @@ func dataSourceIllumioContainerClusterWorkloadProfilesRead(ctx context.Context, 
 	}
 
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		key := "assign_labels"
 		m[key] = extractDataSourceAttrs(child, key, []string{"href"})
@@ -266,14 +266,14 @@ func dataSourceIllumioContainerClusterWorkloadProfilesRead(ctx context.Context, 
 			labelI := []map[string]interface{}{}
 
 			for _, label := range labels.Children() {
-				labelMap := gabsToMap(label, labelKeys)
+				labelMap := extractMap(label, labelKeys)
 				if label.Exists("assignment") {
-					labelMap["assignment"] = []interface{}{gabsToMap(label.S("assignment"), []string{"href", "value"})}
+					labelMap["assignment"] = []interface{}{extractMap(label.S("assignment"), []string{"href", "value"})}
 				} else {
 					labelMap["assignment"] = nil
 				}
 				if label.Exists("restriction") {
-					labelMap["restriction"] = gabsToMapArray(label.S("restriction"), []string{"href", "value"})
+					labelMap["restriction"] = extractMapArray(label.S("restriction"), []string{"href", "value"})
 				} else {
 					labelMap["restriction"] = nil
 				}

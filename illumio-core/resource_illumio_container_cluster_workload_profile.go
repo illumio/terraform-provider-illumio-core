@@ -290,7 +290,7 @@ func resourceIllumioContainerClusterWorkloadProfileRead(ctx context.Context, d *
 		ALI := []map[string]interface{}{}
 
 		for _, AL := range ALs.Children() {
-			ALI = append(ALI, gabsToMap(AL, ALKeys))
+			ALI = append(ALI, extractMap(AL, ALKeys))
 		}
 
 		d.Set("assign_labels", ALI)
@@ -308,14 +308,14 @@ func resourceIllumioContainerClusterWorkloadProfileRead(ctx context.Context, d *
 		labelI := []map[string]interface{}{}
 
 		for _, label := range labels.Children() {
-			labelMap := gabsToMap(label, labelKeys)
+			labelMap := extractMap(label, labelKeys)
 			if label.Exists("assignment") {
-				labelMap["assignment"] = []interface{}{gabsToMap(label.S("assignment"), []string{"href", "value"})}
+				labelMap["assignment"] = []interface{}{extractMap(label.S("assignment"), []string{"href", "value"})}
 			} else {
 				labelMap["assignment"] = nil
 			}
 			if label.Exists("restriction") {
-				labelMap["restriction"] = gabsToMapArray(label.S("restriction"), []string{"href", "value"})
+				labelMap["restriction"] = extractMapArray(label.S("restriction"), []string{"href", "value"})
 			} else {
 				labelMap["restriction"] = nil
 			}

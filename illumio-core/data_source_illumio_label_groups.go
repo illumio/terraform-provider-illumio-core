@@ -67,7 +67,7 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -285,14 +285,14 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 	}
 
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		if child.Exists("labels") {
 			labels := child.S("labels")
 			labelI := []map[string]interface{}{}
 
 			for _, l := range labels.Children() {
-				labelI = append(labelI, gabsToMap(l, []string{"href", "key", "value"}))
+				labelI = append(labelI, extractMap(l, []string{"href", "key", "value"}))
 			}
 
 			m["labels"] = labelI
@@ -305,7 +305,7 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 			sub_groupI := []map[string]interface{}{}
 
 			for _, sg := range sub_groups.Children() {
-				sub_groupI = append(sub_groupI, gabsToMap(sg, []string{"href", "name"}))
+				sub_groupI = append(sub_groupI, extractMap(sg, []string{"href", "name"}))
 			}
 
 			m["sub_groups"] = sub_groupI

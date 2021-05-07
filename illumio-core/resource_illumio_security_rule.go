@@ -180,8 +180,8 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Worklaod",
-						Elem:        hrefSchemaRequired("Workload", isWorklaodHref),
+						Description: "Href of Workload",
+						Elem:        hrefSchemaRequired("Workload", isWorkloadHref),
 					},
 					"virtual_service": {
 						Type:        schema.TypeList,
@@ -239,8 +239,8 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Worklaod",
-						Elem:        hrefSchemaRequired("Workload", isWorklaodHref),
+						Description: "Href of Workload",
+						Elem:        hrefSchemaRequired("Workload", isWorkloadHref),
 					},
 					"virtual_service": {
 						Type:        schema.TypeList,
@@ -578,12 +578,12 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 
 	prkey := "providers"
 	if data.Exists(prkey) {
-		d.Set(prkey, getRuleActors(data.S(prkey)))
+		d.Set(prkey, extractResourceRuleActors(data.S(prkey)))
 	}
 
 	cnKeys := "consumers"
 	if data.Exists(cnKeys) {
-		d.Set(cnKeys, getRuleActors(data.S(cnKeys)))
+		d.Set(cnKeys, extractResourceRuleActors(data.S(cnKeys)))
 	}
 
 	return diagnostics

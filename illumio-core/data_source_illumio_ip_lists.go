@@ -58,7 +58,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -263,14 +263,14 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 		"deleted_at",
 	}
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		if child.Exists("ip_ranges") {
 			ip_ranges := child.S("ip_ranges")
 			ip_rangeI := []map[string]interface{}{}
 
 			for _, ip := range ip_ranges.Children() {
-				ip_rangeI = append(ip_rangeI, gabsToMap(ip, []string{"description", "from_ip", "to_ip", "exclusion"}))
+				ip_rangeI = append(ip_rangeI, extractMap(ip, []string{"description", "from_ip", "to_ip", "exclusion"}))
 			}
 
 			m["ip_ranges"] = ip_rangeI
@@ -283,7 +283,7 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 			fqdnI := []map[string]interface{}{}
 
 			for _, ip := range fqdns.Children() {
-				fqdnI = append(fqdnI, gabsToMap(ip, []string{"fqdn", "description"}))
+				fqdnI = append(fqdnI, extractMap(ip, []string{"fqdn", "description"}))
 			}
 
 			m["fqdns"] = fqdnI

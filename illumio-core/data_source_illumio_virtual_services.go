@@ -51,7 +51,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
 			},
 			"items": {
 				Type:        schema.TypeList,
@@ -381,7 +381,7 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 	}
 
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		key := "service"
 		if child.Exists(key) {

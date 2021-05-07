@@ -337,11 +337,11 @@ func dataSourceIllumioPairingProfilesRead(ctx context.Context, d *schema.Resourc
 	pps := []map[string]interface{}{}
 
 	for _, child := range data.Children() {
-		pp := gabsToMap(child, ppKeys)
+		pp := extractMap(child, ppKeys)
 
 		key := "labels"
 		if child.Exists(key) {
-			pp[key] = gabsToMapArray(child.S(key), []string{"href"})
+			pp[key] = extractMapArray(child.S(key), []string{"href"})
 		} else {
 			pp[key] = nil
 		}

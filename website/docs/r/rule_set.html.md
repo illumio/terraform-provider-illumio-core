@@ -163,7 +163,7 @@ Optional:
 - **actors** (String) Set this if rule actors are all workloads. Allowed value: "ams"
 - **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--ip_tables_rules--actors--label))
 - **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--ip_tables_rules--actors--label_group))
-- **workload** (Block List, Max: 1) Href of Worklaod (see [below for nested schema](#nestedblock--ip_tables_rules--actors--workload))
+- **workload** (Block List, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--ip_tables_rules--actors--workload))
 
 <a id="nestedblock--ip_tables_rules--actors--label"></a>
 ### Nested Schema for `ip_tables_rules.actors.label`
@@ -243,7 +243,7 @@ Optional:
 - **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--rule--consumers--label))
 - **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--rule--consumers--label_group))
 - **virtual_service** (Block List, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--rule--consumers--virtual_service))
-- **workload** (Block List, Max: 1) Href of Worklaod (see [below for nested schema](#nestedblock--rule--consumers--workload))
+- **workload** (Block List, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--rule--consumers--workload))
 
 <a id="nestedblock--rule--consumers--ip_list"></a>
 ### Nested Schema for `rule.consumers.ip_list`
@@ -297,7 +297,7 @@ Optional:
 - **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--rule--providers--label_group))
 - **virtual_server** (Block List, Max: 1) Href of Virtual Server (see [below for nested schema](#nestedblock--rule--providers--virtual_server))
 - **virtual_service** (Block List, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--rule--providers--virtual_service))
-- **workload** (Block List, Max: 1) Href of Worklaod (see [below for nested schema](#nestedblock--rule--providers--workload))
+- **workload** (Block List, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--rule--providers--workload))
 
 <a id="nestedblock--rule--providers--ip_list"></a>
 ### Nested Schema for `rule.providers.ip_list`

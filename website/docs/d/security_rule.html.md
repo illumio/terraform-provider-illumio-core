@@ -58,7 +58,7 @@ Read-Only:
 - **label** (Map of String) Href of Label
 - **label_group** (Map of String) Href of Label Group
 - **virtual_service** (Map of String) Href of Virtual Service
-- **workload** (Map of String) Href of Worklaod
+- **workload** (Map of String) Href of Workload
 
 
 <a id="nestedatt--ingress_services"></a>

@@ -172,7 +172,7 @@ func datasourceIllumioContainerClustersRead(ctx context.Context, d *schema.Resou
 	}
 
 	for _, child := range data.Children() {
-		m := gabsToMap(child, keys)
+		m := extractMap(child, keys)
 
 		for key, value := range map[string][]string{
 			"nodes":  {"pod_subnet"},

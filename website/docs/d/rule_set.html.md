@@ -65,7 +65,7 @@ Read-Only:
 - **actors** (String) actors for IP table Rule actors
 - **label** (Map of String) Href of Label 
 - **label_group** (Map of String) Href of Label Group
-- **workload** (Map of String) Href of Worklaod
+- **workload** (Map of String) Href of Workload
 
 
 <a id="nestedobjatt--ip_tables_rules--statements"></a>
@@ -115,7 +115,7 @@ Read-Only:
 - **label** (Map of String) Href of Label
 - **label_group** (Map of String) Href of Label Group
 - **virtual_service** (Map of String) Href of Virtual Service
-- **workload** (Map of String) Href of Worklaod
+- **workload** (Map of String) Href of Workload
 
 <a id="nestedobjatt--rules--ingress_services"></a>
 ### Nested Schema for `rules.ingress_services`

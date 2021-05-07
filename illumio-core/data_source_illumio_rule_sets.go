@@ -345,7 +345,7 @@ func datasourceIllumioRuleSets() *schema.Resource {
 												"workload": {
 													Type:        schema.TypeMap,
 													Computed:    true,
-													Description: "Href of Worklaod",
+													Description: "Href of Workload",
 													Elem:        &schema.Schema{Type: schema.TypeString},
 												},
 											},
@@ -411,7 +411,7 @@ func datasourceIllumioRuleSets() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -492,7 +492,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 	rss := []map[string]interface{}{}
 
 	for _, ruleSet := range data.Children() {
-		rs := gabsToMap(ruleSet, rsKeys)
+		rs := extractMap(ruleSet, rsKeys)
 
 		key := "rules"
 		if ruleSet.Exists(key) {
@@ -518,7 +518,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 			}
 
 			for _, rule := range ruleSet.S(key).Children() {
-				rl := gabsToMap(rule, rlKeys)
+				rl := extractMap(rule, rlKeys)
 
 				rlaKey := "resolve_labels_as"
 				if rule.Exists(rlaKey) {
@@ -534,7 +534,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 						"to_port",
 					}
 
-					rl[isKey] = gabsToMapArray(rule.S(isKey), isKeys)
+					rl[isKey] = extractMapArray(rule.S(isKey), isKeys)
 				}
 
 				providersKey := "providers"
@@ -558,7 +558,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 			scps := []interface{}{}
 			scopeKeys := []string{"label", "label_group"}
 			for _, scope := range ruleSet.S(key).Children() {
-				scps = append(scps, gabsToMapArray(scope, scopeKeys))
+				scps = append(scps, extractMapArray(scope, scopeKeys))
 			}
 
 			rs[key] = scps
@@ -592,10 +592,10 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 			iptrs := []map[string]interface{}{}
 			for _, iptRule := range ruleSet.S(key).Children() {
 
-				iptr := gabsToMap(iptRule, iptrKeys)
+				iptr := extractMap(iptRule, iptrKeys)
 
 				if iptRule.Exists(statKey) {
-					iptr[statKey] = gabsToMapArray(iptRule.S(statKey), statKeys)
+					iptr[statKey] = extractMapArray(iptRule.S(statKey), statKeys)
 				}
 
 				if iptRule.Exists(actorsKey) {

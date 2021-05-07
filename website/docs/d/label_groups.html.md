@@ -30,7 +30,7 @@ data "illumio-core_label_groups" "name" {
 - **key** (String) Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".
 - **max_results** (String) Maximum number of Labels to return
 - **name** (String) Name of Label Group(s) to return. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
 - **usage** (String) Include label usage flags as well
 
 ### Read-Only

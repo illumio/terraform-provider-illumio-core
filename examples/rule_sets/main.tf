@@ -16,9 +16,5 @@ provider "illumio-core" {
 }
 
 data "illumio-core_rule_sets" "example" {
-  max_results = 100
-}
-
-output "name" {
-  value = data.illumio-core_rule_sets.example
+  max_results = 5
 }

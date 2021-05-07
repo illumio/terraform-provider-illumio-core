@@ -158,27 +158,22 @@ func datasourceIllumioContainerClustersRead(ctx context.Context, d *schema.Resou
 
 	dataMap := []map[string]interface{}{}
 
-	for _, child := range data.Children() {
-		m := map[string]interface{}{}
+	keys := []string{
+		"href",
+		"name",
+		"description",
+		"container_runtime",
+		"manager_type",
+		"last_connected",
+		"online",
+		"kubelink_version",
+		"pce_fqdn",
+		"caps",
+	}
 
-		for _, key := range []string{
-			"href",
-			"name",
-			"description",
-			"container_runtime",
-			"manager_type",
-			"last_connected",
-			"online",
-			"kubelink_version",
-			"pce_fqdn",
-			"caps",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+	for _, child := range data.Children() {
+		m := gabsToMap(child, keys)
+
 		for key, value := range map[string][]string{
 			"nodes":  {"pod_subnet"},
 			"errors": {"audit_event", "duplicate_ids", "error_type"},

@@ -64,6 +64,13 @@ func datasourceIllumioServices() *schema.Resource {
 		SchemaVersion: version,
 		Description:   "Represents Illumio Services",
 		Schema: map[string]*schema.Schema{
+			"pversion": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Default:          "draft",
+				ValidateDiagFunc: isValidPversion(),
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -277,6 +284,8 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
+	pversion := d.Get("pversion").(string)
+
 	paramKeys := []string{
 		"description",
 		"external_data_reference",
@@ -289,7 +298,7 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/services", pConfig.OrgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/%v/services", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -297,32 +306,25 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	dataMap := []map[string]interface{}{}
+	keys := []string{
+		"href",
+		"name",
+		"description",
+		"description_url",
+		"process_name",
+		"external_data_set",
+		"external_data_reference",
+		"created_at",
+		"updated_at",
+		"deleted_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+		"update_type",
+	}
 
 	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-
-		for _, key := range []string{
-			"href",
-			"name",
-			"description",
-			"description_url",
-			"process_name",
-			"external_data_set",
-			"external_data_reference",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-			"update_type",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+		m := gabsToMap(child, keys)
 
 		if child.Exists("service_ports") {
 			sps := child.S("service_ports")

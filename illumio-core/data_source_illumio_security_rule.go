@@ -396,12 +396,12 @@ func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceDa
 
 	providersKey := "providers"
 	if data.Exists(providersKey) {
-		d.Set(providersKey, extractActors(data.S(providersKey)))
+		d.Set(providersKey, extractDatasourceActors(data.S(providersKey)))
 	}
 
 	consumerKey := "consumers"
 	if data.Exists(consumerKey) {
-		d.Set(consumerKey, extractActors(data.S(consumerKey)))
+		d.Set(consumerKey, extractDatasourceActors(data.S(consumerKey)))
 	}
 
 	return diagnostics

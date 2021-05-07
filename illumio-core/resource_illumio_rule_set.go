@@ -3,30 +3,12 @@ package illumiocore
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/illumio/terraform-provider-illumio-core/models"
-)
-
-var (
-	RuleSetIPTableRuleSupportedParams = []string{
-		"ip_version",
-		"update_type",
-		"created_at",
-		"updated_at",
-		"deleted_at",
-		"created_by",
-		"updated_by",
-		"deleted_by",
-		"href",
-		"enabled",
-		"description",
-		"statements",
-	}
 )
 
 func resourceIllumioRuleSet() *schema.Resource {
@@ -543,13 +525,13 @@ func resourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	if data.Exists("rules") {
-		d.Set("rules", resourceIllumioRuleSetReadSecurityRules(data.S("rules")))
+		d.Set("rules", extractResourceRuleSetSecurityRules(data.S("rules")))
 	} else {
 		d.Set("rules", nil)
 	}
 
 	if data.Exists("ip_tables_rules") {
-		d.Set("ip_tables_rules", resourceIllumioRuleSetReadIPTablesRules(data.S("ip_tables_rules")))
+		d.Set("ip_tables_rules", extractResourceRuleSetIPTablesRules(data.S("ip_tables_rules")))
 	} else {
 		d.Set("ip_tables_rules", nil)
 	}
@@ -557,92 +539,88 @@ func resourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m i
 	return diagnostics
 }
 
-func resourceIllumioRuleSetReadIPTablesRules(data *gabs.Container) []map[string]interface{} {
+func extractResourceRuleSetIPTablesRules(data *gabs.Container) []map[string]interface{} {
 	ms := []map[string]interface{}{}
-	for _, data := range data.Children() {
-		m := map[string]interface{}{}
-		for k, v := range data.ChildrenMap() {
-			if k == "actors" {
-				m[k] = getRuleActors(v)
-			} else if contains(RuleSetIPTableRuleSupportedParams, k) {
-				m[k] = v.Data()
-			}
-		}
+
+	iptrKeys := []string{
+		"ip_version",
+		"update_type",
+		"created_at",
+		"updated_at",
+		"deleted_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+		"href",
+		"enabled",
+		"description",
+	}
+
+	statKeys := []string{
+		"table_name",
+		"chain_name",
+		"parameters",
+	}
+
+	for _, ipTableRuleData := range data.Children() {
+		m := gabsToMap(ipTableRuleData, iptrKeys)
+		m["actors"] = getRuleActors(ipTableRuleData.S("actors"))
+		m["statements"] = gabsToMapArray(ipTableRuleData.S("statements"), statKeys)
+
 		ms = append(ms, m)
 	}
 	return ms
 }
 
-func resourceIllumioRuleSetReadSecurityRules(data *gabs.Container) []map[string]interface{} {
-	ms := []map[string]interface{}{}
-	for _, data := range data.Children() {
-		m := map[string]interface{}{}
+func extractResourceRuleSetSecurityRules(data *gabs.Container) []map[string]interface{} {
 
-		for _, key := range []string{
-			"href",
-			"enabled",
-			"description",
-			"external_data_set",
-			"external_data_reference",
-			"sec_connect",
-			"stateless",
-			"machine_auth",
-			"unscoped_consumers",
-			"update_type",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-		} {
-			if data.Exists(key) {
-				m[key] = data.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
-
-		obj := map[string]interface{}{}
-		for k, v := range data.S("resolve_labels_as").Data().(map[string]interface{}) {
-			obj[k] = getStringList(v)
-		}
-		resLabAs := []map[string]interface{}{obj}
-
-		// Req param, Will be present in JSON responce
-		m["resolve_labels_as"] = resLabAs
-
-		// Req param, Will be present in JSON responce
-		m["providers"] = getRuleActors(data.S("providers"))
-
-		// Req param, Will be present in JSON responce
-		m["consumers"] = getRuleActors(data.S("consumers"))
-
-		ingServs := data.S("ingress_services").Data().([]interface{})
-
-		iss := []map[string]interface{}{}
-
-		for _, ingServ := range ingServs {
-			is := ingServ.(map[string]interface{})
-
-			for k, v := range ingServ.(map[string]interface{}) {
-				if k == "href" {
-					is[k] = v
-				} else {
-					is[k] = strconv.Itoa(int(v.(float64)))
-				}
-
-				iss = append(iss, is)
-			}
-		}
-
-		// Req param, Will be present in JSON responce
-		m["ingress_services"] = iss
-
-		ms = append(ms, m)
+	srKeys := []string{
+		"href",
+		"enabled",
+		"description",
+		"external_data_set",
+		"external_data_reference",
+		"sec_connect",
+		"stateless",
+		"machine_auth",
+		"unscoped_consumers",
+		"update_type",
+		"created_at",
+		"updated_at",
+		"deleted_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
 	}
 
-	return ms
+	srs := []map[string]interface{}{}
+	for _, secRuleData := range data.Children() {
+		sr := gabsToMap(secRuleData, srKeys)
+
+		rlaKey := "resolve_labels_as"
+		if secRuleData.Exists(rlaKey) {
+			sr[rlaKey] = extractSecurityRuleResolveLabelAs(secRuleData.S(rlaKey))
+		}
+
+		prkey := "providers"
+		if secRuleData.Exists(prkey) {
+			sr[prkey] = getRuleActors(secRuleData.S(prkey))
+		}
+
+		cnKeys := "consumers"
+		if secRuleData.Exists(cnKeys) {
+			sr[cnKeys] = getRuleActors(secRuleData.S(cnKeys))
+		}
+
+		isKey := "ingress_services"
+		if secRuleData.Exists(isKey) {
+			sr[isKey] = extractResourceSecurityRuleIngressService(secRuleData.S(isKey))
+		}
+
+		srs = append(srs, sr)
+	}
+
+	return srs
 }
 
 func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

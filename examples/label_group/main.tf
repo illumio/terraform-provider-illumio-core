@@ -20,17 +20,17 @@ data "illumio-core_label_group" "datalg1"{
 }
 
 data "illumio-core_label" "label_1" {
-  label_id  = 1
+  href  = "/orgs/1/labels/1"
 }
 
 data "illumio-core_label" "label_2" {
-  label_id  = 2
+  href  = "/orgs/1/labels/2"
 }
 
 resource "illumio-core_label_group" "role_lg_a" {
   key           = "role"
-  name          = "test label group - a"
-  description   = "Update Desc"
+  name          = "example name"
+  description   = "example description"
   labels {
     href = data.illumio-core_label.label_1.href
   }

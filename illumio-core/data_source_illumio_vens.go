@@ -759,40 +759,33 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	dataMap := []map[string]interface{}{}
+	keys := []string{
+		"href",
+		"name",
+		"description",
+		"hostname",
+		"uid",
+		"os_id",
+		"os_detail",
+		"os_platform",
+		"version",
+		"status",
+		"activation_type",
+		"active_pce_fqdn",
+		"target_pce_fqdn",
+		"labels",
+		"unpair_allowed",
+		"last_heartbeat_at",
+		"last_goodbye_at",
+		"created_at",
+		"created_by",
+		"updated_at",
+		"updated_by",
+		"caps",
+	}
 
 	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-
-		for _, key := range []string{
-			"href",
-			"name",
-			"description",
-			"hostname",
-			"uid",
-			"os_id",
-			"os_detail",
-			"os_platform",
-			"version",
-			"status",
-			"activation_type",
-			"active_pce_fqdn",
-			"target_pce_fqdn",
-			"labels",
-			"unpair_allowed",
-			"last_heartbeat_at",
-			"last_goodbye_at",
-			"created_at",
-			"created_by",
-			"updated_at",
-			"updated_by",
-			"caps",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+		m := gabsToMap(child, keys)
 
 		intfKeys := []string{
 			"href",

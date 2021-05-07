@@ -32,7 +32,7 @@ resource "illumio-core_vens_unpair" "example" {
 
 ### Required
 
-- **vens** (Block Set, Min: 1) List of VENs to unpair (see [below for nested schema](#nestedblock--vens))
+- **vens** (Block Set, Min: 1) List of VENs to unpair. Max Items allowed: 1000 (see [below for nested schema](#nestedblock--vens))
 
 ### Optional
 

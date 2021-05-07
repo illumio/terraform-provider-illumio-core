@@ -2,6 +2,7 @@ package illumiocore
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -68,14 +69,15 @@ func resourceIllumioOrganizationSettingsRead(ctx context.Context, d *schema.Reso
 	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	href := d.Id()
 
-	_, data, err := illumioClient.Get(href, nil)
+	orgID := pConfig.OrgID
+
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/event", orgID), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(href)
+	d.SetId(fmt.Sprintf("/orgs/%v/settings/event", orgID))
 
 	for _, key := range []string{
 		"audit_event_retention_seconds",

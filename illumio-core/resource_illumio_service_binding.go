@@ -79,10 +79,9 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"container_workload": {
-				Type:         schema.TypeSet,
-				Optional:     true,
-				ExactlyOneOf: []string{"workload", "container_workload"},
-				Description:  "Container Workload href",
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Container Workload href",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

@@ -9,7 +9,7 @@ description: |-
 
 # illumio-core_organization_settings (Resource)
 
-Manages Illumio Organization Settings
+Manages Illumio Organization Settings (***Global Organization Owner access required***)
 
 
 ```hcl
@@ -31,7 +31,7 @@ resource "illumio-core_organization_settings" "example" {
 
 ## Importing ##
 
-This resource can only be imported and can not be created. Use below command to import resource. Since this resource auto determines ID based on provider config. You can pass anything as identifier. 
+This resource can only be imported and can not be created. Use below command to import resource.  This resource auto determines URI based on provider config. So no need of providing URI while importing. 
 
 After importing, Cherry pick the configurable parameters from `terraform show` and paste it into .tf file.
 
@@ -39,6 +39,6 @@ Ref: https://www.terraform.io/docs/import/index.html
 
 
 ```
-terraform import illumio-core_organization_settings.example <URI>
+terraform import illumio-core_organization_settings.example <ANYTHING>
 ```
 

@@ -34,7 +34,7 @@ resource "illumio-core_vens_upgrade" "example" {
 ### Required
 
 - **release** (String) The software release to upgrade to
-- **vens** (Block Set, Min: 1) List of VENs to unpair (see [below for nested schema](#nestedblock--vens))
+- **vens** (Block Set, Min: 1) List of VENs to unpair. Max Items allowed: 25000 (see [below for nested schema](#nestedblock--vens))
 
 <a id="nestedblock--vens"></a>
 ### Nested Schema for `vens`

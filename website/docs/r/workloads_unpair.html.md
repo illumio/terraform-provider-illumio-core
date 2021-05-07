@@ -33,7 +33,7 @@ resource "illumio-core_workloads_unpair" "example" {
 
 ### Required
 
-- **workloads** (Block Set, Min: 1) List of Workloads to unpair (see [below for nested schema](#nestedblock--workloads))
+- **workloads** (Block Set, Min: 1) List of Workloads to unpair. Max Items allowed: 1000. (see [below for nested schema](#nestedblock--workloads))
 
 ### Optional
 

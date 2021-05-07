@@ -30,7 +30,7 @@ func resourceIllumioWorkloadsUnpair() *schema.Resource {
 					m := i.(map[string]interface{})
 					return hashcode(m["href"].(string))
 				},
-				Description: "List of Workloads to unpair",
+				Description: "List of Workloads to unpair. Max Items allowed: 1000",
 				Elem:        hrefSchemaRequired("Workload", isWorkloadHref),
 			},
 			"ip_table_restore": {

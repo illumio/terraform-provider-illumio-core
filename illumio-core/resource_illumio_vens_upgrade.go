@@ -29,7 +29,7 @@ func resourceIllumioVENsUpgrade() *schema.Resource {
 					m := i.(map[string]interface{})
 					return hashcode(m["href"].(string))
 				},
-				Description: "List of VENs to unpair",
+				Description: "List of VENs to unpair. Max Items allowed: 25000",
 				Elem:        hrefSchemaRequired("VEN", isVENHref),
 			},
 			"release": {

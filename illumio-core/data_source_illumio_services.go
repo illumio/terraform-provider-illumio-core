@@ -106,7 +106,7 @@ func datasourceIllumioServices() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of service hrefs",
+				Description: "List of services",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

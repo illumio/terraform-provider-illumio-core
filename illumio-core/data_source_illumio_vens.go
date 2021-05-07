@@ -131,7 +131,7 @@ func datasourceIllumioVENs() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of VEN hrefs",
+				Description: "list of VENs",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

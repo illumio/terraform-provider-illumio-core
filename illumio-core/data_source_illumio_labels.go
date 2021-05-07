@@ -82,7 +82,7 @@ func datasourceIllumioLabels() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of label hrefs",
+				Description: "List of labels",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

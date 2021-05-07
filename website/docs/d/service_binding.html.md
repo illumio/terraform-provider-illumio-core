@@ -11,6 +11,9 @@ description: |-
 
 Represents Illumio Service Binding
 
+Example Usage
+------------
+
 ```hcl
 data "illumio-core_service_binding" "test" {
    href = "/orgs/1/service_bindings/ad730105-d913-4859-b240-857ac4b8621d"

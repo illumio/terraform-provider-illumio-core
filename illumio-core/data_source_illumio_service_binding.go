@@ -137,7 +137,6 @@ func datasourceIllumioServiceBindingRead(ctx context.Context, d *schema.Resource
 		"href",
 		"bound_service",
 		"virtual_service",
-		"container_workload",
 		"external_data_set",
 		"external_data_reference",
 	} {
@@ -146,6 +145,12 @@ func datasourceIllumioServiceBindingRead(ctx context.Context, d *schema.Resource
 		} else {
 			d.Set(key, nil)
 		}
+	}
+
+	if data.Exists("container_workload") {
+		d.Set("container_workload", map[string]string{"href": data.S("container_workload").S("href").Data().(string)})
+	} else {
+		d.Set("container_workload", nil)
 	}
 
 	if data.Exists("port_overrides") {

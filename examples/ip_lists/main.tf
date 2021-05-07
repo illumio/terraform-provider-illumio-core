@@ -15,6 +15,6 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-data "illumio-core_ip_lists" "name" {
+data "illumio-core_ip_lists" "example" {
     max_results = "5"
 }  

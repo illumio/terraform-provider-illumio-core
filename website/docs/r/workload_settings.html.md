@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 # INFO: cherry-picked attributes from terraform show after import
-resource "illumio-core_workload_settings" "test" {
+resource "illumio-core_workload_settings" "example" {
   workload_disconnected_timeout_seconds {
     value = -1
   }

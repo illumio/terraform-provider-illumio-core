@@ -206,7 +206,7 @@ func resourceIllumioEnforcementBoundaryCreate(ctx context.Context, d *schema.Res
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/enforcement_boundaries", orgID), EnfBoun)
 	if err != nil {
-		return diag.Errorf(err.Error())
+		return diag.FromErr(err)
 	}
 
 	pConfig.StoreHref(pConfig.OrgID, "enforcement_boundaries", data.S("href").Data().(string))
@@ -243,7 +243,7 @@ func expandIllumioEnforcementBoundaryIngressService(inServices []interface{}) ([
 	iss := []map[string]interface{}{}
 
 	if len(inServices) == 0 {
-		diags = append(diags, diag.Errorf("At least one ingress_service must be specified")...)
+		diags = append(diags, diag.Errorf("[illumio-core_enforcement_boundary] At least one ingress_service must be specified")...)
 	}
 	for _, service := range inServices {
 		s := service.(map[string]interface{})
@@ -261,7 +261,7 @@ func expandIllumioEnforcementBoundaryIngressService(inServices []interface{}) ([
 					m["port"] = vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
-							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside ingress_services")...)
+							diags = append(diags, diag.Errorf("[illumio-core_enforcement_boundary] Value of to_port can't be less or equal to value of port inside ingress_services")...)
 						} else {
 							m["to_port"] = vToPort
 						}
@@ -290,7 +290,7 @@ func expandIllumioEnforcementBoundaryConsumers(consumers []interface{}) ([]*mode
 		}
 
 		if !con.HasOneActor() {
-			return nil, diag.Errorf("consumer block can have only one rule actor")
+			return nil, diag.Errorf("[illumio-core_enforcement_boundary] Consumer block can have only one rule actor")
 		}
 		cons = append(cons, con)
 	}
@@ -310,7 +310,7 @@ func expandIllumioEnforcementBoundaryProviders(providers []interface{}) ([]*mode
 			IPList:     getHrefObj(p["ip_list"]),
 		}
 		if !prov.HasOneActor() {
-			return nil, diag.Errorf("provider block can only have one rule actor")
+			return nil, diag.Errorf("[illumio-core_enforcement_boundary] Provider block can only have one rule actor")
 		}
 
 		provs = append(provs, prov)

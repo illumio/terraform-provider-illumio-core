@@ -12,7 +12,9 @@ description: |-
 Represents List of Illumio Traffic Collector Settings 
 
 ```hcl
-data "illumio-core_traffic_collector_settings_list" "example" {}
+data "illumio-core_traffic_collector_settings_list" "example" {
+  
+}
 ```
 
 ## Schema

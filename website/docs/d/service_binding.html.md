@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_service_binding" "test" {
+data "illumio-core_service_binding" "example" {
    href = "/orgs/1/service_bindings/ad730105-d913-4859-b240-857ac4b8621d"
 }
 ```

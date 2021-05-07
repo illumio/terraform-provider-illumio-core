@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_pairing_profile" "example" {
-  max_results = 5
+  max_results = "5"
 }
 ```
 
@@ -29,7 +29,7 @@ data "illumio-core_pairing_profile" "example" {
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **labels** (String) List of lists of label URIs, encoded as a JSON string
-- **max_results** (String) Maximum number of Pairing Profiles to return.
+- **max_results** (String) Maximum number of Pairing Profiles to return. The integer should be a non-zero positive integer. 
 - **name** (String) Name of Pairing Profile(s) to return. Supports partial matches
 
 ### Read-Only

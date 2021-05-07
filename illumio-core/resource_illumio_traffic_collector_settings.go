@@ -105,7 +105,7 @@ func resourceIllumioTrafficCollectorSettingsCreate(ctx context.Context, d *schem
 		return diag.Diagnostics{
 			diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "expected target block",
+				Summary:  "[illumio-core_traffic_collector_settings] Expected target block",
 				Detail:   "target block must be specified if action is \"drop\"",
 			},
 		}
@@ -113,8 +113,8 @@ func resourceIllumioTrafficCollectorSettingsCreate(ctx context.Context, d *schem
 		return diag.Diagnostics{
 			diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unexpected target block",
-				Detail:   "target block cannot be specified if action is \"aggregate\"",
+				Summary:  "[illumio-core_traffic_collector_settings] target block not allowed",
+				Detail:   "target block is not allowed when action is \"aggregate\"",
 			},
 		}
 	}
@@ -212,7 +212,7 @@ func resourceIllumioTrafficCollectorSettingsUpdate(ctx context.Context, d *schem
 		return diag.Diagnostics{
 			diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unexpectade update: action is not updatable",
+				Summary:  "[illumio-core_traffic_collector_settings] Unexpectade update: action attribute is not updatable",
 			},
 		}
 	}
@@ -230,8 +230,8 @@ func resourceIllumioTrafficCollectorSettingsUpdate(ctx context.Context, d *schem
 		return diag.Diagnostics{
 			diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unexpected target block",
-				Detail:   "target block cannot be specified if action is \"aggregate\"",
+				Summary:  "[illumio-core_traffic_collector_settings] target block not allowed",
+				Detail:   "target block is not allowed when action is \"aggregate\"",
 			},
 		}
 	}

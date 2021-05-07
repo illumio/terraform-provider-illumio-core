@@ -350,7 +350,7 @@ func expandIllumioSecurityRule(d *schema.ResourceData) (*models.SecurityRule, *d
 	}
 
 	if secRule.HasConflicts() {
-		diags = append(diags, diag.Errorf("Only one of [\"sec_connect\", \"machine_auth\", \"stateless\"] can be set to true")...)
+		diags = append(diags, diag.Errorf("[illumio-core_security_rule] Only one of [\"sec_connect\", \"machine_auth\", \"stateless\"] can be set to true")...)
 	}
 
 	resLabelAs, errs := expandIllumioSecurityRuleResolveLabelsAs(d.Get("resolve_labels_as").([]interface{})[0])
@@ -383,11 +383,11 @@ func expandIllumioSecurityRuleResolveLabelsAs(o interface{}) (*models.SecurityRu
 	rCons := getStringList(resLabelsAs["consumers"].(*schema.Set).List())
 
 	if !validateList(rProvs, validSRResLabelAsValues) {
-		diags = append(diags, diag.Errorf(`invalid value for resolve_value_as.providers, allowed values are "workloads" and "virtual_services"`)...)
+		diags = append(diags, diag.Errorf(`[illumio-core_security_rule] Invalid value for resolve_value_as.providers, allowed values are "workloads" and "virtual_services"`)...)
 	}
 
 	if !validateList(rCons, validSRResLabelAsValues) {
-		diags = append(diags, diag.Errorf(`invalid value for resolve_value_as.consumers, allowed values are "workloads" and "virtual_services"`)...)
+		diags = append(diags, diag.Errorf(`[illumio-core_security_rule] Invalid value for resolve_value_as.consumers, allowed values are "workloads" and "virtual_services"`)...)
 	}
 
 	v := &models.SecurityRuleResolveLabelAs{
@@ -405,12 +405,12 @@ func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty 
 
 	// Throw error if virtual_services is the only value set in resolve_label_as.provider and ingress_service's resource is non empty
 	if setEmpty && len(inServices) > 0 {
-		diags = append(diags, diag.Errorf("If the only value in the providers of resolve_label_as block is \"virtual_services\", then setting ingress_services is not allowed")...)
+		diags = append(diags, diag.Errorf("[illumio-core_security_rule] If the only value in the providers of resolve_label_as block is \"virtual_services\", then setting ingress_services is not allowed")...)
 	}
 
 	if !setEmpty {
 		if len(inServices) == 0 {
-			diags = append(diags, diag.Errorf("At least one ingress_service must be specified if providers of resolve_label_as block has \"workloads\"")...)
+			diags = append(diags, diag.Errorf("[illumio-core_security_rule] At least one ingress_service must be specified if providers of resolve_label_as block has \"workloads\"")...)
 		}
 		for _, service := range inServices {
 			s := service.(map[string]interface{})
@@ -428,7 +428,7 @@ func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty 
 						m["port"] = vPort
 						if vToPort, ok := getInt(s["to_port"]); ok {
 							if vToPort <= vPort {
-								diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside ingress_services")...)
+								diags = append(diags, diag.Errorf(" [illumio-core_security_rule] Value of to_port can't be less or equal to value of port inside ingress_services")...)
 							} else {
 								m["to_port"] = vToPort
 							}
@@ -455,21 +455,21 @@ func isIngressServiceSchemaValid(s map[string]interface{}, diags *diag.Diagnosti
 
 	switch {
 	case !hrefOk && !protoOk:
-		*diags = append(*diags, diag.Errorf("href/proto is required inside ingress_services")...)
+		*diags = append(*diags, diag.Errorf("[illumio-core_security_rule] Atleast one of [href, proto] is required inside ingress_services")...)
 
 	case hrefOk && protoOk:
-		*diags = append(*diags, diag.Errorf("Only one of [href, proto] is allowed inside ingress_services")...)
+		*diags = append(*diags, diag.Errorf("[illumio-core_security_rule] Exactly one of [href, proto] is allowed inside ingress_services")...)
 
 	case hrefOk:
 		if portOk || toPortOk { // If port or to_port are defined with href, return error
-			*diags = append(*diags, diag.Errorf("port/proto is not allowed with href inside ingress_services")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_security_rule] port/proto is not allowed with href inside ingress_services")...)
 			return false
 		}
 		return true
 
 	case protoOk:
 		if !portOk && toPortOk { // If to_port is defined without port, return error
-			*diags = append(*diags, diag.Errorf("port is required with to_port inside ingress_services")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_security_rule] port is required with to_port inside ingress_services")...)
 			return false
 		}
 		return true
@@ -493,7 +493,7 @@ func expandIllumioSecurityRuleProviders(providers []interface{}) ([]*models.Secu
 			IPList:         getHrefObj(p["ip_list"]),
 		}
 		if !prov.HasOneActor() {
-			return nil, diag.Errorf("provider block can have only one rule actor")
+			return nil, diag.Errorf("[illumio-core_security_rule] Provider block can have only one rule actor")
 		}
 
 		provs = append(provs, prov)
@@ -517,7 +517,7 @@ func expandIllumioSecurityRuleConsumers(consumers []interface{}) ([]*models.Secu
 		}
 
 		if !con.HasOneActor() {
-			return nil, diag.Errorf("consumer block can have only one rule actor")
+			return nil, diag.Errorf("[illumio-core_security_rule] Consumer block can have only one rule actor")
 		}
 		cons = append(cons, con)
 	}
@@ -660,7 +660,7 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if secRule.HasConflicts() {
-		diags = append(diags, diag.Errorf("Only one of [\"sec_connect\", \"machine_auth\", \"stateless\"] can be set to true")...)
+		diags = append(diags, diag.Errorf("[illumio-core_security_rule] Exactly one of [\"sec_connect\", \"machine_auth\", \"stateless\"] can be set to true")...)
 	}
 
 	if diags.HasError() {

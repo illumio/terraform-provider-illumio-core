@@ -17,5 +17,5 @@ provider "illumio-core" {
 }
 
 data "illumio-core_container_clusters" "example" {
-  max_results = 6
+  max_results = "5"
 }

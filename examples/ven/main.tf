@@ -19,7 +19,7 @@ data "illumio-core_ven" "ven" {
   href = "/orgs/1/vens/80ec4e0a-e628-41c2-b79a-866f72a6b070"
 }
 
-resource "illumio-core_ven" "name" {
+resource "illumio-core_ven" "example" {
   status = "suspended"
   name = "example name"
   description = "description"

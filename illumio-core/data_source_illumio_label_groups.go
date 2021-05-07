@@ -95,9 +95,10 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 				Description: `Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".`,
 			},
 			"max_results": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Maximum number of Labels to return",
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of Labels to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -260,7 +261,7 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/%v/label_groups", orgID, pversion), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%d/sec_policy/%v/label_groups", orgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

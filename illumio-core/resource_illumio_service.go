@@ -260,7 +260,7 @@ func expandIllumioServiceServicePorts(serPorts []interface{}) ([]map[string]inte
 					m["port"] = vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
-							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside service_ports")...)
+							diags = append(diags, diag.Errorf("[illumio-core_service] Value of to_port can't be less or equal to value of port inside service_ports")...)
 						} else {
 							m["to_port"] = vToPort
 						}
@@ -291,29 +291,29 @@ func isPortServiceSchemaValid(p map[string]interface{}, diags *diag.Diagnostics)
 
 	if vProto == "6" || vProto == "17" {
 		if icmpCodeOk || icmpTypeOk {
-			*diags = append(*diags, diag.Errorf("icmp_code and icmp_type are not allowed parameter in case of TCP or UDP protocol is defined")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_service] icmp_code and icmp_type are not allowed when TCP or UDP protocol is specified, inside service ports")...)
 			return false
 		}
 		if !portOk && toPortOk {
-			*diags = append(*diags, diag.Errorf("to_port parameter should be defined if port is defined")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_service] to_port parameter should be defined if port is specified, inside service ports")...)
 			return false
 		}
 	} else if vProto == "1" || vProto == "58" {
 		if portOk || toPortOk {
-			*diags = append(*diags, diag.Errorf("port and to_port parameter should be allowed if TCP or UDP protocol is defined")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_service] port and to_port parameter are not allowed if ICMP or ICMPv6 protocol is specified, inside service ports")...)
 			return false
 		}
 		if icmpCodeOk && !icmpTypeOk {
-			*diags = append(*diags, diag.Errorf("icmp_type should be provided if icmp_code is provided")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_service] icmp_type is required if icmp_code is specifiedn inside service ports")...)
 			return false
 		}
 	} else {
 		if icmpCodeOk || icmpTypeOk {
-			*diags = append(*diags, diag.Errorf("icmp_code and icmp_type are not allowed parameter for this protocol")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_service] icmp_code and icmp_type are not allowed if protocols except ICMP and ICMPv6 are specified")...)
 			return false
 		}
 		if portOk || toPortOk {
-			*diags = append(*diags, diag.Errorf("port and to_port parameter should be allowed if TCP or UDP protocol is defined")...)
+			*diags = append(*diags, diag.Errorf("[illumio-core_service] port and to_port parameter are not allowed if protocols except TCP and UDP are specified")...)
 			return false
 		}
 	}
@@ -341,7 +341,7 @@ func expandIllumioWindowServices(winServs []interface{}) ([]map[string]interface
 					m["port"] = vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
-							diags = append(diags, diag.Errorf("value of to_port can't be less or equal to value of port inside windows_services")...)
+							diags = append(diags, diag.Errorf("[illumio-core_service] Value of to_port can't be less or equal to value of port inside windows_services")...)
 						} else {
 							m["to_port"] = vToPort
 						}
@@ -461,7 +461,7 @@ func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m
 	if d.HasChange("process_name") {
 		service.ProcessName = d.Get("process_name").(string)
 		if isUpdatedToEmptyString(d.GetChange("process_name")) {
-			diags = append(diags, diag.Errorf("Once set, process_name cannot be updated to an empty string")...)
+			diags = append(diags, diag.Errorf("[illumio-core_service] Once set, process_name cannot be updated to an empty string")...)
 		}
 	}
 
@@ -492,7 +492,7 @@ func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if service.ServicePorts != nil && service.WindowsServices != nil {
-		diags = append(diags, diag.Errorf("Can't change OS type form windows to service or vice versa")...)
+		diags = append(diags, diag.Errorf("[illumio-core_service] Cannot change OS type form windows to service or vice versa")...)
 	}
 
 	if diags.HasError() {

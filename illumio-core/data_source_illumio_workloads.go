@@ -789,8 +789,8 @@ func datasourceIllumioWorkloads() *schema.Resource {
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Maximum number of workloads to return.",
+				ValidateDiagFunc: isStringGreaterThanZero(),
+				Description:      "Maximum number of workloads to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -907,7 +907,7 @@ func dataSourceIllumioWorkloadsRead(ctx context.Context, d *schema.ResourceData,
 		params["vulnerability_summary.vulnerability_exposure_score[lte]"] = value.(string)
 	}
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/workloads", pConfig.OrgID), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/workloads", pConfig.OrgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

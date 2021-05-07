@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_workload" "test" {
+data "illumio-core_workload" "example" {
   href = "/orgs/1/workloads/e683b686-8afe-4675-88a1-4463395f0482"
 }
 ```

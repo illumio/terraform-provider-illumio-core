@@ -16,7 +16,8 @@ Example Usage
 
 ```hcl
 data "illumio-core_enforcement_boundaries" "example" {
-  max_results = 5
+  max_results = "5"
+  container_cluster_href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde"
 }
 ```
 
@@ -24,7 +25,7 @@ data "illumio-core_enforcement_boundaries" "example" {
 
 ### Required
 
-- **href** (String) URI of the Container Cluster
+- **container_cluster_href** (String) URI of the Container Cluster
 
 ### Optional
 
@@ -32,10 +33,10 @@ data "illumio-core_enforcement_boundaries" "example" {
 - **enforcement_mode** (String) Filter by enforcement mode.
 - **linked** (String) Filter by linked container workload profiles. Allowed values are "true" and "false".
 - **managed** (String) Filter by managed state. Allowed values are "true" and "false".
-- **max_results** (String) Maximum number of container workloads to return.
+- **max_results** (String) Maximum number of container workloads to return. The integer should be a non-zero positive integer.
 - **name** (String) Name string to match.Supports partial matches.
 - **namespace** (String) Namespace string to match.Supports partial matches.
-- **visibility_level** (String) Filter by visibility level
+- **visibility_level** (String) Filter by visibility level. Allowed values are "flow_full_detail", "flow_summary", "flow_drops", "flow_off" and "enhanced_data_collection
 
 ### Read-Only
 

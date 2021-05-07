@@ -118,7 +118,7 @@ func resourceIllumioOrganizationSettingsDelete(ctx context.Context, d *schema.Re
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Detail:   "[illumio-core_organization_settings] Ignoring Delete Operation.",
+		Summary:  "[illumio-core_organization_settings] Ignoring Delete Operation...",
 	})
 
 	return diags

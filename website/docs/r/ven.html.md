@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_ven" "name" {
+resource "illumio-core_ven" "example" {
   status = "suspended"
   name = "example name"
   description = "description"

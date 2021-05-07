@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_organization_settings" "test" {
+data "illumio-core_organization_settings" "example" {
   
 }
 ```

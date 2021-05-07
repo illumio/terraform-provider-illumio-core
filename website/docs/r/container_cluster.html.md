@@ -16,9 +16,9 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_container_cluster" "test" {
-    name = "test cc"
-    description = "test desc"
+resource "illumio-core_container_cluster" "example" {
+    name = "name example"
+    description = "description example"
 }
 ```
 

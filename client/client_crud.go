@@ -43,6 +43,26 @@ func (c *V2) Get(endpoint string, queryParams *map[string]string) (*http.Respons
 //
 // Illumio GET APIs return json response on success, available as *gabs.Container
 func (c *V2) AsyncGet(endpoint string, queryParams *map[string]string) (*http.Response, *gabs.Container, error) {
+
+	if queryParams != nil {
+		queryMaxResults, _ := strconv.Atoi((*queryParams)["max_results"])
+
+		if queryMaxResults == 0 {
+			res, respBody, err := c.Get(endpoint, queryParams)
+			if err != nil {
+				return nil, nil, err
+			}
+
+			if v, x := strconv.Atoi(res.Header.Get("X-Total-Count")); x != nil {
+				if v <= 500 {
+					return res, respBody, nil
+				}
+			}
+		} else if queryMaxResults <= 500 {
+			return c.Get(endpoint, queryParams)
+		}
+	}
+
 	req, err := c.PrepareRequest(http.MethodGet, endpoint, nil, queryParams)
 	if err != nil {
 		return nil, nil, err

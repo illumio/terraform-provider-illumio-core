@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_ip_lists" "name" {
+data "illumio-core_ip_lists" "example" {
   max_results = "5"
 }  
 ```
@@ -29,7 +29,7 @@ data "illumio-core_ip_lists" "name" {
 - **external_data_set** (String) The data source from which a resource originates
 - **fqdn** (String) IP lists matching FQDN. Supports partial matches
 - **ip_address** (String) IP address matching IP list(s) to return. Supports partial matches
-- **max_results** (String) Maximum number of IP Lists to return.
+- **max_results** (String) Maximum number of IP Lists to return. The integer should be a non-zero positive integer.
 - **name** (String) Name of IP list(s) to return. Supports partial matches
 - **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
 

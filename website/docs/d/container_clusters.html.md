@@ -15,8 +15,8 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_container_clusters" "test" {
-    max_results = 5
+data "illumio-core_container_clusters" "example" {
+    max_results = "5"
 }
 ```
 
@@ -24,7 +24,7 @@ data "illumio-core_container_clusters" "test" {
 
 ### Optional
 
-- **max_results** (String) Maximum number of container clusters to return
+- **max_results** (String) Maximum number of container clusters to return. The integer should be a non-zero positive integer.
 - **name** (String) Name of the container cluster(s) to return. Supports partial matches
 
 ### Read-Only

@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_services" "name" {
+data "illumio-core_services" "example" {
   max_results = "5"
 }
 ```
@@ -27,7 +27,7 @@ data "illumio-core_services" "name" {
 - **description** (String) Long description of the servcie
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **max_results** (String) Maximum number of Services to return
+- **max_results** (String) Maximum number of Services to return. The integer should be a non-zero positive integer. 
 - **name** (String) Name of the servcie (does not need to be unique)
 - **port** (String) Specify port or port range to filter results. The range is from -1 to 65535 (0 is not supported)
 - **proto** (String) Protocol to filter on. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94

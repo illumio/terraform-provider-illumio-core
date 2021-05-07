@@ -153,7 +153,15 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 }
 
 func resourceIllumioFirewallSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return diag.Errorf("illumio_firewall_settings can not be created. please use import")
+	var diags diag.Diagnostics
+
+	diags = append(diags, diag.Diagnostic{
+		Severity: diag.Error,
+		Detail:   "[illumio-core_firewall_settings] Cannot use Create Operation.",
+		Summary:  "Please use terrform import...",
+	})
+
+	return diags
 }
 
 func resourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -246,7 +254,14 @@ func resourceIllumioFirewallSettingsUpdate(ctx context.Context, d *schema.Resour
 
 func resourceIllumioFirewallSettingsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	d.SetId("")
-	return nil
+	var diags diag.Diagnostics
+
+	diags = append(diags, diag.Diagnostic{
+		Severity: diag.Warning,
+		Summary:  "[illumio-core_firewall_settings] Ignoring Delete Operation...",
+	})
+
+	return diags
 }
 
 func expandFirewallCoexistence(firewallCoexistence []interface{}) models.FirewallCoexistence {
@@ -272,10 +287,10 @@ func expandScopes(scopes []interface{}, min, max int) (models.Scopes, diag.Diagn
 		labelGroups := scopeObj["label_group"].(*schema.Set).List()
 
 		if len(labels)+len(labelGroups) > max {
-			return models.Scopes{}, diag.Errorf("at most %d blocks of label/label_group are allowed", max)
+			return models.Scopes{}, diag.Errorf("[illumio-core_firewall_settings] at most %d blocks of label/label_group are allowed", max)
 		}
 		if len(labels)+len(labelGroups) < min {
-			return models.Scopes{}, diag.Errorf("at least %d block(s) of label/label_group are required", min)
+			return models.Scopes{}, diag.Errorf("[illumio-core_firewall_settings] at least %d block(s) of label/label_group are required", min)
 		}
 		for _, label := range labels {
 			s := models.ScopeObj{

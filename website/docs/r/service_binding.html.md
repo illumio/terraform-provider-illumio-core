@@ -12,7 +12,7 @@ description: |-
 Manages Illumio Service Binding
 
 ```hcl
-resource "illumio-core_service_binding" "test" {
+resource "illumio-core_service_binding" "example" {
   virtual_service {
     href = "/orgs/1/sec_policy/active/virtual_services/69f1fcc7-94f0-4e42-b9a8-e722038e6dda"
   }

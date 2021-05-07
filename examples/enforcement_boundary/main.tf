@@ -16,7 +16,7 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-resource "illumio-core_enforcement_boundary" "test" {
+resource "illumio-core_enforcement_boundary" "example" {
   name = "testing eb"
   ingress_services {
     href = "/orgs/1/sec_policy/draft/services/3"
@@ -33,6 +33,6 @@ resource "illumio-core_enforcement_boundary" "test" {
   }
 }
 
-data "illumio-core_enforcement_boundary" "test" {
+data "illumio-core_enforcement_boundary" "example" {
   href = "/orgs/1/sec_policy/draft/enforcement_boundaries/57"
 }

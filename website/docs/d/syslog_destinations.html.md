@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_syslog_destinations" "name" {
+data "illumio-core_syslog_destinations" "example" {
   
 }
 ```

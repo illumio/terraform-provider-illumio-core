@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_syslog_destination" "name" {
+data "illumio-core_syslog_destination" "example" {
   href = "/orgs/1/settings/syslog/destinations/11a4cfdf-a78e-4144-bbbc-67faec728df1"
 }
 ```

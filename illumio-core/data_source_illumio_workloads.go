@@ -183,7 +183,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of workload hrefs",
+				Description: "list of workloads",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

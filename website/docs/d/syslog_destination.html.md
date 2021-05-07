@@ -9,7 +9,7 @@ description: |-
 
 # illumio-core_syslog_destination (Data Source)
 
-Manages Illumio Syslog Destination
+Represents Illumio Syslog Destination
 
 Example Usage
 ------------

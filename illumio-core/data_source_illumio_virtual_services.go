@@ -49,7 +49,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of virtual service hrefs",
+				Description: "list of virtual services",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

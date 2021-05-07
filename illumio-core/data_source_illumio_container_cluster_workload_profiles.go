@@ -15,7 +15,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 		Description:   "Represents Illumio Container Cluster Workload Profiles",
 
 		Schema: map[string]*schema.Schema{
-			"href": {
+			"container_cluster_href": {
 				Type:             schema.TypeString,
 				Required:         true,
 				Description:      "URI of the Container Cluster",
@@ -226,7 +226,7 @@ func dataSourceIllumioContainerClusterWorkloadProfilesRead(ctx context.Context, 
 	}
 
 	params := resourceDataToMap(d, paramKeys)
-	_, data, err := illumioClient.AsyncGet(d.Get("href").(string)+"/container_workload_profiles", &params)
+	_, data, err := illumioClient.AsyncGet(d.Get("container_cluster_href").(string)+"/container_workload_profiles", &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

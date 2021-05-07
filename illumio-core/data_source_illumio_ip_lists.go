@@ -92,7 +92,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of IP List hrefs",
+				Description: "list of IP Lists",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

@@ -33,7 +33,6 @@ resource "illumio-core_service_binding" "test" {
 - **container_workload** (Block Set) Container Workload href (see [below for nested schema](#nestedblock--container_workload))
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data Set identifier
-- **id** (String) The ID of this resource.
 - **port_overrides** (Block Set) Port Overrides for Service Bindings (see [below for nested schema](#nestedblock--port_overrides))
 - **workload** (Block Set) Workload Object for Service Bindings (see [below for nested schema](#nestedblock--workload))
 

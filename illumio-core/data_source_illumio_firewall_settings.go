@@ -288,8 +288,6 @@ func datasourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.Resour
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	// orgID := pConfig.OrgID
-
 	href := d.Get("href").(string)
 
 	_, data, err := illumioClient.Get(href, nil)
@@ -320,7 +318,7 @@ func datasourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.Resour
 		"blocked_connection_reject_scopes",
 		"loopback_interfaces_in_policy_scopes",
 	} {
-		d.Set(k, extractScopes(data, k))
+		d.Set(k, extractDatasourceScopes(data, k))
 	}
 	d.Set("firewall_coexistence", extractFirewallCoexistence(data))
 	return diagnostics
@@ -361,7 +359,7 @@ func extractFirewallCoexistence(data *gabs.Container) []interface{} {
 	return nil
 }
 
-func extractScopes(data *gabs.Container, key string) []interface{} {
+func extractDatasourceScopes(data *gabs.Container, key string) []interface{} {
 	if data.Exists(key) {
 		l1 := []interface{}{}
 		for _, child1 := range data.S(key).Children() {

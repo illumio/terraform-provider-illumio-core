@@ -28,7 +28,7 @@ data "illumio-core_security_rule" "example" {
 
 ### Read-Only
 
-- **consumers** (Set of Object) Consumers for Security Rule (see [below for nested schema](#nestedatt--consumers))
+- **consumers** (Set of Object) consumers of Security Rule (see [below for nested schema](#nestedatt--consumers))
 - **created_at** (String) Timestamp when this security rule was first created
 - **created_by** (Map of String) User who originally created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
@@ -39,8 +39,8 @@ data "illumio-core_security_rule" "example" {
 - **external_data_set** (String) External data set identifier
 - **ingress_services** (List of Object) Collection of Ingress Services (see [below for nested schema](#nestedatt--ingress_services))
 - **machine_auth** (Boolean) Determines whether machine authentication is enabled
-- **providers** (Set of Object) providers for Security Rule (see [below for nested schema](#nestedatt--providers))
-- **resolve_labels_as** (List of Object) resolve label as for Security rule (see [below for nested schema](#nestedatt--resolve_labels_as))
+- **providers** (Set of Object) providers of Security Rule (see [below for nested schema](#nestedatt--providers))
+- **resolve_labels_as** (List of Object) resolve_label_as of Security rule (see [below for nested schema](#nestedatt--resolve_labels_as))
 - **sec_connect** (Boolean) Determines whether a secure connection is established
 - **stateless** (Boolean) Determines whether packet filtering is stateless for the rule
 - **unscoped_consumers** (Boolean) Set the scope for rule consumers to All
@@ -53,7 +53,7 @@ data "illumio-core_security_rule" "example" {
 
 Read-Only:
 
-- **actors** (String) actors for consumers
+- **actors** (String) actors of consumers actors
 - **ip_list** (Map of String) Href of IP List
 - **label** (Map of String) Href of Label
 - **label_group** (Map of String) Href of Label Group
@@ -91,5 +91,5 @@ Read-Only:
 
 Read-Only:
 
-- **consumers** (List of String) consumers for resolve_labels_as
-- **providers** (List of String) providers for resolve_labels_as
+- **consumers** (List of String) consumers of resolve_labels_as
+- **providers** (List of String) providers of resolve_labels_as

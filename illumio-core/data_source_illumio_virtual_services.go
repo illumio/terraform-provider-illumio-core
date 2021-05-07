@@ -46,6 +46,13 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 		Description:   "Represents Illumio Virtual Services",
 
 		Schema: map[string]*schema.Schema{
+			"pversion": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Default:          "draft",
+				ValidateDiagFunc: isValidPversion(),
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+			},
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -318,6 +325,8 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
+	pversion := d.Get("pversion").(string)
+
 	paramKeys := []string{
 		"description",
 		"external_data_reference",
@@ -343,7 +352,7 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 		params["service_address.proto"] = value.(string)
 	}
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/draft/virtual_services", pConfig.OrgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/virtual_services", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -351,35 +360,28 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	dataMap := []map[string]interface{}{}
+	keys := []string{
+		"href",
+		"created_at",
+		"updated_at",
+		"deleted_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+		"update_type",
+		"name",
+		"description",
+		"external_data_set",
+		"external_data_reference",
+		"pce_fqdn",
+		"labels",
+		"ip_overrides",
+		"apply_to",
+		"caps",
+	}
 
 	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-
-		for _, key := range []string{
-			"href",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-			"update_type",
-			"name",
-			"description",
-			"external_data_set",
-			"external_data_reference",
-			"pce_fqdn",
-			"labels",
-			"ip_overrides",
-			"apply_to",
-			"caps",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+		m := gabsToMap(child, keys)
 
 		key := "service"
 		if child.Exists(key) {

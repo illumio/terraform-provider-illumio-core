@@ -16,6 +16,13 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 		Description:   "Represents Illumio Enforcement Boundaries",
 
 		Schema: map[string]*schema.Schema{
+			"pversion": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Default:          "draft",
+				ValidateDiagFunc: isValidPversion(),
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+			},
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -214,6 +221,8 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
+	pversion := d.Get("pversion").(string)
+
 	paramKeys := []string{
 		"labels",
 		"max_results",
@@ -229,7 +238,7 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 		params["service_address.proto"] = value.(string)
 	}
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/draft/enforcement_boundaries", pConfig.OrgID), &params)
+	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/%v/enforcement_boundaries", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -237,26 +246,20 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	dataMap := []map[string]interface{}{}
-
+	keys := []string{
+		"href",
+		"name",
+		"created_at",
+		"updated_at",
+		"deleted_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+		"caps",
+	}
 	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-		for _, key := range []string{
-			"href",
-			"name",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-			"caps",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+		m := gabsToMap(child, keys)
+		
 		if child.Exists("ingress_services") {
 			ingServs := child.S("ingress_services").Data().([]interface{})
 			iss := []map[string]interface{}{}

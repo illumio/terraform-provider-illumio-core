@@ -174,34 +174,21 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
-	dataMap := []map[string]interface{}{}
-
-	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-
-		for _, key := range []string{
-			"href",
-			"deleted",
-			"key",
-			"value",
-			"external_data_set",
-			"external_data_reference",
-			"created_at",
-			"updated_at",
-			"created_by",
-			"updated_by",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
-
-		dataMap = append(dataMap, m)
+	keys := []string{
+		"href",
+		"deleted",
+		"key",
+		"value",
+		"external_data_set",
+		"external_data_reference",
+		"created_at",
+		"updated_at",
+		"created_by",
+		"updated_by",
 	}
 
-	d.Set("items", dataMap)
+
+	d.Set("items", gabsToMapArray(data, keys))
 
 	return diagnostics
 }

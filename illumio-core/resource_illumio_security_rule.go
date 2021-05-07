@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -534,7 +535,7 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 		return diag.FromErr(err)
 	}
 
-	for _, key := range []string{
+	srKeys := []string{
 		"href",
 		"enabled",
 		"description",
@@ -551,7 +552,9 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 		"created_by",
 		"updated_by",
 		"deleted_by",
-	} {
+	}
+
+	for _, key := range srKeys {
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
 		} else {
@@ -559,41 +562,65 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 		}
 	}
 
-	if data.Exists("ingress_services") {
-		ingServs := data.S("ingress_services").Data().([]interface{})
-		iss := []map[string]interface{}{}
-
-		for _, ingServ := range ingServs {
-			is := ingServ.(map[string]interface{})
-
-			for k, v := range ingServ.(map[string]interface{}) {
-				if k == "href" {
-					is[k] = v
-				} else {
-					is[k] = strconv.Itoa(int(v.(float64)))
-				}
-
-				iss = append(iss, is)
-			}
-		}
-
-		d.Set("ingress_services", iss)
+	isKey := "ingress_services"
+	if data.Exists(isKey) {
+		d.Set(isKey, extractResourceSecurityRuleIngressService(data.S(isKey)))
 	} else {
-		d.Set("ingress_services", nil)
+		d.Set(isKey, nil)
 	}
 
-	obj := map[string]interface{}{}
-	for k, v := range data.S("resolve_labels_as").Data().(map[string]interface{}) {
-		obj[k] = getStringList(v)
+	rlaKey := "resolve_labels_as"
+	if data.Exists(rlaKey) {
+		d.Set(rlaKey, extractSecurityRuleResolveLabelAs(data.S(rlaKey)))
+	} else {
+		d.Set(rlaKey, nil)
 	}
-	resLabAs := []map[string]interface{}{obj}
 
-	// Required params and will be present in JSON responce
-	d.Set("resolve_labels_as", resLabAs)
-	d.Set("providers", getRuleActors(data.S("providers")))
-	d.Set("consumers", getRuleActors(data.S("consumers")))
+	prkey := "providers"
+	if data.Exists(prkey) {
+		d.Set(prkey, getRuleActors(data.S(prkey)))
+	}
+
+	cnKeys := "consumers"
+	if data.Exists(cnKeys) {
+		d.Set(cnKeys, getRuleActors(data.S(cnKeys)))
+	}
 
 	return diagnostics
+}
+
+func extractSecurityRuleResolveLabelAs(data *gabs.Container) []interface{} {
+	m := map[string][]interface{}{
+		"providers": data.S("providers").Data().([]interface{}),
+		"consumers": data.S("consumers").Data().([]interface{}),
+	}
+
+	return []interface{}{m}
+}
+
+func extractResourceSecurityRuleIngressService(data *gabs.Container) []map[string]interface{} {
+	isKeys := []string{
+		"proto",
+		"port",
+		"to_port",
+	}
+
+	iss := []map[string]interface{}{}
+	for _, ingSerData := range data.Children() {
+		is := map[string]interface{}{}
+
+		for k, v := range ingSerData.ChildrenMap() {
+			if k == "href" {
+				is[k] = v
+			} else if contains(isKeys, k) {
+				is[k] = strconv.Itoa(int(v.Data().(float64)))
+			}
+
+			iss = append(iss, is)
+		}
+	}
+
+	return iss
 }
 
 func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

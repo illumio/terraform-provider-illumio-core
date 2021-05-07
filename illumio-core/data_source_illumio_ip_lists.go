@@ -53,6 +53,13 @@ func datasourceIllumioIPLists() *schema.Resource {
 		Description:   "Represents Illumio IP Lists",
 
 		Schema: map[string]*schema.Schema{
+			"pversion": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Default:          "draft",
+				ValidateDiagFunc: isValidPversion(),
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -220,6 +227,7 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 	illumioClient := pConfig.IllumioClient
 
 	orgID := pConfig.OrgID
+	pversion := d.Get("pversion").(string)
 
 	paramKeys := []string{
 		"description",
@@ -233,7 +241,7 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/draft/ip_lists", orgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/ip_lists", orgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -241,29 +249,21 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	dataMap := []map[string]interface{}{}
-
+	keys := []string{
+		"href",
+		"name",
+		"description",
+		"external_data_set",
+		"external_data_reference",
+		"created_at",
+		"updated_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+		"deleted_at",
+	}
 	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-
-		for _, key := range []string{
-			"href",
-			"name",
-			"description",
-			"external_data_set",
-			"external_data_reference",
-			"created_at",
-			"updated_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-			"deleted_at",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+		m := gabsToMap(child, keys)
 
 		if child.Exists("ip_ranges") {
 			ip_ranges := child.S("ip_ranges")

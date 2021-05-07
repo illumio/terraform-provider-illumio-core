@@ -16,11 +16,7 @@ provider "illumio-core" {
 }
 
 data "illumio-core_traffic_collector_settings" "example" {
-  traffic_collector_setting_id = "9c186bde-27aa-495b-89ac-8401f62ffbe8"
-}
-
-output "output" {
-  value = data.illumio-core_traffic_collector_settings.name
+  href = "/orgs/draft/settings/traffic_collector/9c186bde-27aa-495b-89ac-8401f62ffbe8"
 }
 
 resource "illumio-core_traffic_collector_settings" "example" {

@@ -90,15 +90,16 @@ func datasourceIllumioContainerClusterServiceBackendsRead(ctx context.Context, d
 
 	d.SetId(href)
 
+	sbsKeys := []string{
+		"name",
+		"kind",
+		"namespace",
+		"updated_at",
+		"created_at",
+	}
+
 	sbs := []map[string]interface{}{}
 	for _, child := range data.Children() {
-		sbsKeys := []string{
-			"name",
-			"kind",
-			"namespace",
-			"updated_at",
-			"created_at",
-		}
 		sb := gabsToMap(child, sbsKeys)
 
 		if child.Exists("virtual_service") {

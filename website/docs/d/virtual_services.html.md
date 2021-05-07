@@ -16,8 +16,8 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_virtual_service" "vs_1"{
-  href = "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
+data "illumio-core_virtual_services" "vs_1"{
+  max_results = 5
 }
 ```
 
@@ -32,6 +32,7 @@ data "illumio-core_virtual_service" "vs_1"{
 - **labels** (String) List of lists of label URIs, encoded as a JSON string
 - **max_results** (String) Maximum number of Virtual Services to return.
 - **name** (String) Name on which to filter. Supports partial matches
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0
 - **service** (String) Service URI
 - **service_address_fqdn** (String) FQDN configured under service_address property, supports partial matches
 - **service_address_ip** (String) IP address configured under service_address property, supports partial matches

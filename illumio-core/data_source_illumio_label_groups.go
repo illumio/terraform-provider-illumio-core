@@ -62,6 +62,13 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 		Description:   "Represents Illumio Label Groups",
 
 		Schema: map[string]*schema.Schema{
+			"pversion": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Default:          "draft",
+				ValidateDiagFunc: isValidPversion(),
+				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0`,
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -239,6 +246,7 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 	illumioClient := pConfig.IllumioClient
 
 	orgID := pConfig.OrgID
+	pversion := d.Get("pversion").(string)
 
 	paramKeys := []string{
 		"description",
@@ -252,7 +260,7 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/label_groups", orgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/%v/label_groups", orgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -260,31 +268,24 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	dataMap := []map[string]interface{}{}
+	keys := []string{
+		"href",
+		"name",
+		"description",
+		"key",
+		"external_data_set",
+		"external_data_reference",
+		"update_type",
+		"created_at",
+		"updated_at",
+		"deleted_at",
+		"created_by",
+		"updated_by",
+		"deleted_by",
+	}
 
 	for _, child := range data.Children() {
-		m := map[string]interface{}{}
-
-		for _, key := range []string{
-			"href",
-			"name",
-			"description",
-			"key",
-			"external_data_set",
-			"external_data_reference",
-			"update_type",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+		m := gabsToMap(child, keys)
 
 		if child.Exists("labels") {
 			labels := child.S("labels")

@@ -235,29 +235,23 @@ func dataSourceIllumioContainerClusterWorkloadProfilesRead(ctx context.Context, 
 
 	dataMap := []map[string]interface{}{}
 
-	for _, child := range data.Children() {
-		m := map[string]interface{}{}
+	keys := []string{
+		"href",
+		"name",
+		"namespace",
+		"description",
+		"enforcement_mode",
+		"managed",
+		"linked",
+		"visibility_level",
+		"created_at",
+		"updated_at",
+		"created_by",
+		"updated_by",
+	}
 
-		for _, key := range []string{
-			"href",
-			"name",
-			"namespace",
-			"description",
-			"enforcement_mode",
-			"managed",
-			"linked",
-			"visibility_level",
-			"created_at",
-			"updated_at",
-			"created_by",
-			"updated_by",
-		} {
-			if child.Exists(key) {
-				m[key] = child.S(key).Data()
-			} else {
-				m[key] = nil
-			}
-		}
+	for _, child := range data.Children() {
+		m := gabsToMap(child, keys)
 
 		key := "assign_labels"
 		m[key] = extractDataSourceAttrs(child, key, []string{"href"})

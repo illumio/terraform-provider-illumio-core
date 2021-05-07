@@ -54,9 +54,9 @@ func hrefSchemaComputed(rName string, diagValid schema.SchemaValidateDiagFunc) *
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:             schema.TypeString,
-				Computed:         true,
-				Description:      fmt.Sprintf("URI of %v", rName),
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: fmt.Sprintf("URI of %v", rName),
 			},
 		},
 	}
@@ -80,12 +80,6 @@ func getHrefObj(obj interface{}) *models.Href {
 	default:
 		return &models.Href{}
 	}
-}
-
-// getRuleSetID Returns ID of RuleSet from Href
-func getRuleSetID(href string) string {
-	hrefSplit := s.Split(href, "/")
-	return hrefSplit[len(hrefSplit)-1]
 }
 
 // Returns string list from interface type
@@ -374,4 +368,22 @@ func extractDataSourceAttrs(data *gabs.Container, key string, elementKeys []stri
 		return elements
 	}
 	return nil
+}
+
+func isValidPversion() schema.SchemaValidateDiagFunc {
+	return func(v interface{}, path cty.Path) diag.Diagnostics {
+		var diags diag.Diagnostics
+
+		sv := v.(string)
+		iv, k := getInt(v)
+		if !k || (k && iv < 0) {
+			if sv == "active" || sv == "draft" {
+				return diags
+			} else {
+				diags = append(diags, diag.Errorf(`expected an integer greater than 0 or one of ["active", "draft"], got %v`, v)...)
+			}
+		}
+
+		return diags
+	}
 }

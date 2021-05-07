@@ -63,6 +63,6 @@ data "illumio-core_pairing_profile" "example" {
 
 Read-Only:
 
-- **href** (String) Label URI
+- **href** (String) URI of Label
 
 

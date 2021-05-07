@@ -9,7 +9,7 @@ description: |-
 
 # illumio-core_traffic_collector_settings (Resource)
 
-Manages Illumio Traffic Collector Settings
+Manages Illumio Traffic Collector Settings (***Global Organization Owner access required***)
 
 Example Usage
 ------------

@@ -2,6 +2,7 @@ package illumiocore
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -106,7 +107,7 @@ func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resource
 	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	href := d.Id()
+	href := fmt.Sprintf("/orgs/%v/settings/workloads", pConfig.OrgID)
 
 	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {

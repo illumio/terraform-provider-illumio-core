@@ -83,7 +83,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "traffic_event_logger details for destination. Single element list",
+				Description: `traffic_event_logger details for destination. Required when type is set to "remote_syslog". Single element list`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"traffic_flow_allowed_event_included": {

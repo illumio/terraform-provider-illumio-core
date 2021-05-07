@@ -188,5 +188,5 @@ Ref: https://www.terraform.io/docs/import/index.html
 
 
 ```
-terraform import illumio-core_ven.example <URI>
+terraform import illumio-core_ven.example  <URI of VEN>
 ```

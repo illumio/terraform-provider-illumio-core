@@ -9,7 +9,7 @@ description: |-
 
 # illumio-core_syslog_destination (Resource)
 
-Manages Illumio SyslogDestination
+Manages Illumio SyslogDestination (***Global Organization Owner access required***)
 
 Example Usage
 ------------
@@ -58,7 +58,7 @@ resource "illumio-core_syslog_destination" "example" {
 - **type** (String) Destination type. Allowed values are "local_syslog" and "remote_syslog"
 
 ### Optional
-- **remote_syslog** (Block List, Max: 1) remote_syslog details for destination. Single element list (see [below for nested schema](#nestedblock--remote_syslog))
+- **remote_syslog** (Block List, Max: 1) remote_syslog details for destination. Required when type is set to "remote_syslog" .Single element list (see [below for nested schema](#nestedblock--remote_syslog))
 
 ### Read-Only
 

@@ -251,7 +251,7 @@ Required:
 
 ## Importing ##
 
-This resource can only be imported and can not be created. Use below command to import resource. Since this resource auto determines ID based on provider config. You can pass anything as identifier. 
+This resource can only be imported and can not be created. Use below command to import resource. This resource auto determines URI based on provider config. So no need of providing URI while importing.
 
 After importing, Cherry pick the configurable parameters from `terraform show` and paste it into .tf file.
 

@@ -72,12 +72,12 @@ func resourceIllumioOrganizationSettingsRead(ctx context.Context, d *schema.Reso
 
 	orgID := pConfig.OrgID
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/event", orgID), nil)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/events", orgID), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(fmt.Sprintf("/orgs/%v/settings/event", orgID))
+	d.SetId(fmt.Sprintf("/orgs/%v/settings/events", orgID))
 
 	for _, key := range []string{
 		"audit_event_retention_seconds",

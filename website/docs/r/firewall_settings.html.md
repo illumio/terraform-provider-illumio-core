@@ -120,13 +120,13 @@ resource "illumio-core_firewall_settings" "example" {
 
 ### Read-Only
 
-- **created_at** (String) Time stamp when these firewall settings were first created
+- **created_at** (String) Timestamp when these firewall settings were first created
 - **created_by** (Map of String) User who originally created this resource
-- **deleted_at** (String) Time stamp when these firewall settings were deleted
+- **deleted_at** (String) Timestamp when these firewall settings were deleted
 - **deleted_by** (Map of String) User who deleted this resource
 - **href** (String) URI of Firewall Settings
 - **update_type** (String) Type of Update
-- **updated_at** (String) Time stamp when these firewall settings were last updated
+- **updated_at** (String) Timestamp when these firewall settings were last updated
 - **updated_by** (Map of String) User who last updated this resource
 
 <a id="nestedblock--blocked_connection_reject_scopes"></a>

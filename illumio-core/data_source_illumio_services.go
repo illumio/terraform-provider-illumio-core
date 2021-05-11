@@ -232,17 +232,17 @@ func datasourceIllumioServices() *schema.Resource {
 						"created_at": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Time stamp when this Service was first created",
+							Description: "Timestamp when this Service was first created",
 						},
 						"updated_at": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Time stamp when this Service was last updated",
+							Description: "Timestamp when this Service was last updated",
 						},
 						"deleted_at": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Time stamp when this Service was deleted",
+							Description: "Timestamp when this Service was deleted",
 						},
 						"created_by": {
 							Type:        schema.TypeMap,

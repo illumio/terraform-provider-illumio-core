@@ -67,17 +67,17 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Time stamp when these firewall settings were first created",
+				Description: "Timestamp when these firewall settings were first created",
 			},
 			"updated_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Time stamp when these firewall settings were last updated",
+				Description: "Timestamp when these firewall settings were last updated",
 			},
 			"deleted_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Time stamp when these firewall settings were deleted",
+				Description: "Timestamp when these firewall settings were deleted",
 			},
 			"created_by": {
 				Type:        schema.TypeMap,

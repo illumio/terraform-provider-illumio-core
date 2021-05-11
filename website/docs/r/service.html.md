@@ -74,14 +74,14 @@ resource "illumio-core_service" "example_with_windows_services" {
 
 ### Read-Only
 
-- **created_at** (String) Time stamp when this Service was first created
+- **created_at** (String) Timestamp when this Service was first created
 - **created_by** (Map of String) User who originally created this Service
-- **deleted_at** (String) Time stamp when this Service was deleted
+- **deleted_at** (String) Timestamp when this Service was deleted
 - **deleted_by** (Map of String) User who deleted this Service
 - **description_url** (String) Description URL Read-only to prevent XSS attacks
 - **href** (String) URI of the service
 - **update_type** (String) Type of update
-- **updated_at** (String) Time stamp when this Service was last updated
+- **updated_at** (String) Timestamp when this Service was last updated
 - **updated_by** (Map of String) User who last updated this Service
 
 <a id="nestedblock--service_ports"></a>

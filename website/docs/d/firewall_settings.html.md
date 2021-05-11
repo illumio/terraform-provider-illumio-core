@@ -33,16 +33,16 @@ data "illumio-core_firewall_settings" "current" {
 
 - **blocked_connection_reject_scopes** (List of List of Object) scopes for reject connections
 - **containers_inherit_host_policy_scopes** (List of List of Object) scopes for container inherit host policy
-- **created_at** (String) Time stamp when these firewall settings were first created
+- **created_at** (String) Timestamp when these firewall settings were first created
 - **created_by** (Map of String) User who originally created this resource
-- **deleted_at** (String) Time stamp when these firewall settings were deleted
+- **deleted_at** (String) Timestamp when these firewall settings were deleted
 - **deleted_by** (Map of String) User who deleted this resource
 - **firewall_coexistence** (List of Object) Firewall coexistence configuration (see [below for nested schema](#nestedatt--firewall_coexistence))
 - **ike_authentication_type** (String) IKE authentication type to use for IPsec (SecureConnect and Machine Authentication)
 - **loopback_interfaces_in_policy_scopes** (List of List of Object) scopes for loopback interfaces
 - **static_policy_scopes** (List of List of Object) scopes for static policy
 - **update_type** (String) Type of Update
-- **updated_at** (String) Time stamp when these firewall settings were last updated
+- **updated_at** (String) Timestamp when these firewall settings were last updated
 - **updated_by** (Map of String) User who last updated this resource
 
 <a id="nestedatt--firewall_coexistence"></a>

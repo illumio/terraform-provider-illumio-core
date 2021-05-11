@@ -28,9 +28,9 @@ data "illumio-core_service" "example" {
 
 ### Read-Only
 
-- **created_at** (String) Time stamp when this Service was first created
+- **created_at** (String) Timestamp when this Service was first created
 - **created_by** (Map of String) User who originally created this Service
-- **deleted_at** (String) Time stamp when this Service was deleted
+- **deleted_at** (String) Timestamp when this Service was deleted
 - **deleted_by** (Map of String) User who deleted this Service
 - **description** (String) Long Description of Service
 - **description_url** (String) Description URL Read-only to prevent XSS attacks
@@ -40,7 +40,7 @@ data "illumio-core_service" "example" {
 - **process_name** (String) The process name
 - **service_ports** (List of Object) Service ports of Illumio Service (see [below for nested schema](#nestedatt--service_ports))
 - **update_type** (Map of String) Type of update
-- **updated_at** (String) Time stamp when this Service was last updated
+- **updated_at** (String) Timestamp when this Service was last updated
 - **updated_by** (Map of String) User who last updated this Service
 - **windows_services** (List of Object) (see [below for nested schema](#nestedatt--windows_services))
 

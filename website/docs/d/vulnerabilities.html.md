@@ -1,7 +1,7 @@
 ---
 layout: "illumio-core"
 page_title: "illumio-core_vulnerabilities Data Source - terraform-provider-illumio-core"
-sidebar_current: sidebar_current: "docs-illumio-core-data-vulnerabilities"
+sidebar_current: sidebar_current: "docs-illumio-core-data-source-vulnerabilities"
 subcategory: ""
 description: |-
   Represents Illumio Vulnerabilities

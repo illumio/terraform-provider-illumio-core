@@ -83,6 +83,70 @@ Now provision command can be used with terraform apply
 terraform apply && provision
 ```
 
+### Managing Versioned and Non-versioned Resources Together
+
+**Non-Versioned Resource**: Resource which does not require provisioning 
+
+While managing versioned and non-versioned resources together, if you want to destroy non-versioned resource which is already linked with the versioned resource then you must unlink/delete versioned resource and provision it first. You can perform the following steps for the same:
+  -  Unlink the non-versioned resources from versioned resources OR destroy the versioned resources and then provision it using provisioning binary
+  - Perform the deletion of non-versioned resources
+
+For example, to delete label `env_dev` which is referred in `env_lg`
+
+```hcl
+# label is non-versioned resource
+resource "illumio-core_label" "env_dev" {
+  key     = "env"
+  value   = "dev"
+}
+
+# label_group is versioned resource
+resource "illumio-core_label_group" "env_lg" {
+  key           = "env"
+  name          = "Dev Group"
+  description   = "Label group for dev environments"
+  labels {
+    href = illumio-core_label.env_dev.href
+  }
+}
+```
+
+1. To delete label `env_dev`, we first need to either delete `env_lg` OR unlink `env_dev` from `env_lg`. We chose to unlink here. But we can not delete `env_dev` until we provision `env_lg`.
+
+```hcl
+# label is non-versioned resource
+resource "illumio-core_label" "env_dev" {
+  key     = "env"
+  value   = "dev"
+}
+
+# label_group is versioned resource
+resource "illumio-core_label_group" "env_lg" {
+  key           = "env"
+  name          = "Dev Group"
+  description   = "Label group for dev environments"
+  # labels {
+  #   href = illumio-core_label.env_dev.href
+  # }
+}
+```
+
+2. Run `terraform apply && provision` on above configuration.
+
+```hcl
+
+# Removed `env_dev`
+
+# label_group is versioned resource
+resource "illumio-core_label_group" "env_lg" {
+  key           = "env"
+  name          = "Dev Group"
+  description   = "Label group for dev environments"
+}
+```
+
+3. Remove `env_dev` and run `terraform apply`. 
+
 
 ## Schema
 

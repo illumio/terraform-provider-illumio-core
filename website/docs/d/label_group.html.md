@@ -16,7 +16,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_label_group" "lg1"{
+data "illumio-core_label_group" "example"{
   href = "/orgs/1/sec_policy/draft/label_groups/db3fc597-e0ee-4391-8a8b-31a0d1acb3b5"
 }
 ```

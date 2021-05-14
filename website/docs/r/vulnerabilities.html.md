@@ -17,16 +17,16 @@ Example Usage
 ```hcl
 resource "illumio-core_vulnerabilities" "example" {
   vulnerability {
-    reference_id = "example1"
-    name         = "example-name1"
+    reference_id = "example-id-1"
+    name         = "example name"
     score        = 3
-    cve_ids      = ["id1"]
-    description  = "example1 description"
+    cve_ids      = ["id"]
+    description  = "example desc"
   }
 
   vulnerability {
-    reference_id = "example2"
-    name         = "example-name2"
+    reference_id = "example-id-2"
+    name         = "example name"
     score        = 9
   }
 }

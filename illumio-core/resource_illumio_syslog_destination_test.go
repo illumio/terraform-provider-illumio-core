@@ -42,7 +42,7 @@ func testAccCheckIllumioSyslogDestinationConfig_basic(val string) string {
 	return fmt.Sprintf(`
 	resource "illumio-core_syslog_destination" "test" {
 		type        = "local_syslog"
-		pce_scope   = ["2x2devtest59.ilabs.io"]
+		pce_scope   = ["crest-mnc.ilabs.io"]
 		description = "%s"
 	  
 		audit_event_logger {
@@ -60,7 +60,6 @@ func testAccCheckIllumioSyslogDestinationConfig_basic(val string) string {
 		node_status_logger {
 		  node_status_included = true
 		}
-	  
 	  }
 	  
 	`, val)

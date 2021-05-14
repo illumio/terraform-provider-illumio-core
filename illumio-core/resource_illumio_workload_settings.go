@@ -21,6 +21,16 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 		Description:   "Manages Illumio Workload Settings",
 
 		Schema: map[string]*schema.Schema{
+			"href": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "URI of the Workload Settings",
+			},
+			"test_href": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "URI of VEN, only used for testing",
+			},
 			"workload_disconnected_timeout_seconds": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -94,11 +104,15 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 func resourceIllumioWorkloadSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Detail:   "[illumio-core_workload_settings] Cannot use Create Operation.",
-		Summary:  "Please use terrform import...",
-	})
+	if v, k := d.GetOk("test_href"); k {
+		d.SetId(v.(string))
+	} else {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Detail:   "[illumio-core_workload_settings] Cannot use create operation.",
+			Summary:  "Please use terraform import...",
+		})
+	}
 
 	return diags
 }
@@ -114,7 +128,8 @@ func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resource
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
+	d.SetId(href)
+	d.Set("href", href)
 
 	if data.Exists("workload_disconnected_timeout_seconds") {
 		wdtsS := data.S("workload_disconnected_timeout_seconds")
@@ -200,7 +215,7 @@ func resourceIllumioWorkloadSettingsDelete(ctx context.Context, d *schema.Resour
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Detail:   "[illumio-core_workload_settings] Ignoring Delete Operation...",
+		Summary:  "[illumio-core_workload_settings] Ignoring Delete Operation...",
 	})
 
 	return diags

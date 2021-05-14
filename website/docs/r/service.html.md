@@ -15,44 +15,43 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_service" "example_with_service_ports" {
-  name = "example"
+resource "illumio-core_service" "example_service" {
+  name = "example name service ports"
   
   service_ports {
-    proto = "-1"
+    proto = -1
   }
 
   service_ports {
-    proto = "6"
-    port = "15"
+    proto = 6
+    port = 15
   }
 
   service_ports {
-    proto = "1"
-    icmp_type = "5"
-	  icmp_code = "5"
+    proto = 1
+    icmp_type = 5
+	  icmp_code = 5
   }
 
 }
 
-resource "illumio-core_service" "example_with_windows_services" {
-  name="example"
+resource "illumio-core_service" "example_windows" {
+  name="example name windows service"
   
   windows_services {
     service_name = "example"
   }
 
   windows_services {
-    proto = "6"
-    process_name = "example"
+    proto = 6
+    process_name = "example name"
   }
 
   windows_services {
-    proto="1"
-    icmp_type="5"
-    icmp_code="5"
+    proto = 1
+    icmp_type = 5
+    icmp_code = 5
   }
-
 }
 
 ```

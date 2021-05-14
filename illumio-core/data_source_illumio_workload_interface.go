@@ -31,9 +31,10 @@ func datasourceIllumioWorkloadInterface() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the Workload Interface",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isWorkloadInterfaceHref,
+				Description:      "URI of the Workload Interface",
 			},
 			"name": {
 				Type:        schema.TypeString,

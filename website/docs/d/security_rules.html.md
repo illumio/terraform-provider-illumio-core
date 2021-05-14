@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_security_rule" "example" {
+data "illumio-core_security_rules" "example" {
   external_data_reference = "ref"
 }
 ```

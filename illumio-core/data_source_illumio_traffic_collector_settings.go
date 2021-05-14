@@ -29,9 +29,10 @@ func datasourceIllumioTrafficCollectorSettings() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of traffic collecter settings",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isTrafficCollectorSettingsHref,
+				Description:      "URI of traffic collecter settings",
 			},
 			"transmission": {
 				Type:        schema.TypeString,

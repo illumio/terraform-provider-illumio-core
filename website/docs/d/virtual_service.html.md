@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_virtual_service" "vs_1"{
+data "illumio-core_virtual_service" "example"{
   href = "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
 }
 

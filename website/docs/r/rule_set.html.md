@@ -19,20 +19,17 @@ resource "illumio-core_rule_set" "example" {
   name = "example name"
 
   ip_tables_rules {
-    description = "some desc"
+    description = "example desc"
     enabled = true
     ip_version = 4
-    
     actors {
       actors = "ams"
     }
-    
     actors {
       label {
         href = "/orgs/1/labels/69"
       }
     }
-
     statements {
       table_name = "nat"
       chain_name = "PREROUTING"
@@ -54,25 +51,21 @@ resource "illumio-core_rule_set" "example" {
 
   rules {
     enabled       = true
-
     resolve_labels_as {
       consumers = ["workloads"]
       providers = ["workloads"]
     }
-
     consumers {
       actors = "ams"
     }
-
     providers {
       label {
         href = "/orgs/1/labels/715"
       }
     }
-
     ingress_services {
       proto = 6
-      port  = "1"
+      port  = 1
     }
   }
 }
@@ -88,7 +81,7 @@ resource "illumio-core_rule_set" "example" {
 ### Optional
 
 - **description** (String) Description of Rule Set
-- **enabled** (Boolean) Enabled flag. Determines wheter the Rule Set is enabled or not. Default value: true
+- **enabled** (Boolean) Enabled flag. Determines whether the Rule Set is enabled or not. Default value: true
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ip_tables_rules** (Block Set) Collection of IP Tables Rules (see [below for nested schema](#nestedblock--ip_tables_rules))

@@ -16,9 +16,10 @@ Example Usage
 
 ```hcl
 resource "illumio-core_virtual_service" "example" {
-  name = "Virtual Service 1"
-  description = "Virtual Service to apply on host"
+  name = "example name"
+  description = "example desc"
   apply_to = "host_only"
+  
   # service {
   #   href = "/orgs/1/sec_policy/draft/services/99"
   # }

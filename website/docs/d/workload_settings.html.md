@@ -26,6 +26,7 @@ data "illumio-core_workload_settings" "example" {
 
 ### Read-Only
 
+- **href** (String) URI of the Workload Settings
 - **workload_disconnected_timeout_seconds** (Set of Object) Workload Disconnected Timeout Seconds for Workload Settings (see [below for nested schema](#nestedatt--workload_disconnected_timeout_seconds))
 - **workload_goodbye_timeout_seconds** (Set of Object) Workload Goodbye Timeout Seconds for Workload Settings (see [below for nested schema](#nestedatt--workload_goodbye_timeout_seconds))
 

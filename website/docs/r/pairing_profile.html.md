@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 resource "illumio-core_pairing_profile" "example" {
-    name = "example"
+    name = "example name"
     enabled = false
     labels {
       href = "/orgs/1/labels/1"

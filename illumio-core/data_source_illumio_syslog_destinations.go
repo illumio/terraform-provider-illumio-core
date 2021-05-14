@@ -159,7 +159,8 @@ func dataSourceIllumioSyslogDestinationsRead(ctx context.Context, d *schema.Reso
 
 	orgID := pConfig.OrgID
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/settings/syslog/destinations", orgID), nil)
+	// Does not support Async Call
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/syslog/destinations", orgID), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

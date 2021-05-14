@@ -16,7 +16,7 @@ Example Usage
 ```hcl
 resource "illumio-core_label" "example" {
   key     = "env"
-  value   = "dev"
+  value   = "example env"
 }
 
 ```

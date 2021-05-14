@@ -125,9 +125,10 @@ func datasourceIllumioVEN() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of VEN",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isVENHref,
+				Description:      "URI of VEN",
 			},
 			"name": {
 				Type:        schema.TypeString,

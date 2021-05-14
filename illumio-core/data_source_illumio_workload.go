@@ -178,9 +178,10 @@ func datasourceIllumioWorkload() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the Workload",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isWorkloadHref,
+				Description:      "URI of the Workload",
 			},
 			"deleted": {
 				Type:        schema.TypeBool,

@@ -13,7 +13,14 @@ Represents Illumio Rule Sets
 
 ```hcl
 data "illumio-core_rule_sets" "example" {
-    max_results = "5"
+  max_results = "5"
+  labels = jsonencode([
+    [
+      {
+        href = "/orgs/1/labels/12"
+      }
+    ]
+  ])
 }
 ```
 
@@ -44,7 +51,7 @@ Read-Only:
 - **deleted_at** (String) Timestamp when this rule set was deleted
 - **deleted_by** (Map of String) User who deleted this resource
 - **description** (String) Description of Rule Set
-- **enabled** (Boolean) Enabled flag. Determines wheter the Rule Set is enabled or not
+- **enabled** (Boolean) Enabled flag. Determines whether the Rule Set is enabled or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **href** (String) URI of rule set

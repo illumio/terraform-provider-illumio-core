@@ -41,7 +41,7 @@ func TestAccIllumioSecurityRule_CreateUpdate(t *testing.T) {
 func testAccCheckIllumioSecurityRuleConfig_basic(val string) string {
 	return fmt.Sprintf(`
 	resource "illumio-core_security_rule" "test" {
-		rule_set_id = 81
+		rule_set_href = "/orgs/1/sec_policy/draft/rule_sets/6"
 		enabled = true
 		description = "%s"
 
@@ -50,17 +50,17 @@ func testAccCheckIllumioSecurityRuleConfig_basic(val string) string {
 		  providers = ["workloads"]
 		}
 	  
-		consumer {
+		consumers {
 		  actors = "ams"
 		}
 	  
-		illumio_provider {
+		providers {
 		  label {
 			href = "/orgs/1/labels/715"
 		  }
 		}
 	  
-		ingress_service {
+		ingress_services {
 		  proto = 6
 		  port  = 12
 		}

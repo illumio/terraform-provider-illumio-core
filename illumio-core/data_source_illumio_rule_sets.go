@@ -236,7 +236,7 @@ func datasourceIllumioRuleSets() *schema.Resource {
 						"enabled": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Enabled flag. Determines wheter the Rule Set is enabled or not",
+							Description: "Enabled flag. Determines whether the Rule Set is enabled or not",
 						},
 						"scopes": {
 							Type:        schema.TypeList,

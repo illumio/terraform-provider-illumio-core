@@ -24,3 +24,10 @@ Provider to maintain Illumio Resource with terraform.
 - Run `cd examples/<resource|datasource>/`
 - Run `terraform init`
 - Run `terraform apply`
+
+## Debugging and Troubleshooting
+
+- Set environment variable `TF_LOG` to one of the log levels `TRACE`, `DEBUG`, `INFO`, `WARN` or `ERROR`
+- Set environment variable `TF_LOG_PATH` to write logs in a file. e.g. `TF_LOG_PATH=tf.log`
+
+For more details visit - [Terraform Debugging](https://www.terraform.io/docs/internals/debugging.html)

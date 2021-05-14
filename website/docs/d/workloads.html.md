@@ -16,7 +16,14 @@ Example Usage
 
 ```hcl
 data "illumio-core_workloads" "example" {
-    max_results = "5"
+  max_results = "5"
+  labels = jsonencode([
+    [
+      {
+        href = "/orgs/1/labels/12"
+      }
+    ]
+  ])
 }
 ```
 

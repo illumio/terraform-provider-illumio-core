@@ -18,19 +18,19 @@ func TestAccIllumioTrafficCollectorSettings_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerTCS),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerTCS, "illumio_traffic_collector_settings", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerTCS, "illumio-core_traffic_collector_settings", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioTrafficCollectorSettingsConfig_basic("1.1.1.2"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioTrafficCollectorSettingsExists("illumio_traffic_collector_settings.test", serAttr),
+					testAccCheckIllumioTrafficCollectorSettingsExists("illumio-core_traffic_collector_settings.test", serAttr),
 					testAccCheckIllumioTrafficCollectorSettingsAttributes("1.1.1.2", serAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioTrafficCollectorSettingsConfig_basic("10.0.0.0/8"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioTrafficCollectorSettingsExists("illumio_traffic_collector_settings.test", serAttr),
+					testAccCheckIllumioTrafficCollectorSettingsExists("illumio-core_traffic_collector_settings.test", serAttr),
 					testAccCheckIllumioTrafficCollectorSettingsAttributes("10.0.0.0/8", serAttr),
 				),
 			},
@@ -40,7 +40,7 @@ func TestAccIllumioTrafficCollectorSettings_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioTrafficCollectorSettingsConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_traffic_collector_settings" "test" {
+	resource "illumio-core_traffic_collector_settings" "test" {
 		action       = "drop"
 		transmission = "broadcast"
 		target {

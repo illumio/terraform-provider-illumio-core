@@ -33,6 +33,10 @@ resource "illumio-core_workload_settings" "example" {
 - **workload_disconnected_timeout_seconds** (Block Set) Workload Disconnected Timeout Seconds for Workload Settings (see [below for nested schema](#nestedblock--workload_disconnected_timeout_seconds))
 - **workload_goodbye_timeout_seconds** (Block Set) Workload Goodbye Timeout Seconds for Workload Settings (see [below for nested schema](#nestedblock--workload_goodbye_timeout_seconds))
 
+### Read-Only
+
+- **href** (String) URI of the Workload Settings
+
 <a id="nestedatt--workload_disconnected_timeout_seconds"></a>
 ### Nested Schema for `workload_disconnected_timeout_seconds`
 

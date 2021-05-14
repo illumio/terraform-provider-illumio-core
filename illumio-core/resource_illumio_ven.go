@@ -29,6 +29,11 @@ func resourceIllumioVEN() *schema.Resource {
 				Computed:    true,
 				Description: "URI of VEN",
 			},
+			"test_href": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "URI of VEN, only used for testing",
+			},
 			"name": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -478,12 +483,18 @@ func resourceIllumioVEN() *schema.Resource {
 }
 
 func resourceIllumioVENCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return diag.Diagnostics{
-		diag.Diagnostic{
-			Severity: diag.Error,
-			Detail:   "[illumio-core_ven] Cannot use Create Operation.",
-			Summary:  "Please use terrform import...",
-		},
+	// Id set to href when testing import
+	if v, k := d.GetOk("test_href"); k {
+		d.SetId(v.(string))
+		return diag.Diagnostics{}
+	} else {
+		return diag.Diagnostics{
+			diag.Diagnostic{
+				Severity: diag.Warning,
+				Detail:   "[illumio-core_ven] Cannot use create operation.",
+				Summary:  "Please use terraform import...",
+			},
+		}
 	}
 }
 

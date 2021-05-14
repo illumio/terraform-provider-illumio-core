@@ -19,9 +19,10 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the Service Binding",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isServiceBindingHref,
+				Description:      "URI of the Service Binding",
 			},
 			"bound_service": {
 				Type:        schema.TypeMap,

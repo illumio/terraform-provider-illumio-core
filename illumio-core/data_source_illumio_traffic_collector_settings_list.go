@@ -90,7 +90,8 @@ func datasourceIllumioTrafficCollectorSettingsListRead(ctx context.Context, d *s
 
 	href := fmt.Sprintf("/orgs/%v/settings/traffic_collector", pConfig.OrgID)
 
-	_, data, err := illumioClient.AsyncGet(href, nil)
+	// Does not support Async Call
+	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -42,6 +42,11 @@ func datasourceIllumioWorkloadSettings() *schema.Resource {
 		Description:   "Represents Illumio Workload Settings",
 
 		Schema: map[string]*schema.Schema{
+			"href": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "URI of the Workload Settings",
+			},
 			"workload_disconnected_timeout_seconds": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -115,6 +120,8 @@ func datasourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resour
 	}
 
 	d.SetId(data.S("href").Data().(string))
+
+	d.Set("href", data.S("href").Data().(string))
 
 	if data.Exists("workload_disconnected_timeout_seconds") {
 		wdtsS := data.S("workload_disconnected_timeout_seconds")

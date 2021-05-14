@@ -18,19 +18,19 @@ func TestAccIllumioRuleSet_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerRS),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerRS, "illumio_rule_set", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerRS, "illumio-core_rule_set", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioRuleSetConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioRuleSetExists("illumio_rule_set.test", srAttr),
+					testAccCheckIllumioRuleSetExists("illumio-core_rule_set.test", srAttr),
 					testAccCheckIllumioRuleSetAttributes("creation from terraform", srAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioRuleSetConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioRuleSetExists("illumio_rule_set.test", srAttr),
+					testAccCheckIllumioRuleSetExists("illumio-core_rule_set.test", srAttr),
 					testAccCheckIllumioRuleSetAttributes("updation from terraform", srAttr),
 				),
 			},
@@ -40,11 +40,11 @@ func TestAccIllumioRuleSet_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioRuleSetConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_rule_set" "test" {
+	resource "illumio-core_rule_set" "test" {
 		name = "terraform-test-1"
 		description = "%s"
 		
-		ip_tables_rule {
+		ip_tables_rules {
 		  actors {
 			actors = "ams"
 		  }
@@ -65,42 +65,39 @@ func testAccCheckIllumioRuleSetConfig_basic(val string) string {
 		  }
 		}
 	  
-		scope {
+		scopes {
 		  label {
-			href = "/orgs/1/labels/69"
+			href = "/orgs/1/labels/1"
 		  }
 		  label {
-			href = "/orgs/1/labels/94"
-		  }
-		  label_group {
-			href = "/orgs/1/sec_policy/draft/label_groups/65d0ad0f-329a-4ddc-8919-bd0220051fc7"
+			href = "/orgs/1/labels/7"
 		  }
 		}
 	  
-		rule {
+		rules {
 		  enabled = false
 		  resolve_labels_as {
 			consumers = ["workloads"]
 			providers = ["workloads"]
 		  }
 	  
-		  consumer {
+		  consumers {
 			actors = "ams"
 		  }
-	  
-		  illumio_provider {
+	  	  
+		  providers {
 			label {
 			  href = "/orgs/1/labels/715"
 			}
 		  }
 	  
-		  illumio_provider {
+		  providers {
 			label {
 			  href = "/orgs/1/labels/294"
 			}
 		  }
 	  
-		  ingress_service {
+		  ingress_services {
 			proto = 6
 			port  = 4
 		  }

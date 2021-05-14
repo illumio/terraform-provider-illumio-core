@@ -19,10 +19,6 @@ data "illumio-core_traffic_collector_settings_list" "example" {
 
 ## Schema
 
-### Optional
-
-- **id** (String) The ID of this resource.
-
 ### Read-Only
 
 - **items** (List of Object) list of Traffic Collector Setting hrefs (see [below for nested schema](#nestedatt--items))

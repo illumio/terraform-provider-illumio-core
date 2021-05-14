@@ -184,7 +184,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 			"labels": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "List of label URIs, encoded as a JSON string",
+				Description: "List of lists of label URIs, encoded as a JSON string",
 			},
 			"max_results": {
 				Type:             schema.TypeString,

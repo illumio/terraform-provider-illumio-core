@@ -18,19 +18,19 @@ func TestAccIllumioSyslogDestination_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerSyslogD),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSyslogD, "illumio_syslog_destination", false),
+		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerSyslogD, "illumio-core_syslog_destination", false),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioSyslogDestinationConfig_basic("creation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioSyslogDestinationExists("illumio_syslog_destination.test", serAttr),
+					testAccCheckIllumioSyslogDestinationExists("illumio-core_syslog_destination.test", serAttr),
 					testAccCheckIllumioSyslogDestinationAttributes("creation from terraform", serAttr),
 				),
 			},
 			{
 				Config: testAccCheckIllumioSyslogDestinationConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioSyslogDestinationExists("illumio_syslog_destination.test", serAttr),
+					testAccCheckIllumioSyslogDestinationExists("illumio-core_syslog_destination.test", serAttr),
 					testAccCheckIllumioSyslogDestinationAttributes("updation from terraform", serAttr),
 				),
 			},
@@ -40,9 +40,9 @@ func TestAccIllumioSyslogDestination_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioSyslogDestinationConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_syslog_destination" "test" {
+	resource "illumio-core_syslog_destination" "test" {
 		type        = "local_syslog"
-		pce_scope   = ["2x2devtest59.ilabs.io"]
+		pce_scope   = ["crest-mnc.ilabs.io"]
 		description = "%s"
 	  
 		audit_event_logger {
@@ -60,7 +60,6 @@ func testAccCheckIllumioSyslogDestinationConfig_basic(val string) string {
 		node_status_logger {
 		  node_status_included = true
 		}
-	  
 	  }
 	  
 	`, val)

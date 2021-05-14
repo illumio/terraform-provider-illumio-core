@@ -8,9 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-
-/*
+/* Sample API Responce
 {
   "audit_event_retention_seconds": 0,
   "audit_event_min_severity": "error",
@@ -56,7 +54,6 @@ func datasourceIllumioOrganizationSettingsRead(ctx context.Context, d *schema.Re
 		return diag.FromErr(err)
 	}
 
-	//TODO: Check whether to use this or to remove the id
 	d.SetId(fmt.Sprintf("/orgs/%v/settings/events", orgID))
 
 	for _, key := range []string{

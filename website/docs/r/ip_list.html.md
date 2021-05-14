@@ -17,20 +17,20 @@ Example Usage
 
 ```hcl
 resource "illumio-core_ip_list" "iplist_1" {
-    name = "test iplist"
-    description = "desc test"
+    name = "example name"
+    description = "example desc"
     ip_ranges{
       	from_ip = "0.0.0.0/0"
         to_ip = "0.0.0.0/0"
-        description = "test ip_ranges description"
+        description = "example ip_ranges description"
         exclusion = false
     }
     fqdns {
         fqdn = "app.example.com"
-        description = "test fqdn description"
+        description = "example fqdn description"
     }
-    external_data_reference = "test reference"
-    external_data_set = "test set"
+    external_data_reference = "example reference"
+    external_data_set = "example set"
 }
 ```
 

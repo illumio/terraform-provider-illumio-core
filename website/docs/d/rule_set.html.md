@@ -34,7 +34,7 @@ data "illumio-core_rule_set" "example" {
 - **deleted_at** (String) Timestamp when this rule set was deleted
 - **deleted_by** (Map of String) User who deleted this resource
 - **description** (String) Description of Rule Set
-- **enabled** (Boolean) Enabled flag. Determines wheter the Rule Set is enabled or not
+- **enabled** (Boolean) Enabled flag. Determines whether the Rule Set is enabled or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ip_tables_rules** (List of Object) Collection of IP Tables Rules (see [below for nested schema](#nestedatt--ip_tables_rules))

@@ -18,8 +18,8 @@ Example Usage
 ```hcl
 # INFO: cherry-picked attributes from terraform show after import
 resource "illumio-core_firewall_settings" "example" {
-
     ike_authentication_type = "psk"
+
     blocked_connection_reject_scopes {
         label {
             href = "/orgs/1/labels/1"
@@ -94,7 +94,6 @@ resource "illumio-core_firewall_settings" "example" {
         label {
             href = "/orgs/1/labels/14"
         }
-
         label_group {
             href = "/orgs/1/sec_policy/draft/label_groups/a715cd8f-04f3-4bc1-82bf-d650b01453a5"
         }

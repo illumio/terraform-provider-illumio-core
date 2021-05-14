@@ -17,6 +17,13 @@ Example Usage
 ```hcl
 data "illumio-core_enforcement_boundaries" "example" {
   max_results = "5"
+  labels = jsonencode([
+    [
+      {
+        href = "/orgs/1/labels/12"
+      }
+    ]
+  ])
 }
 ```
 

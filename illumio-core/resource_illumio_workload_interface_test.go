@@ -54,7 +54,7 @@ func testAccCheckIllumioWorkloadInterfaceExists(name string, ipAttr map[string]i
 		rs, ok := s.RootModule().Resources[name]
 
 		if !ok {
-			return fmt.Errorf("IP List %s not found", name)
+			return fmt.Errorf("Workload Profule %s not found", name)
 		}
 
 		if rs.Primary.ID == "" {

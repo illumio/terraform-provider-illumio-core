@@ -16,26 +16,26 @@ Example Usage
 
 ```hcl
 resource "illumio-core_workload" "example" {
-    name = "test workload name"
-    description = "test Desc"
-    external_data_set ="test set"
-    external_data_reference = "test reference"
-    hostname = "test hostname"
-    service_principal_name = "test spn"
+    name = "example workload name"
+    description = "example Desc"
+    external_data_set ="example set"
+    external_data_reference = "example reference"
+    hostname = "example hostname"
+    service_principal_name = "example spn"
     public_ip = "0.0.0.0"
     interfaces {
-        name = "test interface"
+        name = "example interface"
         link_state = "up"
         address = "0.0.0.0"
         cidr_block = 0
         default_gateway_address = "0.0.0.0"
-        friendly_name = "test friendly name"
+        friendly_name = "example friendly name"
     }
-    service_provider = "test service provider"
-    data_center = "test data center"
-    data_center_zone = "test data center zone"
-    os_detail = "test os details"
-    os_id = "test os id"
+    service_provider = "example service provider"
+    data_center = "example data center"
+    data_center_zone = "example data center zone"
+    os_detail = "example os details"
+    os_id = "example os id"
     online = false
     labels{
       href = "/orgs/1/labels/1"

@@ -45,9 +45,10 @@ func datasourceIllumioVirtualService() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the virtual service",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isVirtualServiceHref,
+				Description:      "URI of the virtual service",
 			},
 			"name": {
 				Type:        schema.TypeString,

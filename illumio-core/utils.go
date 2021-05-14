@@ -76,7 +76,7 @@ var orgsPrefix = "^/orgs/[1-9][0-9]*/"
 var secPMefix = "sec_policy/(draft|active|[0-9]*)/"
 
 var isLabelHref = generateHrefValidationFunction("labels/[1-9][0-9]*", "Label")
-var isLabelGroupHref = generateHrefValidationFunction(secPMefix+"label_groups/"+uuidV4RegEx, "Label Group href is not in the correct format")
+var isLabelGroupHref = generateHrefValidationFunction(secPMefix+"label_groups/"+uuidV4RegEx, "Label Group")
 var isIPListHref = generateHrefValidationFunction(secPMefix+"ip_lists/[1-9][0-9]*", "IP List")
 var isServiceHref = generateHrefValidationFunction(secPMefix+"services/[1-9][0-9]*", "Service")
 var isVirtualServiceHref = generateHrefValidationFunction(secPMefix+"virtual_services/"+uuidV4RegEx, "Virtual Service")
@@ -90,6 +90,11 @@ var isEnforcementBoundaryHref = generateHrefValidationFunction(secPMefix+"enforc
 var isRuleSetHref = generateHrefValidationFunction(secPMefix+"rule_sets/[1-9][0-9]*", "Rule Set")
 var isSecurityRuleHref = generateHrefValidationFunction(secPMefix+"rule_sets/[1-9][0-9]*/sec_rules/[1-9][0-9]*", "Security Rule")
 var isFirewallSettingsHref = generateHrefValidationFunction(secPMefix+"firewall_settings", "Firewall Settings")
+var isWorkloadInterfaceHref = generateHrefValidationFunction("workloads/"+uuidV4RegEx+"/interfaces/.*", "Workload Interface")
+var isVulnerabilityReportHref = generateHrefValidationFunction("vulnerability_reports/.*", "Vulnerability Report")
+var isTrafficCollectorSettingsHref = generateHrefValidationFunction("settings/traffic_collector/"+uuidV4RegEx, "Traffic Collector Settings")
+var isSyslogDestinationHref = generateHrefValidationFunction("settings/syslog/destinations/"+uuidV4RegEx, "Syslog Destination")
+var isServiceBindingHref = generateHrefValidationFunction("service_bindings/"+uuidV4RegEx, "Service Binding")
 
 func generateHrefValidationFunction(regex string, msg string) schema.SchemaValidateDiagFunc {
 	return validation.ToDiagFunc(
@@ -185,7 +190,7 @@ func isStringABoolean() schema.SchemaValidateDiagFunc {
 	return func(v interface{}, path cty.Path) diag.Diagnostics {
 		var diags diag.Diagnostics
 
-		if v.(string) == "true" || v.(string) == "false" {
+		if v.(string) != "true" && v.(string) != "false" {
 			diags = append(diags, diag.Errorf("expected boolean values (true or false), got %v", v)...)
 		}
 

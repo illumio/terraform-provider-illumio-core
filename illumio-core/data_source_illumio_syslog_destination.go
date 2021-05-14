@@ -49,9 +49,10 @@ func datasourceIllumioSyslogDestination() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the destination",
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: isSyslogDestinationHref,
+				Description:      "URI of the destination",
 			},
 			"pce_scope": {
 				Type:        schema.TypeList,

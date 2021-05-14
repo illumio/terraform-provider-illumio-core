@@ -18,25 +18,23 @@ func TestAccIllumioVEN_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerVEN),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVEN, "illumio_ven", false),
+		// CheckDestroy is ignored as illumio-core_ven does not support delete operation
 		Steps: []resource.TestStep{
 			{
-				// Config:            `resource "illumio_ven" "test" { status = "active" }`,
-				ResourceName:  "illumio_ven.test",
-				ImportStateId: "/orgs/1/vens/e6eec907-85c0-4ca7-8607-1b35c27501d7",
-				ImportState:   true,
-				// ImportStateVerify: true,
+				Config:             testAccCheckIllumioVENConfig_basic("creation from terraform"),
+				ExpectNonEmptyPlan: true,
 			},
-			// {
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		testAccCheckIllumioVENExists("illumio_ven.test", srAttr),
-			// 		testAccCheckIllumioVENAttributes("creation from terraform", srAttr),
-			// 	),
-			// },
+			{
+				ResourceName:            "illumio-core_ven.test",
+				ImportStateId:           "/orgs/1/vens/61ea9747-8f09-439a-9541-726733daa758",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"test_href"},
+			},
 			{
 				Config: testAccCheckIllumioVENConfig_basic("updation from terraform"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVENExists("illumio_ven.test", srAttr),
+					testAccCheckIllumioVENExists("illumio-core_ven.test", srAttr),
 					testAccCheckIllumioVENAttributes("updation from terraform", srAttr),
 				),
 			},
@@ -46,8 +44,9 @@ func TestAccIllumioVEN_CreateUpdate(t *testing.T) {
 
 func testAccCheckIllumioVENConfig_basic(val string) string {
 	return fmt.Sprintf(`
-	resource "illumio_ven" "test" {
-		status = "suspended"
+	resource "illumio-core_ven" "test" {
+		test_href = "/orgs/1/vens/61ea9747-8f09-439a-9541-726733daa758"
+		status = "active"
 		description = "%s"
 	  }
 	`, val)
@@ -87,7 +86,7 @@ func testAccCheckIllumioVENExists(name string, lgAttr map[string]interface{}) re
 func testAccCheckIllumioVENAttributes(val string, lgAttr map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		expectation := map[string]interface{}{
-			"status":      "suspended",
+			"status":      "active",
 			"description": val,
 		}
 		for k, v := range expectation {

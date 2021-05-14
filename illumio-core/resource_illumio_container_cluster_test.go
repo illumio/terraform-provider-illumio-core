@@ -52,7 +52,7 @@ func testAccCheckIllumioContainerClusterExists(name string, ccAttr map[string]in
 		rs, ok := s.RootModule().Resources[name]
 
 		if !ok {
-			return fmt.Errorf("IP List %s not found", name)
+			return fmt.Errorf("Container Cluster %s not found", name)
 		}
 
 		if rs.Primary.ID == "" {

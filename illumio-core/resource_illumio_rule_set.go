@@ -96,7 +96,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Enabled flag. Determines wheter the Rule Set is enabled or not. Default value: true",
+				Description: "Enabled flag. Determines whether the Rule Set is enabled or not. Default value: true",
 			},
 			"scopes": {
 				Type:        schema.TypeList,

@@ -18,7 +18,7 @@ Example Usage
 resource "illumio-core_ven" "example" {
   status = "suspended"
   name = "example name"
-  description = "description"
+  description = "example desc"
   target_pce_fqdn = "example.fqdn"
 }
 ```

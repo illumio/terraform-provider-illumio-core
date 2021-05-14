@@ -65,7 +65,7 @@ func testAccCheckIllumioEnforcementBoundaryExists(name string, ebAttr map[string
 		rs, ok := s.RootModule().Resources[name]
 
 		if !ok {
-			return fmt.Errorf("IP List %s not found", name)
+			return fmt.Errorf("Enforcement Boundary %s not found", name)
 		}
 
 		if rs.Primary.ID == "" {

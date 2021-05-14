@@ -21,6 +21,11 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 		Description:   "Manages Illumio Organization Settings",
 
 		Schema: map[string]*schema.Schema{
+			"test_href": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "URI of Organization Settings, only used for testing",
+			},
 			"audit_event_retention_seconds": {
 				Type:        schema.TypeInt,
 				Required:    true,
@@ -56,11 +61,15 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 func resourceIllumioOrganizationSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Detail:   "[illumio-core_organization_settings] Cannot use Create Operation.",
-		Summary:  "Please use terrform import...",
-	})
+	if v, k := d.GetOk("test_href"); k {
+		d.SetId(v.(string))
+	} else {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Detail:   "[illumio-core_organization_settings] Cannot use create operation.",
+			Summary:  "Please use terraform import...",
+		})
+	}
 
 	return diags
 }

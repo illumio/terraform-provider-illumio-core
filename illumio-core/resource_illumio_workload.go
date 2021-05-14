@@ -716,9 +716,8 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			}
 
 			srs = append(srs, sr)
-
-			d.Set(key, srs)
 		}
+		d.Set(key, srs)
 	} else {
 		d.Set(key, nil)
 	}
@@ -747,9 +746,8 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			}
 
 			srs = append(srs, sr)
-
-			d.Set(key, srs)
 		}
+		d.Set(key, srs)
 	} else {
 		d.Set(key, nil)
 	}
@@ -791,9 +789,8 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			}
 
 			srs = append(srs, sr)
-
-			d.Set(key, srs)
 		}
+		d.Set(key, srs)
 	} else {
 		d.Set(key, nil)
 	}
@@ -802,6 +799,8 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 		d.Set("firewall_coexistence", extractMapArray(data.S("firewall_coexistence"), []string{
 			"illumio_primary",
 		}))
+	} else {
+		d.Set("firewall_coexistence", nil)
 	}
 
 	if data.Exists("selectively_enforced_services") {
@@ -811,6 +810,8 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			"port",
 			"to_port",
 		}))
+	} else {
+		d.Set("selectively_enforced_services", nil)
 	}
 
 	if data.Exists("container_cluster") {
@@ -818,6 +819,8 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			"href",
 			"name",
 		}))
+	} else {
+		d.Set("container_cluster", nil)
 	}
 
 	return diagnostics

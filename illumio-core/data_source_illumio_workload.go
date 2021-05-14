@@ -798,9 +798,8 @@ func dataSourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, 
 			}
 
 			srs = append(srs, sr)
-
-			d.Set(key, srs)
 		}
+		d.Set(key, srs)
 	} else {
 		d.Set(key, nil)
 	}

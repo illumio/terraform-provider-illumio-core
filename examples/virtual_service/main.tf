@@ -15,13 +15,13 @@ provider "illumio-core" {
   org_id                = 1
 }
 
-data "illumio-core_virtual_service" "vs_1"{
+data "illumio-core_virtual_service" "example"{
   href = "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
 }
 
-resource "illumio-core_virtual_service" "vs_2" {
-  name = "Virtual Service 1 1"
-  description = "Virtual Service to apply on host"
+resource "illumio-core_virtual_service" "example" {
+  name = "example name"
+  description = "example desc"
   apply_to = "host_only"
   service_ports {
     proto = 6

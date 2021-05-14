@@ -16,22 +16,22 @@ provider "illumio-core" {
 }
 
 resource "illumio-core_workload" "example" {
-  name        = "test workload name"
-  description = "test Desc"
-  external_data_set       = "test set"
-  external_data_reference = "test reference"
-  hostname               = "test hostname"
-  service_principal_name = "test spn 99"
+  name        = "example workload name"
+  description = "example Desc"
+  external_data_set       = "example set"
+  external_data_reference = "example reference"
+  hostname               = "example hostname"
+  service_principal_name = "example spn 99"
   interfaces {
-    name       = "test interface"
+    name       = "example interface"
     link_state = "up"
     address    = "10.10.3.10"
   }
-  service_provider = "test service provider"
-  data_center      = "test data center"
-  data_center_zone = "test data center zone"
-  os_detail        = "test os details"
-  os_id            = "test os id"
+  service_provider = "example service provider"
+  data_center      = "example data center"
+  data_center_zone = "example data center zone"
+  os_detail        = "example os details"
+  os_id            = "example os id"
   online           = false
   labels {
     href = "/orgs/1/labels/1"

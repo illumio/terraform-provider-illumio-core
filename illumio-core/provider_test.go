@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -17,10 +18,10 @@ var testAccProviderFactories map[string]func() (*schema.Provider, error)
 func init() {
 	testAccProvider = Provider()
 	testAccProviders = map[string]*schema.Provider{
-		"illumio": testAccProvider,
+		"illumio-core": testAccProvider,
 	}
 	testAccProviderFactories = map[string]func() (*schema.Provider, error){
-		"illumio": func() (*schema.Provider, error) { return Provider(), nil },
+		"illumio-core": func() (*schema.Provider, error) { return Provider(), nil },
 	}
 }
 
@@ -41,7 +42,7 @@ func testAccProviderFactoriesInit(provider **schema.Provider, providerName strin
 }
 
 func testAccProviderFactoriesInternal(provider **schema.Provider) map[string]func() (*schema.Provider, error) {
-	return testAccProviderFactoriesInit(provider, "illumio")
+	return testAccProviderFactoriesInit(provider, "illumio-core")
 }
 
 func TestProvider(t *testing.T) {
@@ -88,6 +89,16 @@ func testAccCheckIllumioGeneralizeDestroy(providerInstance *schema.Provider, res
 				}
 
 			}
+		}
+
+		return nil
+	}
+}
+
+func testAccCheckIllumioListDataSourceSize(listAttr map[string]interface{}, length string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		if listAttr["length"] != length {
+			return fmt.Errorf("Bad List Size. Expected : %v, Got : %v", length, listAttr["length"])
 		}
 
 		return nil

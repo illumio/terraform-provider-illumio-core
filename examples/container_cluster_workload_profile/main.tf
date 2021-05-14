@@ -19,7 +19,7 @@ provider "illumio-core" {
 
 resource "illumio-core_container_cluster_workload_profile" "example" {
   container_cluster_href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
-  name = "testing it"
+  name = "example name"
   managed = true
   assign_labels {
     href = "/orgs/1/labels/1"

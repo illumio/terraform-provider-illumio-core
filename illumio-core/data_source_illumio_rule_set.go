@@ -156,9 +156,10 @@ func datasourceIllumioRuleSet() *schema.Resource {
 		Description:   "Represents Illumio Rule Set",
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of Rule Set",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of Rule Set",
+				ValidateDiagFunc: isRuleSetHref,
 			},
 			"created_at": {
 				Type:        schema.TypeString,

@@ -82,9 +82,10 @@ func datasourceIllumioFirewallSettings() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of Firewall Settings",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of Firewall Settings",
+				ValidateDiagFunc: isFirewallSettingsHref,
 			},
 			"update_type": {
 				Type:        schema.TypeString,

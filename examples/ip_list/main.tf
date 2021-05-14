@@ -16,21 +16,21 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-resource "illumio-core_ip_list" "iplist_1" {
-  name        = "test iplist"
-  description = "desc test"
+resource "illumio-core_ip_list" "example" {
+  name        = "example name"
+  description = "example desc"
   ip_ranges {
     from_ip = "1.1.0.0/24"
     to_ip = "0.0.0.0/0"
-    description = "test ip_ranges description"
+    description = "example ip_ranges description"
     exclusion = false
   }
   fqdns {
     fqdn = "app.example.com"
-    description = "test fqdn description"
+    description = "example fqdn description"
   }
 }
 
-data "illumio-core_ip_list" "iplist_1" {
+data "illumio-core_ip_list" "example" {
   href = "/orgs/1/sec_policy/draft/ip_lists/1"
 }

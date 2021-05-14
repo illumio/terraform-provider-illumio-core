@@ -69,9 +69,10 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of this Enforcement Boundary",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of this Enforcement Boundary",
+				ValidateDiagFunc: isEnforcementBoundaryHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

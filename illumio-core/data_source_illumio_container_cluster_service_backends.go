@@ -14,10 +14,11 @@ func datasourceIllumioContainerClusterServiceBackends() *schema.Resource {
 		Description:   "Represents Illumio Container Cluster Service Backend",
 
 		Schema: map[string]*schema.Schema{
-			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of Container Cluster Service backend",
+			"container_cluster_href": {
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of Container Cluster",
+				ValidateDiagFunc: isContainerClusterHref,
 			},
 			"items": {
 				Type:        schema.TypeList,
@@ -81,7 +82,7 @@ func datasourceIllumioContainerClusterServiceBackendsRead(ctx context.Context, d
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	href := d.Get("href").(string)
+	href := d.Get("container_cluster_href").(string) + "/service_backends"
 
 	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {

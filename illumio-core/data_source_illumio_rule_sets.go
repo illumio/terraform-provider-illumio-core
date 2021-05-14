@@ -475,6 +475,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
 	rsKeys := []string{
+		"href",
 		"created_at",
 		"updated_at",
 		"deleted_at",

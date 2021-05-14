@@ -130,7 +130,7 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("%v/sec_rules", ruleSetHref), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("%v/sec_rules", ruleSetHref), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

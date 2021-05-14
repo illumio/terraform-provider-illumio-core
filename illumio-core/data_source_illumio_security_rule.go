@@ -88,13 +88,8 @@ func datasourceIllumioSecurityRule() *schema.Resource {
 }
 
 func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"href": {
-			Type:        schema.TypeString,
-			Computed:    !hrefRequired,
-			Required:    hrefRequired,
-			Description: "URI of Security Rule",
-		},
+
+	m := map[string]*schema.Schema{
 		"enabled": {
 			Type:        schema.TypeBool,
 			Computed:    true,
@@ -328,6 +323,21 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 			},
 		},
 	}
+	if hrefRequired {
+		m["href"] = &schema.Schema{
+			Type:             schema.TypeString,
+			Required:         true,
+			ValidateDiagFunc: isSecurityRuleHref,
+			Description:      "URI of Security Rule",
+		}
+	} else {
+		m["href"] = &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "URI of Security Rule",
+		}
+	}
+	return m
 }
 
 func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

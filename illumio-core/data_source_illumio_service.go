@@ -59,9 +59,10 @@ func datasourceIllumioService() *schema.Resource {
 		Description:   "Represents Illumio Service",
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of Service",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of Service",
+				ValidateDiagFunc: isServiceHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

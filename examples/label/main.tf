@@ -15,11 +15,11 @@ provider "illumio-core" {
   org_id                = 1
 }
 
-data "illumio-core_label" "label_1" {
+data "illumio-core_label" "example" {
   href = "/orgs/1/labels/1"
 }
 
-resource "illumio-core_label" "test_label" {
+resource "illumio-core_label" "example" {
   key     = "role"
-  value   = "test_role_2"
+  value   = "example role"
 }

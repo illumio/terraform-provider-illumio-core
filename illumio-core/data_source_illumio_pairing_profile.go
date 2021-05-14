@@ -57,9 +57,10 @@ func datasourceIllumioPairingProfile() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of this pairing profile",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of this pairing profile",
+				ValidateDiagFunc: isPairingProfileHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

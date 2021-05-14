@@ -1,0 +1,55 @@
+package illumiocore
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+)
+
+var providerDSEBL *schema.Provider
+
+func TestAccIllumioEBL_Read(t *testing.T) {
+	listAttr := map[string]interface{}{}
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactoriesInternal(&providerDSEBL),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCheckIllumioEBLDataSourceConfig_basic(),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIllumioDataSourceEBLExists("data.illumio-core_enforcement_boundaries.test", listAttr),
+					testAccCheckIllumioListDataSourceSize(listAttr, "3"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckIllumioEBLDataSourceConfig_basic() string {
+	return `
+	data "illumio-core_enforcement_boundaries" "test" {
+		max_results = "3"
+	  }
+	`
+}
+
+func testAccCheckIllumioDataSourceEBLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[name]
+
+		if !ok {
+			return fmt.Errorf("List of Enforcement Boundaries %s not found", name)
+		}
+
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("ID was not set")
+		}
+
+		listAttr["length"] = rs.Primary.Attributes["items.#"]
+
+		return nil
+	}
+}

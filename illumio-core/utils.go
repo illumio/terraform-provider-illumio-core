@@ -72,17 +72,37 @@ var nameValidation = validation.ToDiagFunc(validation.StringLenBetween(1, 255))
 var checkStringZerotoTwoHundredAndFiftyFive = validation.ToDiagFunc(validation.StringLenBetween(0, 255))
 
 var uuidV4RegEx = "[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}"
+var orgsPrefix = "^/orgs/[1-9][0-9]*/"
+var secPMefix = "sec_policy/(draft|active|[0-9]*)/"
 
-var isLabelHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/labels/[1-9][0-9]*"), "Label href is not in the correct format"))
-var isLabelGroupHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/sec_policy/(draft|active|[0-9]*)/label_groups/"+uuidV4RegEx), "Label Group href is not in the correct format"))
-var isIPListHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/sec_policy/(draft|active|[0-9]*)/ip_lists/[1-9][0-9]*"), "IP List href is not in the correct format"))
-var isServiceHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/sec_policy/(draft|active|[0-9]*)/services/[1-9][0-9]*"), "IP List href is not in the correct format"))
-var isVirtualServiceHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/sec_policy/(draft|active|[0-9]*)/virtual_services/"+uuidV4RegEx), "Virtual Service href is not in the correct format"))
-var isWorkloadHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/workloads/"+uuidV4RegEx), "Workload href is not in the correct format"))
-var isPairingProfileHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/pairing_profiles/[1-9][0-9]*"), "Pairing Profile href is not in the correct format"))
-var isVulnerabilityHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile(`/orgs/[1-9][0-9]*/vulnerabilities/[\S]*`), "Vulnerability href is not in the correct format"))
-var isVENHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/vens/"+uuidV4RegEx), "VEN href is not in the correct format"))
-var isContainerClusterHref = validation.ToDiagFunc(validation.StringMatch(regexp.MustCompile("/orgs/[1-9][0-9]*/container_clusters/"+uuidV4RegEx), "Container Cluster href is not in the correct format"))
+var isLabelHref = generateHrefValidationFunction("labels/[1-9][0-9]*", "Label")
+var isLabelGroupHref = generateHrefValidationFunction(secPMefix+"label_groups/"+uuidV4RegEx, "Label Group href is not in the correct format")
+var isIPListHref = generateHrefValidationFunction(secPMefix+"ip_lists/[1-9][0-9]*", "IP List")
+var isServiceHref = generateHrefValidationFunction(secPMefix+"services/[1-9][0-9]*", "Service")
+var isVirtualServiceHref = generateHrefValidationFunction(secPMefix+"virtual_services/"+uuidV4RegEx, "Virtual Service")
+var isWorkloadHref = generateHrefValidationFunction("workloads/"+uuidV4RegEx, "Workload")
+var isPairingProfileHref = generateHrefValidationFunction("pairing_profiles/[1-9][0-9]*", "Pairing Profile")
+var isVulnerabilityHref = generateHrefValidationFunction("vulnerabilities/.*", "Vulnerability")
+var isVENHref = generateHrefValidationFunction("vens/"+uuidV4RegEx, "VEN")
+var isContainerClusterHref = generateHrefValidationFunction("container_clusters/"+uuidV4RegEx, "Container Cluster")
+var isContainerClusterWorkloadProfileHref = generateHrefValidationFunction("container_clusters/"+uuidV4RegEx+"/container_workload_profiles/"+uuidV4RegEx, "Container Cluster Workload Profile")
+var isEnforcementBoundaryHref = generateHrefValidationFunction(secPMefix+"enforcement_boundaries/[1-9][0-9]*", "Enforcement Boundary")
+var isRuleSetHref = generateHrefValidationFunction(secPMefix+"rule_sets/[1-9][0-9]*", "Rule Set")
+var isSecurityRuleHref = generateHrefValidationFunction(secPMefix+"rule_sets/[1-9][0-9]*/sec_rules/[1-9][0-9]*", "Security Rule")
+var isFirewallSettingsHref = generateHrefValidationFunction(secPMefix+"firewall_settings", "Firewall Settings")
+
+func generateHrefValidationFunction(regex string, msg string) schema.SchemaValidateDiagFunc {
+	return validation.ToDiagFunc(
+		validation.StringMatch(
+			regexp.MustCompile(
+				orgsPrefix+
+					regex+
+					"$",
+			),
+			fmt.Sprintf("%v href is not in the correct format", msg),
+		),
+	)
+}
 
 // hrefSchemaRequired returns Href resource as required
 func hrefSchemaRequired(rName string, diagValid schema.SchemaValidateDiagFunc) *schema.Resource {
@@ -425,7 +445,7 @@ func isValidPversion() schema.SchemaValidateDiagFunc {
 
 		sv := v.(string)
 		iv, k := getInt(v)
-		if !k || (k && iv < 0) {
+		if !k || (k && iv < 1) {
 			if sv == "active" || sv == "draft" {
 				return diags
 			} else {

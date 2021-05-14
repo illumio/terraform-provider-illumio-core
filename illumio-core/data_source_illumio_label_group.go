@@ -59,9 +59,10 @@ func datasourceIllumioLabelGroup() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of Label Group",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of Label Group",
+				ValidateDiagFunc: isLabelGroupHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

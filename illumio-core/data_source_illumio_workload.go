@@ -346,7 +346,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 			"labels": {
 				Type:        schema.TypeSet,
 				Computed:    true,
-				Description: "List of lists of label URIs",
+				Description: "List of label URIs",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {

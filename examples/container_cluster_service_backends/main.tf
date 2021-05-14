@@ -16,6 +16,6 @@ provider "illumio-core" {
 }
 
 data "illumio-core_container_cluster_service_backends" "example" {
-  href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde/service_backends"
+  container_cluster_href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde"
 }
 

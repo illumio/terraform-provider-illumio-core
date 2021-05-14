@@ -23,7 +23,7 @@ resource "illumio-core_rule_set" "example" {
   name = "example"
 
   ip_tables_rules {
-    description = "some des"
+    description = "example desc"
     actors {
       actors = "ams"
     }
@@ -61,7 +61,7 @@ resource "illumio-core_rule_set" "example" {
   rules {
     enabled = false
     resolve_labels_as {
-      consumers = ["workloads", "workloads"]
+      consumers = ["workloads"]
       providers = ["workloads"]
     }
 

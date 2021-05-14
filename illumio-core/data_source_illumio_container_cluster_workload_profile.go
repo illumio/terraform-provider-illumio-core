@@ -51,9 +51,10 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the container workload profile",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of the container workload profile",
+				ValidateDiagFunc: isContainerClusterWorkloadProfileHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

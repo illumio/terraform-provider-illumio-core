@@ -51,9 +51,10 @@ func datasourceIllumioIPList() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the IPList",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of the IPList",
+				ValidateDiagFunc: isIPListHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

@@ -20,7 +20,7 @@ data "illumio-core_pairing_profile" "example" {
 }
 
 resource "illumio-core_pairing_profile" "example" {
-  name    = "pairing_profile_name"
+  name    = "example name"
   enabled = true
   labels {
     href = "/orgs/1/labels/1"

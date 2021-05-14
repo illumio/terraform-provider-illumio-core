@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-data "illumio-core_pairing_profile" "example" {
+data "illumio-core_pairing_profiles" "example" {
   max_results = "5"
 }
 ```

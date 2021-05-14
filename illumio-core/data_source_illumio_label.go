@@ -34,9 +34,10 @@ func datasourceIllumioLabel() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of this label",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of this label",
+				ValidateDiagFunc: isLabelHref,
 			},
 			"deleted": {
 				Type:        schema.TypeBool,

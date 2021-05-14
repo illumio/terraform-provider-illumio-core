@@ -56,7 +56,7 @@ resource "illumio-core_enforcement_boundary" "example" {
 
 Optional:
 
-- **actors** (String) actors for consumers parameter. Allowed values are "ams" and "container_host"
+- **actors** (String) actors for consumers parameter. Valid value is "ams"
 - **ip_list** (Block List, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--consumers--ip_list))
 - **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--consumers--label))
 - **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--consumers--label_group))
@@ -127,8 +127,6 @@ Required:
 Optional:
 
 - **href** (String) URI of Service
-- **port** (String) Port number used with protocol or starting port when specifying a range. Valid range is 0-65535
+- **port** (String) Port number used with protocol or starting port when specifying a range. Valid range: 0-65535
 - **proto** (String) Protocol number. Allowed values are 6 and 17
-- **to_port** (String) Upper end of port range. Valid range (0-65535)
-
-
+- **to_port** (String) Upper end of port range. Valid range: 0-65535

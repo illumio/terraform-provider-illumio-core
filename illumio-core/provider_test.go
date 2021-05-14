@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -88,6 +89,16 @@ func testAccCheckIllumioGeneralizeDestroy(providerInstance *schema.Provider, res
 				}
 
 			}
+		}
+
+		return nil
+	}
+}
+
+func testAccCheckIllumioListDataSourceSize(listAttr map[string]interface{}, length string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		if listAttr["length"] != length {
+			return fmt.Errorf("Bad List Size. Expected : %v, Got : %v", length, listAttr["length"])
 		}
 
 		return nil

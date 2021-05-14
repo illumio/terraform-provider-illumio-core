@@ -45,9 +45,10 @@ func datasourceIllumioContainerCluster() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"href": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "URI of the Cluster",
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "URI of the Cluster",
+				ValidateDiagFunc: isContainerClusterHref,
 			},
 			"name": {
 				Type:        schema.TypeString,

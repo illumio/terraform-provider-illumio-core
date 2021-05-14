@@ -15,7 +15,7 @@ Example Usage
 ------------
 
 ```hcl
-ata "illumio-core_container_cluster_workload_profiles" "example" {
+data "illumio-core_container_cluster_workload_profiles" "example" {
   max_results = "5"
   container_cluster_href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde"
 }

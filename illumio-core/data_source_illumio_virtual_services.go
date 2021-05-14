@@ -345,11 +345,11 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 	if value, ok := d.GetOk("service_address_ip"); ok {
 		params["service_address.ip"] = value.(string)
 	}
-	if value, ok := d.GetOk("service_address_port"); ok {
-		params["service_address.port"] = value.(string)
+	if value, ok := d.GetOk("service_ports_port"); ok {
+		params["service_ports.port"] = value.(string)
 	}
-	if value, ok := d.GetOk("service_address_proto"); ok {
-		params["service_address.proto"] = value.(string)
+	if value, ok := d.GetOk("service_ports_proto"); ok {
+		params["service_ports.proto"] = value.(string)
 	}
 
 	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/%v/virtual_services", pConfig.OrgID, pversion), &params)

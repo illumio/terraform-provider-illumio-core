@@ -53,16 +53,16 @@ func (c *V2) AsyncGet(endpoint string, queryParams *map[string]string) (*http.Re
 				return nil, nil, err
 			}
 
-			if v, x := strconv.Atoi(res.Header.Get("X-Total-Count")); x != nil {
-				if v <= 500 {
-					return res, respBody, nil
-				}
+			// check actual count of elements, if less than 500 we don't need to perform async
+			if len(respBody.Children()) < 500 {
+				return res, respBody, nil
 			}
+
 		} else if queryMaxResults <= 500 {
 			return c.Get(endpoint, queryParams)
 		}
 	}
-
+	log.Printf("Performing AsyncGet for endpoint - %s", endpoint)
 	req, err := c.PrepareRequest(http.MethodGet, endpoint, nil, queryParams)
 	if err != nil {
 		return nil, nil, err

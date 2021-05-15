@@ -1,6 +1,5 @@
 package illumiocore
 
-
 import (
 	"fmt"
 	"testing"

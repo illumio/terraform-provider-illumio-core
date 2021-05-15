@@ -32,7 +32,7 @@ func (l *LabelGroup) ToMap() (map[string]interface{}, error) {
 	if l.ExternalDataReference != "" {
 		lgAttrMap["external_data_reference"] = l.ExternalDataReference
 	}
-	
+
 	lgAttrMap["external_data_set"] = nil
 	if l.ExternalDataSet != "" {
 		lgAttrMap["external_data_set"] = l.ExternalDataSet

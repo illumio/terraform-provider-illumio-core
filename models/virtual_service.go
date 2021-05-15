@@ -92,7 +92,7 @@ func (vs *VirtualService) ToMap() (map[string]interface{}, error) {
 	if vs.ExternalDataReference != "" {
 		vsAttrmap["external_data_reference"] = vs.ExternalDataReference
 	}
-	
+
 	vsAttrmap["labels"] = GetHrefMaps(vs.Labels)
 
 	// One of service or service_ports is required

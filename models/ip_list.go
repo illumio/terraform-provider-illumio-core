@@ -76,7 +76,7 @@ func (i *IPList) ToMap() (map[string]interface{}, error) {
 	if i.ExternalDataReference != "" {
 		ipListAttrMap["external_data_reference"] = i.ExternalDataReference
 	}
-	
+
 	iprMapArr := []map[string]interface{}{}
 	for _, o := range i.IPRanges {
 		m := make(map[string]interface{})

@@ -87,11 +87,11 @@ terraform apply && provision
 
 **Non-Versioned Resource**: Resource which does not require provisioning 
 
-While managing versioned and non-versioned resources together, if you want to destroy non-versioned resource which is already linked with the versioned resource then you must unlink/delete versioned resource and provision it first. You can perform the following steps for the same:
+While managing versioned and non-versioned resources together, if you want to destroy a non-versioned resource which is already linked with the versioned resource then you must unlink/delete versioned resource and provision it first. You can perform the following steps for the same:
   -  Unlink the non-versioned resources from versioned resources OR destroy the versioned resources and then provision it using provisioning binary
   - Perform the deletion of non-versioned resources
 
-For example, to delete label `env_dev` which is referred in `env_lg`
+For example, to delete the label `env_dev` which is referred in `env_lg`
 
 ```hcl
 # label is non-versioned resource

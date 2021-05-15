@@ -1,33 +1,23 @@
-# Illumio Provider
-Provider to maintain Illumio Resource with terraform.
+<a href="https://terraform.io">
+    <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" alt="Terraform logo" title="Terraform" align="right" height="50" />
+</a>
 
-# Development
-- Clone this repo to `$GOPATH/src/github.com/illumio/terraform-provider-illumio-core`
-- Install terraform and create path for plugin `%APPDATA%\terraform.d\plugins\illumio.com\labs\illumio-core\0.1\windows_amd64`
-- Copy env.example.bat to env.bat and replace dummy values with credentials
+# Terraform Provider for Illumio-Core
 
-## Commands to build and use plugin in terraform
 
-- `go build -o terraform-provider-illumio-core.exe`
-- `move terraform-provider-illumio-core.exe %APPDATA%\terraform.d\plugins\illumio.com\labs\illumio-core\0.1\windows_amd64`
+- Website: [terraform.io](https://terraform.io)
+- Tutorials: [learn.hashicorp.com](https://learn.hashicorp.com/terraform?track=getting-started#getting-started)
+- Chat: [gitter](https://gitter.im/hashicorp-terraform/Lobby)
+- Mailing List: [Google Groups](http://groups.google.com/group/terraform-tool)
 
-## Build binaries for multiple platform
+The Terraform Illumio-Core provider is a plugin for Terraform that allows for the management of Illumio-Core resources.
 
-- Run `go get github.com/mitchellh/gox`. This will place gox executable in Go's binary directory. Make sure that is part of the PATH.
-- Run `sh scripts/build.sh`. This will create `pkg` directory with binaries for configuration in `build.sh`
-- Same can be done for `provision` executable
-- Run `cd cmd/provision` and  `sh ../../scripts/build.sh`. This will create `cmd/provision/pkg` directory with binaries for configuration in `build.sh`
+Note: For us, Terraform's security is the highest priority. In case of a security issue found in the Terraform Illumio-Core Provider, please report it at \<Placeholder for Illumio-Core Security Team\>.
 
-## To run terraform on any examples
 
-- Run `env.bat`
-- Run `cd examples/<resource|datasource>/`
-- Run `terraform init`
-- Run `terraform apply`
+## Getting Started
 
-## Debugging and Troubleshooting
+- [Develop, Build, Test, and Debug the provider](docs/DEVELOPMENT.md)
+- [Using the provider](docs/index.md)
 
-- Set environment variable `TF_LOG` to one of the log levels `TRACE`, `DEBUG`, `INFO`, `WARN` or `ERROR`
-- Set environment variable `TF_LOG_PATH` to write logs in a file. e.g. `TF_LOG_PATH=tf.log`
 
-For more details visit - [Terraform Debugging](https://www.terraform.io/docs/internals/debugging.html)

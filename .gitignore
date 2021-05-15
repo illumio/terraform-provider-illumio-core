@@ -2,9 +2,6 @@
 *.log
 env.bat
 
-# Docs
-/docs
-
 # IDE filesd
 .idea/
 .vscode/

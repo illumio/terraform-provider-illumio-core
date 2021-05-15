@@ -1,0 +1,89 @@
+{
+  "data": [
+    {
+      "illumio-core_security_rule": [
+        {
+          "example": [
+            {
+              "href": "/orgs/1/sec_policy/draft/rule_sets/6/sec_rules/7"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "provider": [
+    {
+      "illumio-core": [
+        {
+          "org_id": 1,
+          "request_timeout": 30
+        }
+      ]
+    }
+  ],
+  "resource": [
+    {
+      "illumio-core_security_rule": [
+        {
+          "example": [
+            {
+              "consumers": [
+                {
+                  "actors": "ams"
+                }
+              ],
+              "enabled": true,
+              "ingress_services": [
+                {
+                  "href": "/orgs/1/sec_policy/draft/services/19"
+                },
+                {
+                  "port": 1,
+                  "proto": 6
+                },
+                {
+                  "port": 1,
+                  "proto": 6,
+                  "to_port": 12
+                }
+              ],
+              "providers": [
+                {
+                  "label": [
+                    {
+                      "href": "/orgs/1/labels/715"
+                    }
+                  ]
+                }
+              ],
+              "resolve_labels_as": [
+                {
+                  "consumers": [
+                    "workloads"
+                  ],
+                  "providers": [
+                    "virtual_services"
+                  ]
+                }
+              ],
+              "rule_set_href": "/orgs/1/sec_policy/draft/rule_sets/6"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "terraform": [
+    {
+      "required_providers": [
+        {
+          "illumio-core": {
+            "source": "illumio.com/labs/illumio-core",
+            "version": "0.1"
+          }
+        }
+      ]
+    }
+  ]
+}

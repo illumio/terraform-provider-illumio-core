@@ -1,0 +1,53 @@
+{
+  "data": [
+    {
+      "illumio-core_ven": [
+        {
+          "example": [
+            {
+              "href": "/orgs/1/vens/80ec4e0a-e628-41c2-b79a-866f72a6b070"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "provider": [
+    {
+      "illumio-core": [
+        {
+          "org_id": 1,
+          "request_timeout": 30
+        }
+      ]
+    }
+  ],
+  "resource": [
+    {
+      "illumio-core_ven": [
+        {
+          "example": [
+            {
+              "description": "example description",
+              "name": "example name",
+              "status": "suspended",
+              "target_pce_fqdn": "example.fqdn"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "terraform": [
+    {
+      "required_providers": [
+        {
+          "illumio-core": {
+            "source": "illumio.com/labs/illumio-core",
+            "version": "0.1"
+          }
+        }
+      ]
+    }
+  ]
+}

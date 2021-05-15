@@ -17,10 +17,10 @@ provider "illumio-core" {
 }
 
 resource "illumio-core_container_cluster" "example" {
-    name = "test cc"
-    description = "test desc"
+  name        = "test cc"
+  description = "test desc"
 }
 
 data "illumio-core_container_cluster" "example" {
-    href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
+  href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
 }

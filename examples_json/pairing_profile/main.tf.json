@@ -1,0 +1,69 @@
+{
+  "data": [
+    {
+      "illumio-core_pairing_profile": [
+        {
+          "example": [
+            {
+              "href": "/orgs/1/pairing_profiles/9"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "provider": [
+    {
+      "illumio-core": [
+        {
+          "org_id": 1,
+          "request_timeout": 30
+        }
+      ]
+    }
+  ],
+  "resource": [
+    {
+      "illumio-core_pairing_profile": [
+        {
+          "example": [
+            {
+              "allowed_uses_per_key": "50",
+              "app_label_lock": true,
+              "enabled": true,
+              "env_label_lock": false,
+              "key_lifespan": "50",
+              "labels": [
+                {
+                  "href": "/orgs/1/labels/1"
+                },
+                {
+                  "href": "/orgs/1/labels/7"
+                }
+              ],
+              "loc_label_lock": true,
+              "log_traffic": false,
+              "log_traffic_lock": true,
+              "name": "example name",
+              "role_label_lock": true,
+              "visibility_level": "flow_off",
+              "visibility_level_lock": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "terraform": [
+    {
+      "required_providers": [
+        {
+          "illumio-core": {
+            "source": "illumio.com/labs/illumio-core",
+            "version": "0.1"
+          }
+        }
+      ]
+    }
+  ]
+}

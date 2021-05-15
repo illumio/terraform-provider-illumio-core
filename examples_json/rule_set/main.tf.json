@@ -1,0 +1,132 @@
+{
+  "data": [
+    {
+      "illumio-core_rule_set": [
+        {
+          "example": [
+            {
+              "href": "/orgs/1/sec_policy/draft/rule_sets/70"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "provider": [
+    {
+      "illumio-core": [
+        {
+          "org_id": 1,
+          "request_timeout": 30
+        }
+      ]
+    }
+  ],
+  "resource": [
+    {
+      "illumio-core_rule_set": [
+        {
+          "example": [
+            {
+              "ip_tables_rules": [
+                {
+                  "actors": [
+                    {
+                      "actors": "ams"
+                    },
+                    {
+                      "label": [
+                        {
+                          "href": "/orgs/1/labels/69"
+                        }
+                      ]
+                    }
+                  ],
+                  "description": "example desc",
+                  "enabled": false,
+                  "ip_version": 6,
+                  "statements": [
+                    {
+                      "chain_name": "PREROUTING",
+                      "parameters": "value",
+                      "table_name": "nat"
+                    }
+                  ]
+                }
+              ],
+              "name": "example",
+              "rules": [
+                {
+                  "consumers": [
+                    {
+                      "actors": "ams"
+                    }
+                  ],
+                  "enabled": false,
+                  "ingress_services": [
+                    {
+                      "port": 4,
+                      "proto": 6
+                    }
+                  ],
+                  "providers": [
+                    {
+                      "label": [
+                        {
+                          "href": "/orgs/1/labels/715"
+                        }
+                      ]
+                    }
+                  ],
+                  "resolve_labels_as": [
+                    {
+                      "consumers": [
+                        "workloads"
+                      ],
+                      "providers": [
+                        "workloads"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "scopes": [
+                {
+                  "label": [
+                    {
+                      "href": "/orgs/1/labels/69"
+                    }
+                  ],
+                  "label_group": [
+                    {
+                      "href": "/orgs/1/sec_policy/draft/label_groups/65d0ad0f-329a-4ddc-8919-bd0220051fc7"
+                    }
+                  ]
+                },
+                {
+                  "label": [
+                    {
+                      "href": "/orgs/1/labels/94"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "terraform": [
+    {
+      "required_providers": [
+        {
+          "illumio-core": {
+            "source": "illumio.com/labs/illumio-core",
+            "version": "0.1"
+          }
+        }
+      ]
+    }
+  ]
+}

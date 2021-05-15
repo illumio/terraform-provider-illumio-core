@@ -94,3 +94,95 @@ $ make testacc
 - Set environment variable `TF_LOG_PATH` to write logs in a file. e.g. `TF_LOG_PATH=tf.log`
 
 For more details visit - [Terraform Debugging](https://www.terraform.io/docs/internals/debugging.html)
+
+
+## JSON Format TF Configuration Files
+- The user can also use the JSON format TF configuration files similar to HCL configuration files. 
+- Please refer to the github link for conversion of HCL to JSON format TF configuration files and vice versa. Note - In the output JSON file generated after conversion of the corresponding HCL file using the above tool, please convert the  terraform.required_providers[0].illumio-core (highlighted in bold in the below JSON example) from List to Map.
+- Below is an example of the HCL and the corresponding JSON file.
+
+### HCL (.tf file)
+
+```hcl
+terraform {
+  required_providers {
+    illumio-core = {
+      version = "0.1"
+      source  = "illumio.com/labs/illumio-core"
+    }
+  }
+}
+
+provider "illumio-core" {
+  request_timeout = 30
+  org_id          = 1
+}
+
+resource "illumio-core_rule_set" "name" {
+  name = "example-json-hcl"
+  scopes {
+    label {
+      href = "/orgs/1/labels/69"
+    }
+    label {
+      href = "/orgs/1/labels/1"
+    }
+    label_group {
+      href = "/orgs/1/sec_policy/draft/label_groups/64126bda-0f9d-47fc-846b-0f9adbe290d6"
+    }
+  }
+}
+```
+
+### JSON (.tf.json file)
+
+```JSON
+{
+    "resource": {
+        "illumio-core_rule_set": {
+            "name-json": {
+                "name": "example-hcl-json",
+                "scopes": [
+                    {
+                        "label": [
+                            {
+                                "href": "/orgs/1/labels/69"
+                            },
+                            {
+                                "href": "/orgs/1/labels/1"
+                            }
+                        ],
+                        "label_group": [
+                            {
+                                "href": "/orgs/1/sec_policy/draft/label_groups/64126bda-0f9d-47fc-846b-0f9adbe290d6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "provider": [
+        {
+            "illumio-core": [
+                {
+                    "org_id": 1,
+                    "request_timeout": 30
+                }
+            ]
+        }
+    ],
+    "terraform": [
+        {
+            "required_providers": [
+                {
+                    "illumio-core": {
+                        "source": "illumio.com/labs/illumio-core",
+                        "version": "0.1"
+                    }
+                }
+            ]
+        }
+    ]
+}
+```

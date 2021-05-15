@@ -26,11 +26,6 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 				Computed:    true,
 				Description: "URI of the Workload Settings",
 			},
-			"test_href": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "URI of VEN, only used for testing",
-			},
 			"workload_disconnected_timeout_seconds": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -104,15 +99,11 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 func resourceIllumioWorkloadSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	if v, k := d.GetOk("test_href"); k {
-		d.SetId(v.(string))
-	} else {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Detail:   "[illumio-core_workload_settings] Cannot use create operation.",
-			Summary:  "Please use terraform import...",
-		})
-	}
+	diags = append(diags, diag.Diagnostic{
+		Severity: diag.Error,
+		Detail:   "[illumio-core_workload_settings] Cannot use create operation.",
+		Summary:  "Please use terraform import...",
+	})
 
 	return diags
 }

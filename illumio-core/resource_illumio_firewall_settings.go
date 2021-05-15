@@ -59,11 +59,6 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 				Computed:    true,
 				Description: "URI of Firewall Settings",
 			},
-			"test_href": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "URI of Organization Settings, only used for testing",
-			},
 			"update_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -158,19 +153,13 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 }
 
 func resourceIllumioFirewallSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if v, k := d.GetOk("test_href"); k {
-		d.SetId(v.(string))
-	} else {
-		diags = append(diags, diag.Diagnostic{
+	return diag.Diagnostics{
+		diag.Diagnostic{
 			Severity: diag.Error,
 			Detail:   "[illumio-core_firewall_settings] Cannot use create operation.",
 			Summary:  "Please use terraform import...",
-		})
+		},
 	}
-
-	return diags
 }
 
 func resourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

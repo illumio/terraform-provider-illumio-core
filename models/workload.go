@@ -93,12 +93,12 @@ func (w *Workload) ToMap() (map[string]interface{}, error) {
 	}
 
 	workloadAttrMap["external_data_reference"] = nil
-	if w.ExternalDataSet != "" {
+	if w.ExternalDataReference != "" {
 		workloadAttrMap["external_data_reference"] = w.ExternalDataReference
 	}
 
 	workloadAttrMap["external_data_set"] = nil
-	if w.ExternalDataReference != "" {
+	if w.ExternalDataSet != "" {
 		workloadAttrMap["external_data_set"] = w.ExternalDataSet
 	}
 	wMapArr := []map[string]interface{}{}
@@ -119,7 +119,6 @@ func (w *Workload) ToMap() (map[string]interface{}, error) {
 		}
 		if o.FriendlyName != "" {
 			m["friendly_name"] = o.FriendlyName
-
 		}
 		wMapArr = append(wMapArr, m)
 	}

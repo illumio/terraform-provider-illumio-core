@@ -611,7 +611,7 @@ func extractResourceSecurityRuleIngressService(data *gabs.Container) []map[strin
 
 		for k, v := range ingSerData.ChildrenMap() {
 			if k == "href" {
-				is[k] = v
+				is[k] = v.Data().(string)
 			} else if contains(isKeys, k) {
 				is[k] = strconv.Itoa(int(v.Data().(float64)))
 			}

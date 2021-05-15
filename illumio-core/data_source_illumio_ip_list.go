@@ -67,7 +67,7 @@ func datasourceIllumioIPList() *schema.Resource {
 				Description: "Description of the IPList",
 			},
 			"ip_ranges": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "IP addresses or ranges",
 				Elem: &schema.Resource{
@@ -96,7 +96,7 @@ func datasourceIllumioIPList() *schema.Resource {
 				},
 			},
 			"fqdns": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Collection of Fully Qualified Domain Names",
 				Elem: &schema.Resource{

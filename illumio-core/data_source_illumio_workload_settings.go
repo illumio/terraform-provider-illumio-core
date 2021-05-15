@@ -48,13 +48,13 @@ func datasourceIllumioWorkloadSettings() *schema.Resource {
 				Description: "URI of the Workload Settings",
 			},
 			"workload_disconnected_timeout_seconds": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Workload Disconnected Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"scope": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Assigned labels for Workload Disconnected Timeout Seconds",
 							Elem: &schema.Resource{
@@ -76,13 +76,13 @@ func datasourceIllumioWorkloadSettings() *schema.Resource {
 				},
 			},
 			"workload_goodbye_timeout_seconds": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Workload Goodbye Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"scope": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Assigned labels for Workload Goodbye Timeout Seconds",
 							Elem: &schema.Resource{

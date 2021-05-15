@@ -346,7 +346,7 @@ func datasourceIllumioVENs() *schema.Resource {
 										Description: "The public IP address of the server",
 									},
 									"interfaces": {
-										Type:        schema.TypeSet,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Network interfaces of the workload",
 										Elem: &schema.Resource{

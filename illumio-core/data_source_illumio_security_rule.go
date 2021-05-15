@@ -180,7 +180,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 			Description: "Determines whether machine authentication is enabled",
 		},
 		"providers": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Computed:    true,
 			Description: "providers for Security Rule",
 			Elem: &schema.Resource{
@@ -230,7 +230,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 			},
 		},
 		"consumers": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Computed:    true,
 			Description: "Consumers for Security Rule",
 			Elem: &schema.Resource{

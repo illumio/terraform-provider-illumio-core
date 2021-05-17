@@ -78,8 +78,9 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 							),
 						},
 						"assignment": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Optional:    true,
+							MaxItems:    1,
 							Description: "The label href to set. Single element list",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -204,11 +205,14 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 			labelsI := models.ContainerClusterWorkloadProfileLabel{}
 			labelMap := label.(map[string]interface{})
 			labelsI.Key = labelMap["key"].(string)
-			if labelMap["assignment"].(*schema.Set).Len() > 0 {
-				tempL := labelMap["assignment"].(*schema.Set).List()
-				tempMap := tempL[0].(map[string]interface{})
-				labelsI.Assignment.Href = tempMap["href"].(string)
+
+			if len(labelMap["assignment"].([]interface{})) > 0 {
+				t := models.Href{
+					Href: labelMap["assignment"].([]interface{})[0].(map[string]interface{})["href"].(string),
+				}
+				labelsI.Assignment = t
 			}
+
 			if labelMap["restriction"].(*schema.Set).Len() > 0 {
 				labelsI.Restriction = models.GetHrefs(labelMap["restriction"].(*schema.Set).List())
 			}
@@ -247,6 +251,8 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 	}
 
 	d.SetId(data.S("href").Data().(string))
+	isAssignLabelsAvailable = false
+	isLabelsAvailable = false
 	return resourceIllumioContainerClusterWorkloadProfileRead(ctx, d, m)
 }
 
@@ -344,49 +350,50 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 	var isAssignLabelsUpdate bool
 	var isLabelsUpdate bool
 
-	// if d.HasChange("assign_labels") {
-	items := d.Get("assign_labels")
-	ccwp.AssignLabels = models.GetHrefs(items.(*schema.Set).List())
-	if len(items.(*schema.Set).List()) > 0 {
-		isAssignLabelsUpdate = true
+	if d.HasChange("assign_labels") {
+		items := d.Get("assign_labels")
+		ccwp.AssignLabels = models.GetHrefs(items.(*schema.Set).List())
+		if len(items.(*schema.Set).List()) > 0 {
+			isAssignLabelsUpdate = true
+		}
 	}
-	// }
 
-	// if d.HasChange("labels") {
-	items = d.Get("labels")
-	labels := items.(*schema.Set).List()
-	labelsModel := []models.ContainerClusterWorkloadProfileLabel{}
-	for _, label := range labels {
-		labelsI := models.ContainerClusterWorkloadProfileLabel{}
-		labelMap := label.(map[string]interface{})
-		labelsI.Key = labelMap["key"].(string)
-		if labelMap["assignment"].(*schema.Set).Len() > 0 {
-			tempL := labelMap["assignment"].(*schema.Set).List()
-			tempMap := tempL[0].(map[string]interface{})
-			labelsI.Assignment.Href = tempMap["href"].(string)
-		}
-		if labelMap["restriction"].(*schema.Set).Len() > 0 {
-			labelsI.Restriction = models.GetHrefs(labelMap["restriction"].(*schema.Set).List())
-		}
+	if d.HasChange("labels") {
+		items := d.Get("labels")
+		labels := items.(*schema.Set).List()
+		labelsModel := []models.ContainerClusterWorkloadProfileLabel{}
+		for _, label := range labels {
+			labelsI := models.ContainerClusterWorkloadProfileLabel{}
+			labelMap := label.(map[string]interface{})
+			labelsI.Key = labelMap["key"].(string)
+			if len(labelMap["assignment"].([]interface{})) > 0 {
+				t := models.Href{
+					Href: labelMap["assignment"].([]interface{})[0].(map[string]interface{})["href"].(string),
+				}
+				labelsI.Assignment = t
+			}
+			if labelMap["restriction"].(*schema.Set).Len() > 0 {
+				labelsI.Restriction = models.GetHrefs(labelMap["restriction"].(*schema.Set).List())
+			}
 
-		if labelsI.HasConflicts() {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assignment\", \"restriction\"} in the labels block",
-				AttributePath: cty.Path{
-					cty.GetAttrStep{
-						Name: "labels",
+			if labelsI.HasConflicts() {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Error,
+					Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assignment\", \"restriction\"} in the labels block",
+					AttributePath: cty.Path{
+						cty.GetAttrStep{
+							Name: "labels",
+						},
 					},
-				},
-			})
+				})
+			}
+			labelsModel = append(labelsModel, labelsI)
 		}
-		labelsModel = append(labelsModel, labelsI)
+		ccwp.Labels = labelsModel
+		if len(items.(*schema.Set).List()) > 0 {
+			isLabelsUpdate = true
+		}
 	}
-	ccwp.Labels = labelsModel
-	if len(items.(*schema.Set).List()) > 0 {
-		isLabelsUpdate = true
-	}
-	// }
 
 	if isAssignLabelsUpdate && isLabelsUpdate {
 		diags = append(diags, diag.Diagnostic{
@@ -421,18 +428,3 @@ func resourceIllumioContainerClusterWorkloadProfileDelete(ctx context.Context, d
 	d.SetId("")
 	return diagnostics
 }
-
-// func expandIllumioCCWorkloadProfileLabels(arr []interface{}) []models.ContainerClusterWorkloadProfileLabel {
-// 	var ccwpL []models.ContainerClusterWorkloadProfileLabel
-
-// 	for _, e := range arr {
-// 		elem := e.(map[string]interface{})
-// 		ccwpL = append(ccwpL, models.ContainerClusterWorkloadProfileLabel{
-// 			Key:         elem["key"].(string),
-// 			Assignment:  models.GetHrefs(elem["assignment"].(*schema.Set).List()),
-// 			Restriction: elem["restriction"].(models.Href),
-// 		})
-// 	}
-
-// 	return ccwpL
-// }

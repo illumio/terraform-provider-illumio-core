@@ -87,7 +87,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 				},
 			},
 			"service": {
-				Type:         schema.TypeSet,
+				Type:         schema.TypeList,
 				Optional:     true,
 				MaxItems:     1,
 				Description:  "Associated service",
@@ -251,8 +251,9 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	}
 
 	if v, ok := d.GetOk("service"); ok {
-		services := v.(*schema.Set).List()
-		vs.Service = models.Href{Href: services[0].(map[string]interface{})["href"].(string)}
+		vs.Service = models.Href{
+			Href: v.([]interface{})[0].(map[string]interface{})["href"].(string),
+		}
 	} else if v, ok := d.GetOk("service_ports"); ok {
 		servicePorts := v.(*schema.Set).List()
 		sps := []models.ServicePort{}
@@ -437,8 +438,9 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	}
 
 	if v, ok := d.GetOk("service"); ok {
-		services := v.(*schema.Set).List()
-		vs.Service = models.Href{Href: services[0].(map[string]interface{})["href"].(string)}
+		vs.Service = models.Href{
+			Href: v.([]interface{})[0].(map[string]interface{})["href"].(string),
+		}
 	} else if v, ok := d.GetOk("service_ports"); ok {
 		servicePorts := v.(*schema.Set).List()
 		sps := []models.ServicePort{}

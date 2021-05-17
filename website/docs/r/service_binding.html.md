@@ -26,15 +26,15 @@ resource "illumio-core_service_binding" "example" {
 
 ### Required
 
-- **virtual_service** (Block Set, Min: 1) Virtual service href (see [below for nested schema](#nestedblock--virtual_service))
+- **virtual_service** (Block List, Max: 1) Virtual service href (see [below for nested schema](#nestedblock--virtual_service))
 
 ### Optional
 
-- **container_workload** (Block Set) Container Workload href (see [below for nested schema](#nestedblock--container_workload))
+- **container_workload** (Block List, Max: 1) Container Workload href (see [below for nested schema](#nestedblock--container_workload))
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data Set identifier
 - **port_overrides** (Block Set) Port Overrides for Service Bindings (see [below for nested schema](#nestedblock--port_overrides))
-- **workload** (Block Set) Workload Object for Service Bindings (see [below for nested schema](#nestedblock--workload))
+- **workload** (Block Set, List: 1) Workload Object for Service Bindings (see [below for nested schema](#nestedblock--workload))
 
 ### Read-Only
 

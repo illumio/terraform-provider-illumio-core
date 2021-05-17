@@ -12,7 +12,7 @@
 
 The Terraform Illumio-Core provider is a plugin for Terraform that allows for the management of Illumio-Core resources.
 
-Note: For us, Terraform's security is the highest priority. In case of a security issue found in the Terraform Illumio-Core Provider, please report it at \<Placeholder for Illumio-Core Security Team\>.
+Note: For us, Terraform's security is the highest priority. In case of a security issue found in the Terraform Illumio-Core Provider, please report it at security@illumio.com.
 
 
 ## Getting Started

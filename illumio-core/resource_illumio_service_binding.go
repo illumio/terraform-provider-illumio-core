@@ -35,8 +35,9 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"virtual_service": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Required:    true,
+				MaxItems:    1,
 				Description: "Virtual service href",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -49,8 +50,9 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"workload": {
-				Type:         schema.TypeSet,
+				Type:         schema.TypeList,
 				Optional:     true,
+				MaxItems:     1,
 				ExactlyOneOf: []string{"workload", "container_workload"},
 				Description:  "Workload Object for Service Bindings",
 				Elem: &schema.Resource{
@@ -79,8 +81,9 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"container_workload": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
+				MaxItems:    1,
 				Description: "Container Workload href",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -152,20 +155,17 @@ func resourceIllumioServiceBindingCreate(ctx context.Context, d *schema.Resource
 		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
 
-	tempL := d.Get("virtual_service").(*schema.Set).List()
-	tempMap := tempL[0].(map[string]interface{})
-	ServiceBinding.VirtualService.Href = tempMap["href"].(string)
+	item := d.Get("virtual_service").([]interface{})
+	ServiceBinding.VirtualService.Href = item[0].(map[string]interface{})["href"].(string)
 
-	if d.Get("workload").(*schema.Set).Len() > 0 {
-		tempL = d.Get("workload").(*schema.Set).List()
-		tempMap = tempL[0].(map[string]interface{})
-		ServiceBinding.Workload.Href = tempMap["href"].(string)
+	item = d.Get("workload").([]interface{})
+	if len(item) > 0 {
+		ServiceBinding.Workload.Href = item[0].(map[string]interface{})["href"].(string)
 	}
 
-	if d.Get("container_workload").(*schema.Set).Len() > 0 {
-		tempL = d.Get("container_workload").(*schema.Set).List()
-		tempMap = tempL[0].(map[string]interface{})
-		ServiceBinding.ContainerWorkload.Href = tempMap["href"].(string)
+	item = d.Get("container_workload").([]interface{})
+	if len(item) > 0 {
+		ServiceBinding.ContainerWorkload.Href = item[0].(map[string]interface{})["href"].(string)
 	}
 
 	if items, ok := d.GetOk("port_overrides"); ok {

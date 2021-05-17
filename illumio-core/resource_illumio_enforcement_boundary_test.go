@@ -2,7 +2,6 @@ package illumiocore
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"testing"
 
@@ -101,7 +100,6 @@ func testAccCheckIllumioEnforcementBoundaryAttributes(val string, ebAttr map[str
 			"providers.0.label.href":   "/orgs/1/labels/1",
 		}
 
-		log.Println("TEST CRASH I GUESS PLS CHECK : ", ebAttr)
 		for k, v := range expectation {
 			if ebAttr[k] != v {
 				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ebAttr[k], v)

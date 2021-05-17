@@ -17,7 +17,7 @@ Note: For us, Terraform's security is the highest priority. In case of a securit
 
 ## Getting Started
 
-- [Develop, Build, Test, and Debug the provider](docs/DEVELOPMENT.md)
+- [Develop, Build, Test, and Debug the provider](./CONTRIBUTING.md)
 - [Using the provider](docs/index.md)
 
 

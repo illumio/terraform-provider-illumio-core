@@ -32,7 +32,7 @@ func datasourceIllumioVulnerabilities() *schema.Resource {
 							Description: "The normalized score of the vulnerability within the range of 0 to 100. CVSS Score can be used here with a 10x multiplier",
 						},
 						"cve_ids": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "The cve_ids for the vulnerability",
 							Elem: &schema.Schema{

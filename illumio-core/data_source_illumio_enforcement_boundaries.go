@@ -41,7 +41,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 							Description: "Name of the Enforcement Boundary",
 						},
 						"ingress_service": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Collection of Ingress Service. Only one of the {\"href\"} or {\"proto\", \"port\", \"to_port\"} parameter combination is allowed",
 							Elem: &schema.Resource{
@@ -69,16 +69,16 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 								},
 							},
 						},
-						"illumio_provider": {
-							Type:        schema.TypeSet,
+						"providers": {
+							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "providers for Enforcement Boundary. Only one actor can be specified in one illumio_provider block",
+							Description: "providers for Enforcement Boundary. Only one actor can be specified in one providers block",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"actors": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "actors for illumio_provider.",
+										Description: "actors for providers.",
 									},
 									"label": {
 										Type:        schema.TypeList,
@@ -101,10 +101,10 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 								},
 							},
 						},
-						"consumer": {
-							Type:        schema.TypeSet,
+						"consumers": {
+							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block",
+							Description: "consumers for Enforcement Boundary. Only one actor can be specified in one consumers block",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"actors": {
@@ -284,8 +284,8 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 		} else {
 			m["ingress_service"] = nil
 		}
-		m["illumio_provider"] = extractEBActors(child.S("providers"))
-		m["consumer"] = extractEBActors(child.S("consumers"))
+		m["providers"] = extractEBActors(child.S("providers"))
+		m["consumers"] = extractEBActors(child.S("consumers"))
 
 		dataMap = append(dataMap, m)
 	}

@@ -49,7 +49,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 							Description: "Description of the container workload profile",
 						},
 						"assign_labels": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Assigned labels container workload profile",
 							Elem: &schema.Resource{
@@ -63,7 +63,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 							},
 						},
 						"labels": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Labels to assign to the workload that matches the namespace",
 							Elem: &schema.Resource{
@@ -74,7 +74,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 										Description: "Key of the label",
 									},
 									"assignment": {
-										Type:        schema.TypeSet,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "The label href to set. Single element list",
 										Elem: &schema.Resource{
@@ -93,7 +93,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 										},
 									},
 									"restriction": {
-										Type:        schema.TypeSet,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "The list of allowed label hrefs.",
 										Elem: &schema.Resource{

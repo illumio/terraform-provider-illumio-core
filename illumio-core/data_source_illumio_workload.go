@@ -244,7 +244,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 				Description: "A unque identifier within the external data source",
 			},
 			"interfaces": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "A unque identifier within the external data source",
 				Elem: &schema.Resource{
@@ -345,7 +345,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 				},
 			},
 			"labels": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "List of label URIs",
 				Elem: &schema.Resource{

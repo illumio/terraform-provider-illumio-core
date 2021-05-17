@@ -80,7 +80,7 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 				Description: "Name of the Enforcement Boundary",
 			},
 			"ingress_services": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Collection of Ingress Service. Only one of the {\"href\"} or {\"proto\", \"port\", \"to_port\"} parameter combination is allowed",
 				Elem: &schema.Resource{
@@ -109,15 +109,15 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 				},
 			},
 			"providers": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "providers for Enforcement Boundary. Only one actor can be specified in one illumio_provider block",
+				Description: "providers for Enforcement Boundary. Only one actor can be specified in one providers block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"actors": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "actors for illumio_provider.",
+							Description: "actors for providers.",
 						},
 						"label": {
 							Type:        schema.TypeList,
@@ -141,7 +141,7 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 				},
 			},
 			"consumers": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block",
 				Elem: &schema.Resource{

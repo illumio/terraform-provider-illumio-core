@@ -41,7 +41,7 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"workload": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Workload Object for Service Bindings",
 				Elem: &schema.Resource{
@@ -78,7 +78,7 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"port_overrides": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Port Overrides for Service Bindings",
 				Elem: &schema.Resource{

@@ -80,7 +80,7 @@ func datasourceIllumioLabelGroup() *schema.Resource {
 				Description: "Key in key-value pair of contained labels or Label Groups",
 			},
 			"labels": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Contained labels",
 				Elem: &schema.Resource{
@@ -104,7 +104,7 @@ func datasourceIllumioLabelGroup() *schema.Resource {
 				},
 			},
 			"sub_groups": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Contained Label Groups",
 				Elem: &schema.Resource{

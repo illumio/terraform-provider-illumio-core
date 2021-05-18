@@ -1,3 +1,5 @@
+// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+
 package models
 
 type TrafficCollectorSettings struct {

@@ -1,3 +1,5 @@
+// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+
 package models
 
 // Href - Represents href object for Illumio Resource

@@ -45,7 +45,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Desciption of IP Range",
+							Description: "Description of IP Range",
 						},
 						"from_ip": {
 							Type:        schema.TypeString,
@@ -86,7 +86,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Desciption of FQDN",
+							Description: "Description of FQDN",
 						},
 					},
 				},

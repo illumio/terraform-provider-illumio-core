@@ -47,7 +47,7 @@ Read-Only:
 - **deleted_at** (String) Timestamp when this IP List was deleted
 - **deleted_by** (Map of String) User who deleted this IP List
 - **description** (String) description of this IPList
-- **external_data_reference** (String) A unque identifier within the external data source
+- **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **fqdns** (List of Object) Collection of Fully Qualified Domain Names for IP List (see [below for nested schema](#nestedobjatt--items--fqdns))
 - **href** (String) URI of the IPList
@@ -61,7 +61,7 @@ Read-Only:
 
 Read-Only:
 
-- **description** (String) Desciption of FQDN
+- **description** (String) Description of FQDN
 - **fqdn** (String) Full Qualified Domain Name
 
 
@@ -70,7 +70,7 @@ Read-Only:
 
 Read-Only:
 
-- **description** (String) Desciption of IP Range
+- **description** (String) Description of IP Range
 - **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.
 - **from_ip** (String) IP adress or a low end of IP range. Might be specified with CIDR notation
 - **to_ip** (String) High end of an IP range

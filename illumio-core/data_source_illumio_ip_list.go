@@ -75,7 +75,7 @@ func datasourceIllumioIPList() *schema.Resource {
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Desciption of the IP Range",
+							Description: "Description of the IP Range",
 						},
 						"from_ip": {
 							Type:        schema.TypeString,
@@ -109,7 +109,7 @@ func datasourceIllumioIPList() *schema.Resource {
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Desciption of FQDN",
+							Description: "Description of FQDN",
 						},
 					},
 				},
@@ -122,7 +122,7 @@ func datasourceIllumioIPList() *schema.Resource {
 			"external_data_reference": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "A unque identifier within the external data source",
+				Description: "A unique identifier within the external data source",
 			},
 			"created_at": {
 				Type:        schema.TypeString,

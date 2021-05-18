@@ -74,7 +74,7 @@ func datasourceIllumioServices() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Long description of the servcie",
+				Description: "Long description of the Service",
 			},
 			"external_data_reference": {
 				Type:             schema.TypeString,
@@ -97,7 +97,7 @@ func datasourceIllumioServices() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the servcie (does not need to be unique)",
+				Description: "Name of the Service (does not need to be unique)",
 			},
 			"port": {
 				Type:             schema.TypeString,

@@ -83,7 +83,7 @@ Read-Only:
 - **detected_vulnerabilities** (List of Object) Detected Vulnerabilities (see [below for nested schema](#nestedobjatt--items--detected_vulnerabilities))
 - **distinguished_name** (String) X.509 Subject distinguished name
 - **enforcement_mode** (String) Enforcement mode of workload(s) to return
-- **external_data_reference** (String) A unque identifier within the external data source
+- **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **firewall_coexistence** (List of Object) Firewall coexistence mode (see [below for nested schema](#nestedobjatt--items--firewall_coexistence))
 - **hostname** (String) The hostname of this workload

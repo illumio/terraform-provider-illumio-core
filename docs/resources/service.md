@@ -60,11 +60,11 @@ resource "illumio-core_service" "example_windows" {
 
 ### Required
 
-- **name** (String) Name of the servcie (does not need to be unique)
+- **name** (String) Name of the Service (does not need to be unique)
 
 ### Optional
 
-- **description** (String) Long description of the servcie
+- **description** (String) Long description of the Service
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **process_name** (String) The process name

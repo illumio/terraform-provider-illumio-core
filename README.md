@@ -20,4 +20,6 @@ Note: For us, Terraform's security is the highest priority. In case of a securit
 - [Develop, Build, Test, and Debug the provider](./CONTRIBUTING.md)
 - [Using the provider](docs/index.md)
 
+## Support
 
+TODO Add support statement

@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package models
 

@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -8,7 +8,9 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -124,6 +126,11 @@ func resourceIllumioPairingKeysCommon(activationTokens []interface{}, addCount i
 				Severity: diag.Warning,
 				Summary:  fmt.Sprintf("[illumio-core_pairing_keys] Could not generate activation token - Error: %v", err),
 			})
+			// As hard limit reached, we should stop calling api
+			if strings.Contains(err.Error(), "hard limit reached") {
+				log.Printf("[illumio-core_pairing_keys] Hard limit reached for pairing profile - %v", href)
+				break
+			}
 		} else {
 			key, _ := getAESGCMKeyFromEnv() // suppressing error as it should hit error in validation phase
 			activationCode := data.S("activation_code").Data().(string)
@@ -183,9 +190,8 @@ func resourceIllumioPairingKeysUpdate(ctx context.Context, d *schema.ResourceDat
 		return diag.Errorf("[illumio-core_pairing_keys] Can not change pairing_profile_href once set")
 	}
 	activationTokens := d.Get("activation_tokens").([]interface{})
-	oldv, newv := d.GetChange("token_count")
-	old := oldv.(int)
-	new := newv.(int)
+	old := len(activationTokens) // relying on actual length of activation tokens instead of last user input
+	new := d.Get("token_count").(int)
 	if new < old {
 		activationTokens = activationTokens[:new]
 		d.Set("activation_tokens", activationTokens)

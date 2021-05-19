@@ -170,7 +170,7 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%d/labels", orgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/labels", orgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

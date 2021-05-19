@@ -235,7 +235,7 @@ func dataSourceIllumioContainerClusterWorkloadProfilesRead(ctx context.Context, 
 	}
 
 	params := resourceDataToMap(d, paramKeys)
-	_, data, err := illumioClient.AsyncGet(d.Get("container_cluster_href").(string)+"/container_workload_profiles", &params)
+	_, data, err := illumioClient.Get(d.Get("container_cluster_href").(string)+"/container_workload_profiles", &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

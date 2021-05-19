@@ -243,7 +243,7 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/%v/ip_lists", orgID, pversion), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/ip_lists", orgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -206,7 +206,7 @@ func dataSourceIllumioServiceBindingsRead(ctx context.Context, d *schema.Resourc
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/service_bindings", orgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/service_bindings", orgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

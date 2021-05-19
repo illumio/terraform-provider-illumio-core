@@ -753,7 +753,7 @@ func dataSourceIllumioVENsRead(ctx context.Context, d *schema.ResourceData, m in
 		params["last_heartbeat_at[lte]"] = value.(string)
 	}
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/vens", pConfig.OrgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/vens", pConfig.OrgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

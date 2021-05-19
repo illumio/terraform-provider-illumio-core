@@ -470,7 +470,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.AsyncGet(href, &params)
+	_, data, err := illumioClient.Get(href, &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

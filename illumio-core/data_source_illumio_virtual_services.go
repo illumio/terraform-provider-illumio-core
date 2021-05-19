@@ -354,7 +354,7 @@ func dataSourceIllumioVirtualServicesRead(ctx context.Context, d *schema.Resourc
 		params["service_ports.proto"] = value.(string)
 	}
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%v/sec_policy/%v/virtual_services", pConfig.OrgID, pversion), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/virtual_services", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

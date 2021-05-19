@@ -301,7 +301,7 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 
 	params := resourceDataToMap(d, paramKeys)
 
-	_, data, err := illumioClient.AsyncGet(fmt.Sprintf("/orgs/%d/sec_policy/%v/services", pConfig.OrgID, pversion), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/%v/services", pConfig.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

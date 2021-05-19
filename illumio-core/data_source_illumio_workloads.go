@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -765,16 +765,14 @@ func datasourceIllumioWorkloads() *schema.Resource {
 				Description: "List of lists of label URIs, encoded as a JSON string",
 			},
 			"last_heartbeat_on_gte": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Greater than or equal to value for last heartbeat on timestamp",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Greater than or equal to value for last heartbeat on timestamp",
 			},
 			"last_heartbeat_on_lte": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateDiagFunc: isStringANumber(),
-				Description:      "Less than or equal to value for last heartbeat on timestamp",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Less than or equal to value for last heartbeat on timestamp",
 			},
 			"log_traffic": {
 				Type:             schema.TypeString,

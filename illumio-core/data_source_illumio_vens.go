@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -642,28 +642,24 @@ func datasourceIllumioVENs() *schema.Resource {
 				Description: "2D Array of label URIs, encoded as a JSON string",
 			},
 			"last_goodbye_at_gte": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Greater than or equal to value for last goodbye at timestamp",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Greater than or equal to value for last goodbye at timestamp",
 			},
 			"last_goodbye_at_lte": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Greater than or equal to value for last goodbye at timestamp",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Greater than or equal to value for last goodbye at timestamp",
 			},
 			"last_heartbeat_at_gte": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Greater than or equal to value for last heartbeat timestamp",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Greater than or equal to value for last heartbeat timestamp",
 			},
 			"last_heartbeat_at_lte": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Less than or equal to value for last heartbeat timestamp",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Less than or equal to value for last heartbeat timestamp",
 			},
 			"max_results": {
 				Type:             schema.TypeString,

@@ -3,7 +3,6 @@
 package client
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -47,19 +46,6 @@ func TestClient(t *testing.T) {
 	_, err := GetTestClient()
 	if err != nil {
 		t.Error("Error in creating client")
-	}
-}
-
-func TestAsyncGet(t *testing.T) {
-	testClient, err := GetTestClient()
-	if err != nil {
-		t.Error("Error in creating client")
-		return
-	}
-	_, data, err := testClient.AsyncGet("/orgs/1/labels", nil)
-	fmt.Printf("AsyncGet - Data Length: %v\n", len(data.Children()))
-	if err != nil {
-		t.Error("Error in async get request", err)
 	}
 }
 

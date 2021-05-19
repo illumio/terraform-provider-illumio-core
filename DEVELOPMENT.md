@@ -96,6 +96,15 @@ $ make testacc
 For more details visit - [Terraform Debugging](https://www.terraform.io/docs/internals/debugging.html)
 
 
+## Documentation
+
+Once done with changes/development of any resource/datasource, document the changes.
+
+- Update parameter/description as per the resource changes.
+- If a resource is designed to behave in a specific way that might be strange to the end-user, that should be documented.
+- Add an example usage section and add different examples about how to use it.
+- Document any environment variable on which resource/datasource is dependent in the example usage section or in the argument description itself.
+
 ## JSON Format TF Configuration Files
 - The user can also use the JSON format TF configuration files similar to HCL configuration files. 
 - Please refer to the github link for conversion of HCL to JSON format TF configuration files and vice versa. Note - In the output JSON file generated after conversion of the corresponding HCL file using the above tool, please convert the  terraform.required_providers[0].illumio-core (highlighted in bold in the below JSON example) from List to Map.

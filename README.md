@@ -20,6 +20,13 @@ Note: For us, Terraform's security is the highest priority. In case of a securit
 - [Develop, Build, Test, and Debug the provider](./DEVELOPMENT.md)
 - [Using the provider](docs/index.md)
 
+## Contributing
+
+To contribute, please refer the [guideline](./CONTRIBUTING.md)
+
 ## Support
 
-TODO Add support statement
+The Illumio-Core Terraform Provider is released and distributed as open source software subject to the [LICENSE](LICENSE). 
+<!-- Illumio has no obligation or responsibility related to the Illumio-Core Terraform Provider with respect to support, maintenance, availability, security or otherwise.  -->
+Please read the entire [LICENSE](LICENSE) for additional information regarding the permissions and limitations. 
+You can engage with the author & contributors team and community on SLACK.

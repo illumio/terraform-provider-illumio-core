@@ -40,7 +40,7 @@ func resourceIllumioWorkloadsUnpair() *schema.Resource {
 				Optional:         true,
 				Default:          "default",
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"saved", "default", "disable"}, false)),
-				Description:      `The desired state of IP tables after the agent is uninstalled. Allowed values are "saved", "default" and "disable"`,
+				Description:      `The desired state of IP tables after the agent is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"`,
 			},
 		},
 	}
@@ -86,10 +86,6 @@ func resourceIllumioWorkloadsUnpairUpdate(ctx context.Context, d *schema.Resourc
 	illumioClient := pConfig.IllumioClient
 
 	vup := expandIllumioWorkloadsUnpair(d, true, &diags)
-
-	if diags != nil && len(diags) > 0 {
-		return diags
-	}
 
 	responce, err := illumioClient.Update(d.Id(), vup)
 

@@ -36,7 +36,7 @@ resource "illumio-core_vens_unpair" "example" {
 
 ### Optional
 
-- **firewall_restore** (String) The strategy to use to restore the firewall state after the VEN is uninstalled. Allowed values are "saved", "default" and "disable"
+- **firewall_restore** (String) The strategy to use to restore the firewall state after the VEN is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"
 
 <a id="nestedblock--vens"></a>
 ### Nested Schema for `vens`

@@ -43,7 +43,7 @@ $ $GOPATH/bin/terraform-provider-illumio-core
 
 ## Using the Provider
 
-Move the generated binary from the build step to the [plugin directory](https://www.terraform.io/docs/cli/config/config-file.html#implied-local-mirror-directories)/illumio.com/labs/illumio-core/`<version>`/`<os>_<arch>`. Examples for `<os>_<arch>` are `windows_amd64`, `linux_arm`, `darwin_amd64`, etc. be After placing it into your plugins directory, run `terraform init` to initialize it.
+Move the generated binary from the build step to the [plugin directory](https://www.terraform.io/docs/cli/config/config-file.html#implied-local-mirror-directories)/illumio.com/labs/illumio-core/`<version>`/`<os>_<arch>`. Examples for `<os>_<arch>` are `windows_amd64`, `linux_arm`, `darwin_amd64`, etc. After placing it into your plugins directory, run `terraform init` to initialize it.
 
 *Note:* Make sure `ILLUMIO_PCE_HOST`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_API_KEY_SECRET` variables are set.
 

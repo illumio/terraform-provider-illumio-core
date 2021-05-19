@@ -38,7 +38,7 @@ func TestAccIllumioVENsUpgrade_CreateUpdate(t *testing.T) {
 func testAccCheckIllumioVENsUpgradeConfig_basic(id string) string {
 	return fmt.Sprintf(`
 	resource "illumio-core_vens_upgrade" "test" {
-		release = "1.2"
+		release = "21.2.0-7878"
 		vens {
 		  href = "/orgs/1/vens/%s"
 		}

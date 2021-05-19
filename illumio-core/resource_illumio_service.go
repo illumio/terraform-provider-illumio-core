@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -34,13 +34,13 @@ func resourceIllumioService() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "Name of the servcie (does not need to be unique)",
+				Description:      "Name of the Service (does not need to be unique)",
 				ValidateDiagFunc: nameValidation,
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Long description of the servcie",
+				Description: "Long description of the Service",
 			},
 			"description_url": {
 				Type:        schema.TypeString,

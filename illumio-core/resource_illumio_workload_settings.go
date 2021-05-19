@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -53,7 +53,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 							Optional:    true,
 							Description: "Property value associated with the scope",
 							ValidateDiagFunc: validation.ToDiagFunc(
-								validation.Any(validation.IntAtLeast(300), validation.IntInSlice([]int{-1})),
+								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
 							),
 						},
 					},
@@ -84,7 +84,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 							Optional:    true,
 							Description: "Property value associated with the scope",
 							ValidateDiagFunc: validation.ToDiagFunc(
-								validation.Any(validation.IntAtLeast(300), validation.IntInSlice([]int{-1})),
+								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
 							),
 						},
 					},

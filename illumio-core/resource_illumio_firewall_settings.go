@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -206,7 +206,6 @@ func resourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.Resource
 		} else {
 			d.Set(key, nil)
 		}
-
 	}
 	key := "firewall_coexistence"
 	if data.Exists(key) {
@@ -281,6 +280,12 @@ func expandScopes(scopes []interface{}, min, max int) (models.Scopes, diag.Diagn
 	scps := models.Scopes{}
 	for _, scope := range scopes {
 		scp := models.Scope{}
+
+		if scope == nil {
+			scps = append(scps, scp)
+			continue
+		}
+
 		scopeObj := scope.(map[string]interface{})
 
 		labels := scopeObj["label"].(*schema.Set).List()

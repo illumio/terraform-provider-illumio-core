@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -301,7 +301,7 @@ func isUnlimitedOrValidRange(min, max int) schema.SchemaValidateDiagFunc {
 }
 
 func isUpdatedToEmptyString(oldVal, newVal interface{}) bool {
-	if oldVal.(string) != "" && newVal.(string) == "" {
+	if oldVal.(string) != "" && (newVal == nil || newVal.(string) == "") {
 		return true
 	}
 	return false

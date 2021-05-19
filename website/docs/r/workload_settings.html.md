@@ -43,7 +43,7 @@ resource "illumio-core_workload_settings" "example" {
 Optional:
 
 - **scope** (Block Set) Assigned labels for Workload Disconnected Timeout Seconds (see [below for nested schema](#nestedblock--workload_disconnected_timeout_seconds--scope))
-- **value** (Number) Property value associated with the scope
+- **value** (Number) Property value associated with the scope. Valid values : -1 or between 300 and 2147483647
 
 <a id="nestedobjatt--workload_disconnected_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_disconnected_timeout_seconds.scope`
@@ -59,7 +59,7 @@ Optional:
 Optional:
 
 - **scope** (Block Set) Assigned labels for Workload Goodbye Timeout Seconds (see [below for nested schema](#nestedblock--workload_goodbye_timeout_seconds--scope))
-- **value** (Number) Property value associated with the scope
+- **value** (Number) Property value associated with the scope. Valid values : -1 or between 300 and 2147483647
 
 <a id="nestedobjatt--workload_goodbye_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_goodbye_timeout_seconds.scope`

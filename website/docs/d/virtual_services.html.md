@@ -63,14 +63,14 @@ Read-Only:
 - **deleted_at** (String) Timestamp when this Virtual Service was deleted
 - **deleted_by** (Map of String) User who deleted this Virtual Service
 - **description** (String) The long description of this virtual service
-- **external_data_reference** (String) A unque identifier within the external data source
+- **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **ip_overrides** (List of String) Array of IPs or CIDRs as IP overrides
 - **labels** (List of Object) Assigned labels (see [below for nested schema](#nestedobjatt--items--labels))
 - **name** (String) Name of the virtual service
 - **pce_fqdn** (String) PCE FQDN for this container cluster. Used in Supercluster only
 - **service** (List of Object) URI of associated service (see [below for nested schema](#nestedobjatt--items--service))
-- **service_addresses** (List of Object) Serivce Addresses (see [below for nested schema](#nestedobjatt--items--service_addresses))
+- **service_addresses** (List of Object) Service Addresses (see [below for nested schema](#nestedobjatt--items--service_addresses))
 - **service_ports** (List of Object) Service Ports (see [below for nested schema](#nestedobjatt--items--service_ports))
 - **update_type** (String) Update Type
 - **updated_at** (String) Timestamp when this Virtual Service was last updated

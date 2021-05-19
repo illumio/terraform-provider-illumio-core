@@ -37,7 +37,7 @@ resource "illumio-core_workloads_unpair" "example" {
 
 ### Optional
 
-- **ip_table_restore** (String) The desired state of IP tables after the agent is uninstalled. Allowed values are "saved", "default" and "disable"
+- **ip_table_restore** (String) The desired state of IP tables after the agent is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"
 
 <a id="nestedblock--workloads"></a>
 ### Nested Schema for `workloads`

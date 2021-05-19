@@ -75,7 +75,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 			"external_data_reference": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "A unque identifier within the external data source",
+				Description: "A unique identifier within the external data source",
 			},
 			"labels": {
 				Type:        schema.TypeList,
@@ -153,7 +153,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 			"service_addresses": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Serivce Addresses",
+				Description: "Service Addresses",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"fqdn": {

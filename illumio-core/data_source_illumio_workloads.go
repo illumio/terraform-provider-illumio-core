@@ -251,12 +251,12 @@ func datasourceIllumioWorkloads() *schema.Resource {
 						"external_data_reference": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "A unque identifier within the external data source",
+							Description: "A unique identifier within the external data source",
 						},
 						"interfaces": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "A unque identifier within the external data source",
+							Description: "A unique identifier within the external data source",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {

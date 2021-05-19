@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -326,7 +326,13 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 	sps := [][]*models.RuleSetScope{}
 
 	for _, scope := range scopes {
+
 		sp := []*models.RuleSetScope{}
+
+		if scope == nil {
+			sps = append(sps, sp)
+			continue
+		}
 
 		scopeObj := scope.(map[string]interface{})
 

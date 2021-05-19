@@ -17,13 +17,13 @@ Example Usage
 ```hcl
 resource "illumio-core_vens_unpair" "example" {
   vens {
-    href = "/orgs/1/workloads/de7c1705-6e9d-46e7-b3b1-5ef5a638c0f8"
+    href = "/orgs/1/vens/de7c1705-6e9d-46e7-b3b1-5ef5a638c0f8"
   }
   vens {
-    href = "/orgs/1/workloads/32254e8b-eddc-428d-96fa-f8625416a0d6"
+    href = "/orgs/1/vens/32254e8b-eddc-428d-96fa-f8625416a0d6"
   }
   vens {
-    href = "/orgs/1/workloads/11416eb7-43df-4acc-a4b0-c17c1e2b1b77"
+    href = "/orgs/1/vens/11416eb7-43df-4acc-a4b0-c17c1e2b1b77"
   }
 }
 ```
@@ -36,7 +36,7 @@ resource "illumio-core_vens_unpair" "example" {
 
 ### Optional
 
-- **firewall_restore** (String) The strategy to use to restore the firewall state after the VEN is uninstalled. Allowed values are "saved", "default" and "disable"
+- **firewall_restore** (String) The strategy to use to restore the firewall state after the VEN is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"
 
 <a id="nestedblock--vens"></a>
 ### Nested Schema for `vens`

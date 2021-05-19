@@ -67,7 +67,7 @@ Required:
 
 Optional:
 
-- **description** (String) Desciption of FQDN
+- **description** (String) Description of FQDN
 
 <a id="nestedatt--ip_ranges"></a>
 ### Nested Schema for `ip_ranges`
@@ -78,7 +78,7 @@ Required:
 
 Optional:
 
-- **description** (String) Desciption of IP Range
+- **description** (String) Description of IP Range
 - **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.
 - **to_ip** (String) High end of an IP range. The IP given should be in CIDR form i.e. "0.0.0.0/0"
 

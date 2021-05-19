@@ -40,7 +40,7 @@ func resourceIllumioVENsUnpair() *schema.Resource {
 				Optional:         true,
 				Default:          "default",
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"saved", "default", "disable"}, false)),
-				Description:      `The strategy to use to restore the firewall state after the VEN is uninstalled. Allowed values are "saved", "default" and "disable"`,
+				Description:      `The strategy to use to restore the firewall state after the VEN is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"`,
 			},
 		},
 	}
@@ -86,10 +86,6 @@ func resourceIllumioVENsUnpairUpdate(ctx context.Context, d *schema.ResourceData
 	illumioClient := pConfig.IllumioClient
 
 	vup := expandIllumioVENsUnpair(d, true, &diags)
-
-	if diags != nil && len(diags) > 0 {
-		return diags
-	}
 
 	responce, err := illumioClient.Update(d.Id(), vup)
 

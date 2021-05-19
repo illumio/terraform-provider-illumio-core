@@ -1,4 +1,4 @@
-// Copyright 2021 Illumio, Inc. All Rights Reserved. 
+// Copyright 2021 Illumio, Inc. All Rights Reserved.
 
 package illumiocore
 
@@ -87,10 +87,6 @@ func resourceIllumioVENsUpgradeUpdate(ctx context.Context, d *schema.ResourceDat
 	illumioClient := pConfig.IllumioClient
 
 	vup := expandIllumioVENsUpgrade(d, true, &diags)
-
-	if diags != nil && len(diags) > 0 {
-		return diags
-	}
 
 	responce, err := illumioClient.Update(d.Id(), vup)
 

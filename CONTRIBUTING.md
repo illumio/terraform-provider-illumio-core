@@ -3,6 +3,7 @@
 ## Sign the CLA
 
 Before you can contribute, you will need to sign the [Contributor License Agreement](CLA.md).
+
 ## GitHub workflow
 
 Github workflow followed by the project:
@@ -25,7 +26,6 @@ Before reporting any bugs, please do a quick search if any existing bug is alrea
 
 While reporting a fresh bug, provide a minimal example to reproduce the bug. Include `.tf` files (**REMOVE ANY SECRETS**). Also include `crash.log` in case of panic.
 
-
 ## Issue Assignment
 
 Once a bug/issue is raised and acknowledged as an issue by repo maintainers.
@@ -36,7 +36,6 @@ Anyone can work on the issue. Before start working on an issue, make sure to ass
 While submitting a new resource/datasource, please make sure you add acceptance tests for them. While updating an existing resource/datasource, update test steps to test the changes done. Also, feel free to add unit tests.
 
 You can refer to the terraform [testing guideline](https://www.terraform.io/docs/extend/testing/index.html) to test resource/datasource.
-
 
 ## Documentation
 

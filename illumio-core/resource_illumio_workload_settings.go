@@ -30,7 +30,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 			},
 			"workload_disconnected_timeout_seconds": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Required:    true,
 				Description: "Workload Disconnected Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -61,7 +61,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 			},
 			"workload_goodbye_timeout_seconds": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Required:    true,
 				Description: "Workload Goodbye Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -172,25 +172,27 @@ func resourceIllumioWorkloadSettingsUpdate(ctx context.Context, d *schema.Resour
 	WorkloadSettings := &models.WorkloadSettings{}
 
 	for _, x := range []string{"workload_disconnected_timeout_seconds", "workload_goodbye_timeout_seconds"} {
-		items := d.Get(x)
-		wdts := items.(*schema.Set).List()
-		wdtsModel := []models.WorkloadSettingsTimeout{}
 
-		for _, w := range wdts {
-			wdtsI := models.WorkloadSettingsTimeout{}
-			wdtsMap := w.(map[string]interface{})
-			wdtsI.Value = wdtsMap["value"].(int)
-			if wdtsMap["scope"].(*schema.Set).Len() > 0 {
-				wdtsI.Scope = models.GetHrefs(wdtsMap["scope"].(*schema.Set).List())
-			} else {
-				wdtsI.Scope = nil
+		if items, ok := d.GetOk(x); ok {
+			wdts := items.(*schema.Set).List()
+			wdtsModel := []models.WorkloadSettingsTimeout{}
+
+			for _, w := range wdts {
+				wdtsI := models.WorkloadSettingsTimeout{}
+				wdtsMap := w.(map[string]interface{})
+				wdtsI.Value = wdtsMap["value"].(int)
+				if wdtsMap["scope"].(*schema.Set).Len() > 0 {
+					wdtsI.Scope = models.GetHrefs(wdtsMap["scope"].(*schema.Set).List())
+				} else {
+					wdtsI.Scope = nil
+				}
+				wdtsModel = append(wdtsModel, wdtsI)
 			}
-			wdtsModel = append(wdtsModel, wdtsI)
-		}
-		if x == "workload_disconnected_timeout_seconds" {
-			WorkloadSettings.WorkloadDisconnectedTimeoutSeconds = wdtsModel
-		} else {
-			WorkloadSettings.WorkloadGoodbyeTimeoutSeconds = wdtsModel
+			if x == "workload_disconnected_timeout_seconds" {
+				WorkloadSettings.WorkloadDisconnectedTimeoutSeconds = wdtsModel
+			} else {
+				WorkloadSettings.WorkloadGoodbyeTimeoutSeconds = wdtsModel
+			}
 		}
 	}
 

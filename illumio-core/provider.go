@@ -6,12 +6,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/illumio/terraform-provider-illumio-core/client"
+	"github.com/illumio/terraform-provider-illumio-core/models"
 	"golang.org/x/time/rate"
 )
 
@@ -286,4 +288,17 @@ func (c Config) StoreHref(orgID int, resourceType, href string) {
 	} else {
 		panic(errors.New("couldn't create file"))
 	}
+}
+
+// ProvisionAResource - Provision a single resource
+func (c Config) ProvisionAResource(orgID int, resourceType, href string) error {
+	log.Printf("ProvisionAResource - %s", href)
+	cs := models.SecurityPolicyChangeSubset{}
+	cs.AppendHref(resourceType, href)
+	secPolicy := &models.SecurityPolicy{
+		UpdateDesc:   "Provisioned by Terraform",
+		ChangeSubset: cs,
+	}
+	_, _, err := c.IllumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy", orgID), secPolicy)
+	return err
 }

@@ -320,7 +320,9 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
+	// pConfig.StoreHref(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
+	// Provisioning instantly as only active version can be used for service binding
+	pConfig.ProvisionAResource(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
 	d.SetId(data.S("href").Data().(string))
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }

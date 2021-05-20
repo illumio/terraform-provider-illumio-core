@@ -16,7 +16,7 @@ Example Usage
 
 ```hcl
 resource "illumio-core_vens_upgrade" "example" {
-  release = "21.2.0-7878"
+  release = "21.2.0-7828"
   vens {
     href = "/orgs/1/vens/e6eaccb3-39b0-44db-907d-d61c6ff1f8f6"
   }

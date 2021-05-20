@@ -16,12 +16,12 @@ provider "illumio-core" {
 }
 
 resource "illumio-core_vens_upgrade" "example" {
-  release = "1.2"
+  release = "21.2.0-7828"
   vens {
-    href = "/orgs/1/vens/e6eaccb3-39b0-44db-907d-d61c6ff1f8f6"
+    href = "/orgs/1/vens/2820775a-b8bd-4932-a812-50ee0df0ccaf"
   }
   vens {
-    href = "/orgs/1/vens/8754058f-819f-4c50-91f1-da6e9af28918"
+    href = "/orgs/1/vens/1f7cc136-40c8-4e92-b810-c70afe649291"
   }
   vens {
     href = "/orgs/1/vens/11635f19-625f-436c-a299-43d1883145d5"

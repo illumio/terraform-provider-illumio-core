@@ -390,7 +390,7 @@ func handleUnpairAndUpgradeOperationErrors(e error, res *http.Response, op, r st
 		if err == nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Warning,
-				Summary:  fmt.Sprintf("[illumio-core_%v_%v] Got failure/s in responce", r, op),
+				Summary:  fmt.Sprintf("[illumio-core_%v_%v] Got possible failure/s in responce", r, op),
 				Detail:   container.String(),
 			})
 		}

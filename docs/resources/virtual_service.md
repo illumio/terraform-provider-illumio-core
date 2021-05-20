@@ -65,7 +65,7 @@ resource "illumio-core_virtual_service" "example" {
 - **external_data_set** (String) The data source from which a resource originates
 - **ip_overrides** (Set of String) Array of IPs or CIDRs as IP overrides
 - **labels** (Block Set) Contained labels (see [below for nested schema](#nestedblock--labels))
-- **service** (Block Set, Max: 1) Associated service (see [below for nested schema](#nestedblock--service))
+- **service** (Block List, Max: 1) Associated service (see [below for nested schema](#nestedblock--service))
 - **service_addresses** (Block Set) List of service address. Specify one of the combination {fqdn, description, port}, {ip, network_href} or {ip, port} (see [below for nested schema](#nestedblock--service_addresses))
 - **service_ports** (Block Set) URI of associated service (see [below for nested schema](#nestedblock--service_ports))
 

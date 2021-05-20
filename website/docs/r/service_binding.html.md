@@ -11,6 +11,11 @@ description: |-
 
 Manages Illumio Service Binding
 
+Example Usage
+------------
+
+~> Any updates to this resource once created will be ignored.
+
 ```hcl
 resource "illumio-core_service_binding" "example" {
   virtual_service {

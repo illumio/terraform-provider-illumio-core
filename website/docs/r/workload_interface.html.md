@@ -15,6 +15,8 @@ Manages Illumio Workload Interface
 Example Usage
 ------------
 
+~> Any updates to this resource once created will be ignored.
+
 ```hcl
 resource "illumio-core_workload_interface" "example" {
     workload_href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"

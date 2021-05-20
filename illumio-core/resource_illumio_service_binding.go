@@ -268,7 +268,7 @@ func resourceIllumioServiceBindingUpdate(ctx context.Context, d *schema.Resource
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Detail:   "Cannot Update the Workload Interface Resource.",
+		Detail:   "Cannot Update the Service Binding Resource.",
 		Summary:  "Ignoring the Update...",
 	})
 

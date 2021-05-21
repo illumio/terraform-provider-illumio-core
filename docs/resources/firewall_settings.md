@@ -120,7 +120,7 @@ resource "illumio-core_firewall_settings" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when these firewall settings were first created
-- **created_by** (Map of String) User who originally created this resource
+- **created_by** (Map of String) User who created this resource
 - **deleted_at** (String) Timestamp when these firewall settings were deleted
 - **deleted_by** (Map of String) User who deleted this resource
 - **href** (String) URI of Firewall Settings
@@ -250,9 +250,9 @@ Required:
 
 ## Importing ##
 
-This resource can only be imported and can not be created. Use below command to import resource. This resource auto determines URI based on provider config. So no need of providing URI while importing.
+This resource can only be imported and can not be created. Use the below command to import resource. This resource auto determines URI based on provider config. So no need of providing URI while importing.
 
-After importing, Cherry pick the configurable parameters from `terraform show` and paste it into .tf file.
+After importing, Cherry-pick the configurable parameters from `terraform show` and paste it into .tf file.
 
 Ref: https://www.terraform.io/docs/import/index.html
 

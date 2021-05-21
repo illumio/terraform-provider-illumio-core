@@ -169,7 +169,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Port Number. Also the starting port when specifying a range",
+							Description: "Port Number. Also, the starting port when specifying a range",
 						},
 						"ip": {
 							Type:        schema.TypeString,
@@ -216,7 +216,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this Virtual Service",
+				Description: "User who created this Virtual Service",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

@@ -56,7 +56,7 @@ resource "illumio-core_security_rule" "example" {
 ### Required
 
 - **consumers** (Block Set, Min: 1) Consumers for Security Rule. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedblock--consumers))
-- **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in rule set or not
+- **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not
 - **providers** (Block Set, Min: 1) providers for Security Rule. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
 - **resolve_labels_as** (Block List, Min: 1, Max: 1) resolve label as for Security rule (see [below for nested schema](#nestedblock--resolve_labels_as))
 - **rule_set_href** (String) URI of Rule set, in which security rule will be added.
@@ -75,7 +75,7 @@ resource "illumio-core_security_rule" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this security rule was first created
-- **created_by** (Map of String) User who originally created this security rule
+- **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
 - **deleted_by** (Map of String) User who deleted this security rule
 - **href** (String) URI of Security Rule

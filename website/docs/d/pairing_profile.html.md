@@ -29,11 +29,11 @@ data "illumio-core_pairing_profile" "example" {
 ### Read-Only
 
 - **agent_software_release** (String) Agent software release associated with this paring profile
-- **allowed_uses_per_key** (String) The number of times the pairing profile can be use
+- **allowed_uses_per_key** (String) The number of times the pairing profile can be used
 - **app_label_lock** (Boolean) Flag that controls whether app label can be overridden from pairing script
 - **caps** (List of String) CAP
 - **created_at** (String) Timestamp when this pairing profile was first created
-- **created_by** (Map of String) User who originally created this pairing profile
+- **created_by** (Map of String) User who created this pairing profile
 - **description** (String) The long description of the pairing profile
 - **enabled** (Boolean) The enabled flag of the pairing profile
 - **enforcement_mode** (String) Filter by mode

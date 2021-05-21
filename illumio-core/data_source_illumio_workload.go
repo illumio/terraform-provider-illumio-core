@@ -279,12 +279,12 @@ func datasourceIllumioWorkload() *schema.Resource {
 						"default_gateway_address": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Default Gateaway Address of the Interface",
+							Description: "Default Gateway Address of the Interface",
 						},
 						"network": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "Default Gateaway Address of the Interface",
+							Description: "Default Gateway Address of the Interface",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -331,7 +331,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 			"os_detail": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Additional OS details - just displayed to end user",
+				Description: "Additional OS details - just displayed to end-user",
 			},
 			"online": {
 				Type:        schema.TypeBool,
@@ -410,7 +410,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 									"package": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The RPM/DEB pacakge that the program is part of",
+										Description: "The RPM/DEB package that the program is part of",
 									},
 									"win_service_name": {
 										Type:        schema.TypeString,
@@ -484,7 +484,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 						"ip_address": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The ip address of the host where the vulnerability is found",
+							Description: "The IP address of the host where the vulnerability is found",
 						},
 						"port_wide_exposure": {
 							Type:        schema.TypeList,
@@ -508,12 +508,12 @@ func datasourceIllumioWorkload() *schema.Resource {
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The port which is associated with the vulnerability",
+							Description: "The port that is associated with the vulnerability",
 						},
 						"proto": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The protocol which is associated with the vulnerability",
+							Description: "The protocol that is associated with the vulnerability",
 						},
 						"port_exposure": {
 							Type:        schema.TypeInt,
@@ -614,7 +614,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Port number used with protocol. Also the starting port when specifying a range",
+							Description: "Port number used with protocol. Also, the starting port when specifying a range",
 						},
 						"to_port": {
 							Type:        schema.TypeInt,
@@ -633,12 +633,12 @@ func datasourceIllumioWorkload() *schema.Resource {
 						"href": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "URI of conatainer cluster",
+							Description: "URI of container cluster",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of conatainer cluster",
+							Description: "Name of container cluster",
 						},
 					},
 				},
@@ -681,7 +681,7 @@ func datasourceIllumioWorkload() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this Workload",
+				Description: "User who created this Workload",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

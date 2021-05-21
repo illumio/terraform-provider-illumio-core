@@ -25,18 +25,18 @@ func resourceIllumioIPList() *schema.Resource {
 			"href": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "URI of this IPList",
+				Description: "URI of this IP List",
 			},
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "Name of the IPList",
+				Description:      "Name of the IP List",
 				ValidateDiagFunc: nameValidation,
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of the IPList",
+				Description: "Description of the IP List",
 			},
 			"ip_ranges": {
 				Type:         schema.TypeSet,
@@ -83,7 +83,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"fqdn": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Full Qualified Domain Name for IP List. Allowed formats: hostname, IP, or URI",
+							Description: "Fully Qualified Domain Name for IP List. Allowed formats: hostname, IP, or URI",
 						},
 						"description": {
 							Type:        schema.TypeString,
@@ -109,17 +109,17 @@ func resourceIllumioIPList() *schema.Resource {
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this IPList was first created",
+				Description: "Timestamp when this IP List was first created",
 			},
 			"updated_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this IPList was last updated",
+				Description: "Timestamp when this IP List was last updated",
 			},
 			"deleted_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this IPList was last deleted",
+				Description: "Timestamp when this IP List was last deleted",
 			},
 			"created_by": {
 				Type:     schema.TypeMap,
@@ -127,7 +127,7 @@ func resourceIllumioIPList() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this IPList",
+				Description: "User who created this IP List",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,
@@ -135,7 +135,7 @@ func resourceIllumioIPList() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who last updated this IPList",
+				Description: "User who last updated this IP List",
 			},
 			"deleted_by": {
 				Type:     schema.TypeMap,
@@ -143,7 +143,7 @@ func resourceIllumioIPList() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who last deleted this IPList",
+				Description: "User who last deleted this IP List",
 			},
 		},
 	}

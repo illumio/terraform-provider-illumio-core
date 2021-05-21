@@ -32,7 +32,7 @@ data "illumio-core_label_group" "example"{
 ### Read-Only
 
 - **created_at** (String) Timestamp when this Label Group was first created
-- **created_by** (Map of String) User who originally created this Label Group
+- **created_by** (Map of String) User who created this Label Group
 - **deleted_at** (String) Timestamp when this Label Group was last deleted
 - **deleted_by** (Map of String) User who deleted this Label Group
 - **description** (String) The long description of the Label Group

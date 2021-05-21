@@ -39,10 +39,10 @@ resource "illumio-core_ip_list" "iplist_1" {
 
 ### Required
 
-- **name** (String) Name of the IPList. The name should be in between 1 to 255 characters
+- **name** (String) Name of the IP List. The name should be between1 to 255 characters
 
 
-- **description** (String) Description of the IPList
+- **description** (String) Description of the IP List
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **fqdns** (Block Set) Collection of Fully Qualified Domain Names for IP List (see [below for nested schema](#nestedblock--fqdns))
@@ -50,20 +50,20 @@ resource "illumio-core_ip_list" "iplist_1" {
 
 ### Read-Only
 
-- **created_at** (String) Timestamp when this IPList was first created
-- **created_by** (Map of String) User who originally created this IPList
-- **href** (String) URI of this IPList
-- **deleted_at** (String) Timestamp when this IPList was last deleted
-- **deleted_by** (Map of String) User who last deleted this IPList
-- **updated_at** (String) Timestamp when this IPList was last updated
-- **updated_by** (Map of String) User who last updated this IPList
+- **created_at** (String) Timestamp when this IP List was first created
+- **created_by** (Map of String) User who created this IP List
+- **href** (String) URI of this IP List
+- **deleted_at** (String) Timestamp when this IP List was last deleted
+- **deleted_by** (Map of String) User who last deleted this IP List
+- **updated_at** (String) Timestamp when this IP List was last updated
+- **updated_by** (Map of String) User who last updated this IP List
 
 <a id="nestedatt--fqdns"></a>
 ### Nested Schema for `fqdns`
 
 Required:
 
-- **fqdn** (String) Full Qualified Domain Name for IP List.  Allowed formats: hostname, IP, or URI
+- **fqdn** (String) Fully Qualified Domain Name for IP List.  Allowed formats: hostname, IP, or URI
 
 Optional:
 

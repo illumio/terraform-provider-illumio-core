@@ -30,7 +30,7 @@ data "illumio-core_label_groups" "example" {
 - **key** (String) Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".
 - **max_results** (String) Maximum number of Labels to return. The integer should be a non-zero positive integer.
 - **name** (String) Name of Label Group(s) to return. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 - **usage** (String) Include label usage flags as well
 
 ### Read-Only
@@ -43,7 +43,7 @@ data "illumio-core_label_groups" "example" {
 Read-Only:
 
 - **created_at** (String) Timestamp when this Label Group was first created
-- **created_by** (Map of String) User who originally created this Label Group
+- **created_by** (Map of String) User who created this Label Group
 - **deleted_at** (String) Timestamp when this Label Group was last deleted
 - **deleted_by** (Map of String) User who deleted this Label Group
 - **description** (String) The long description of the Label Group

@@ -4,12 +4,12 @@ page_title: "illumio-core_rule_set Resource - terraform-provider-illumio-core"
 sidebar_current: "docs-illumio-core-resource-rule-set"
 subcategory: ""
 description: |-
-  Manages Illumio Rule Set
+  Manages Illumio Ruleset
 ---
 
 # illumio-core_rule_set (Resource)
 
-Manages Illumio Rule Set
+Manages Illumio Ruleset
 
 Example Usage
 ------------
@@ -75,13 +75,13 @@ resource "illumio-core_rule_set" "example" {
 
 ### Required
 
-- **name** (String) Name of Rule Set. Valid name should be in between 1 to 255 characters
-- **scopes** (Block Set, Min: 1) scopes for Rule Set. At most 3 blocks of label/label_group can be specified inside each scopes block (see [below for nested schema](#nestedblock--scopes))
+- **name** (String) Name of Ruleset. Valid name should be between1 to 255 characters
+- **scopes** (Block Set, Min: 1) scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scopes block (see [below for nested schema](#nestedblock--scopes))
 
 ### Optional
 
-- **description** (String) Description of Rule Set
-- **enabled** (Boolean) Enabled flag. Determines whether the Rule Set is enabled or not. Default value: true
+- **description** (String) Description of Ruleset
+- **enabled** (Boolean) Enabled flag. Determines whether the Ruleset is enabled or not. Default value: true
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ip_tables_rules** (Block Set) Collection of IP Tables Rules (see [below for nested schema](#nestedblock--ip_tables_rules))
@@ -89,14 +89,14 @@ resource "illumio-core_rule_set" "example" {
 
 ### Read-Only
 
-- **created_at** (String) Timestamp when this rule set was first created
-- **created_by** (Map of String) User who originally created this rule set
-- **deleted_at** (String) Timestamp when this rule set was deleted
-- **deleted_by** (Map of String) User who deleted this rule set
-- **href** (String) URI of Rule Set
+- **created_at** (String) Timestamp when this ruleset was first created
+- **created_by** (Map of String) User who created this ruleset
+- **deleted_at** (String) Timestamp when this ruleset was deleted
+- **deleted_by** (Map of String) User who deleted this ruleset
+- **href** (String) URI of Ruleset
 - **update_type** (String) Type of update
-- **updated_at** (String) Timestamp when this rule set was last updated
-- **updated_by** (Map of String) User who last updated this rule set
+- **updated_at** (String) Timestamp when this ruleset was last updated
+- **updated_by** (Map of String) User who last updated this ruleset
 
 <a id="nestedblock--scopes"></a>
 ### Nested Schema for `scopes`
@@ -140,7 +140,7 @@ Optional:
 Read-Only:
 
 - **created_at** (String) Timestamp when this IP Table Rule was first created
-- **created_by** (Map of String) User who originally created this IP Table Rule
+- **created_by** (Map of String) User who created this IP Table Rule
 - **deleted_at** (String) Timestamp when this IP Table Rule was deleted
 - **deleted_by** (Map of String) User who deleted this IP Table Rule
 - **href** (String) URI of the Ip Tables Rules
@@ -200,7 +200,7 @@ Required:
 Required:
 
 - **consumers** (Block Set, Min: 1) Consumers for Security Rule. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedblock--rule--consumers))
-- **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in rule set or not
+- **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not
 - **providers** (Block Set, Min: 1) providers for Security Rule. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--rule--providers))
 - **resolve_labels_as** (Block List, Min: 1, Max: 1) resolve label as for Security rule (see [below for nested schema](#nestedblock--rule--resolve_labels_as))
 
@@ -218,7 +218,7 @@ Optional:
 Read-Only:
 
 - **created_at** (String) Timestamp when this security rule was first created
-- **created_by** (Map of String) User who originally created this security rule
+- **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
 - **deleted_by** (Map of String) User who deleted this security rule
 - **href** (String) URI of Security Rule

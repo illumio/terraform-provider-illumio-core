@@ -79,7 +79,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Optional:         true,
 				Default:          "unlimited",
 				ValidateDiagFunc: isUnlimitedOrValidRange(1, 2147483647),
-				Description:      `The number of times pairing profile keys can be used. Allowed values are range(1-2147483647) and "unlimited". Default value: "unlimited"`,
+				Description:      `The number of times pairing profile keys can be usedd. Allowed values are range(1-2147483647) and "unlimited". Default value: "unlimited"`,
 			},
 			"key_lifespan": {
 				Type:             schema.TypeString,
@@ -173,7 +173,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this pairing profile",
+				Description: "User who created this pairing profile",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

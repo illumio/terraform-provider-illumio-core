@@ -20,12 +20,12 @@ func resourceIllumioRuleSet() *schema.Resource {
 		UpdateContext: resourceIllumioRuleSetUpdate,
 		DeleteContext: resourceIllumioRuleSetDelete,
 		SchemaVersion: version,
-		Description:   "Manages Illumio Rule Set",
+		Description:   "Manages Illumio Ruleset",
 		Schema: map[string]*schema.Schema{
 			"href": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "URI of Rule Set",
+				Description: "URI of Ruleset",
 			},
 			"update_type": {
 				Type:        schema.TypeString,
@@ -35,17 +35,17 @@ func resourceIllumioRuleSet() *schema.Resource {
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this rule set was first created",
+				Description: "Timestamp when this ruleset was first created",
 			},
 			"updated_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this rule set was last updated",
+				Description: "Timestamp when this ruleset was last updated",
 			},
 			"deleted_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this rule set was deleted",
+				Description: "Timestamp when this ruleset was deleted",
 			},
 			"created_by": {
 				Type:     schema.TypeMap,
@@ -53,7 +53,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this rule set",
+				Description: "User who created this ruleset",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,
@@ -61,7 +61,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who last updated this rule set",
+				Description: "User who last updated this ruleset",
 			},
 			"deleted_by": {
 				Type:     schema.TypeMap,
@@ -69,18 +69,18 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who deleted this rule set",
+				Description: "User who deleted this ruleset",
 			},
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
 				ValidateDiagFunc: nameValidation,
-				Description:      "Name of Rule Set. Valid name should be in between 1 to 255 characters",
+				Description:      "Name of Ruleset. Valid name should be between1 to 255 characters",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of Rule Set",
+				Description: "Description of Ruleset",
 			},
 			"external_data_set": {
 				Type:             schema.TypeString,
@@ -98,13 +98,13 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Enabled flag. Determines whether the Rule Set is enabled or not. Default value: true",
+				Description: "Enabled flag. Determines whether the Ruleset is enabled or not. Default value: true",
 			},
 			"scopes": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				Description: "scopes for Rule Set. At most 3 blocks of label/label_group can be specified inside each scope block",
+				Description: "scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scope block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"label": {
@@ -245,7 +245,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who originally created this IP Table Rule",
+							Description: "User who created this IP Table Rule",
 						},
 						"updated_by": {
 							Type:     schema.TypeMap,

@@ -38,7 +38,7 @@ func datasourceIllumioOrganizationSettings() *schema.Resource {
 			"format": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The log format (JSON, CEF, LEEF), which applies to all remote syslog destinations.",
+				Description: "The log format (JSON, CEF, LEEF), which applies to all remote Syslog destinations.",
 			},
 		},
 	}

@@ -65,7 +65,7 @@ func datasourceIllumioTrafficCollectorSettings() *schema.Resource {
 						"dst_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: `single ip address or CIDR`,
+							Description: `single IP address or CIDR`,
 						},
 					},
 				},

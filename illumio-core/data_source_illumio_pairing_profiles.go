@@ -105,7 +105,7 @@ func datasourceIllumioPairingProfiles() *schema.Resource {
 						"allowed_uses_per_key": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The number of times the pairing profile can be use",
+							Description: "The number of times the pairing profile can be used",
 						},
 						"key_lifespan": {
 							Type:        schema.TypeString,
@@ -140,7 +140,7 @@ func datasourceIllumioPairingProfiles() *schema.Resource {
 						"created_by": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "User who originally created this pairing profile",
+							Description: "User who created this pairing profile",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

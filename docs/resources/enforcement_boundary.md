@@ -44,7 +44,7 @@ resource "illumio-core_enforcement_boundary" "example" {
 
 - **caps** (List of String) CAPS for Enforcement Boundary
 - **created_at** (String) Timestamp when this Enforcement Boundary was first created
-- **created_by** (Map of String) User who originally created this Enforcement Boundary
+- **created_by** (Map of String) User who created this Enforcement Boundary
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
 - **href** (String) URI of this Enforcement Boundary

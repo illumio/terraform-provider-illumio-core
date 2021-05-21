@@ -27,12 +27,12 @@ resource "illumio-core_ven" "example" {
 
 ### Required
 
-- **status** (String) Status of the VEN. Allowed values are "active" and "suspended
+- **status** (String) Status of the VEN. Allowed values are "active", and "suspended
 
 ### Optional
 
 - **description** (String) The description of the VEN
-- **name** (String) Friendly name for the VEN. The name should be upto 255 characters.
+- **name** (String) Friendly name for the VEN. The name should be up to 255 characters.
 - **target_pce_fqdn** (String) The FQDN of the PCE that the VEN will use for future connections
 
 ### Read-Only
@@ -180,9 +180,9 @@ Read-Only:
 
 ## Importing ##
 
-This resource can only be imported and cannot be created. Use below command to import resource.
+This resource can only be imported and cannot be created. Use the below command to import resource.
 
-After importing, Cherry pick the configurable parameters from `terraform show` and paste it into .tf file.
+After importing, Cherry-pick the configurable parameters from `terraform show` and paste it into .tf file.
 
 Ref: https://www.terraform.io/docs/import/index.html
 

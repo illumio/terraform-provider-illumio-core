@@ -9,14 +9,14 @@ description: |-
 
 Overview
 --------------------------------------------------
-Terraform provider Illumio Core is a Terraform plugin which can be used to manage the Illumio resources on the Illumio PCE platform with leveraging advantages of Terraform. 
+Terraform provider Illumio Core is a Terraform plugin that can be used to manage the Illumio resources on the Illumio PCE platform by leveraging the advantages of Terraform. 
 Illumio Core Terraform provider lets users represent the infrastructure as a code and provides a way to enforce state on the infrastructure managed by the Terraform provider. 
-Customers can use this provider to integrate the Terraform configuration with the DevOps pipeline to manage the Illumio Resource in a more flexible, consistent and reliable way.
+Customers can use this provider to integrate the Terraform configuration with the DevOps pipeline to manage the Illumio Resource in a more flexible, consistent, and reliable way.
 
 Illumio Core Provider
 ------------
 The Illumio Core provider is used to interact with the resources provided by Illumio Core APIs.
-The provider needs to be configured with the pce host and api key details before it can be used.
+The provider needs to be configured with the PCE host and API key details before it can be used.
 
 Example Usage
 ------------
@@ -58,12 +58,12 @@ provider "illumio-core" {
 }
 ```
 
-Some of the attributes can be specified via environment variables. Refer to schema for attributes which can be configured via environment variables.
+Some of the attributes can be specified via environment variables. Refer to the schema for attributes that can be configured via environment variables.
 
 
 Provisioning
 ------------
-Currently terraform does not support post-processing of resources. To provision changes, provision command can be used.
+Currently, terraform does not support the post-processing of resources. To provision changes, provision command can be used.
 
 To run provision, clone the provider repo and follow the commands.
 
@@ -73,8 +73,8 @@ go build -o provision  # provision.exe for windows
 ```
 
 Move the provision binary to the root dir of your tf module.
-To use provision command, The required environment variables must be set  (`ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_PCE_HOST`).
-Note that same environment variables can be used to configure provider.
+To use the provision command, The required environment variables must be set  (`ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_PCE_HOST`).
+Note that the same environment variables can be used to configure the provider.
 
 
 Now provision command can be used with terraform apply
@@ -87,8 +87,8 @@ terraform apply && provision
 
 **Non-Versioned Resource**: Resource which does not require provisioning 
 
-While managing versioned and non-versioned resources together, if you want to destroy a non-versioned resource which is already linked with the versioned resource then you must unlink/delete versioned resource and provision it first. You can perform the following steps for the same:
-  -  Unlink the non-versioned resources from versioned resources OR destroy the versioned resources and then provision it using provisioning binary
+While managing versioned and non-versioned resources together, if you want to destroy a non-versioned resource that is already linked with the versioned resource then you must unlink/delete the versioned resource and provision it first. You can perform the following steps for the same:
+  -  Unlink the non-versioned resources from versioned resources OR destroy the versioned resources and then provision them using provisioning binary
   - Perform the deletion of non-versioned resources
 
 For example, to delete the label `env_dev` which is referred in `env_lg`
@@ -111,7 +111,7 @@ resource "illumio-core_label_group" "env_lg" {
 }
 ```
 
-1. To delete label `env_dev`, we first need to either delete `env_lg` OR unlink `env_dev` from `env_lg`. We chose to unlink here. But we can not delete `env_dev` until we provision `env_lg`.
+1. To delete the label `env_dev`, we first need to either delete `env_lg` OR unlink `env_dev` from `env_lg`. We chose to unlink here. But we can not delete `env_dev` until we provision `env_lg`.
 
 ```hcl
 # label is non-versioned resource
@@ -131,7 +131,7 @@ resource "illumio-core_label_group" "env_lg" {
 }
 ```
 
-2. Run `terraform apply && provision` on above configuration.
+2. Run `terraform apply && provision` on the above configuration.
 
 ```hcl
 

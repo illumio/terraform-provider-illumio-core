@@ -31,7 +31,7 @@ resource "illumio-core_container_cluster_workload_profile" "example" {
 ### Required
 
 - **container_cluster_href** (String) URI of Container Cluster
-- **name** (String) A friendly name given to a profile if the namespace is not user friendly. The name should be upto 255 characters.
+- **name** (String) A friendly name given to a profile if the namespace is not user-friendly. The name should be up to 255 characters.
 
 ### Optional
 
@@ -44,7 +44,7 @@ resource "illumio-core_container_cluster_workload_profile" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this label group was first created
-- **created_by** (Map of String) User who originally created this label group
+- **created_by** (Map of String) User who created this label group
 - **href** (String) URI of the container workload profile
 - **linked** (Boolean) True if the namespace exists in the cluster and is reported by kubelink.
 - **namespace** (String) Namespace name of the container workload profile.

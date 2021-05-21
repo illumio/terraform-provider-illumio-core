@@ -50,7 +50,7 @@ Required:
 
 Optional:
 
-- **dst_ip** (String) single ip address or CIDR. Default value: "0.0.0.0/0"
+- **dst_ip** (String) single IP address or CIDR. Default value: "0.0.0.0/0"
 - **dst_port** (Number) destination port for target. Allowed range is -1 to 65535. Default value: -1
 
 

@@ -119,7 +119,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also the starting port when specifying a range. Allowed range is -1 - 65535",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535",
 							ValidateDiagFunc: isStringInRange(-1, 65535),
 						},
 						"to_port": {
@@ -158,7 +158,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also the starting port when specifying a range. Allowed range is -1 - 65535.",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535.",
 							ValidateDiagFunc: isStringInRange(-1, 65535),
 						},
 						"ip": {
@@ -200,7 +200,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this virtual service",
+				Description: "User who created this virtual service",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

@@ -95,7 +95,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 		"enabled": {
 			Type:        schema.TypeBool,
 			Computed:    true,
-			Description: "Enabled flag. Determines whether this rule will be enabled in rule set or not",
+			Description: "Enabled flag. Determines whether this rule will be enabled in ruleset or not",
 		},
 		"description": {
 			Type:        schema.TypeString,
@@ -131,7 +131,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 					"port": {
 						Type:        schema.TypeInt,
 						Computed:    true,
-						Description: "Port number used with protocol. Also the starting port when specifying a range",
+						Description: "Port number used with protocol. Also, the starting port when specifying a range",
 					},
 					"to_port": {
 						Type:        schema.TypeInt,
@@ -303,7 +303,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 		"created_by": {
 			Type:        schema.TypeMap,
 			Computed:    true,
-			Description: "User who originally created this security rule",
+			Description: "User who created this security rule",
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},

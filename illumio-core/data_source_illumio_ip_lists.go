@@ -60,7 +60,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -112,12 +112,12 @@ func datasourceIllumioIPLists() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the IPList",
+							Description: "Name of the IP List",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Description of the IPList",
+							Description: "Description of the IP List",
 						},
 						"ip_ranges": {
 							Type:        schema.TypeList,
@@ -157,7 +157,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 									"fqdn": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Full Qualified Domain Name",
+										Description: "Fully Qualified Domain Name",
 									},
 									"description": {
 										Type:        schema.TypeString,
@@ -195,7 +195,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 						"created_by": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "User who originally created this IP List",
+							Description: "User who created this IP List",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

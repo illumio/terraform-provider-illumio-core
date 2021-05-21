@@ -69,7 +69,7 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -215,7 +215,7 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 						"created_by": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "User who originally created this Label Group",
+							Description: "User who created this Label Group",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

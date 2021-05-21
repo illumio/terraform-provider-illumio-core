@@ -155,33 +155,33 @@ func datasourceIllumioRuleSet() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioRuleSetRead,
 		SchemaVersion: version,
-		Description:   "Represents Illumio Rule Set",
+		Description:   "Represents Illumio Ruleset",
 		Schema: map[string]*schema.Schema{
 			"href": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "URI of Rule Set",
+				Description:      "URI of Ruleset",
 				ValidateDiagFunc: isRuleSetHref,
 			},
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this rule set was first created",
+				Description: "Timestamp when this ruleset was first created",
 			},
 			"updated_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this rule set was last updated",
+				Description: "Timestamp when this ruleset was last updated",
 			},
 			"deleted_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this rule set was deleted",
+				Description: "Timestamp when this ruleset was deleted",
 			},
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this resource",
+				Description: "User who created this resource",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -210,12 +210,12 @@ func datasourceIllumioRuleSet() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Name of Rule Set",
+				Description: "Name of Ruleset",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Description of Rule Set",
+				Description: "Description of Ruleset",
 			},
 			"external_data_set": {
 				Type:        schema.TypeString,
@@ -230,12 +230,12 @@ func datasourceIllumioRuleSet() *schema.Resource {
 			"enabled": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "Enabled flag. Determines whether the Rule Set is enabled or not",
+				Description: "Enabled flag. Determines whether the Ruleset is enabled or not",
 			},
 			"scopes": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "scopes for Rule Set",
+				Description: "scopes for Ruleset",
 				Elem: &schema.Schema{
 					Type: schema.TypeList,
 					Elem: &schema.Resource{
@@ -376,7 +376,7 @@ func datasourceIllumioRuleSet() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who originally created this IP Table Rule",
+							Description: "User who created this IP Table Rule",
 						},
 						"updated_by": {
 							Type:     schema.TypeMap,

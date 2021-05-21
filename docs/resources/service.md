@@ -74,7 +74,7 @@ resource "illumio-core_service" "example_windows" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this Service was first created
-- **created_by** (Map of String) User who originally created this Service
+- **created_by** (Map of String) User who created this Service
 - **deleted_at** (String) Timestamp when this Service was deleted
 - **deleted_by** (Map of String) User who deleted this Service
 - **description_url** (String) Description URL Read-only to prevent XSS attacks
@@ -94,7 +94,7 @@ Optional:
 
 - **icmp_code** (String) ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 15 inclusive
 - **icmp_type** (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255 inclusive
-- **port** (String) Port Number. Also the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive
 - **to_port** (String) High end of port range inclusive if specifying a range. Allowed range is 0 - 65535 inclusive
 
 
@@ -105,7 +105,7 @@ Optional:
 
 - **icmp_code** (String) ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range 0 - 15 inclusive
 - **icmp_type** (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255 inclusive
-- **port** (String) Port Number. Also the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive
 - **process_name** (String) Name of running process
 - **proto** (String) Transport protocol. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94
 - **service_name** (String) Name of Windows Service

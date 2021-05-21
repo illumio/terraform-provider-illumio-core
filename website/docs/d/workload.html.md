@@ -33,7 +33,7 @@ data "illumio-core_workload" "example" {
 - **container_cluster** (List of Object) Container Cluster for Workload (see [below for nested schema](#nestedatt--container_cluster))
 - **containers_inherit_host_policy** (Boolean) This workload will apply the policy it receives both to itself and the containers hosted by it
 - **created_at** (String) Timestamp when this Workload was first created
-- **created_by** (Map of String) User who originally created this Workload
+- **created_by** (Map of String) User who created this Workload
 - **data_center** (String) Data center for Workload
 - **data_center_zone** (String) Data center Zone for Workload
 - **deleted** (Boolean) This indicates that the workload has been deleted
@@ -52,7 +52,7 @@ data "illumio-core_workload" "example" {
 - **labels** (List of Object) List of lists of label URIs (see [below for nested schema](#nestedatt--labels))
 - **name** (String) Name of the Workload
 - **online** (Boolean) Determines if this workload is online
-- **os_detail** (String) Additional OS details - just displayed to end user
+- **os_detail** (String) Additional OS details - just displayed to end-user
 - **os_id** (String) OS identifier for Workload
 - **public_ip** (String) The public IP address of the server
 - **selectively_enforced_services** (List of Object) Selectively Enforced Services for Workload (see [below for nested schema](#nestedatt--selectively_enforced_services))
@@ -70,18 +70,18 @@ data "illumio-core_workload" "example" {
 
 Read-Only:
 
-- **href** (String) URI of conatainer cluster
-- **name** (String) Name of conatainer cluster
+- **href** (String) URI of container cluster
+- **name** (String) Name of container cluster
 
 <a id="nestedatt--detected_vulnerabilities"></a>
 ### Nested Schema for `detected_vulnerabilities`
 
 Read-Only:
 
-- **ip_address** (String) The ip address of the host where the vulnerability is found
-- **port** (Number) The port which is associated with the vulnerability
+- **ip_address** (String) The IP address of the host where the vulnerability is found
+- **port** (Number) The port that is associated with the vulnerability
 - **port_exposure** (Number) The exposure of the port based on the current policy.
-- **proto** (Number) The protocol which is associated with the vulnerability
+- **proto** (Number) The protocol that is associated with the vulnerability
 - **vulnerability** (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability **vulnerability_report** (Set of Object) Vulnerability Report for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 - **workload** (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 
@@ -116,7 +116,7 @@ Read-Only:
 
 - **address** (String) Address of the Interface
 - **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0.
-- **default_gateway_address** (String) Default Gateaway Address of the Interface
+- **default_gateway_address** (String) Default Gateway Address of the Interface
 - **friendly_name** (String) Friendly name of the Interface
 - **loopback** (Boolean) Loopback for workload interfaces
 - **link_state** (String) Link State of the Interface
@@ -157,7 +157,7 @@ Read-Only:
 Read-Only:
 
 - **address** (String) The local address this service is bound to
-- **package** (String) The RPM/DEB pacakge that the program is part of
+- **package** (String) The RPM/DEB package that the program is part of
 - **port** (Number) The local port this service is bound to
 - **process_name** (String) The process name (including the full path)
 - **protocol** (Number) Transport protocol for open service ports

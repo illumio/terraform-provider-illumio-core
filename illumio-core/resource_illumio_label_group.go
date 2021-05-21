@@ -123,7 +123,7 @@ func resourceIllumioLabelGroup() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this label group",
+				Description: "User who created this label group",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

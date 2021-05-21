@@ -44,7 +44,7 @@ resource "illumio-core_label_group" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this label group was first created
-- **created_by** (Map of String) User who originally created this label group
+- **created_by** (Map of String) User who created this label group
 - **deleted_at** (String) Timestamp when this label group was last deleted
 - **deleted_by** (Map of String) User who deleted this label group
 - **href** (String) URI of this label group

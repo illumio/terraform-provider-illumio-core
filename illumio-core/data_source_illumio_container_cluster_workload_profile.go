@@ -61,7 +61,7 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "A friendly name given to a profile if the namespace is not user friendly",
+				Description: "A friendly name given to a profile if the namespace is not user-friendly",
 			},
 			"namespace": {
 				Type:        schema.TypeString,
@@ -157,7 +157,7 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 			"linked": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "True if the namespace exists in the cluster and is reported by kubelink.",
+				Description: "True if the namespace exists in the cluster and is reported by Kubelink.",
 			},
 			"created_at": {
 				Type:        schema.TypeString,
@@ -175,7 +175,7 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this label group",
+				Description: "User who created this label group",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

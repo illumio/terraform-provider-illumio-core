@@ -36,7 +36,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "A friendly name given to a profile if the namespace is not user friendly. The name should be upto 255 characters.",
+				Description:      "A friendly name given to a profile if the namespace is not user-friendly. The name should be up to 255 characters.",
 				ValidateDiagFunc: nameValidation,
 			},
 			"namespace": {
@@ -162,7 +162,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this label group",
+				Description: "User who created this label group",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

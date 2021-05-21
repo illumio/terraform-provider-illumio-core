@@ -72,7 +72,7 @@ resource "illumio-core_virtual_service" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this virtual service was first created
-- **created_by** (Map of String) User who originally created this virtual service
+- **created_by** (Map of String) User who created this virtual service
 - **deleted_at** (String) Timestamp when this virtual service was last deleted
 - **deleted_by** (Map of String) User who deleted this virtual service
 - **pce_fqdn** (String) PCE FQDN for this container cluster. Used in Supercluster only
@@ -109,7 +109,7 @@ Optional:
 - **fqdn** (String) FQDN to assign to the virtual service.  Allowed formats: hostname, IP, or URI
 - **ip** (String) IP address to assign to the virtual service
 - **network_href** (String) Network URI for this IP address
-- **port** (String) Port Number. Also the starting port when specifying a range. Allowed range is -1 - 65535.
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535.
 
 
 <a id="nestedblock--service_ports"></a>
@@ -121,5 +121,5 @@ Required:
 
 Optional:
 
-- **port** (String) Port Number. Also the starting port when specifying a range. Allowed range is -1 - 65535
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535
 - **to_port** (String) High end of port range inclusive if specifying a range. Allowed range is 0 - 65535

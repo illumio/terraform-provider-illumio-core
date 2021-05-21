@@ -27,7 +27,7 @@ resource "illumio-core_container_cluster" "example" {
 ### Optional
 
 - **description** (String) Description of the Cluster
-- **name** (String) Name of the Cluster. The name should be  upto 255 characters.
+- **name** (String) Name of the Cluster. The name should be up to 255 characters.
 
 ### Read-Only
 

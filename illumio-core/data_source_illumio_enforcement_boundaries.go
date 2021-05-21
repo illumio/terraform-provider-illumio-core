@@ -24,7 +24,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
 			},
 			"items": {
 				Type:        schema.TypeList,
@@ -156,7 +156,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who originally created this Enforcement Boundary",
+							Description: "User who created this Enforcement Boundary",
 						},
 						"updated_by": {
 							Type:     schema.TypeMap,

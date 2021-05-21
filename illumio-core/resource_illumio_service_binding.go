@@ -46,7 +46,7 @@ func resourceIllumioServiceBinding() *schema.Resource {
 						"href": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Virtul Service URI",
+							Description: "Virtual Service URI",
 						},
 					},
 				},

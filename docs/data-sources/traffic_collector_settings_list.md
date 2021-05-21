@@ -37,7 +37,7 @@ Read-Only:
 
 Read-Only:
 
-- **dst_ip** (String) single ip address or CIDR
+- **dst_ip** (String) single IP address or CIDR
 - **dst_port** (Number) destination port for target
 - **proto** (Number) protocol for target
 

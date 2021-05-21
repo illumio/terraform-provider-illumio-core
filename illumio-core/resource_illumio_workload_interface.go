@@ -63,7 +63,7 @@ func resourceIllumioWorkloadInterface() *schema.Resource {
 			"default_gateway_address": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The IP Address of the default gateway. The Default Gateaway Address should in the IPv4 or IPv6 format.",
+				Description: "The IP Address of the default gateway. The Default Gateway Address should in the IPv4 or IPv6 format.",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IsIPAddress,
 				),

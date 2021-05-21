@@ -4,12 +4,12 @@ page_title: "illumio-core_rule_set Data Source - terraform-provider-illumio-core
 sidebar_current: "docs-illumio-core-data-source-rule-set"
 subcategory: ""
 description: |-
-  Represents Illumio Rule Set
+  Represents Illumio Ruleset
 ---
 
 # illumio-core_rule_set (Data Source)
 
-Represents Illumio Rule Set
+Represents Illumio Ruleset
 
 Example Usage
 ------------
@@ -24,25 +24,25 @@ data "illumio-core_rule_set" "example" {
 
 ### Required
 
-- **href** (String) URI of rule set
+- **href** (String) URI of ruleset
 
 
 ### Read-Only
 
-- **created_at** (String) Timestamp when this rule set was first created
-- **created_by** (Map of String) User who originally created this resource
-- **deleted_at** (String) Timestamp when this rule set was deleted
+- **created_at** (String) Timestamp when this ruleset was first created
+- **created_by** (Map of String) User who created this resource
+- **deleted_at** (String) Timestamp when this ruleset was deleted
 - **deleted_by** (Map of String) User who deleted this resource
-- **description** (String) Description of Rule Set
-- **enabled** (Boolean) Enabled flag. Determines whether the Rule Set is enabled or not
+- **description** (String) Description of Ruleset
+- **enabled** (Boolean) Enabled flag. Determines whether the Ruleset is enabled or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ip_tables_rules** (List of Object) Collection of IP Tables Rules (see [below for nested schema](#nestedatt--ip_tables_rules))
-- **name** (String) Name of Rule Set
+- **name** (String) Name of Ruleset
 - **rules** (List of Object) Collection of Security Rules (see [below for nested schema](#nestedatt--rules))
-- **scopes** (List of List of Object) scopes for Rule Set
+- **scopes** (List of List of Object) scopes for Ruleset
 - **update_type** (String) Type of update
-- **updated_at** (String) Timestamp when this rule set was last updated
+- **updated_at** (String) Timestamp when this ruleset was last updated
 - **updated_by** (Map of String) User who last updated this resource
 
 <a id="nestedatt--ip_tables_rules"></a>
@@ -86,11 +86,11 @@ Read-Only:
 
 - **consumers** (Set of Object) Consumers for Security Rule (see [below for nested schema](#nestedobjatt--rules--consumers))
 - **created_at** (String) Timestamp when this security rule was first created
-- **created_by** (Map of String) User who originally created this security rule
+- **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
 - **deleted_by** (Map of String) User who deleted this security rule
 - **description** (String) Description of Security Rule
-- **enabled** (Boolean) Enabled flag. Determines whether this rule will be enabled in rule set or not
+- **enabled** (Boolean) Enabled flag. Determines whether this rule will be enabled in ruleset or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **href** (String) URI of Security Rule
@@ -124,7 +124,7 @@ Read-Only:
 
 - **href** (String) URI of service
 - **port** (Number) Protocol number
-- **proto** (Number) Port number used with protocol. Also the starting port when specifying a range
+- **proto** (Number) Port number used with protocol. Also, the starting port when specifying a range
 - **to_port** (Number) High end of port range inclusive if specifying a range
 
 

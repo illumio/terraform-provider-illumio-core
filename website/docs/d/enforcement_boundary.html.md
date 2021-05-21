@@ -28,7 +28,7 @@ data "illumio-core_enforcement_boundary" "example" {
 - **caps** (List of String) CAPS for Enforcement Boundary
 - **consumers** (Set of Object) Consumers for Enforcement Boundary. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedatt--consumers))
 - **created_at** (String) Timestamp when this Enforcement Boundary was first created
-- **created_by** (Map of String) User who originally created this Enforcement Boundary
+- **created_by** (Map of String) User who created this Enforcement Boundary
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
 - **illumio_providers** (Block Set) providers for Enforcement Boundary. Only one actor can be specified in one illumio_providers block (see [below for nested schema](#nestedblock--illumio_providers))

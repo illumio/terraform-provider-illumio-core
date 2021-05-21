@@ -32,7 +32,7 @@ data "illumio-core_virtual_service" "example"{
 - **apply_to** (String) Firewall rule target for workloads bound to this virtual service: host_only or internal_bridge_network
 - **caps** (List of String) CAPS
 - **created_at** (String) Timestamp when this Virtual Service was first created
-- **created_by** (Map of String) User who originally created this Virtual Service
+- **created_by** (Map of String) User who created this Virtual Service
 - **deleted_at** (String) Timestamp when this Virtual Service was deleted
 - **deleted_by** (Map of String) User who deleted this Virtual Service
 - **description** (String) The long description of this virtual service
@@ -83,7 +83,7 @@ Read-Only:
 
 Read-Only:
 
-- **port** (Number) Port Number. Also the starting port when specifying a range.
+- **port** (Number) Port Number. Also, the starting port when specifying a range.
 - **proto** (Number) High end of port range inclusive if specifying a range. If not specifying a range then don't send this.
 - **to_port** (Number) Transport protocol
 

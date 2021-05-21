@@ -43,7 +43,7 @@ func testAccCheckIllumioDataSourceRSLExists(name string, listAttr map[string]int
 		rs, ok := s.RootModule().Resources[name]
 
 		if !ok {
-			return fmt.Errorf("List of Rule Sets %s not found", name)
+			return fmt.Errorf("List of Rulesets %s not found", name)
 		}
 
 		if rs.Primary.ID == "" {

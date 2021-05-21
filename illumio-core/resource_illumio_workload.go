@@ -37,13 +37,13 @@ func resourceIllumioWorkload() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				AtLeastOneOf:     []string{"name", "hostname"},
-				Description:      "Name of the Workload. The name should be upto 255 characters.",
+				Description:      "Name of the Workload. The name should be up to 255 characters.",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"hostname": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "The hostname of this workload. The hostname should be upto 255 characters.",
+				Description:      "The hostname of this workload. The hostname should be up to 255 characters.",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"description": {
@@ -54,7 +54,7 @@ func resourceIllumioWorkload() *schema.Resource {
 			"service_principal_name": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "The Kerberos Service Principal Name (SPN). The SPN should be in between 1 to 255 characters",
+				Description:      "The Kerberos Service Principal Name (SPN). The SPN should be between1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"public_ip": {
@@ -102,7 +102,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"default_gateway_address": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Default Gateaway Address of the Interface. The Default Gateaway Address should in the IPv4 or IPv6 format.",
+							Description: "Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format.",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.IsIPAddress,
 							),
@@ -161,7 +161,7 @@ func resourceIllumioWorkload() *schema.Resource {
 			"os_detail": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Additional OS details - just displayed to end user",
+				Description:      "Additional OS details - just displayed to end-user",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"online": {
@@ -201,7 +201,7 @@ func resourceIllumioWorkload() *schema.Resource {
 			"agent_to_pce_certificate_authentication_id": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "PKI Certificate identifier to be used by the PCE for authenticating the VEN. The ID should be in between 1 to 255 characters",
+				Description:      "PKI Certificate identifier to be used by the PCE for authenticating the VEN. The ID should be between1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"distinguished_name": {
@@ -271,7 +271,7 @@ func resourceIllumioWorkload() *schema.Resource {
 									"package": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The RPM/DEB pacakge that the program is part of",
+										Description: "The RPM/DEB package that the program is part of",
 									},
 									"win_service_name": {
 										Type:        schema.TypeString,
@@ -353,12 +353,12 @@ func resourceIllumioWorkload() *schema.Resource {
 						"ip_address": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The ip address of the host where the vulnerability is found",
+							Description: "The IP address of the host where the vulnerability is found",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The port which is associated with the vulnerability",
+							Description: "The port that is associated with the vulnerability",
 						},
 						"port_wide_exposure": {
 							Type:        schema.TypeList,
@@ -382,7 +382,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"proto": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The protocol which is associated with the vulnerability",
+							Description: "The protocol that is associated with the vulnerability",
 						},
 						"port_exposure": {
 							Type:        schema.TypeInt,
@@ -483,7 +483,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Port number used with protocol. Also the starting port when specifying a range",
+							Description: "Port number used with protocol. Also, the starting port when specifying a range",
 						},
 						"to_port": {
 							Type:        schema.TypeInt,
@@ -502,12 +502,12 @@ func resourceIllumioWorkload() *schema.Resource {
 						"href": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "URI of conatainer cluster",
+							Description: "URI of container cluster",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of conatainer cluster",
+							Description: "Name of container cluster",
 						},
 					},
 				},
@@ -562,7 +562,7 @@ func resourceIllumioWorkload() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this label group",
+				Description: "User who created this label group",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

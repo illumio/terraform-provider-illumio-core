@@ -24,7 +24,7 @@ data "illumio-core_security_rules" "example" {
 
 ### Required
 
-- **rule_set_href** (String) URI of rule set
+- **rule_set_href** (String) URI of ruleset
 
 ### Optional
 
@@ -42,11 +42,11 @@ Read-Only:
 
 - **consumers** (Set of Object) consumers of Security Rule  (see [below for nested schema](#nestedobjatt--items--consumers))
 - **created_at** (String) Timestamp when this security rule was first created
-- **created_by** (Map of String) User who originally created this security rule
+- **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
 - **deleted_by** (Map of String) User who deleted this security rule
 - **description** (String) Description of Security Rule
-- **enabled** (Boolean) Enabled flag. Determines whether this rule will be enabled in rule set or not
+- **enabled** (Boolean) Enabled flag. Determines whether this rule will be enabled in ruleset or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **href** (String) URI of Security Rule
@@ -81,7 +81,7 @@ Read-Only:
 
 - **href** (String) URI of service
 - **port** (Number) Protocol number
-- **proto** (Number) Port number used with protocol. Also the starting port when specifying a range
+- **proto** (Number) Port number used with protocol. Also, the starting port when specifying a range
 - **to_port** (Number) High end of port range inclusive if specifying a range
 
 

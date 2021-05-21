@@ -166,7 +166,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who originally created this Enforcement Boundary",
+				Description: "User who created this Enforcement Boundary",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,

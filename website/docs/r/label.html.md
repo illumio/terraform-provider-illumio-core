@@ -36,7 +36,7 @@ resource "illumio-core_label" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this label was first created
-- **created_by** (Map of String) User who originally created this label
+- **created_by** (Map of String) User who created this label
 - **deleted** (Boolean) Flag to indicate whether deleted or not
 - **href** (String) URI of this label
 - **updated_at** (String) Timestamp when this label was last updated

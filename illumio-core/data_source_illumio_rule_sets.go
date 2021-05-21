@@ -157,39 +157,39 @@ func datasourceIllumioRuleSets() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioRuleSetsRead,
 		SchemaVersion: version,
-		Description:   "Represents Illumio Rule Sets",
+		Description:   "Represents Illumio Rulesets",
 
 		Schema: map[string]*schema.Schema{
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of Rule Sets",
+				Description: "list of Rulesets",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "URI of Rule Set",
+							Description: "URI of Ruleset",
 						},
 						"created_at": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Timestamp when this rule set was first created",
+							Description: "Timestamp when this ruleset was first created",
 						},
 						"updated_at": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Timestamp when this rule set was last updated",
+							Description: "Timestamp when this ruleset was last updated",
 						},
 						"deleted_at": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Timestamp when this rule set was deleted",
+							Description: "Timestamp when this ruleset was deleted",
 						},
 						"created_by": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "User who originally created this resource",
+							Description: "User who created this resource",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -218,12 +218,12 @@ func datasourceIllumioRuleSets() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of Rule Set",
+							Description: "Name of Ruleset",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Description of Rule Set",
+							Description: "Description of Ruleset",
 						},
 						"external_data_set": {
 							Type:        schema.TypeString,
@@ -238,12 +238,12 @@ func datasourceIllumioRuleSets() *schema.Resource {
 						"enabled": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Enabled flag. Determines whether the Rule Set is enabled or not",
+							Description: "Enabled flag. Determines whether the Ruleset is enabled or not",
 						},
 						"scopes": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "scopes for Rule Set",
+							Description: "scopes for Ruleset",
 							Elem: &schema.Schema{
 								Type: schema.TypeList,
 								Elem: &schema.Resource{
@@ -384,7 +384,7 @@ func datasourceIllumioRuleSets() *schema.Resource {
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
-										Description: "User who originally created this IP Table Rule",
+										Description: "User who created this IP Table Rule",
 									},
 									"updated_by": {
 										Type:     schema.TypeMap,
@@ -413,12 +413,12 @@ func datasourceIllumioRuleSets() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of Rule Set(s) to return. Supports partial matches",
+				Description: "Description of Ruleset(s) to return. Supports partial matches",
 			},
 			"external_data_reference": {
 				Type:        schema.TypeString,
@@ -439,12 +439,12 @@ func datasourceIllumioRuleSets() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of Rule Sets to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of Rulesets to return. The integer should be a non-zero positive integer.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of Rule Set(s) to return. Supports partial matches",
+				Description: "Name of Ruleset(s) to return. Supports partial matches",
 			},
 		},
 	}

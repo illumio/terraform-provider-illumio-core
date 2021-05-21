@@ -76,7 +76,7 @@ func resourceIllumioLabel() *schema.Resource {
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this label",
+				Description: "User who created this label",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

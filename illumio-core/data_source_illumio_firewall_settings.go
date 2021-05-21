@@ -112,7 +112,7 @@ func datasourceIllumioFirewallSettings() *schema.Resource {
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this resource",
+				Description: "User who created this resource",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

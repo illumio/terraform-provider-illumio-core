@@ -42,7 +42,7 @@ data "illumio-core_labels" "example" {
 Read-Only:
 
 - **created_at** (String) Timestamp when this label was first created
-- **created_by** (Map of String) User who originally created this label
+- **created_by** (Map of String) User who created this label
 - **deleted** (Boolean) Flag to indicate whether deleted or not
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates

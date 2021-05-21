@@ -191,7 +191,7 @@ func datasourceIllumioService() *schema.Resource {
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this Service",
+				Description: "User who created this Service",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

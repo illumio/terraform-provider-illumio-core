@@ -157,7 +157,7 @@ func datasourceIllumioLabelGroup() *schema.Resource {
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this Label Group",
+				Description: "User who created this Label Group",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

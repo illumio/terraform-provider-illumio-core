@@ -30,13 +30,13 @@ data "illumio-core_container_cluster_workload_profile" "example" {
 
 - **assign_labels** (Set of Object) Assigned labels container workload profile (see [below for nested schema](#nestedatt--assign_labels))
 - **created_at** (String) Timestamp when this label group was first created
-- **created_by** (Map of String) User who originally created this label group
+- **created_by** (Map of String) User who created this label group
 - **description** (String) Description of the container workload profile
 - **enforcement_mode** (String) Enforcement mode of container workload profiles to return.
 - **labels** (Set of Object) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedatt--labels))
 - **linked** (Boolean) True if the namespace exists in the cluster and is reported by kubelink.
 - **managed** (Boolean) If the namespace is managed or not.
-- **name** (String) A friendly name given to a profile if the namespace is not user friendly
+- **name** (String) A friendly name given to a profile if the namespace is not user-friendly
 - **namespace** (String) Namespace name of the container workload profile
 - **updated_at** (String) Timestamp when this label group was last updated
 - **updated_by** (Map of String) User who last updated this label group

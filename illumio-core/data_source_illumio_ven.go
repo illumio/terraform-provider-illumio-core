@@ -372,7 +372,7 @@ func datasourceIllumioVEN() *schema.Resource {
 									"default_gateway_address": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Default Gateaway Address of the Interface",
+										Description: "Default Gateway Address of the Interface",
 									},
 									"network": {
 										Type:        schema.TypeMap,

@@ -83,7 +83,7 @@ func resourceIllumioTrafficCollectorSettings() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "0.0.0.0/0",
-							Description: `single ip address or CIDR. Default value: "0.0.0.0/0"`,
+							Description: `single IP address or CIDR. Default value: "0.0.0.0/0"`,
 							ValidateDiagFunc: validation.ToDiagFunc(validation.Any(
 								validation.IsIPAddress,
 								validation.IsCIDR,

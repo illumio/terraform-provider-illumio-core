@@ -93,7 +93,7 @@ func datasourceIllumioSecurityRules() *schema.Resource {
 			"rule_set_href": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "URI of rule set",
+				Description: "URI of ruleset",
 			},
 			"items": {
 				Type:        schema.TypeList,

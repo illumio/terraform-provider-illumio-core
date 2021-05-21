@@ -39,7 +39,7 @@ data "illumio-core_virtual_services" "example"{
 - **labels** (String) List of lists of label URIs, encoded as a JSON string
 - **max_results** (String) Maximum number of Virtual Services to return. The integer should be a non-zero positive integer. 
 - **name** (String) Name on which to filter. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 - **service** (String) Service URI
 - **service_address_fqdn** (String) FQDN configured under service_address property, supports partial matches
 - **service_address_ip** (String) IP address configured under service_address property, supports partial matches
@@ -59,7 +59,7 @@ Read-Only:
 - **apply_to** (String) Firewall rule target for workloads bound to this virtual service: host_only or internal_bridge_network
 - **caps** (List of String) CAPS
 - **created_at** (String) Timestamp when this Virtual Service was first created
-- **created_by** (Map of String) User who originally created this Virtual Service
+- **created_by** (Map of String) User who created this Virtual Service
 - **deleted_at** (String) Timestamp when this Virtual Service was deleted
 - **deleted_by** (Map of String) User who deleted this Virtual Service
 - **description** (String) The long description of this virtual service
@@ -111,7 +111,7 @@ Read-Only:
 
 Read-Only:
 
-- **port** (Number) Port Number. Also the starting port when specifying a range.
+- **port** (Number) Port Number. Also, the starting port when specifying a range.
 - **proto** (Number) High end of port range inclusive if specifying a range. If not specifying a range then don't send this.
 - **to_port** (Number) Transport protocol
 

@@ -54,7 +54,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 		"enabled": {
 			Type:        schema.TypeBool,
 			Required:    true,
-			Description: "Enabled flag. Determines whether the rule will be enabled in rule set or not",
+			Description: "Enabled flag. Determines whether the rule will be enabled in ruleset or not",
 		},
 		"description": {
 			Type:        schema.TypeString,
@@ -293,7 +293,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
-			Description: "User who originally created this security rule",
+			Description: "User who created this security rule",
 		},
 		"updated_by": {
 			Type:     schema.TypeMap,

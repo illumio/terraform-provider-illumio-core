@@ -31,7 +31,7 @@ data "illumio-core_services" "example" {
 - **name** (String) Name of the Service (does not need to be unique)
 - **port** (String) Specify port or port range to filter results. The range is from -1 to 65535 (0 is not supported)
 - **proto** (String) Protocol to filter on. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 
 ### Read-Only
 
@@ -43,7 +43,7 @@ data "illumio-core_services" "example" {
 Read-Only:
 
 - **created_at** (String) Timestamp when this Service was first created
-- **created_by** (Map of String) User who originally created this Service
+- **created_by** (Map of String) User who created this Service
 - **deleted_at** (String) Timestamp when this Service was deleted
 - **deleted_by** (Map of String) User who deleted this Service
 - **description** (String) Long Description of Service
@@ -66,7 +66,7 @@ Read-Only:
 
 - **icmp_code** (String) ICMP Code
 - **icmp_type** (String) ICMP Type
-- **port** (String) Port Number. Also the starting port when specifying a range.
+- **port** (String) Port Number. Also, the starting port when specifying a range.
 - **proto** (String) Transport protocol.
 - **to_port** (String) High end of port range inclusive if specifying a range.
 
@@ -78,7 +78,7 @@ Read-Only:
 
 - **icmp_code** (String) ICMP Code. 
 - **icmp_type** (String) ICMP Type. 
-- **port** (String) Port Number. Also the starting port when specifying a range.
+- **port** (String) Port Number. Also, the starting port when specifying a range.
 - **process_name** (String) Name of running process
 - **proto** (String) Transport protocol.
 - **service_name** (String) Name of Windows Service

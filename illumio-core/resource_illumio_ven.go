@@ -34,7 +34,7 @@ func resourceIllumioVEN() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Friendly name for the VEN. The name should be upto 255 characters.",
+				Description:      "Friendly name for the VEN. The name should be up to 255 characters.",
 				ValidateDiagFunc: nameValidation,
 			},
 			"description": {
@@ -76,7 +76,7 @@ func resourceIllumioVEN() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(venStatusValidValues, false)),
-				Description:      `Status of the VEN. Allowed values are "active" and "suspended`,
+				Description:      `Status of the VEN. Allowed values are "active", and "suspended`,
 			},
 			"activation_type": {
 				Type:        schema.TypeString,
@@ -273,7 +273,7 @@ func resourceIllumioVEN() *schema.Resource {
 									"default_gateway_address": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Default Gateaway Address of the Interface",
+										Description: "Default Gateway Address of the Interface",
 									},
 									"network": {
 										Type:        schema.TypeMap,

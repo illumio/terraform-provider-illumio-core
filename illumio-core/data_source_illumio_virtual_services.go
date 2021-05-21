@@ -53,7 +53,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"`,
+				Description:      `pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
 			},
 			"items": {
 				Type:        schema.TypeList,
@@ -183,7 +183,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 									"port": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Port Number. Also the starting port when specifying a range",
+										Description: "Port Number. Also, the starting port when specifying a range",
 									},
 									"ip": {
 										Type:        schema.TypeString,
@@ -230,7 +230,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 						"created_by": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "User who originally created this Virtual Service",
+							Description: "User who created this Virtual Service",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

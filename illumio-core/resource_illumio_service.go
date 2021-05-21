@@ -62,7 +62,7 @@ func resourceIllumioService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive",
 							ValidateDiagFunc: isStringAPortNumber(),
 						},
 						"to_port": {
@@ -114,7 +114,7 @@ func resourceIllumioService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive",
 							ValidateDiagFunc: isStringAPortNumber(),
 						},
 						"to_port": {
@@ -174,7 +174,7 @@ func resourceIllumioService() *schema.Resource {
 			"created_by": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "User who originally created this Service",
+				Description: "User who created this Service",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

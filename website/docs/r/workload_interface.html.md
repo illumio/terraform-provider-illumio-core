@@ -38,7 +38,7 @@ resource "illumio-core_workload_interface" "example" {
 
 - **address** (String) The IP Address to assign to this interface. The address should in the IPv4 or IPv6 format.
 - **cidr_block** (Number) CIDR BLOCK of the Workload Interface.
-- **default_gateway_address** (String) The IP Address of the default gateway. The Default Gateaway Address should in the IPv4 or IPv6 format.
+- **default_gateway_address** (String) The IP Address of the default gateway. The Default Gateway Address should in the IPv4 or IPv6 format.
 - **friendly_name** (String) User-friendly name for Workload Interface
 
 ### Read-Only

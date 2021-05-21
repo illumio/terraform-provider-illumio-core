@@ -29,7 +29,7 @@ func resourceIllumioContainerCluster() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Name of the Cluster. The name should be  upto 255 characters.",
+				Description:      "Name of the Cluster. The name should be up to 255 characters.",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"description": {

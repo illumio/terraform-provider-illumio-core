@@ -29,7 +29,7 @@ data "illumio-core_service" "example" {
 ### Read-Only
 
 - **created_at** (String) Timestamp when this Service was first created
-- **created_by** (Map of String) User who originally created this Service
+- **created_by** (Map of String) User who created this Service
 - **deleted_at** (String) Timestamp when this Service was deleted
 - **deleted_by** (Map of String) User who deleted this Service
 - **description** (String) Long Description of Service
@@ -51,7 +51,7 @@ Read-Only:
 
 - **icmp_code** (String) ICMP Code
 - **icmp_type** (String) ICMP Type
-- **port** (String) Port Number. Also the starting port when specifying a range.
+- **port** (String) Port Number. Also, the starting port when specifying a range.
 - **proto** (String) Transport protocol.
 - **to_port** (String) High end of port range inclusive if specifying a range.
 
@@ -63,7 +63,7 @@ Read-Only:
 
 - **icmp_code** (String) ICMP Code. 
 - **icmp_type** (String) ICMP Type. 
-- **port** (String) Port Number. Also the starting port when specifying a range.
+- **port** (String) Port Number. Also, the starting port when specifying a range.
 - **process_name** (String) Name of running process
 - **proto** (String) Transport protocol.
 - **service_name** (String) Name of Windows Service

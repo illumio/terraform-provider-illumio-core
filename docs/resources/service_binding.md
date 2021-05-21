@@ -51,7 +51,7 @@ resource "illumio-core_service_binding" "example" {
 
 Required:
 
-- **href** (String) Virtul Service URI
+- **href** (String) Virtual Service URI
 
 
 <a id="nestedblock--container_workload"></a>

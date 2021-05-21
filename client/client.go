@@ -5,6 +5,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
@@ -12,9 +13,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
+	"math/big"
+	mathrand "math/rand"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -68,7 +71,7 @@ func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLi
 	}
 	tlsConfig := &tls.Config{InsecureSkipVerify: insecure}
 	if len(caFile) > 0 {
-		caCert, err := ioutil.ReadFile(caFile)
+		caCert, err := ioutil.ReadFile(filepath.Clean(caFile))
 		if err != nil {
 			return nil, err
 		}
@@ -123,7 +126,16 @@ func (c *V2) Do(req *http.Request) (*http.Response, error) {
 			log.Printf("[DEBUG] Retrying DO method %s", req.URL.String())
 			retryCount++
 			// Sleep for configured time and retry
-			jitter := rand.Intn(5-1) + 1 // jitter in 1-5 seconds
+			// jitter in 1-5 seconds
+			jitter := 1
+			// using strong crypto/rand
+			n, err := rand.Int(rand.Reader, big.NewInt(5))
+			if err != nil {
+				// in case of error, fallback to weak math/rand
+				jitter = mathrand.Intn(5) + 1
+			} else {
+				jitter = int(n.Int64()) + 1
+			}
 			time.Sleep(time.Duration(c.backoffTime+jitter) * time.Second)
 		} else {
 			// No indication of rate limit from server, we can proceed

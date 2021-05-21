@@ -279,7 +279,7 @@ func (c Config) StoreHref(orgID int, resourceType, href string) {
 	fileMutex.Lock()
 	defer fileMutex.Unlock()
 
-	fp, err := os.OpenFile(c.HrefFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	fp, err := os.OpenFile(c.HrefFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err == nil {
 		_, err = fp.WriteString(fmt.Sprintf("%d,%s,%s\n", orgID, resourceType, href))
 		if err != nil {

@@ -1,0 +1,83 @@
+{
+  "data": [
+    {
+      "illumio-core_virtual_service": [
+        {
+          "example": [
+            {
+              "href": "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "provider": [
+    {
+      "illumio-core": [
+        {
+          "org_id": 1,
+          "request_timeout": 30
+        }
+      ]
+    }
+  ],
+  "resource": [
+    {
+      "illumio-core_virtual_service": [
+        {
+          "example": [
+            {
+              "apply_to": "host_only",
+              "description": "example desc",
+              "ip_overrides": [
+                "1.2.3.4"
+              ],
+              "labels": [
+                {
+                  "href": "/orgs/1/labels/1"
+                }
+              ],
+              "name": "example name",
+              "service_addresses": [
+                {
+                  "fqdn": "*.illumio.com"
+                },
+                {
+                  "ip": "1.1.1.1",
+                  "port": "80"
+                },
+                {
+                  "ip": "1.1.1.2",
+                  "network_href": "/orgs/1/networks/b8007bd8-4b16-41b5-b500-5ea236d49d61"
+                }
+              ],
+              "service_ports": [
+                {
+                  "proto": 6
+                },
+                {
+                  "port": 80,
+                  "proto": 17,
+                  "to_port": 443
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "terraform": [
+    {
+      "required_providers": [
+        {
+          "illumio-core": {
+            "source": "illumio.com/labs/illumio-core",
+            "version": "0.1"
+          }
+        }
+      ]
+    }
+  ]
+}

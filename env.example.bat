@@ -1,0 +1,3 @@
+set ILLUMIO_PCE_HOST=https://2x2devtest59.ilabs.io:8443
+set ILLUMIO_API_KEY_USERNAME=api_xxxxxxxxxxxxx
+set ILLUMIO_API_KEY_SECRET=yyyyyyyyyyyyyyyyyyyyyyyyyyyyy

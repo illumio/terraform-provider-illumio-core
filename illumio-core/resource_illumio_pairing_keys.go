@@ -85,8 +85,8 @@ func resourceIllumioPairingKeys() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 				Description: "Count of token to generate/maintain. It can be accessed in `activation_tokens` On increasing the count, new activation tokens will be generated. " +
-					"On decreasing the count `activation_tokens` list will shrink to that size and extra keys will be discarded. Minimum: 1",
-				ValidateDiagFunc: validation.ToDiagFunc(validation.IntAtLeast(1)),
+					"On decreasing the count `activation_tokens` list will shrink to that size and extra keys will be discarded. Allowed range is 1 to 5",
+				ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(1, 5)),
 			},
 			"activation_tokens": {
 				Type:     schema.TypeList,

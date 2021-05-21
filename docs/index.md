@@ -65,6 +65,9 @@ Provisioning
 ------------
 Currently, terraform does not support the post-processing of resources. To provision changes, provision command can be used.
 
+-> Currently, there is a plan to provide provision binary via [release page](https://github.com/illumio/terraform-provider-illumio-core/releases). In case, the plan does not work, one should follow the below steps.
+
+
 To run provision, clone the provider repo and follow the commands.
 
 ```bash

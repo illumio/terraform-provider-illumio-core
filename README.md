@@ -4,27 +4,52 @@
 
 # Terraform Provider for Illumio-Core
 
-- Website: [terraform.io](https://terraform.io)
-- Tutorials: [learn.hashicorp.com](https://learn.hashicorp.com/terraform?track=getting-started#getting-started)
-- Chat: [gitter](https://gitter.im/hashicorp-terraform/Lobby)
-- Mailing List: [Google Groups](http://groups.google.com/group/terraform-tool)
+The Terraform Illumio-Core provider is a plugin for Terraform that one can use with Terraform to work with Illumio Core. Using this provider, Illumio security policies can be created and applied to your workloads.. 
 
-The Terraform Illumio-Core provider is a plugin for Terraform that allows for the management of Illumio-Core resources.
+For more information about Illumio, please visit https://www.illumio.com
 
-Note: For us, Terraform's security is the highest priority. In case of a security issue found in the Terraform Illumio-Core Provider, please report it at security@illumio.com.
+Documentation about Illumio Core can be found at [Illumio Docs portal](https://docs.illumio.com)
+
+The following versions of Illumio Core are supported:
+- Illumio Core 21.2
+
+In case of a security finding in the Terraform Illumio-Core Provider, please inform security@illumio.com
 
 ## Getting Started
 
-- [Develop, Build, Test, and Debug the provider](./DEVELOPMENT.md)
 - [Using the provider](docs/index.md)
+- [Develop, Build, Test, and Debug the provider](./DEVELOPMENT.md)
+
+The primary use-case for the Illumio Core provider is managing the following resources:
+- labels
+- iplists
+- pairing profiles and pairing keys
+- workloads 
+- rules and rulesets using labels, and iplists
+This use-case is verified and validated with Acceptance tests.  Over time, other use-cases will be developed. 
+
+If you have a specific policy use-case for this provider, please contact opensource@illumio.com  
+
+### Security Policy Provisioning  
+
+When Illumio policy is created or updated, the changes are staged as `draft`.
+Illumio policy needs to be provisioned to make the policy changes `active`.
+
+This provisioning is only done after all the changes are complete.
+To execute provisioning, a separate tool `provision` is provided.
+
+This `provision` tool should be executed after running `terraform apply`. 
+For example: `terrafrom apply && provision`
+
+Similarly, after running `terraform destroy`, the changes are made active using provision. 
 
 ## Contributing
 
-To contribute, please refer the [guideline](./CONTRIBUTING.md)
+To contribute, please refer the [contributor guidelines](./CONTRIBUTING.md)
 
 ## Support
 
 The Illumio-Core Terraform Provider is released and distributed as open source software subject to the [LICENSE](LICENSE). 
-<!-- Illumio has no obligation or responsibility related to the Illumio-Core Terraform Provider with respect to support, maintenance, availability, security or otherwise.  -->
 Please read the entire [LICENSE](LICENSE) for additional information regarding the permissions and limitations. 
-You can engage with the author & contributors team and community on SLACK.
+
+For bugs and feature requests, please open a Github Issue and label it appropriately. 

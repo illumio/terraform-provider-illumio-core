@@ -20,7 +20,7 @@ func TestAccIllumioVirtualService_CreateUpdate(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactoriesInternal(&providerVService),
-		CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerVService, "illumio-core_virtual_service", false),
+		CheckDestroy:      testAccCheckIllumioVirtualServiceDestroy(providerVService),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioVirtualServiceConfig_basic("creation from terraform"),
@@ -50,17 +50,39 @@ func testAccCheckIllumioVirtualServiceConfig_basic(val string) string {
 		service_ports {
 		  proto = 6
 		}
-		service_ports {
-			proto = 17
-			port = 80
-			to_port = 443
-		  }
 		service_addresses {
 		  fqdn = "*.illumio.com"
 		}
 		ip_overrides = [ "1.2.3.4" ]
 	  }
 	`, val)
+}
+
+func testAccCheckIllumioVirtualServiceDestroy(providerInstance *schema.Provider) func(s *terraform.State) error {
+	return func(s *terraform.State) error {
+		pConfig := (*providerInstance).Meta().(Config)
+		for _, rs := range s.RootModule().Resources {
+			if rs.Type == "illumio-core_virtual_service" {
+				// Provisioning Deleteion of Virtual Service resource
+				e := pConfig.ProvisionAResource(pConfig.OrgID, "virtual_services", rs.Primary.ID)
+				if e != nil {
+					return fmt.Errorf("illumio-core_virtual_service resource deletion not successfully provisioned")
+				}
+
+				_, _, err := pConfig.IllumioClient.Get(rs.Primary.ID, nil)
+
+				if err == nil { // got successful response
+					return fmt.Errorf("illumio-core_virtual_service still exists, ResourceID: %v", rs.Primary.ID)
+				}
+				if !strings.Contains(err.Error(), "not-found") {
+					return fmt.Errorf("illumio-core_virtual_service still exists, ResourceID: %v", rs.Primary.ID)
+				}
+
+			}
+		}
+
+		return nil
+	}
 }
 
 func testAccCheckIllumioVirtualServiceExists(name string, vsAttr map[string]interface{}) resource.TestCheckFunc {

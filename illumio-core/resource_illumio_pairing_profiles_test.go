@@ -45,10 +45,10 @@ func testAccCheckIllumioPairingProfileConfig_basic(val string) string {
 	resource "illumio-core_pairing_profile" "test" {
 		name    = "test_code_example"
 		enabled = false
-		label {
+		labels {
 		  href = "/orgs/1/labels/1"
 		}
-		label {
+		labels {
 		  href = "/orgs/1/labels/7"
 		}
 		allowed_uses_per_key  = "unlimited"

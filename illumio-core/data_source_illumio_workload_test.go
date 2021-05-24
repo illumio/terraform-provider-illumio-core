@@ -63,7 +63,6 @@ func testAccCheckIllumioDataSourceWorkloadExists(name string, workloadAttr map[s
 		for _, k := range []string{
 			"enforcement_mode",
 			"visibility_level",
-			"interfaces.1.name",
 			"name",
 		} {
 			workloadAttr[k] = cont.S(strings.Split(k, ".")...).Data()
@@ -76,10 +75,9 @@ func testAccCheckIllumioDataSourceWorkloadExists(name string, workloadAttr map[s
 func testAccCheckIllumioWorkloadDataSourceAttributes(workloadAttr map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		expectation := map[string]interface{}{
-			"enforcement_mode":  "visibility_only",
-			"visibility_level":  "flow_summary",
-			"interfaces.1.name": "acc-test-WI",
-			"name":              "acc-test-Workload",
+			"enforcement_mode": "visibility_only",
+			"visibility_level": "flow_summary",
+			"name":             "acc-test-Workload",
 		}
 		for k, v := range expectation {
 			if workloadAttr[k] != v {

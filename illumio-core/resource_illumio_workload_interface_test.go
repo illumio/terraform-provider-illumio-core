@@ -43,7 +43,7 @@ func TestAccIllumioWorkloadInterface_CreateUpdate(t *testing.T) {
 func testAccCheckIllumioWorkloadInterfaceConfig_basic() string {
 	return `
 	resource "illumio-core_workload_interface" "test" {
-		workload_id = "d42a430e-b20b-4b2d-853f-2d39fa4cea22"
+		workload_href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
 		name = "acc. test Workload Interface"
 		link_state = "up"
 		friendly_name = "test friendly name"

@@ -31,7 +31,7 @@ func TestAccIllumioCCSBL_Read(t *testing.T) {
 func testAccCheckIllumioCCSBLDataSourceConfig_basic() string {
 	return `
 	data "illumio-core_container_cluster_service_backends" "test" {
-		href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde/service_backends"
+		container_cluster_href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde"
 	  }
 	`
 }
@@ -47,8 +47,6 @@ func testAccCheckIllumioDataSourceCCSBLExists(name string) resource.TestCheckFun
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("ID was not set")
 		}
-
-		// listAttr["length"] = rs.Primary.Attributes["items.#"]
 
 		return nil
 	}

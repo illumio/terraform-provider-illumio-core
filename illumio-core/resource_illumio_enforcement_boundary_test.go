@@ -44,15 +44,15 @@ func testAccCheckIllumioEnforcementBoundaryConfig_basic(val string) string {
 	return fmt.Sprintf(`
 	resource "illumio-core_enforcement_boundary" "test" {
 		name = "acc. test Enforcement Boundary %s"
-		ingress_service {
+		ingress_services {
 		  href = "/orgs/1/sec_policy/draft/services/3"
 		}
-		consumer {
+		consumers {
 		  ip_list {
 			href = "/orgs/1/sec_policy/draft/ip_lists/1"
 		  }
 		}
-		illumio_provider {
+		providers {
 		  label {
 			href = "/orgs/1/labels/1"
 		  }

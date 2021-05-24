@@ -22,13 +22,7 @@ func TestAccIllumioVENsUpgrade_CreateUpdate(t *testing.T) {
 			{
 				Config: testAccCheckIllumioVENsUpgradeConfig_basic("63bf19d1-1efa-49ec-b712-c51d5c0aa552"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVENsUpgradeExists("illumio-illumio-core_vens_upgrade.test"),
-				),
-			},
-			{
-				Config: testAccCheckIllumioVENsUpgradeConfig_basic("e683b686-8afe-4675-88a1-4463395f0482"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVENsUpgradeExists("illumio-illumio-core_vens_upgrade.test"),
+					testAccCheckIllumioVENsUpgradeExists("illumio-core_vens_upgrade.test"),
 				),
 			},
 		},

@@ -49,10 +49,10 @@ func testAccCheckIllumioLabelGroupConfig_basic(val string) string {
 		external_data_set = "illumio-core_label_group_external_data_set_1"
 		external_data_reference = "illumio-core_label_group_external_data_reference_1"
 		labels {
-			href = "/orgs/1/labels/7147"
+			href = "/orgs/1/labels/828"
 		}
 		sub_groups {
-			href = "/orgs/1/sec_policy/draft/label_groups/4dcfedff-6236-454b-acb7-92827c9a7a2f"
+			href = "/orgs/1/sec_policy/draft/label_groups/b347346a-7aff-4334-ac90-6f64a7a98f05"
 		}
 	}
 	`, val)
@@ -99,8 +99,8 @@ func testAccCheckIllumioLabelGroupAttributes(val string, lgAttr map[string]inter
 		expectation := map[string]interface{}{
 			"key":                     "role",
 			"description":             val,
-			"labels.0.href":           "/orgs/1/labels/7147",
-			"sub_groups.0.href":       "/orgs/1/sec_policy/draft/label_groups/4dcfedff-6236-454b-acb7-92827c9a7a2f",
+			"labels.0.href":           "/orgs/1/labels/828",
+			"sub_groups.0.href":       "/orgs/1/sec_policy/draft/label_groups/b347346a-7aff-4334-ac90-6f64a7a98f05",
 			"external_data_set":       "illumio-core_label_group_external_data_set_1",
 			"external_data_reference": "illumio-core_label_group_external_data_reference_1",
 		}

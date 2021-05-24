@@ -45,17 +45,10 @@ func testAccCheckIllumioServiceConfig_basic(val string) string {
 	resource "illumio-core_service" "test" {
 		name          = "acc test service"
 		description   = "%s"
-		external_data_set = "illumio-core_service_external_data_set_1"
-		external_data_reference = "illumio-core_service_external_data_reference_1"
-		service_port {
+		service_ports {
 			proto = 6
 			port = 10
 			to_port = 100
-		}
-		service_port {
-			proto = 1
-			icmp_type = 5
-			icmp_code = 6 
 		}
 	}
 	`, val)
@@ -84,23 +77,13 @@ func testAccCheckIllumioServiceExists(name string, serAttr map[string]interface{
 		for _, k := range []string{
 			"name",
 			"description",
-			"external_data_set",
-			"external_data_reference",
 			"service_ports.0.proto",
 			"service_ports.0.port",
 			"service_ports.0.to_port",
-			"service_ports.1.proto",
-			"service_ports.1.icmp_type",
-			"service_ports.1.icmp_code",
 		} {
 			serAttr[k] = cont.S(strings.Split(k, ".")...).Data()
 		}
-		serAttr["service_ports.0.proto"] = int(cont.S("service_ports", "0", "proto").Data().(float64))
-		serAttr["service_ports.0.port"] = int(cont.S("service_ports", "0", "port").Data().(float64))
-		serAttr["service_ports.0.to_port"] = int(cont.S("service_ports", "0", "to_port").Data().(float64))
-		serAttr["service_ports.1.proto"] = int(cont.S("service_ports", "1", "proto").Data().(float64))
-		serAttr["service_ports.1.icmp_type"] = int(cont.S("service_ports", "1", "icmp_type").Data().(float64))
-		serAttr["service_ports.1.icmp_code"] = int(cont.S("service_ports", "1", "icmp_code").Data().(float64))
+
 		return nil
 	}
 }
@@ -108,16 +91,11 @@ func testAccCheckIllumioServiceExists(name string, serAttr map[string]interface{
 func testAccCheckIllumioServiceAttributes(val string, serAttr map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		expectation := map[string]interface{}{
-			"name":                      "acc test service",
-			"description":               val,
-			"external_data_set":         "illumio-core_service_external_data_set_1",
-			"external_data_reference":   "illumio-core_service_external_data_reference_1",
-			"service_ports.0.proto":     6,
-			"service_ports.0.port":      10,
-			"service_ports.0.to_port":   100,
-			"service_ports.1.proto":     1,
-			"service_ports.1.icmp_type": 5,
-			"service_ports.1.icmp_code": 6,
+			"name":                    "acc test service",
+			"description":             val,
+			"service_ports.0.proto":   float64(6),
+			"service_ports.0.port":    float64(10),
+			"service_ports.0.to_port": float64(100),
 		}
 
 		for k, v := range expectation {

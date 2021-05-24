@@ -14,7 +14,7 @@ import (
 
 var providerContainerClusterWorkloadProfile *schema.Provider
 
-func TestAccIllumioContainerClusterWorkloadProfileWorkloadProfile_CreateUpdate(t *testing.T) {
+func TestAccIllumioContainerClusterWorkloadProfile_CreateUpdate(t *testing.T) {
 	ccAttr := map[string]interface{}{}
 
 	resource.Test(t, resource.TestCase{
@@ -43,7 +43,7 @@ func TestAccIllumioContainerClusterWorkloadProfileWorkloadProfile_CreateUpdate(t
 func testAccCheckIllumioContainerClusterWorkloadProfileConfig_basic(val string) string {
 	return fmt.Sprintf(`
 	resource "illumio-core_container_cluster_workload_profile" "test" {
-		container_cluster_id = "deb48c70-e9d2-4101-ab7e-1f48de922ff4"
+		container_cluster_href = "/orgs/1/container_clusters/deb48c70-e9d2-4101-ab7e-1f48de922ff4"
 		name = "acc. test Container Cluster Workload Profile"
 		description = "%s"
 		managed = true

@@ -4,6 +4,7 @@ package illumiocore
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -22,14 +23,10 @@ func TestAccIllumioVENsUnpair_CreateUpdate(t *testing.T) {
 			{
 				Config: testAccCheckIllumioVENsUnpairConfig_basic("63bf19d1-1efa-49ec-b712-c51d5c0aa552"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVENsUnpairExists("illumio-illumio-core_vens_unpair.test"),
+					testAccCheckIllumioVENsUnpairExists("illumio-core_vens_unpair.test"),
 				),
-			},
-			{
-				Config: testAccCheckIllumioVENsUnpairConfig_basic("e683b686-8afe-4675-88a1-4463395f0482"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioVENsUnpairExists("illumio-illumio-core_vens_unpair.test"),
-				),
+				// Comment following line when testing with a valid VEN ID
+				ExpectError: regexp.MustCompile(`invalid_uri`),
 			},
 		},
 	})

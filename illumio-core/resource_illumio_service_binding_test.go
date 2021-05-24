@@ -44,10 +44,10 @@ func testAccCheckIllumioServiceBindingConfig_basic() string {
 	return `
 	resource "illumio-core_service_binding" "test" {
 		virtual_service {
-		  href = "/orgs/1/sec_policy/active/virtual_services/69f1fcc7-94f0-4e42-b9a8-e722038e6dda"
+		  href = "/orgs/1/sec_policy/active/virtual_services/91a20432-bec8-4b2b-9a2d-9185c9dd75e4"
 		}
 		workload {
-		  href = "/orgs/1/workloads/673c3148-a419-4ed2-b0e2-30eb538695e7"
+		  href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
 		}
 	  }			
 	`
@@ -86,8 +86,8 @@ func testAccCheckIllumioServiceBindingExists(name string, ipAttr map[string]inte
 func testAccCheckIllumioServiceBindingAttributes(ipAttr map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		expectation := map[string]interface{}{
-			"virtual_service.href": "/orgs/1/sec_policy/active/virtual_services/69f1fcc7-94f0-4e42-b9a8-e722038e6dda",
-			"workload.href":        "/orgs/1/workloads/673c3148-a419-4ed2-b0e2-30eb538695e7",
+			"virtual_service.href": "/orgs/1/sec_policy/active/virtual_services/91a20432-bec8-4b2b-9a2d-9185c9dd75e4",
+			"workload.href":        "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22",
 		}
 		for k, v := range expectation {
 			if ipAttr[k] != v {

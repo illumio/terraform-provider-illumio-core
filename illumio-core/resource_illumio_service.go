@@ -62,13 +62,13 @@ func resourceIllumioService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535",
 							ValidateDiagFunc: isStringAPortNumber(),
 						},
 						"to_port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "High end of port range inclusive if specifying a range. Allowed range is 0 - 65535 inclusive",
+							Description:      "High end of port range if specifying a range. Allowed range is 0 - 65535",
 							ValidateDiagFunc: isStringAPortNumber(),
 						},
 						"proto": {
@@ -80,13 +80,13 @@ func resourceIllumioService() *schema.Resource {
 						"icmp_type": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255 inclusive",
+							Description:      "ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255",
 							ValidateDiagFunc: isStringInRange(0, 255),
 						},
 						"icmp_code": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 15 inclusive",
+							Description:      "ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 15",
 							ValidateDiagFunc: isStringInRange(0, 15),
 						},
 					},
@@ -114,13 +114,13 @@ func resourceIllumioService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535",
 							ValidateDiagFunc: isStringAPortNumber(),
 						},
 						"to_port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "High end of port range inclusive if specifying a range. Allowed range is 0 - 65535 inclusive",
+							Description:      "High end of port range if specifying a range. Allowed range is 0 - 65535",
 							ValidateDiagFunc: isStringAPortNumber(),
 						},
 						"proto": {
@@ -132,13 +132,13 @@ func resourceIllumioService() *schema.Resource {
 						"icmp_type": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255 inclusive",
+							Description:      "ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255",
 							ValidateDiagFunc: isStringInRange(0, 255),
 						},
 						"icmp_code": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range 0 - 15 inclusive",
+							Description:      "ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range 0 - 15",
 							ValidateDiagFunc: isStringInRange(0, 15),
 						},
 					},

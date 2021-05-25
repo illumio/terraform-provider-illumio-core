@@ -31,7 +31,7 @@ resource "illumio-core_label_group" "example" {
 ### Required
 
 - **description** (String) The long description of the label group
-- **key** (String) Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".
+- **key** (String) Key in key-value pair of contained labels or label groups. Allowed values are "role", "loc", "app" and "env"
 - **name** (String) Name of the label group
 
 ### Optional

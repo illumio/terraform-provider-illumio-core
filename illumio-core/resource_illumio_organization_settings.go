@@ -26,7 +26,7 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 			"audit_event_retention_seconds": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The time in seconds an audit event is stored in the database. The value should be between86400 and 17280000",
+				Description: "The time in seconds an audit event is stored in the database. The value should be between 86400 and 17280000",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IntBetween(86400, 17280000),
 				),
@@ -34,7 +34,7 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 			"audit_event_min_severity": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Minimum severity level of audit event messages. Allowed values : \"error\", \"warning\", and \"informational\" ",
+				Description: "Minimum severity level of audit event messages. Allowed values are \"error\", \"warning\", and \"informational\" ",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice([]string{"error", "warning", "informational"}, false),
 				),
@@ -42,7 +42,7 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 			"format": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The log format (JSON, CEF, LEEF), which applies to all remote Syslog destinations. Allowed values : \"JSON\", \"CEF\", and \"LEEF\" ",
+				Description: "The log format (JSON, CEF, LEEF), which applies to all remote Syslog destinations. Allowed values are \"JSON\", \"CEF\", and \"LEEF\" ",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice([]string{"JSON", "CEF", "LEEF"}, false),
 				),

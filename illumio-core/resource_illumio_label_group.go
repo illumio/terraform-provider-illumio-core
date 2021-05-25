@@ -45,7 +45,7 @@ func resourceIllumioLabelGroup() *schema.Resource {
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice(validLabelKeys, false),
 				),
-				Description: `Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".`,
+				Description: `Key in key-value pair of contained labels or label groups. Allowed values are "role", "loc", "app" and "env"`,
 			},
 			"labels": {
 				Type:        schema.TypeSet,

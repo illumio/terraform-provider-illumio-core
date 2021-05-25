@@ -37,13 +37,13 @@ func resourceIllumioWorkload() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				AtLeastOneOf:     []string{"name", "hostname"},
-				Description:      "Name of the Workload. The name should be up to 255 characters.",
+				Description:      "Name of the Workload. The name should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"hostname": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "The hostname of this workload. The hostname should be up to 255 characters.",
+				Description:      "The hostname of this workload. The hostname should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"description": {
@@ -54,14 +54,14 @@ func resourceIllumioWorkload() *schema.Resource {
 			"service_principal_name": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "The Kerberos Service Principal Name (SPN). The SPN should be between1 to 255 characters",
+				Description:      "The Kerberos Service Principal Name (SPN). The SPN should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"public_ip": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The public IP address of the server. The public IP should in the IPv4 or IPv6 format.",
+				Description: "The public IP address of the server. The public IP should in the IPv4 or IPv6 format",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IsIPAddress,
 				),
@@ -75,7 +75,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"name": {
 							Type:             schema.TypeString,
 							Required:         true,
-							Description:      "Name of Interface",
+							Description:      "Name of Interface. The name should be up to 255 characters",
 							ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 						},
 						"link_state": {
@@ -89,7 +89,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"address": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The Address to assign to this interface. The address should in the IPv4 or IPv6 format.",
+							Description: "The Address to assign to this interface. The address should in the IPv4 or IPv6 format",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.IsIPAddress,
 							),
@@ -97,12 +97,12 @@ func resourceIllumioWorkload() *schema.Resource {
 						"cidr_block": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "CIDR BLOCK of the Interface.",
+							Description: "CIDR BLOCK of the Interface",
 						},
 						"default_gateway_address": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format.",
+							Description: "Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.IsIPAddress,
 							),
@@ -110,7 +110,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"network": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "Network of the Interface",
+							Description: "Href of Network of the Interface",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -123,7 +123,7 @@ func resourceIllumioWorkload() *schema.Resource {
 						"friendly_name": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "User-friendly name for interface",
+							Description:      "User-friendly name for interface. The name should be up to 255 characters",
 							ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 						},
 						"loopback": {
@@ -137,31 +137,31 @@ func resourceIllumioWorkload() *schema.Resource {
 			"service_provider": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Service provider for Workload",
+				Description:      "Service provider for Workload. The service_provider should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"data_center": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Data center for Workload",
+				Description:      "Data center for Workload. The data_center should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"data_center_zone": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Data center Zone for Workload",
+				Description:      "Data center Zone for Workload. The data_center_zone should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"os_id": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "OS identifier for Workload",
+				Description:      "OS identifier for Workload. The os_id should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"os_detail": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Additional OS details - just displayed to end-user",
+				Description:      "Additional OS details - just displayed to end-user. The os_details should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"online": {
@@ -201,13 +201,13 @@ func resourceIllumioWorkload() *schema.Resource {
 			"agent_to_pce_certificate_authentication_id": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "PKI Certificate identifier to be used by the PCE for authenticating the VEN. The ID should be between1 to 255 characters",
+				Description:      "PKI Certificate identifier to be used by the PCE for authenticating the VEN. The ID should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"distinguished_name": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "X.509 Subject distinguished name",
+				Description:      "X.509 Subject distinguished name. The name should be up to 255 characters",
 				ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
 			},
 			"visibility_level": {
@@ -249,14 +249,14 @@ func resourceIllumioWorkload() *schema.Resource {
 										Description: "Transport protocol for open service ports",
 									},
 									"address": {
-										Type:     schema.TypeString,
-										Computed: true,
-										Description: "	The local address this service is bound to",
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The local address this service is bound to",
 									},
 									"port": {
-										Type:     schema.TypeInt,
-										Computed: true,
-										Description: "	The local port this service is bound to",
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "The local port this service is bound to",
 									},
 									"process_name": {
 										Type:        schema.TypeString,
@@ -322,17 +322,17 @@ func resourceIllumioWorkload() *schema.Resource {
 						"vulnerability_exposure_score": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The aggregated vulnerability exposure score of the workload across all the vulnerable ports.",
+							Description: "The aggregated vulnerability exposure score of the workload across all the vulnerable ports",
 						},
 						"vulnerability_score": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "HThe aggregated vulnerability score of the workload across all the vulnerable ports.",
+							Description: "HThe aggregated vulnerability score of the workload across all the vulnerable ports",
 						},
 						"max_vulnerability_score": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The maximum of all the vulnerability scores associated with the detected_vulnerabilities on the workload.",
+							Description: "The maximum of all the vulnerability scores associated with the detected_vulnerabilities on the workload",
 						},
 					},
 				},
@@ -340,7 +340,7 @@ func resourceIllumioWorkload() *schema.Resource {
 			"ike_authentication_certificate": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "IKE authentication certificate for certificate-based Secure Connect and Machine Auth.",
+				Description: "IKE authentication certificate for certificate-based Secure Connect and Machine Auth",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -387,12 +387,12 @@ func resourceIllumioWorkload() *schema.Resource {
 						"port_exposure": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The exposure of the port based on the current policy.",
+							Description: "The exposure of the port based on the current policy",
 						},
 						"workload": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "URI of Workload.",
+							Description: "URI of Workload",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"href": {

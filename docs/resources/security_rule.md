@@ -67,9 +67,9 @@ resource "illumio-core_security_rule" "example" {
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ingress_services** (Block Set) Collection of Ingress Services. If resolve_label_as.providers list includes "workloads" then ingress_services is required. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedblock--ingress_services))
-- **machine_auth** (Boolean) Determines whether machine authentication is enabled
+- **machine_auth** (Boolean) Determines whether machine authentication is enabled. Defaule Value: false
 - **sec_connect** (Boolean) Determines whether a secure connection is established. Defaule Value: false
-- **stateless** (Boolean) Determines whether packet filtering is stateless for the rule
+- **stateless** (Boolean) Determines whether packet filtering is stateless for the rule. Defaule Value: false
 - **unscoped_consumers** (Boolean) Set the scope for rule consumers to All. Defaule Value: false
 
 ### Read-Only
@@ -141,7 +141,7 @@ Required:
 
 Optional:
 
-- **actors** (String) actors for providers. Valid value is "ams"
+- **actors** (String) actors for providers. Allowed value is "ams"
 - **ip_list** (Block List, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--providers--ip_list))
 - **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--providers--label))
 - **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--providers--label_group))
@@ -213,7 +213,7 @@ Required:
 Optional:
 
 - **href** (String) URI of Service
-- **port** (String) Port number used with protocol or starting port when specifying a range. Valid range is 0-65535
-- **proto** (String) Protocol number. Allowed values are 6 and 17
-- **to_port** (String) Upper end of port range. Valid range is 0-65535
+- **port** (String) Port number used with protocol or starting port when specifying a range. Allowed range is 0-65535
+- **proto** (String) Protocol number. Allowed values are 6 (TCP) and 17 (UDP)
+- **to_port** (String) Upper end of port range. Allowed range is 0-65535
 

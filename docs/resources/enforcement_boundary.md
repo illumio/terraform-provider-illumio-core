@@ -127,6 +127,6 @@ Required:
 Optional:
 
 - **href** (String) URI of Service
-- **port** (String) Port number used with protocol or starting port when specifying a range. Valid range: 0-65535
-- **proto** (String) Protocol number. Allowed values are 6 and 17
-- **to_port** (String) Upper end of port range. Valid range: 0-65535
+- **port** (String) Port number used with protocol or starting port when specifying a range. Allowed range is 0-65535
+- **proto** (String) Protocol number. Allowed values are 6 (TCP) and 17 (UDP)
+- **to_port** (String) Upper end of port range. Allowed range is 0-65535

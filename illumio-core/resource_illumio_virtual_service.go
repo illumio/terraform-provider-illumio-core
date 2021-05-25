@@ -32,7 +32,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "Name of the virtual service",
+				Description:      "Name of the virtual service. The name should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"href": {
@@ -158,7 +158,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535.",
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535",
 							ValidateDiagFunc: isStringInRange(-1, 65535),
 						},
 						"ip": {

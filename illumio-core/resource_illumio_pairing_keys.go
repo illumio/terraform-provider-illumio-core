@@ -89,9 +89,8 @@ func resourceIllumioPairingKeys() *schema.Resource {
 				ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(1, 5)),
 			},
 			"activation_tokens": {
-				Type:     schema.TypeList,
-				Computed: true,
-				// Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Computed:    true,
 				Description: "List of activation tokens",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

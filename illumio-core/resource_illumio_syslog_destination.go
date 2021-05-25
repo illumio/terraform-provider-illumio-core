@@ -59,7 +59,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "audit_event_logger details for destination. Single element list",
+				Description: "audit_event_logger details for destination",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"configuration_event_included": {
@@ -85,7 +85,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: `traffic_event_logger details for destination. Required when type is set to "remote_syslog". Single element list`,
+				Description: `traffic_event_logger details for destination. Required when type is set to "remote_syslog"`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"traffic_flow_allowed_event_included": {
@@ -110,7 +110,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "node_status_logger details for destination. Single element list",
+				Description: "node_status_logger details for destination",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"node_status_included": {
@@ -125,7 +125,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
-				Description: "remote_syslog details for destination. Single element list",
+				Description: "remote_syslog details for destination",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"address": {

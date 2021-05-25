@@ -36,13 +36,13 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "A friendly name given to a profile if the namespace is not user-friendly. The name should be up to 255 characters.",
+				Description:      "A friendly name given to a profile if the namespace is not user-friendly. The name should be up to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"namespace": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Namespace name of the container workload profile.",
+				Description: "Namespace name of the container workload profile",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -74,7 +74,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Key of the Label. Allowed values for key are \"role\", \"loc\", \"app\" and \"env\".",
+							Description: "Key of the Label. Allowed values for key are \"role\", \"loc\", \"app\" and \"env\"",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.StringInSlice(validLabelKeys, false),
 							),
@@ -133,18 +133,18 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 			"visibility_level": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Visibility Level of the container cluster workload profile.",
+				Description: "Visibility Level of the container cluster workload profile",
 			},
 			"managed": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "If the namespace is managed or not.",
+				Description: "If the namespace is managed or not",
 			},
 			"linked": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "True if the namespace exists in the cluster and is reported by kubelink.",
+				Description: "True if the namespace exists in the cluster and is reported by kubelink",
 			},
 			"created_at": {
 				Type:        schema.TypeString,

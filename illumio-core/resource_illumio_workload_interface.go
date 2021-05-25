@@ -36,7 +36,7 @@ func resourceIllumioWorkloadInterface() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "Name of the Workload Interface",
+				Description:      "Name of the Workload Interface. The name should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"link_state": {
@@ -50,7 +50,7 @@ func resourceIllumioWorkloadInterface() *schema.Resource {
 			"address": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The IP Address to assign to this interface. The address should in the IPv4 or IPv6 format.",
+				Description: "The IP Address to assign to this interface. The address should in the IPv4 or IPv6 format",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IsIPAddress,
 				),
@@ -58,12 +58,12 @@ func resourceIllumioWorkloadInterface() *schema.Resource {
 			"cidr_block": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "CIDR BLOCK of the Workload Interface.",
+				Description: "CIDR BLOCK of the Workload Interface",
 			},
 			"default_gateway_address": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The IP Address of the default gateway. The Default Gateway Address should in the IPv4 or IPv6 format.",
+				Description: "The IP Address of the default gateway. The Default Gateway Address should in the IPv4 or IPv6 format",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IsIPAddress,
 				),
@@ -71,7 +71,7 @@ func resourceIllumioWorkloadInterface() *schema.Resource {
 			"network": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Network for the Workload Interface.",
+				Description: "Href of Network for the Workload Interface",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

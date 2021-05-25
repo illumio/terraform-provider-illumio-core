@@ -82,19 +82,19 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 					"proto": {
 						Type:             schema.TypeString,
 						Optional:         true,
-						Description:      "Protocol number. Allowed values are 6 and 17",
+						Description:      "Protocol number. Allowed values are 6 (TCP) and 17 (UDP)",
 						ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validSRIngSerProtos, true)),
 					},
 					"port": {
 						Type:             schema.TypeString,
 						Optional:         true,
-						Description:      "Port number used with protocol or starting port when specifying a range. Valid range is 0-65535",
+						Description:      "Port number used with protocol or starting port when specifying a range. Allowed range is 0-65535",
 						ValidateDiagFunc: isStringAPortNumber(),
 					},
 					"to_port": {
 						Type:             schema.TypeString,
 						Optional:         true,
-						Description:      "Upper end of port range. Valid range (0-65535)",
+						Description:      "Upper end of port range. Allowed range is 0-65535",
 						ValidateDiagFunc: isStringAPortNumber(),
 					},
 					"href": {
@@ -144,13 +144,13 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Determines whether packet filtering is stateless for the rule",
+			Description: "Determines whether packet filtering is stateless for the rule. Defaule Value: false",
 		},
 		"machine_auth": {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Determines whether machine authentication is enabled",
+			Description: "Determines whether machine authentication is enabled. Defaule Value: false",
 		},
 		"providers": {
 			Type:        schema.TypeSet,
@@ -161,7 +161,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 					"actors": {
 						Type:         schema.TypeString,
 						Optional:     true,
-						Description:  "actors for illumio_provider. Valid value is \"ams\"",
+						Description:  "actors for illumio_provider. Allowed value is \"ams\"",
 						ValidateFunc: validation.StringInSlice(validSRProducerActors, false),
 					},
 					"label": {

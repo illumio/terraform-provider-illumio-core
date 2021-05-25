@@ -58,6 +58,22 @@ provider "illumio-core" {
 }
 ```
 
+```hcl
+# Configure provider with disabling server cert verification
+provider "illumio-core" {
+    # ... other configuration parameters
+    insecure = true
+}
+```
+
+```hcl
+# Configure provider for server with self-signed server certificate
+provider "illumio-core" {
+    # ... other configuration parameters
+    ca_file = "devtest-selfsign.pem"
+}
+```
+
 Some of the attributes can be specified via environment variables. Refer to the schema for attributes that can be configured via environment variables.
 
 

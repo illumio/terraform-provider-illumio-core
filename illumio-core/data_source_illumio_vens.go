@@ -366,17 +366,17 @@ func datasourceIllumioVENs() *schema.Resource {
 												"link_state": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Link State for the workload Interface.",
+													Description: "Link State for the workload Interface",
 												},
 												"address": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The IP Address to assign to this interface.",
+													Description: "The IP Address to assign to this interface",
 												},
 												"cidr_block": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "CIDR BLOCK of the Interface.",
+													Description: "CIDR BLOCK of the Interface",
 												},
 												"default_gateway_address": {
 													Type:        schema.TypeString,
@@ -611,7 +611,7 @@ func datasourceIllumioVENs() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of VEN(s) to return. Supports partial matches.",
+				Description: "Description of VEN(s) to return. Supports partial matches",
 			},
 			"disconnected_before": {
 				Type:        schema.TypeString,
@@ -665,7 +665,7 @@ func datasourceIllumioVENs() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of VENs to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of VENs to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -675,7 +675,7 @@ func datasourceIllumioVENs() *schema.Resource {
 			"os": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Operating System of VEN(s) to return. Supports partial matches.",
+				Description: "Operating System of VEN(s) to return. Supports partial matches",
 			},
 			"status": {
 				Type:     schema.TypeString,

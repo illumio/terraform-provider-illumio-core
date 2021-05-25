@@ -18,7 +18,6 @@ resource "illumio-core_label" "example" {
   key     = "env"
   value   = "example env"
 }
-
 ```
 
 ## Schema

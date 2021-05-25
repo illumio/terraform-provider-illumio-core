@@ -1,0 +1,135 @@
+=== RUN   TestAccIllumioCCSBL_Read
+--- PASS: TestAccIllumioCCSBL_Read (13.16s)
+=== RUN   TestAccIllumioCC_Read
+--- PASS: TestAccIllumioCC_Read (12.68s)
+=== RUN   TestAccIllumioCCWP_Read
+--- PASS: TestAccIllumioCCWP_Read (12.98s)
+=== RUN   TestAccIllumioCCWPL_Read
+--- PASS: TestAccIllumioCCWPL_Read (12.72s)
+=== RUN   TestAccIllumioCCL_Read
+--- PASS: TestAccIllumioCCL_Read (12.45s)
+=== RUN   TestAccIllumioEBL_Read
+--- PASS: TestAccIllumioEBL_Read (12.45s)
+=== RUN   TestAccIllumioEB_Read
+--- PASS: TestAccIllumioEB_Read (12.64s)
+=== RUN   TestAccIllumioFS_Read
+--- PASS: TestAccIllumioFS_Read (12.97s)
+=== RUN   TestAccIllumioIP_Read
+--- PASS: TestAccIllumioIP_Read (12.77s)
+=== RUN   TestAccIllumioIPL_Read
+--- PASS: TestAccIllumioIPL_Read (16.40s)
+=== RUN   TestAccIllumioLG_Read
+--- PASS: TestAccIllumioLG_Read (12.98s)
+=== RUN   TestAccIllumioLabelGsL_Read
+--- PASS: TestAccIllumioLabelGsL_Read (13.17s)
+=== RUN   TestAccIllumioLabel_Read
+--- PASS: TestAccIllumioLabel_Read (13.62s)
+=== RUN   TestAccIllumioLabelsL_Read
+--- PASS: TestAccIllumioLabelsL_Read (12.41s)
+=== RUN   TestAccIllumioOS_Read
+--- PASS: TestAccIllumioOS_Read (12.88s)
+=== RUN   TestAccIllumioPP_Read
+--- PASS: TestAccIllumioPP_Read (12.68s)
+=== RUN   TestAccIllumioPPL_Read
+--- PASS: TestAccIllumioPPL_Read (12.78s)
+=== RUN   TestAccIllumioRS_Read
+--- PASS: TestAccIllumioRS_Read (12.88s)
+=== RUN   TestAccIllumioRSL_Read
+--- PASS: TestAccIllumioRSL_Read (12.87s)
+=== RUN   TestAccIllumioSR_Read
+--- PASS: TestAccIllumioSR_Read (13.55s)
+=== RUN   TestAccIllumioSRL_Read
+--- PASS: TestAccIllumioSRL_Read (12.46s)
+=== RUN   TestAccIllumioServiceBinding_Read
+--- PASS: TestAccIllumioServiceBinding_Read (12.63s)
+=== RUN   TestAccIllumioSBL_Read
+--- PASS: TestAccIllumioSBL_Read (14.18s)
+=== RUN   TestAccIllumioS_Read
+--- PASS: TestAccIllumioS_Read (12.56s)
+=== RUN   TestAccIllumioSL_Read
+--- PASS: TestAccIllumioSL_Read (12.35s)
+=== RUN   TestAccIllumioSyslogDestination_Read
+--- PASS: TestAccIllumioSyslogDestination_Read (12.78s)
+=== RUN   TestAccIllumioSyslogDestL_Read
+--- PASS: TestAccIllumioSyslogDestL_Read (12.37s)
+=== RUN   TestAccIllumioTCSL_Read
+--- PASS: TestAccIllumioTCSL_Read (12.27s)
+=== RUN   TestAccIllumioTrafficCollectorSettings_Read
+--- PASS: TestAccIllumioTrafficCollectorSettings_Read (12.50s)
+=== RUN   TestAccIllumioVEN_Read
+--- PASS: TestAccIllumioVEN_Read (12.62s)
+=== RUN   TestAccIllumioVENL_Read
+--- PASS: TestAccIllumioVENL_Read (12.74s)
+=== RUN   TestAccIllumioVirtualService_Read
+--- PASS: TestAccIllumioVirtualService_Read (12.73s)
+=== RUN   TestAccIllumioVirtualServiceL_Read
+--- PASS: TestAccIllumioVirtualServiceL_Read (12.46s)
+=== RUN   TestAccIllumioVulnerabilitiesL_Read
+--- PASS: TestAccIllumioVulnerabilitiesL_Read (12.38s)
+=== RUN   TestAccIllumioVulnerabilityReport_Read
+--- PASS: TestAccIllumioVulnerabilityReport_Read (12.72s)
+=== RUN   TestAccIllumioVulReportL_Read
+--- PASS: TestAccIllumioVulReportL_Read (14.56s)
+=== RUN   TestAccIllumioVulnerability_Read
+--- PASS: TestAccIllumioVulnerability_Read (12.71s)
+=== RUN   TestAccIllumioWorkloadInterface_Read
+--- PASS: TestAccIllumioWorkloadInterface_Read (12.71s)
+=== RUN   TestAccIllumioWorkloadInterfacesL_Read
+--- PASS: TestAccIllumioWorkloadInterfacesL_Read (12.39s)
+=== RUN   TestAccIllumioWorkloadSettings_Read
+--- PASS: TestAccIllumioWorkloadSettings_Read (12.96s)
+=== RUN   TestAccIllumioWorkload_Read
+--- PASS: TestAccIllumioWorkload_Read (13.09s)
+=== RUN   TestAccIllumioWorkloadL_Read
+--- PASS: TestAccIllumioWorkloadL_Read (12.68s)
+=== RUN   TestProvider
+--- PASS: TestProvider (0.00s)
+=== RUN   TestProvider_impl
+--- PASS: TestProvider_impl (0.01s)
+=== RUN   TestAccIllumioContainerCluster_CreateUpdate
+--- PASS: TestAccIllumioContainerCluster_CreateUpdate (22.38s)
+=== RUN   TestAccIllumioContainerClusterWorkloadProfileWorkloadProfile_CreateUpdate
+--- PASS: TestAccIllumioContainerClusterWorkloadProfileWorkloadProfile_CreateUpdate (23.80s)
+=== RUN   TestAccIllumioEnforcementBoundary_CreateUpdate
+--- PASS: TestAccIllumioEnforcementBoundary_CreateUpdate (22.76s)
+=== RUN   TestAccIllumioIPList_CreateUpdate
+--- PASS: TestAccIllumioIPList_CreateUpdate (25.59s)
+=== RUN   TestAccIllumioLabelGroup_CreateUpdate
+--- PASS: TestAccIllumioLabelGroup_CreateUpdate (28.12s)
+=== RUN   TestAccIllumioLabel_CreateUpdate
+--- PASS: TestAccIllumioLabel_CreateUpdate (23.39s)
+=== RUN   TestAccIllumioPairingKeys_CreateUpdate
+--- PASS: TestAccIllumioPairingKeys_CreateUpdate (29.20s)
+=== RUN   TestAccIllumioPairingProfile_CreateUpdate
+--- PASS: TestAccIllumioPairingProfile_CreateUpdate (23.19s)
+=== RUN   TestAccIllumioRuleSet_CreateUpdate
+--- PASS: TestAccIllumioRuleSet_CreateUpdate (25.25s)
+=== RUN   TestAccIllumioSecurityRule_CreateUpdate
+--- PASS: TestAccIllumioSecurityRule_CreateUpdate (23.18s)
+=== RUN   TestAccIllumioServiceBinding_CreateUpdate
+--- PASS: TestAccIllumioServiceBinding_CreateUpdate (21.96s)
+=== RUN   TestAccIllumioService_CreateUpdate
+--- PASS: TestAccIllumioService_CreateUpdate (22.52s)
+=== RUN   TestAccIllumioSyslogDestination_CreateUpdate
+--- PASS: TestAccIllumioSyslogDestination_CreateUpdate (23.93s)
+=== RUN   TestAccIllumioTrafficCollectorSettings_CreateUpdate
+--- PASS: TestAccIllumioTrafficCollectorSettings_CreateUpdate (22.48s)
+=== RUN   TestAccIllumioVENsUnpair_CreateUpdate
+--- PASS: TestAccIllumioVENsUnpair_CreateUpdate (7.08s)
+=== RUN   TestAccIllumioVENsUpgrade_CreateUpdate
+--- PASS: TestAccIllumioVENsUpgrade_CreateUpdate (11.48s)
+=== RUN   TestAccIllumioVirtualService_CreateUpdate
+--- PASS: TestAccIllumioVirtualService_CreateUpdate (22.93s)
+=== RUN   TestAccIllumioVulnerabilities_CreateUpdate
+--- PASS: TestAccIllumioVulnerabilities_CreateUpdate (23.41s)
+=== RUN   TestAccIllumioVulnerabilityReport_CreateUpdate
+--- PASS: TestAccIllumioVulnerabilityReport_CreateUpdate (21.93s)
+=== RUN   TestAccIllumioWorkloadInterface_CreateUpdate
+--- PASS: TestAccIllumioWorkloadInterface_CreateUpdate (22.63s)
+=== RUN   TestAccIllumioWorkload_CreateUpdate
+--- PASS: TestAccIllumioWorkload_CreateUpdate (24.08s)
+=== RUN   TestAccIllumioWorkloadsUnpair_CreateUpdate
+--- PASS: TestAccIllumioWorkloadsUnpair_CreateUpdate (11.08s)
+PASS
+coverage: 73.9% of statements
+ok  	github.com/illumio/terraform-provider-illumio-core/illumio-core	1024.609s	coverage: 73.9% of statements

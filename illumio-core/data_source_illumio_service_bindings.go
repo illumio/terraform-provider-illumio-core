@@ -126,7 +126,7 @@ func datasourceIllumioServiceBindings() *schema.Resource {
 									"port": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range.",
+										Description: "Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range",
 									},
 									"proto": {
 										Type:        schema.TypeInt,
@@ -173,7 +173,7 @@ func datasourceIllumioServiceBindings() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of virtual service bindings to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of virtual service bindings to return. The integer should be a non-zero positive integer",
 			},
 			"virtual_service": {
 				Type:        schema.TypeString,

@@ -36,7 +36,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "The short friendly name of the pairing profile",
+				Description:      "The short friendly name of the pairing profile. The name should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"description": {
@@ -55,7 +55,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: `Flag that controls whether enforcement mode can be overridden from pairing script, Default value: "true"`,
+				Description: `Flag that controls whether enforcement mode can be overridden from pairing script, Default value: true`,
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
@@ -106,25 +106,25 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: `Flag that controls whether env label can be overridden from pairing script. Default value: "true"`,
+				Description: `Flag that controls whether env label can be overridden from pairing script. Default value: true`,
 			},
 			"loc_label_lock": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: `Flag that controls whether loc label can be overridden from pairing script. Default value: "true"`,
+				Description: `Flag that controls whether loc label can be overridden from pairing script. Default value: true`,
 			},
 			"role_label_lock": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: `Flag that controls whether role label can be overridden from pairing script. Default value: "true"`,
+				Description: `Flag that controls whether role label can be overridden from pairing script. Default value: true`,
 			},
 			"app_label_lock": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: `Flag that controls whether app label can be overridden from pairing script. Default value: "true"`,
+				Description: `Flag that controls whether app label can be overridden from pairing script. Default value: true`,
 			},
 			"log_traffic": {
 				Type:        schema.TypeBool,
@@ -149,7 +149,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: `Flag that controls whether visibility_level can be overridden from pairing script. Default value: "true"`,
+				Description: `Flag that controls whether visibility_level can be overridden from pairing script. Default value: true`,
 			},
 			"agent_software_release": {
 				Type:        schema.TypeString,

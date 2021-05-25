@@ -56,7 +56,7 @@ resource "illumio-core_virtual_service" "example" {
 ### Required
 
 - **apply_to** (String) Name of the virtual service. Allowed values are "host_only" and "internal_bridge_network"
-- **name** (String) Name of the virtual service
+- **name** (String) Name of the virtual service. The name should be between 1 to 255 characters
 
 ### Optional
 
@@ -109,7 +109,7 @@ Optional:
 - **fqdn** (String) FQDN to assign to the virtual service.  Allowed formats: hostname, IP, or URI
 - **ip** (String) IP address to assign to the virtual service
 - **network_href** (String) Network URI for this IP address
-- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535.
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535
 
 
 <a id="nestedblock--service_ports"></a>

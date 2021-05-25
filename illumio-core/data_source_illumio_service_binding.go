@@ -88,7 +88,7 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range.",
+							Description: "Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range",
 						},
 						"proto": {
 							Type:        schema.TypeInt,

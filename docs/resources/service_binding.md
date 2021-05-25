@@ -67,13 +67,13 @@ Required:
 
 Required:
 
-- **new_port** (Number) Overriding port number (or starting point when specifying a range)
+- **new_port** (Number) Overriding port number (or starting point when specifying a range). Allowed range is 0 - 65535
 
 Optional:
 
-- **new_to_port** (Number) Overriding port range ending port
+- **new_to_port** (Number) Overriding port range ending port. Allowed range is 0 - 65535
 - **port** (Number) Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range.
-- **proto** (Number) Transport protocol in the original service which to override
+- **proto** (Number) Transport protocol in the original service which to override. Allowed values are 6 (TCP) and 17 (UDP)
 
 
 <a id="nestedblock--workload"></a>

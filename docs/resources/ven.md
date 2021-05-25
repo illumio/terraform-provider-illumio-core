@@ -32,7 +32,7 @@ resource "illumio-core_ven" "example" {
 ### Optional
 
 - **description** (String) The description of the VEN
-- **name** (String) Friendly name for the VEN. The name should be up to 255 characters.
+- **name** (String) Friendly name for the VEN. The name should be up to 255 characters
 - **target_pce_fqdn** (String) The FQDN of the PCE that the VEN will use for future connections
 
 ### Read-Only

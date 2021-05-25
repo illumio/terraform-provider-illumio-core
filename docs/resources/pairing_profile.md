@@ -42,27 +42,27 @@ resource "illumio-core_pairing_profile" "example" {
 ### Required
 
 - **enabled** (Boolean) The enabled flag of the pairing profile
-- **name** (String) The short friendly name of the pairing profile
+- **name** (String) The short friendly name of the pairing profile. The name should be between 1 to 255 characters
 
 ### Optional
 
 - **agent_software_release** (String) Agent software release associated with this paring profile. Default value: "Default ()"
 - **allowed_uses_per_key** (String) The number of times pairing profile keys can be usedd. Allowed values are range(1-2147483647) and "unlimited". Default value: "unlimited"
-- **app_label_lock** (Boolean) Flag that controls whether app label can be overridden from pairing script. Default value: "true"
+- **app_label_lock** (Boolean) Flag that controls whether app label can be overridden from pairing script. Default value: true
 - **description** (String) The long description of the pairing profile
 - **enforcement_mode** (String) Flag that controls whether mode can be overridden from pairing script. Allowed values are "idle", "visibility_only", "full" and "selective". Default value: "visibility_only"
-- **enforcement_mode_lock** (Boolean) Flag that controls whether enforcement mode can be overridden from pairing script, Default value: "true"
-- **env_label_lock** (Boolean) Flag that controls whether env label can be overridden from pairing script. Default value: "true"
+- **enforcement_mode_lock** (Boolean) Flag that controls whether enforcement mode can be overridden from pairing script, Default value: true
+- **env_label_lock** (Boolean) Flag that controls whether env label can be overridden from pairing script. Default value: true
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **key_lifespan** (String) Number of seconds pairing profile keys will be valid for. Allowed values are range(1-2147483647) and "unlimited". Default value: "unlimited"
 - **labels** (Block Set) Assigned labels (see [below for nested schema](#nestedblock--labels))
-- **loc_label_lock** (Boolean) Flag that controls whether loc label can be overridden from pairing script. Default value: "true"
+- **loc_label_lock** (Boolean) Flag that controls whether loc label can be overridden from pairing script. Default value: true
 - **log_traffic** (Boolean) Status of VEN(alternative of status). Default value: false
 - **log_traffic_lock** (Boolean) Flag that controls whether log_traffic can be overridden from pairing script. Default value: true
-- **role_label_lock** (Boolean) Flag that controls whether role label can be overridden from pairing script. Default value: "true"
+- **role_label_lock** (Boolean) Flag that controls whether role label can be overridden from pairing script. Default value: true
 - **visibility_level** (String) Visibility level of the agent. Allowed values are "flow_full_detail", "flow_summary", "flow_drops", "flow_off" and "enhanced_data_collection". Default value: "flow_summary"
-- **visibility_level_lock** (Boolean) Flag that controls whether visibility_level can be overridden from pairing script. Default value: "true"
+- **visibility_level_lock** (Boolean) Flag that controls whether visibility_level can be overridden from pairing script. Default value: true
 
 ### Read-Only
 

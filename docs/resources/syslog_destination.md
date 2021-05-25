@@ -50,15 +50,15 @@ resource "illumio-core_syslog_destination" "example" {
 
 ### Required
 
-- **audit_event_logger** (Block List, Min: 1, Max: 1) audit_event_logger details for destination. Single element list (see [below for nested schema](#nestedblock--audit_event_logger))
+- **audit_event_logger** (Block List, Min: 1, Max: 1) audit_event_logger details for destination.  (see [below for nested schema](#nestedblock--audit_event_logger))
 - **description** (String) Description of the destination
-- **node_status_logger** (Block List, Min: 1, Max: 1) node_status_logger details for destination. Single element list (see [below for nested schema](#nestedblock--node_status_logger))
+- **node_status_logger** (Block List, Min: 1, Max: 1) node_status_logger details for destination (see [below for nested schema](#nestedblock--node_status_logger))
 - **pce_scope** (Set of String) pce_scope for destination
-- **traffic_event_logger** (Block List, Min: 1, Max: 1) traffic_event_logger details for destination. Single element list (see [below for nested schema](#nestedblock--traffic_event_logger))
+- **traffic_event_logger** (Block List, Min: 1, Max: 1) traffic_event_logger details for destination (see [below for nested schema](#nestedblock--traffic_event_logger))
 - **type** (String) Destination type. Allowed values are "local_syslog" and "remote_syslog"
 
 ### Optional
-- **remote_syslog** (Block List, Max: 1) remote_syslog details for destination. Required when type is set to "remote_syslog" .Single element list (see [below for nested schema](#nestedblock--remote_syslog))
+- **remote_syslog** (Block List, Max: 1) remote_syslog details for destination. Required when type is set to "remote_syslog" (see [below for nested schema](#nestedblock--remote_syslog))
 
 ### Read-Only
 

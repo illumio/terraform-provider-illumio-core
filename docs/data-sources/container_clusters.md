@@ -24,7 +24,7 @@ data "illumio-core_container_clusters" "example" {
 
 ### Optional
 
-- **max_results** (String) Maximum number of container clusters to return. The integer should be a non-zero positive integer.
+- **max_results** (String) Maximum number of container clusters to return. The integer should be a non-zero positive integer
 - **name** (String) Name of the container cluster(s) to return. Supports partial matches
 
 ### Read-Only

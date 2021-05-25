@@ -51,9 +51,9 @@ Read-Only:
 
 - **icmp_code** (String) ICMP Code
 - **icmp_type** (String) ICMP Type
-- **port** (String) Port Number. Also, the starting port when specifying a range.
-- **proto** (String) Transport protocol.
-- **to_port** (String) High end of port range inclusive if specifying a range.
+- **port** (String) Port Number. Also the starting port when specifying a range
+- **proto** (String) Transport protocol
+- **to_port** (String) High end of port range inclusive if specifying a range
 
 
 <a id="nestedatt--windows_services"></a>
@@ -61,12 +61,10 @@ Read-Only:
 
 Read-Only:
 
-- **icmp_code** (String) ICMP Code. 
-- **icmp_type** (String) ICMP Type. 
-- **port** (String) Port Number. Also, the starting port when specifying a range.
+- **icmp_code** (String) ICMP Code 
+- **icmp_type** (String) ICMP Type
+- **port** (String) Port Number. Also the starting port when specifying a range
 - **process_name** (String) Name of running process
-- **proto** (String) Transport protocol.
+- **proto** (String) Transport protocol
 - **service_name** (String) Name of Windows Service
-- **to_port** (String) High end of port range inclusive if specifying a range.
-
-
+- **to_port** (String) High end of port range inclusive if specifying a range

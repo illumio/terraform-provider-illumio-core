@@ -51,7 +51,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"value": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Property value associated with the scope",
+							Description: "Property value associated with the scope. Allowed range is 300 - 2147483647 or -1",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
 							),
@@ -82,7 +82,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"value": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Property value associated with the scope",
+							Description: "Property value associated with the scope. Allowed range is 300 - 2147483647 or -1",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
 							),

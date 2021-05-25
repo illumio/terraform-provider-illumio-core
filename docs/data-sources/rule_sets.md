@@ -32,9 +32,9 @@ data "illumio-core_rule_sets" "example" {
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **labels** (String) List of lists of label URIs, encoded as a JSON string
-- **max_results** (String) Maximum number of Rulesets to return. The integer should be a non-zero positive integer. 
+- **max_results** (String) Maximum number of Rulesets to return. The integer should be a non-zero positive integer
 - **name** (String) Name of Ruleset(s) to return. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
 
 ### Read-Only
 

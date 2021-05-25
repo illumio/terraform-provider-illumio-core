@@ -16,7 +16,7 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_ip_list" "iplist_1" {
+resource "illumio-core_ip_list" "example" {
     name = "example name"
     description = "example desc"
     ip_ranges{
@@ -39,7 +39,7 @@ resource "illumio-core_ip_list" "iplist_1" {
 
 ### Required
 
-- **name** (String) Name of the IP List. The name should be between1 to 255 characters
+- **name** (String) Name of the IP List. The name should be between 1 to 255 characters
 
 
 - **description** (String) Description of the IP List
@@ -63,7 +63,7 @@ resource "illumio-core_ip_list" "iplist_1" {
 
 Required:
 
-- **fqdn** (String) Fully Qualified Domain Name for IP List.  Allowed formats: hostname, IP, or URI
+- **fqdn** (String) Fully Qualified Domain Name for IP List. Supported formats are hostname, IP, and URI
 
 Optional:
 
@@ -79,7 +79,7 @@ Required:
 Optional:
 
 - **description** (String) Description of IP Range
-- **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.
+- **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses
 - **to_ip** (String) High end of an IP range. The IP given should be in CIDR form i.e. "0.0.0.0/0"
 
 

@@ -32,15 +32,15 @@ data "illumio-core_container_cluster_workload_profile" "example" {
 - **created_at** (String) Timestamp when this label group was first created
 - **created_by** (Map of String) User who created this label group
 - **description** (String) Description of the container workload profile
-- **enforcement_mode** (String) Enforcement mode of container workload profiles to return.
+- **enforcement_mode** (String) Enforcement mode of container workload profiles to return
 - **labels** (Set of Object) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedatt--labels))
-- **linked** (Boolean) True if the namespace exists in the cluster and is reported by Kubelink.
-- **managed** (Boolean) If the namespace is managed or not.
+- **linked** (Boolean) True if the namespace exists in the cluster and is reported by Kubelink
+- **managed** (Boolean) If the namespace is managed or not
 - **name** (String) A friendly name given to a profile if the namespace is not user-friendly
 - **namespace** (String) Namespace name of the container workload profile
 - **updated_at** (String) Timestamp when this label group was last updated
 - **updated_by** (Map of String) User who last updated this label group
-- **visibility_level** (String) Visibility Level of the container cluster workload profile.
+- **visibility_level** (String) Visibility Level of the container cluster workload profile
 
 <a id="nestedatt--assign_labels"></a>
 ### Nested Schema for `assign_labels`
@@ -55,7 +55,7 @@ Read-Only:
 Read-Only:
 
 - **assignment** (Set of Object) The label href to set. Single element list (see [below for nested schema](#nestedobjatt--labels--assignment))
-- **key** (String) Key of the Label.
+- **key** (String) Key of the Label
 - **restriction** (Set of Object) The list of allowed label hrefs (see [below for nested schema](#nestedobjatt--labels--restriction))
 
 <a id="nestedobjatt--labels--assignment"></a>

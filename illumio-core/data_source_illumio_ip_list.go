@@ -92,7 +92,7 @@ func datasourceIllumioIPList() *schema.Resource {
 						"exclusion": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.",
+							Description: "Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses",
 						},
 					},
 				},

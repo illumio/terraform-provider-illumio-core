@@ -91,7 +91,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of IP Lists to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of IP Lists to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -143,7 +143,7 @@ func datasourceIllumioIPLists() *schema.Resource {
 									"exclusion": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.",
+										Description: "Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses",
 									},
 								},
 							},

@@ -31,21 +31,21 @@ resource "illumio-core_workload_interface" "example" {
 ### Required
 
 - **link_state** (String) Link State for Workload Interface. Allowed values are "up", "down", and "unknown"
-- **name** (String) Name of the Workload Interface
+- **name** (String) Name of the Workload Interface. The name should be between 1 to 255 characters
 - **workload_href** (String) URI of Workload
 
 ### Optional
 
-- **address** (String) The IP Address to assign to this interface. The address should in the IPv4 or IPv6 format.
-- **cidr_block** (Number) CIDR BLOCK of the Workload Interface.
-- **default_gateway_address** (String) The IP Address of the default gateway. The Default Gateway Address should in the IPv4 or IPv6 format.
-- **friendly_name** (String) User-friendly name for Workload Interface
+- **address** (String) The IP Address to assign to this interface. The address should in the IPv4 or IPv6 format
+- **cidr_block** (Number) CIDR BLOCK of the Workload Interface
+- **default_gateway_address** (String) The IP Address of the default gateway. The Default Gateway Address should in the IPv4 or IPv6 format
+- **friendly_name** (String) User-friendly name for Workload Interface. The name should be up to 255 characters
 
 ### Read-Only
 
 - **href** (String) URI of the Workload Interface
 - **loopback** (Boolean) Loopback for Workload Interface
-- **network** (Map of String) Network for the Workload Interface.
+- **network** (Map of String) Href of Network for the Workload Interface.
 - **network_detection_mode** (String) Network Detection Mode for Workload Interface
 
 

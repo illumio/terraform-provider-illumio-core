@@ -282,7 +282,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 									"cidr_block": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0.",
+										Description: "CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0",
 									},
 									"default_gateway_address": {
 										Type:        schema.TypeString,
@@ -349,7 +349,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 						"ike_authentication_certificate": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "IKE authentication certificate for certificate-based Secure Connect and Machine Auth.",
+							Description: "IKE authentication certificate for certificate-based Secure Connect and Machine Auth",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -469,17 +469,17 @@ func datasourceIllumioWorkloads() *schema.Resource {
 									"vulnerability_exposure_score": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The aggregated vulnerability exposure score of the workload across all the vulnerable ports.",
+										Description: "The aggregated vulnerability exposure score of the workload across all the vulnerable ports",
 									},
 									"vulnerability_score": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The aggregated vulnerability score of the workload across all the vulnerable ports.",
+										Description: "The aggregated vulnerability score of the workload across all the vulnerable ports",
 									},
 									"max_vulnerability_score": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The maximum of all the vulnerability scores associated with the detected_vulnerabilities on the workload.",
+										Description: "The maximum of all the vulnerability scores associated with the detected_vulnerabilities on the workload",
 									},
 								},
 							},
@@ -526,12 +526,12 @@ func datasourceIllumioWorkloads() *schema.Resource {
 									"port_exposure": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The exposure of the port based on the current policy.",
+										Description: "The exposure of the port based on the current policy",
 									},
 									"workload": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "URI of Workload.",
+										Description: "URI of Workload",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"href": {
@@ -790,7 +790,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of workloads to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of workloads to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -835,7 +835,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 			"ven": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "URI of VEN to filter by.",
+				Description: "URI of VEN to filter by",
 			},
 			"visibility_level": {
 				Type:     schema.TypeString,

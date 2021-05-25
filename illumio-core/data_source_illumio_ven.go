@@ -357,17 +357,17 @@ func datasourceIllumioVEN() *schema.Resource {
 									"link_state": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Link State for the workload Interface.",
+										Description: "Link State for the workload Interface",
 									},
 									"address": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The IP Address to assign to this interface.",
+										Description: "The IP Address to assign to this interface",
 									},
 									"cidr_block": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "CIDR BLOCK of the Interface.",
+										Description: "CIDR BLOCK of the Interface",
 									},
 									"default_gateway_address": {
 										Type:        schema.TypeString,

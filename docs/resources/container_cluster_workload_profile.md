@@ -31,26 +31,26 @@ resource "illumio-core_container_cluster_workload_profile" "example" {
 ### Required
 
 - **container_cluster_href** (String) URI of Container Cluster
-- **name** (String) A friendly name given to a profile if the namespace is not user-friendly. The name should be up to 255 characters.
+- **name** (String) A friendly name given to a profile if the namespace is not user-friendly. The name should be up to 255 characters
 
 ### Optional
 
 - **assign_labels** (Block Set) Assigned labels container workload profile (see [below for nested schema](#nestedblock--assign_labels))
 - **description** (String) Description of the container workload profile
-- **enforcement_mode** (String) Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are "idle","visibility_only","full", and "selective". Default value: "idle"
+- **enforcement_mode** (String) Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are "idle", "visibility_only", "full", and "selective". Default value: "idle"
 - **labels** (Block Set) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedblock--labels))
-- **managed** (Boolean) If the namespace is managed or not.
+- **managed** (Boolean) If the namespace is managed or not
 
 ### Read-Only
 
 - **created_at** (String) Timestamp when this label group was first created
 - **created_by** (Map of String) User who created this label group
 - **href** (String) URI of the container workload profile
-- **linked** (Boolean) True if the namespace exists in the cluster and is reported by kubelink.
-- **namespace** (String) Namespace name of the container workload profile.
+- **linked** (Boolean) True if the namespace exists in the cluster and is reported by Kubelink
+- **namespace** (String) Namespace name of the container workload profile
 - **updated_at** (String) Timestamp when this label group was last updated
 - **updated_by** (Map of String) User who last updated this label group
-- **visibility_level** (String) Visibility Level of the container cluster workload profile.
+- **visibility_level** (String) Visibility Level of the container cluster workload profile
 
 <a id="nestedatt--assign_labels"></a>
 ### Nested Schema for `assign_labels`
@@ -64,12 +64,12 @@ Required:
 
 Required:
 
-- **key** (String) Key of the Label. Allowed values for key are "role", "loc", "app" and "env".
+- **key** (String) Key of the Label. Allowed values for key are "role", "loc", "app" and "env"
 
 Optional:
 
 - **assignment** (Block List, Max: 1) The label href to set. Single element list (see [below for nested schema](#nestedblock--labels--assignment))
-- **restriction** (Block Set) The list of allowed label hrefs. (see [below for nested schema](#nestedblock--labels--restriction))
+- **restriction** (Block Set) The list of allowed label hrefs (see [below for nested schema](#nestedblock--labels--restriction))
 
 
 <a id="nestedobjatt--labels--assignment"></a>

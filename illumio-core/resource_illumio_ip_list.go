@@ -68,7 +68,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"exclusion": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.",
+							Description: "Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses",
 							Default:     false,
 						},
 					},
@@ -83,7 +83,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"fqdn": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Fully Qualified Domain Name for IP List. Allowed formats: hostname, IP, or URI",
+							Description: "Fully Qualified Domain Name for IP List. Supported formats are hostname, IP, and URI",
 						},
 						"description": {
 							Type:        schema.TypeString,

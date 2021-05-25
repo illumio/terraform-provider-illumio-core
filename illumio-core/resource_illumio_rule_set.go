@@ -75,7 +75,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ValidateDiagFunc: nameValidation,
-				Description:      "Name of Ruleset. Valid name should be between1 to 255 characters",
+				Description:      "Name of Ruleset. Valid name should be between 1 to 255 characters",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -187,7 +187,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 										Type:             schema.TypeString,
 										Optional:         true,
 										ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"ams"}, false)),
-										Description:      "Set this if rule actors are all workloads. Allowed value: \"ams\"",
+										Description:      "Set this if rule actors are all workloads. Allowed value is \"ams\"",
 									},
 									"label": {
 										Type:        schema.TypeList,

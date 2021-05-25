@@ -60,14 +60,14 @@ resource "illumio-core_service" "example_windows" {
 
 ### Required
 
-- **name** (String) Name of the Service (does not need to be unique)
+- **name** (String) Name of the Service (does not need to be unique). The name should be between 1 to 255 characters
 
 ### Optional
 
 - **description** (String) Long description of the Service
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **process_name** (String) The process name
+- **process_name** (String) The process name. The name should be between 1 to 255 characters
 - **service_ports** (Block Set) Service ports (see [below for nested schema](#nestedblock--service_ports))
 - **windows_services** (Block Set) Windows services (see [below for nested schema](#nestedblock--windows_services))
 
@@ -92,10 +92,10 @@ Required:
 
 Optional:
 
-- **icmp_code** (String) ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 15 inclusive
-- **icmp_type** (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255 inclusive
-- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive
-- **to_port** (String) High end of port range inclusive if specifying a range. Allowed range is 0 - 65535 inclusive
+- **icmp_code** (String) ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 15
+- **icmp_type** (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535
+- **to_port** (String) High end of port range if specifying a range. Allowed range is 0 - 65535
 
 
 <a id="nestedblock--windows_services"></a>
@@ -103,12 +103,12 @@ Optional:
 
 Optional:
 
-- **icmp_code** (String) ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range 0 - 15 inclusive
-- **icmp_type** (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255 inclusive
-- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535 inclusive
+- **icmp_code** (String) ICMP Code. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range 0 - 15
+- **icmp_type** (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255
+- **port** (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535
 - **process_name** (String) Name of running process
 - **proto** (String) Transport protocol. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94
 - **service_name** (String) Name of Windows Service
-- **to_port** (String) High end of port range inclusive if specifying a range. Allowed range is 0 - 65535 inclusive
+- **to_port** (String) High end of port range if specifying a range. Allowed range is 0 - 65535
 
 

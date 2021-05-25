@@ -26,7 +26,7 @@ data "illumio-core_vulnerabilities" "example" {
 
 ### Optional
 
-- **max_results** (String) Maximum number of vulnerabilities to return. The integer should be a non-zero positive integer. 
+- **max_results** (String) Maximum number of vulnerabilities to return. The integer should be a non-zero positive integer
 
 ### Read-Only
 

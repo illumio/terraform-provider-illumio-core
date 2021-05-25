@@ -32,12 +32,12 @@ data "illumio-core_enforcement_boundaries" "example" {
 ### Optional
 
 - **labels** (String) List of label URIs, encoded as a JSON string
-- **max_results** (String) Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer. 
+- **max_results** (String) Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer
 - **name** (String) Filter by name supports partial matching
 - **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 - **service** (String) Service URI
-- **service_ports_port** (String) Specify port or port range to filter results. The range is from -1 to 65535.
-- **service_ports_proto** (String) Protocol to filter on. Allowed values are 6 and 17.
+- **service_ports_port** (String) Specify port or port range to filter results. The range is from -1 to 65535
+- **service_ports_proto** (String) Protocol to filter on. Allowed values are 6 and 17
 
 ### Read-Only
 
@@ -55,7 +55,7 @@ Read-Only:
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
 - **href** (String) Href of Enforcement Boundary
-- **illumio_provider** (Set of Object) Providers for Enforcement Boundary (see [below for nested schema](#nestedobjatt--items--illumio_provider))
+- **providers** (Set of Object) Providers for Enforcement Boundary (see [below for nested schema](#nestedobjatt--items--providers))
 - **ingress_service** (Set of Object)  Collection of Ingress Service (see [below for nested schema](#nestedobjatt--items--ingress_service))
 - **name** (String) Name of the Enforcement Boundary
 - **updated_at** (String) Timestamp when this Enforcement Boundary was last updated
@@ -96,34 +96,34 @@ Read-Only:
 
 
 
-<a id="nestedobjatt--items--illumio_provider"></a>
-### Nested Schema for `items.illumio_provider`
+<a id="nestedobjatt--items--providers"></a>
+### Nested Schema for `items.providers`
 
 Read-Only:
 
-- **actors** (String) actors for illumio_provider.
-- **ip_list** (List of Object) Href of IP List (see [below for nested schema](#nestedobjatt--items--illumio_provider--ip_list))
-- **label** (List of Object) Href of Label (see [below for nested schema](#nestedobjatt--items--illumio_provider--label))
-- **label_group** (List of Object) Href of Label Group (see [below for nested schema](#nestedobjatt--items--illumio_provider--label_group))
+- **actors** (String) actors for providers
+- **ip_list** (List of Object) Href of IP List (see [below for nested schema](#nestedobjatt--items--providers--ip_list))
+- **label** (List of Object) Href of Label (see [below for nested schema](#nestedobjatt--items--providers--label))
+- **label_group** (List of Object) Href of Label Group (see [below for nested schema](#nestedobjatt--items--providers--label_group))
 
-<a id="nestedobjatt--items--illumio_provider--ip_list"></a>
-### Nested Schema for `items.illumio_provider.ip_list`
+<a id="nestedobjatt--items--providers--ip_list"></a>
+### Nested Schema for `items.providers.ip_list`
 
 Read-Only:
 
 - **href** (String) Href of IP List
 
 
-<a id="nestedobjatt--items--illumio_provider--label"></a>
-### Nested Schema for `items.illumio_provider.label`
+<a id="nestedobjatt--items--providers--label"></a>
+### Nested Schema for `items.providers.label`
 
 Read-Only:
 
 - **href** (String) Href of Label 
 
 
-<a id="nestedobjatt--items--illumio_provider--label_group"></a>
-### Nested Schema for `items.illumio_provider.label_group`
+<a id="nestedobjatt--items--providers--label_group"></a>
+### Nested Schema for `items.providers.label_group`
 
 Read-Only:
 

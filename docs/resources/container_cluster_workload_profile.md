@@ -46,7 +46,7 @@ resource "illumio-core_container_cluster_workload_profile" "example" {
 - **created_at** (String) Timestamp when this label group was first created
 - **created_by** (Map of String) User who created this label group
 - **href** (String) URI of the container workload profile
-- **linked** (Boolean) True if the namespace exists in the cluster and is reported by kubelink
+- **linked** (Boolean) True if the namespace exists in the cluster and is reported by Kubelink
 - **namespace** (String) Namespace name of the container workload profile
 - **updated_at** (String) Timestamp when this label group was last updated
 - **updated_by** (Map of String) User who last updated this label group

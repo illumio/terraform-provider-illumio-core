@@ -144,7 +144,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 			"linked": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "True if the namespace exists in the cluster and is reported by kubelink",
+				Description: "True if the namespace exists in the cluster and is reported by Kubelink",
 			},
 			"created_at": {
 				Type:        schema.TypeString,

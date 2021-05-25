@@ -79,10 +79,10 @@ Read-Only:
 
 Read-Only:
 
-- **ip_address** (String) The ip address of the host where the vulnerability is found
-- **port** (Number) The port which is associated with the vulnerability
+- **ip_address** (String) The IP address of the host where the vulnerability is found
+- **port** (Number) The port that is associated with the vulnerability
 - **port_exposure** (Number) The exposure of the port based on the current policy
-- **proto** (Number) The protocol which is associated with the vulnerability
+- **proto** (Number) The protocol that is associated with the vulnerability
 - **vulnerability** (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability **vulnerability_report** (Set of Object) Vulnerability Report for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 - **workload** (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 
@@ -117,7 +117,7 @@ Read-Only:
 
 - **address** (String) Address of the Interface
 - **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0
-- **default_gateway_address** (String) Default Gateaway Address of the Interface
+- **default_gateway_address** (String) Default Gateway Address of the Interface
 - **friendly_name** (String) Friendly name of the Interface
 - **loopback** (Boolean) Loopback for workload interfaces
 - **link_state** (String) Link State of the Interface

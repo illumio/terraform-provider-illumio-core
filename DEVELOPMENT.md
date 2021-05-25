@@ -87,6 +87,14 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 $ make testacc
 ```
 
+To get code coverage, set `-coverprofile=cover.out` while running `go test` command.
+To analyze code coverage, we can use the standard go tool [cover](https://golang.org/cmd/cover/).
+
+To check coverage per function - `go tool cover -func=cover.out`
+To check code lines covered - `go tool cover -html=cover.out`
+
+*Note: Current code coverage artifacts available at [here](.code-coverage/)*
+
 ## Debugging and Troubleshooting
 
 - Set environment variable `TF_LOG` to one of the log levels `TRACE`, `DEBUG`, `INFO`, `WARN` or `ERROR`

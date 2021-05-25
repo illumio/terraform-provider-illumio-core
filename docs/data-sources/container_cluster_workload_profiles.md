@@ -53,7 +53,7 @@ Read-Only:
 - **description** (String) Description of the container workload profile
 - **enforcement_mode** (String) Enforcement mode of container workload profiles to return
 - **labels** (Set of Object) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedobjatt--items--labels))
-- **linked** (Boolean) True if the namespace exists in the cluster and is reported by kubelink
+- **linked** (Boolean) True if the namespace exists in the cluster and is reported by Kubelink
 - **managed** (Boolean) If the namespace is managed or not
 - **name** (String) A friendly name given to a profile if the namespace is not user-friendly
 - **namespace** (String) Namespace name of the container workload profile

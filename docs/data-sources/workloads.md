@@ -46,14 +46,14 @@ data "illumio-core_workloads" "example" {
 - **last_heartbeat_on_lte** (String) Less than or equal to value for last heartbeat on timestamp
 - **log_traffic** (String) Whether we want to log traffic events from this workload
 - **managed** (String) Return managed or unmanaged workloads using this filter
-- **max_results** (String) Maximum number of workloads to return. The integer should be a non-zero positive integer. 
+- **max_results** (String) Maximum number of workloads to return. The integer should be a non-zero positive integer
 - **name** (String) Name of workload(s) to return. Supports partial matches
 - **online** (String) Return online/offline workloads using this filter
 - **os_id** (String) Operating System of workload(s) to return. Supports partial matches
 - **policy_health** (String) Policy of health of workload(s) to return. Allowed values are "active", "warning", "error" and "suspended"
 - **security_policy_sync_state** (String) Advanced search option for workload based on policy sync state. Allowed value: "staged"
 - **security_policy_update_mode** (String) Advanced search option for workload based on security policy update mode. Allowed values are "static" and "adaptive"
-- **ven** (String) URI of VEN to filter by.
+- **ven** (String) URI of VEN to filter by
 - **visibility_level** (String) Filter by visibility level. Allowed values are "flow_full_detail", "flow_summary", "flow_drops", "flow_off" and "enhanced_data_collection"
 - **vulnerability_summary_vulnerability_exposure_score_gte** (String) Greater than or equal to value for vulnerability_exposure_score
 - **vulnerability_summary_vulnerability_exposure_score_lte** (String) Less than or equal to value for vulnerability_exposure_score
@@ -121,9 +121,9 @@ Read-Only:
 
 Read-Only:
 
-- **ip_address** (String) The IP address of the host where the vulnerability is found
-- **port** (Number) The port that is associated with the vulnerability
-- **port_exposure** (Number) The exposure of the port based on the current policy.
+- **ip_address** (String) The ip address of the host where the vulnerability is found
+- **port** (Number) The port which is associated with the vulnerability
+- **port_exposure** (Number) The exposure of the port based on the current policy
 - **port_wide_exposure** (List of Object) Port Wide Exposure for detected vulnerabilities (see [below for nested schema](#nestedobjatt--items--detected_vulnerabilities--port_wide_exposure))
 - **proto** (Number) The protocol that is associated with the vulnerability
 - **vulnerability** (List of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--items--detected_vulnerabilities--vulnerability))
@@ -135,7 +135,7 @@ Read-Only:
 
 Read-Only:
 
-- **any** (Boolean) The boolean value representing if the port is exposed to internet (any rule).
+- **any** (Boolean) The boolean value representing if the port is exposed to internet (any rule)
 - **ip_list** (Boolean) The boolean value representing if the port is exposed to ip_list(s)
 
 
@@ -180,8 +180,8 @@ Read-Only:
 Read-Only:
 
 - **address** (String) Address of the Interface
-- **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0.
-- **default_gateway_address** (String) Default Gateway Address of the Interface
+- **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0
+- **default_gateway_address** (String) Default Gateaway Address of the Interface
 - **friendly_name** (String) Friendly name of the Interface
 - **loopback** (Boolean) Loopback for workload interfaces
 - **link_state** (String) Link State of the Interface
@@ -204,8 +204,8 @@ Read-Only:
 Read-Only:
 
 - **href** (String) URI of Selectively Enforced Services
-- **port** (Integer) Port number, or the starting port of a range. If unspecified, this will apply to all ports for the given protocol. Minimum and maximum value for port is 0 and 65535 respectively.
-- **to_port** (Integer) Upper end of port range; this field should not be included if specifying an individual port. Minimum and maximum value for to_port is 0 and 65535 respectively.
+- **port** (Integer) Port number, or the starting port of a range. If unspecified, this will apply to all ports for the given protocol. Minimum and maximum value for port is 0 and 65535 respectively
+- **to_port** (Integer) Upper end of port range; this field should not be included if specifying an individual port. Minimum and maximum value for to_port is 0 and 65535 respectively
 - **proto** (Integer) Transport protocol of Selectively Enforced Services
 
 
@@ -239,8 +239,8 @@ Read-Only:
 
 - **max_vulnerability_score** (Number) The maximum of all the vulnerability scores associated with the detected_vulnerabilities on the workload
 - **num_vulnerabilities** (Number) Number of vulnerabilities associated with the workload
-- **vulnerability_exposure_score** (Number) The aggregated vulnerability exposure score of the workload across all the vulnerable ports.
-- **vulnerability_score** (Number) The aggregated vulnerability score of the workload across all the vulnerable ports.
+- **vulnerability_exposure_score** (Number) The aggregated vulnerability exposure score of the workload across all the vulnerable ports
+- **vulnerability_score** (Number) The aggregated vulnerability score of the workload across all the vulnerable ports
 - **vulnerable_port_exposure** (Number) The aggregated vulnerability port exposure score of the workload across all the vulnerable ports
 - **vulnerable_port_wide_exposure** (List of Object) High end of an IP range (see [below for nested schema](#nestedobjatt--items--vulnerabilities_summary--vulnerable_port_wide_exposure))
 

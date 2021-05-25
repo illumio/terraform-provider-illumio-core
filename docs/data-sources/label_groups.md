@@ -27,8 +27,8 @@ data "illumio-core_label_groups" "example" {
 - **description** (String) The long description of the label group
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
-- **key** (String) Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".
-- **max_results** (String) Maximum number of Labels to return. The integer should be a non-zero positive integer.
+- **key** (String) Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env"
+- **max_results** (String) Maximum number of Labels to return. The integer should be a non-zero positive integer
 - **name** (String) Name of Label Group(s) to return. Supports partial matches
 - **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 - **usage** (String) Include label usage flags as well

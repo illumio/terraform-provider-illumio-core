@@ -55,8 +55,8 @@ Read-Only:
 Read-Only:
 
 - **description** (String) Description of IP Range
-- **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.
-- **from_ip** (String) IP address or a low end of IP range. Might be specified with CIDR notation
+- **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses
+- **from_ip** (String) IP adress or a low end of IP range. Might be specified with CIDR notation
 - **to_ip** (String) High end of an IP range
 
 

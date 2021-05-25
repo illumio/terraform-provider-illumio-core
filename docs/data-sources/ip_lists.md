@@ -29,7 +29,7 @@ data "illumio-core_ip_lists" "example" {
 - **external_data_set** (String) The data source from which a resource originates
 - **fqdn** (String) IP lists matching FQDN. Supports partial matches
 - **ip_address** (String) IP address matching IP list(s) to return. Supports partial matches
-- **max_results** (String) Maximum number of IP Lists to return. The integer should be a non-zero positive integer.
+- **max_results** (String) Maximum number of IP Lists to return. The integer should be a non-zero positive integer
 - **name** (String) Name of IP list(s) to return. Supports partial matches
 - **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 
@@ -71,7 +71,7 @@ Read-Only:
 Read-Only:
 
 - **description** (String) Description of IP Range
-- **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses.
-- **from_ip** (String) IP address or a low end of IP range. Might be specified with CIDR notation
+- **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses
+- **from_ip** (String) IP adress or a low end of IP range. Might be specified with CIDR notation
 - **to_ip** (String) High end of an IP range
 

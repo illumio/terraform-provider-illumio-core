@@ -75,7 +75,7 @@ Read-Only:
 - **fqdn** (String) FQDN to assign to the virtual service
 - **ip** (String) IP address to assign to the virtual service
 - **network** (Map of String) Network Object
-- **port** (Number) Port associated with the IP address for the service.
+- **port** (Number) Port associated with the IP address for the service
 
 
 <a id="nestedatt--service_ports"></a>
@@ -83,8 +83,8 @@ Read-Only:
 
 Read-Only:
 
-- **port** (Number) Port Number. Also, the starting port when specifying a range.
-- **proto** (Number) High end of port range inclusive if specifying a range. If not specifying a range then don't send this.
+- **port** (Number) Port Number. Also the starting port when specifying a range
+- **proto** (Number) High end of port range inclusive if specifying a range. If not specifying a range then don't send this
 - **to_port** (Number) Transport protocol
 
 

@@ -35,7 +35,7 @@ data "illumio-core_vens" "example" {
 - **active_pce_fqdn** (String) FQDN of the PCE
 - **condition** (String) A specific error condition to filter by. Allowed values are "agent.upgrade_time_out", "agent.missing_heartbeats_after_upgrade", "agent.clone_detected" and "agent.missed_heartbeats"
 - **container_clusters** (String) Array of container cluster URIs, encoded as a JSON string
-- **description** (String) Description of VEN(s) to return. Supports partial matches.
+- **description** (String) Description of VEN(s) to return. Supports partial matches
 - **disconnected_before** (String) Return VENs that have been disconnected since the given time
 - **health** (String) The overall health (condition) of the VEN. Allowed values are  "healthy", "unhealthy", "error" and "warning"
 - **hostname** (String) Hostname of VEN(s) to return. Supports partial matches
@@ -45,9 +45,9 @@ data "illumio-core_vens" "example" {
 - **last_goodbye_at_lte** (String) Greater than or equal to value for last goodbye at timestamp
 - **last_heartbeat_at_gte** (String) Greater than or equal to value for last heartbeat timestamp
 - **last_heartbeat_at_lte** (String) Less than or equal to value for last heartbeat timestamp
-- **max_results** (String) Maximum number of VENs to return. The integer should be a non-zero positive integer. 
+- **max_results** (String) Maximum number of VENs to return. The integer should be a non-zero positive integer
 - **name** (String) Name of VEN(s) to return. Supports partial matches
-- **os** (String) Operating System of VEN(s) to return. Supports partial matches.
+- **os** (String) Operating System of VEN(s) to return. Supports partial matches
 - **status** (String) The current status of the VEN. Allowed values are "active", "suspended", "stopped" and "uninstalled"
 - **upgrade_pending** (String) Only return VENs with/without a pending upgrade
 - **version_gte** (String) Greater than or equal to value for version

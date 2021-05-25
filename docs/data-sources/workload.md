@@ -49,6 +49,7 @@ data "illumio-core_workload" "example" {
 - **hostname** (String) The hostname of this workload
 - **ignored_interface_names** (List of String) Ignored Interface Names for Workload
 - **interfaces** (List of Object) List of interfaces for workload (see [below for nested schema](#nestedatt--interfaces))
+- **ike_authentication_certificate** IKE authentication certificate for certificate-based Secure Connect and Machine Auth
 - **labels** (List of Object) List of lists of label URIs (see [below for nested schema](#nestedatt--labels))
 - **name** (String) Name of the Workload
 - **online** (Boolean) Determines if this workload is online
@@ -78,10 +79,10 @@ Read-Only:
 
 Read-Only:
 
-- **ip_address** (String) The IP address of the host where the vulnerability is found
-- **port** (Number) The port that is associated with the vulnerability
-- **port_exposure** (Number) The exposure of the port based on the current policy.
-- **proto** (Number) The protocol that is associated with the vulnerability
+- **ip_address** (String) The ip address of the host where the vulnerability is found
+- **port** (Number) The port which is associated with the vulnerability
+- **port_exposure** (Number) The exposure of the port based on the current policy
+- **proto** (Number) The protocol which is associated with the vulnerability
 - **vulnerability** (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability **vulnerability_report** (Set of Object) Vulnerability Report for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 - **workload** (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 
@@ -115,8 +116,8 @@ Read-Only:
 Read-Only:
 
 - **address** (String) Address of the Interface
-- **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0.
-- **default_gateway_address** (String) Default Gateway Address of the Interface
+- **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0
+- **default_gateway_address** (String) Default Gateaway Address of the Interface
 - **friendly_name** (String) Friendly name of the Interface
 - **loopback** (Boolean) Loopback for workload interfaces
 - **link_state** (String) Link State of the Interface
@@ -137,8 +138,8 @@ Read-Only:
 Read-Only:
 
 - **href** (String) URI of Selectively Enforced Services
-- **port** (Integer) Port number, or the starting port of a range. If unspecified, this will apply to all ports for the given protocol. Minimum and maximum value for port is 0 and 65535 respectively.
-- **to_port** (Integer) Upper end of port range; this field should not be included if specifying an individual port. Minimum and maximum value for to_port is 0 and 65535 respectively.
+- **port** (Integer) Port number, or the starting port of a range. If unspecified, this will apply to all ports for the given protocol. Minimum and maximum value for port is 0 and 65535 respectively
+- **to_port** (Integer) Upper end of port range; this field should not be included if specifying an individual port. Minimum and maximum value for to_port is 0 and 65535 respectively
 - **proto** (Integer) Transport protocol of Selectively Enforced Services
 
 <a id="nestedatt--services"></a>
@@ -172,8 +173,8 @@ Read-Only:
 
 - **max_vulnerability_score** (Number) The maximum of all the vulnerability scores associated with the detected_vulnerabilities on the workload
 - **num_vulnerabilities** (Number) Number of vulnerabilities associated with the workload
-- **vulnerability_exposure_score** (Number) The aggregated vulnerability exposure score of the workload across all the vulnerable ports.
-- **vulnerability_score** (Number) The aggregated vulnerability score of the workload across all the vulnerable ports.
+- **vulnerability_exposure_score** (Number) The aggregated vulnerability exposure score of the workload across all the vulnerable ports
+- **vulnerability_score** (Number) The aggregated vulnerability score of the workload across all the vulnerable ports
 - **vulnerable_port_exposure** (Number) The aggregated vulnerability port exposure score of the workload across all the vulnerable ports
 - **vulnerable_port_wide_exposure** (List of Object) High end of an IP range (see [below for nested schema](#nestedobjatt--vulnerabilities_summary--vulnerable_port_wide_exposure))
 
@@ -184,5 +185,3 @@ Read-Only:
 
 - **any** (Boolean) The boolean value representing if at least one port is exposed to internet (any rule) on the workload
 - **ip_list** (Boolean) The boolean value representing if at least one port is exposed to ip_list(s) on the workload
-
-

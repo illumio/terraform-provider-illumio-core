@@ -43,7 +43,7 @@ Read-Only:
 - **link_state** (String) Link State for Workload Interface
 - **loopback** (Boolean) Loopback for Workload Interface
 - **name** (String) Name of the Workload Interface
-- **network** (Map of String) Network for the Workload Interface.
+- **network** (Map of String) Network for the Workload Interface
 - **network_detection_mode** (String) Network Detection Mode for Workload Interface
 
 

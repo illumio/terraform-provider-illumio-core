@@ -31,7 +31,7 @@ data "illumio-core_enforcement_boundary" "example" {
 - **created_by** (Map of String) User who created this Enforcement Boundary
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
-- **illumio_providers** (Block Set) providers for Enforcement Boundary. Only one actor can be specified in one illumio_providers block (see [below for nested schema](#nestedblock--illumio_providers))
+- **providers** (Block Set) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
 - **ingress_services** (Set of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_services))
 - **name** (String) Name of the Enforcement Boundary
 - **updated_at** (String) Timestamp when this Enforcement Boundary was last updated
@@ -72,34 +72,34 @@ Read-Only:
 
 
 
-<a id="nestedblock--illumio_providers"></a>
-### Nested Schema for `illumio_providers`
+<a id="nestedblock--providers"></a>
+### Nested Schema for `providers`
 
 Read-Only:
 
-- **actors** (String) actors for illumio_providers.
-- **ip_list** (List of Object) Href of IP List (see [below for nested schema](#nestedatt--illumio_providers--ip_list))
-- **label** (List of Object) Href of Label (see [below for nested schema](#nestedatt--illumio_providers--label))
-- **label_group** (List of Object) Href of Label Group (see [below for nested schema](#nestedatt--illumio_providers--label_group))
+- **actors** (String) actors for providers
+- **ip_list** (List of Object) Href of IP List (see [below for nested schema](#nestedatt--providers--ip_list))
+- **label** (List of Object) Href of Label (see [below for nested schema](#nestedatt--providers--label))
+- **label_group** (List of Object) Href of Label Group (see [below for nested schema](#nestedatt--providers--label_group))
 
-<a id="nestedatt--illumio_providers--ip_list"></a>
-### Nested Schema for `illumio_providers.ip_list`
+<a id="nestedatt--providers--ip_list"></a>
+### Nested Schema for `providers.ip_list`
 
 Read-Only:
 
 - **href** (String) Href of IP List
 
 
-<a id="nestedatt--illumio_providers--label"></a>
-### Nested Schema for `illumio_providers.label`
+<a id="nestedatt--providers--label"></a>
+### Nested Schema for `providers.label`
 
 Read-Only:
 
 - **href** (String) Href of Label
 
 
-<a id="nestedatt--illumio_providers--label_group"></a>
-### Nested Schema for `illumio_providers.label_group`
+<a id="nestedatt--providers--label_group"></a>
+### Nested Schema for `providers.label_group`
 
 Read-Only:
 
@@ -116,5 +116,3 @@ Read-Only:
 - **port** (String) Port number used with protocol or starting port when specifying a range
 - **proto** (String) Protocol number
 - **to_port** (String) Upper end of port range
-
-

@@ -33,12 +33,12 @@ func datasourceIllumioOrganizationSettings() *schema.Resource {
 			"audit_event_min_severity": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Minimum severity level of audit event messages.",
+				Description: "Minimum severity level of audit event messages",
 			},
 			"format": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The log format (JSON, CEF, LEEF), which applies to all remote Syslog destinations.",
+				Description: "The log format (JSON, CEF, LEEF), which applies to all remote Syslog destinations",
 			},
 		},
 	}

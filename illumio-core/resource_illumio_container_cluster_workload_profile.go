@@ -239,7 +239,7 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 	if isAssignLabelsAvailable && isLabelsAvailable {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assign_labels\", \"labels\"} in the block. Please provide one of them.",
+			Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assign_labels\", \"labels\"} in the block. Please provide one of them",
 		})
 	}
 
@@ -400,7 +400,7 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 	if isAssignLabelsUpdate && isLabelsUpdate {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assign_labels\", \"labels\"} in the block. Please provide one of them.",
+			Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assign_labels\", \"labels\"} in the block. Please provide one of them",
 		})
 	}
 

@@ -120,7 +120,7 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 						"restriction": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "The list of allowed label hrefs.",
+							Description: "The list of allowed label hrefs",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"href": {
@@ -142,22 +142,22 @@ func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 			"enforcement_mode": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Enforcement mode of container workload profiles to return.",
+				Description: "Enforcement mode of container workload profiles to return",
 			},
 			"visibility_level": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Visibility Level of the container cluster workload profile.",
+				Description: "Visibility Level of the container cluster workload profile",
 			},
 			"managed": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "If the namespace is managed or not.",
+				Description: "If the namespace is managed or not",
 			},
 			"linked": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "True if the namespace exists in the cluster and is reported by Kubelink.",
+				Description: "True if the namespace exists in the cluster and is reported by Kubelink",
 			},
 			"created_at": {
 				Type:        schema.TypeString,

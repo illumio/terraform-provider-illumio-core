@@ -94,7 +94,7 @@ func datasourceIllumioServices() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of Services to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of Services to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,

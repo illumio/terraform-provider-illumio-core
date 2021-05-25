@@ -115,7 +115,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 						"to_port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Specify port or port range to filter results.",
+							Description: "Specify port or port range to filter results",
 						},
 						"proto": {
 							Type:        schema.TypeInt,

@@ -129,7 +129,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 									"to_port": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Specify port or port range to filter results.",
+										Description: "Specify port or port range to filter results",
 									},
 									"proto": {
 										Type:        schema.TypeInt,
@@ -278,7 +278,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of Virtual Services to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of Virtual Services to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -304,7 +304,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringInRange(-1, 65535),
-				Description:      "Specify port or port range to filter results. The range is from -1 to 65535.",
+				Description:      "Specify port or port range to filter results. The range is from -1 to 65535",
 			},
 			"service_ports_proto": {
 				Type:             schema.TypeString,

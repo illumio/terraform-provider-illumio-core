@@ -51,17 +51,17 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 									"proto": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Protocol number.",
+										Description: "Protocol number",
 									},
 									"port": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Port number used with protocol or starting port when specifying a range.",
+										Description: "Port number used with protocol or starting port when specifying a range",
 									},
 									"to_port": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Upper end of port range.",
+										Description: "Upper end of port range",
 									},
 									"href": {
 										Type:        schema.TypeString,
@@ -80,7 +80,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 									"actors": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "actors for providers.",
+										Description: "actors for providers",
 									},
 									"label": {
 										Type:        schema.TypeList,
@@ -208,7 +208,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringInRange(-1, 65535),
-				Description:      "Specify port or port range to filter results. The range is from -1 to 65535.",
+				Description:      "Specify port or port range to filter results. The range is from -1 to 65535",
 			},
 			"service_ports_proto": {
 				Type:             schema.TypeString,

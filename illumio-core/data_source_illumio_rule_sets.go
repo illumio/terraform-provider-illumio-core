@@ -439,7 +439,7 @@ func datasourceIllumioRuleSets() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of Rulesets to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of Rulesets to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,

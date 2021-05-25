@@ -97,7 +97,7 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 									"restriction": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "The list of allowed label hrefs.",
+										Description: "The list of allowed label hrefs",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"href": {
@@ -119,22 +119,22 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 						"enforcement_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Enforcement mode of container workload profiles to return.",
+							Description: "Enforcement mode of container workload profiles to return",
 						},
 						"visibility_level": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Visibility Level of the container cluster workload profile.",
+							Description: "Visibility Level of the container cluster workload profile",
 						},
 						"managed": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "If the namespace is managed or not.",
+							Description: "If the namespace is managed or not",
 						},
 						"linked": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "True if the namespace exists in the cluster and is reported by Kubelink.",
+							Description: "True if the namespace exists in the cluster and is reported by Kubelink",
 						},
 						"created_at": {
 							Type:        schema.TypeString,
@@ -176,13 +176,13 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice(ValidWorkloadEnforcementModeValues, false),
 				),
-				Description: "Filter by enforcement mode. Allowed values for enforcement modes are \"idle\",\"visibility_only\",\"full\", and \"selective\".",
+				Description: "Filter by enforcement mode. Allowed values for enforcement modes are \"idle\",\"visibility_only\",\"full\", and \"selective\"",
 			},
 			"linked": {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Filter by linked container workload profiles.",
+				Description:      "Filter by linked container workload profiles",
 			},
 			"managed": {
 				Type:             schema.TypeString,
@@ -194,17 +194,17 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer.",
+				Description:      "Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name string to match.Supports partial matches.",
+				Description: "Name string to match.Supports partial matches",
 			},
 			"namespace": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Namespace string to match.Supports partial matches.",
+				Description: "Namespace string to match.Supports partial matches",
 			},
 			"visibility_level": {
 				Type:     schema.TypeString,

@@ -43,7 +43,7 @@ func TestAccIllumioRuleSet_CreateUpdate(t *testing.T) {
 func testAccCheckIllumioRuleSetConfig_basic(val string) string {
 	return fmt.Sprintf(`
 	resource "illumio-core_rule_set" "test" {
-		name = "terraform-test-1"
+		name = "acc-terraform-test"
 		description = "%s"
 		
 		ip_tables_rules {

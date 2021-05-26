@@ -89,11 +89,11 @@ resource "illumio-core_security_rule" "example" {
 Optional:
 
 - **actors** (String) actors for consumers parameter. Allowed values are "ams" and "container_host"
-- **ip_list** (Block List, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--consumers--ip_list))
-- **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--consumers--label))
-- **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--consumers--label_group))
-- **virtual_service** (Block List, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--consumers--virtual_service))
-- **workload** (Block List, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--consumers--workload))
+- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--consumers--ip_list))
+- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--consumers--label))
+- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--consumers--label_group))
+- **virtual_service** (Block Set, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--consumers--virtual_service))
+- **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--consumers--workload))
 
 <a id="nestedblock--consumers--ip_list"></a>
 ### Nested Schema for `consumers.ip_list`
@@ -142,12 +142,12 @@ Required:
 Optional:
 
 - **actors** (String) actors for providers. Allowed value is "ams"
-- **ip_list** (Block List, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--providers--ip_list))
-- **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--providers--label))
-- **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--providers--label_group))
-- **virtual_server** (Block List, Max: 1) Href of Virtual Server (see [below for nested schema](#nestedblock--providers--virtual_server))
-- **virtual_service** (Block List, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--providers--virtual_service))
-- **workload** (Block List, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--providers--workload))
+- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--providers--ip_list))
+- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--providers--label))
+- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--providers--label_group))
+- **virtual_server** (Block Set, Max: 1) Href of Virtual Server (see [below for nested schema](#nestedblock--providers--virtual_server))
+- **virtual_service** (Block Set, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--providers--virtual_service))
+- **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--providers--workload))
 
 <a id="nestedblock--providers--ip_list"></a>
 ### Nested Schema for `providers.ip_list`

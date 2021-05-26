@@ -27,7 +27,7 @@ resource "illumio-core_ven" "example" {
 
 ### Required
 
-- **status** (String) Status of the VEN. Allowed values are "active", and "suspended
+- **status** (String) Status of the VEN. Allowed values are "active", and "suspended"
 
 ### Optional
 

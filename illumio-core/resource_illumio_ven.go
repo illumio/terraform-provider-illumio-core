@@ -76,7 +76,7 @@ func resourceIllumioVEN() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(venStatusValidValues, false)),
-				Description:      `Status of the VEN. Allowed values are "active", and "suspended`,
+				Description:      `Status of the VEN. Allowed values are "active", and "suspended"`,
 			},
 			"activation_type": {
 				Type:        schema.TypeString,

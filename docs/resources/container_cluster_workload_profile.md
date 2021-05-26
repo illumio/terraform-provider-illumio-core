@@ -68,7 +68,7 @@ Required:
 
 Optional:
 
-- **assignment** (Block List, Max: 1) The label href to set. Single element list (see [below for nested schema](#nestedblock--labels--assignment))
+- **assignment** (Block Set, Max: 1) The label href to set. Single element list (see [below for nested schema](#nestedblock--labels--assignment))
 - **restriction** (Block Set) The list of allowed label hrefs (see [below for nested schema](#nestedblock--labels--restriction))
 
 

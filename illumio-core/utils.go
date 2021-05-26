@@ -138,9 +138,17 @@ func hrefSchemaComputed(rName string, diagValid schema.SchemaValidateDiagFunc) *
 	}
 }
 
-// Constructs Href object from href resource schema, supports both TypeList(Maxitem = 1) and regulare type
+// Constructs Href object from href resource schema, supports TypeList(Maxitem = 1), TypeSet(Maxitem = 1), and regulare type
 func getHrefObj(obj interface{}) *models.Href {
 	switch obj.(type) {
+	case *schema.Set: // TypeSet
+		l := obj.(*schema.Set).List()
+		if len(l) > 0 {
+			m := l[0].(map[string]interface{})
+			return &models.Href{Href: m["href"].(string)}
+		} else {
+			return &models.Href{}
+		}
 	case []interface{}: // TypeList
 		l := obj.([]interface{})
 		if len(l) > 0 {

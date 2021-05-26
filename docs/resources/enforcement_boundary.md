@@ -57,9 +57,9 @@ resource "illumio-core_enforcement_boundary" "example" {
 Optional:
 
 - **actors** (String) actors for consumers parameter. Valid value is "ams"
-- **ip_list** (Block List, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--consumers--ip_list))
-- **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--consumers--label))
-- **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--consumers--label_group))
+- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--consumers--ip_list))
+- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--consumers--label))
+- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--consumers--label_group))
 
 <a id="nestedblock--consumers--ip_list"></a>
 ### Nested Schema for `consumers.ip_list`
@@ -92,9 +92,9 @@ Required:
 Optional:
 
 - **actors** (String) actors for providers. Valid value is "ams"
-- **ip_list** (Block List, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--providers--ip_list))
-- **label** (Block List, Max: 1) Href of Label (see [below for nested schema](#nestedblock--providers--label))
-- **label_group** (Block List, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--providers--label_group))
+- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--providers--ip_list))
+- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--providers--label))
+- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--providers--label_group))
 
 <a id="nestedblock--providers--ip_list"></a>
 ### Nested Schema for `providers.ip_list`

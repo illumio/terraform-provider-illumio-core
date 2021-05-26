@@ -16,6 +16,7 @@ Example Usage
 
 ```hcl
 data "illumio-core_security_rules" "example" {
+  rule_set_href = "/orgs/1/sec_policy/draft/rule_sets/6"
   external_data_reference = "ref"
 }
 ```

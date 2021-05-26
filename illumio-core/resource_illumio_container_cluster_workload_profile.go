@@ -80,7 +80,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 							),
 						},
 						"assignment": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Optional:    true,
 							MaxItems:    1,
 							Description: "The label href to set. Single element list",
@@ -208,9 +208,10 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 			labelMap := label.(map[string]interface{})
 			labelsI.Key = labelMap["key"].(string)
 
-			if len(labelMap["assignment"].([]interface{})) > 0 {
+			assList := labelMap["assignment"].(*schema.Set).List()
+			if len(assList) > 0 {
 				t := models.Href{
-					Href: labelMap["assignment"].([]interface{})[0].(map[string]interface{})["href"].(string),
+					Href: assList[0].(map[string]interface{})["href"].(string),
 				}
 				labelsI.Assignment = t
 			}
@@ -368,9 +369,12 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 			labelsI := models.ContainerClusterWorkloadProfileLabel{}
 			labelMap := label.(map[string]interface{})
 			labelsI.Key = labelMap["key"].(string)
-			if len(labelMap["assignment"].([]interface{})) > 0 {
+
+			assList := labelMap["assignment"].(*schema.Set).List()
+
+			if len(assList) > 0 {
 				t := models.Href{
-					Href: labelMap["assignment"].([]interface{})[0].(map[string]interface{})["href"].(string),
+					Href: assList[0].(map[string]interface{})["href"].(string),
 				}
 				labelsI.Assignment = t
 			}

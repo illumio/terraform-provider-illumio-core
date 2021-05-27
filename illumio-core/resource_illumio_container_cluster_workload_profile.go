@@ -50,10 +50,11 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Description: "Description of the container workload profile",
 			},
 			"assign_labels": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Computed:    true,
-				Description: "Assigned labels container workload profile",
+				Type:         schema.TypeSet,
+				Optional:     true,
+				Computed:     true,
+				ExactlyOneOf: []string{"labels", "assign_labels"},
+				Description:  "Assigned labels container workload profile",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {
@@ -350,15 +351,9 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 		Managed:         d.Get("managed").(bool),
 	}
 
-	var isAssignLabelsUpdate bool
-	var isLabelsUpdate bool
-
 	if d.HasChange("assign_labels") {
 		items := d.Get("assign_labels")
 		ccwp.AssignLabels = models.GetHrefs(items.(*schema.Set).List())
-		if len(items.(*schema.Set).List()) > 0 {
-			isAssignLabelsUpdate = true
-		}
 	}
 
 	if d.HasChange("labels") {
@@ -396,18 +391,8 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 			labelsModel = append(labelsModel, labelsI)
 		}
 		ccwp.Labels = labelsModel
-		if len(items.(*schema.Set).List()) > 0 {
-			isLabelsUpdate = true
-		}
 	}
-
-	if isAssignLabelsUpdate && isLabelsUpdate {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "[illumio-core_container_cluster_workload_profile] ExactlyOneOf : {\"assign_labels\", \"labels\"} in the block. Please provide one of them",
-		})
-	}
-
+	
 	if diags.HasError() {
 		return diags
 	}

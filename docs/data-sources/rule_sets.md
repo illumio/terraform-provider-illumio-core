@@ -34,7 +34,7 @@ data "illumio-core_rule_sets" "example" {
 - **labels** (String) List of lists of label URIs, encoded as a JSON string
 - **max_results** (String) Maximum number of Rulesets to return. The integer should be a non-zero positive integer
 - **name** (String) Name of Ruleset(s) to return. Supports partial matches
-- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active" and numbers greater than 0. Default value: "draft"
+- **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 
 ### Read-Only
 
@@ -44,7 +44,6 @@ data "illumio-core_rule_sets" "example" {
 ### Nested Schema for `items`
 
 Read-Only:
-
 
 - **created_at** (String) Timestamp when this ruleset was first created
 - **created_by** (Map of String) User who created this resource
@@ -109,8 +108,8 @@ Read-Only:
 
 Read-Only:
 
-- **consumers** (Set of Object) consumers of Security Rule (see [below for nested schema](#nestedobjatt--items--rules--consumers))
-- - **created_at** (String) Timestamp when this security rule was first created
+- **consumers** (List of Object) consumers of Security Rule (see [below for nested schema](#nestedobjatt--items--rules--consumers))
+- **created_at** (String) Timestamp when this security rule was first created
 - **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
 - **deleted_by** (Map of String) User who deleted this security rule
@@ -121,8 +120,8 @@ Read-Only:
 - **href** (String) URI of Security Rule
 - **ingress_services** (List of Object) Collection of Ingress Services (see [below for nested schema](#nestedobjatt--items--rules--ingress_services))
 - **machine_auth** (Boolean)
-- **providers** (Set of Object) providers of Security Rule (see [below for nested schema](#nestedobjatt--items--rules--providers))
-- **resolve_labels_as** (List of Object) resolve_label _as of Security rule (see [below for nested schema](#nestedobjatt--items--rules--resolve_labels_as))
+- **providers** (List of Object) providers of Security Rule (see [below for nested schema](#nestedobjatt--items--rules--providers))
+- **resolve_labels_as** (List of Object) resolve_label_as of Security rule (see [below for nested schema](#nestedobjatt--items--rules--resolve_labels_as))
 - **sec_connect** (Boolean) Determines whether a secure connection is established
 - **stateless** (Boolean) Determines whether packet filtering is stateless for the rule
 - **unscoped_consumers** (Boolean) Set the scope for rule consumers to All

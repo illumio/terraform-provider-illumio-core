@@ -179,7 +179,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioWorkloadsRead,
 		SchemaVersion: version,
-		Description:   "Represents Illumio Workload",
+		Description:   "Represents Illumio Workloads",
 
 		Schema: map[string]*schema.Schema{
 			"items": {

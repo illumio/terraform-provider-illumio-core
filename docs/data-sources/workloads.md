@@ -90,8 +90,8 @@ Read-Only:
 - **href** (String) URI of workload
 - **ignored_interface_names** (List of String) Ignored Interface Names for Workload
 - **ike_authentication_certificate** (Map of String)
-- **interfaces** (Set of Object)  List of interfaces for workload (see [below for nested schema](#nestedobjatt--items--interfaces))
-- **labels** (Set of Object) List of lists of label URIs (see [below for nested schema](#nestedobjatt--items--labels))
+- **interfaces** (List of Object) List of interfaces for workload (see [below for nested schema](#nestedobjatt--items--interfaces))
+- **labels** (List of Object) List of lists of label URIs (see [below for nested schema](#nestedobjatt--items--labels))
 - **name** (String) Name of the Workload
 - **online** (Boolean) Determines if this workload is online
 - **os_detail** (String) Additional OS details - just displayed to end-user
@@ -154,7 +154,7 @@ Read-Only:
 
 Read-Only:
 
--- **href** (String) The URI of the vulnerability Report to which this vulnerability belongs to
+- **href** (String) The URI of the vulnerability Report to which this vulnerability belongs to
 
 
 <a id="nestedobjatt--items--detected_vulnerabilities--workload"></a>
@@ -195,7 +195,7 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String)URI of the labels
+- **href** (String) URI of the labels
 
 
 <a id="nestedobjatt--items--selectively_enforced_services"></a>
@@ -230,7 +230,6 @@ Read-Only:
 - **protocol** (Number) Transport protocol for open service ports
 - **user** (String) The user account that the process is running under
 - **win_service_name** (String) Name of the Windows service
-
 
 <a id="nestedobjatt--items--vulnerabilities_summary"></a>
 ### Nested Schema for `items.vulnerabilities_summary`

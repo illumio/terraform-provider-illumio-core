@@ -4,12 +4,12 @@ page_title: "illumio-core_syslog_destination Resource - terraform-provider-illum
 sidebar_current: "docs-illumio-core-resource-syslog-destination"
 subcategory: ""
 description: |-
-  Manages Illumio SyslogDestination
+  Manages Illumio Syslog Destination
 ---
 
 # illumio-core_syslog_destination (Resource)
 
-Manages Illumio SyslogDestination (***Global Organization Owner access required***)
+Manages Illumio Syslog Destination (***Global Organization Owner access required***)
 
 Example Usage
 ------------
@@ -50,7 +50,7 @@ resource "illumio-core_syslog_destination" "example" {
 
 ### Required
 
-- **audit_event_logger** (Block List, Min: 1, Max: 1) audit_event_logger details for destination.  (see [below for nested schema](#nestedblock--audit_event_logger))
+- **audit_event_logger** (Block List, Min: 1, Max: 1) audit_event_logger details for destination (see [below for nested schema](#nestedblock--audit_event_logger))
 - **description** (String) Description of the destination
 - **node_status_logger** (Block List, Min: 1, Max: 1) node_status_logger details for destination (see [below for nested schema](#nestedblock--node_status_logger))
 - **pce_scope** (Set of String) pce_scope for destination
@@ -58,6 +58,7 @@ resource "illumio-core_syslog_destination" "example" {
 - **type** (String) Destination type. Allowed values are "local_syslog" and "remote_syslog"
 
 ### Optional
+
 - **remote_syslog** (Block List, Max: 1) remote_syslog details for destination. Required when type is set to "remote_syslog" (see [below for nested schema](#nestedblock--remote_syslog))
 
 ### Read-Only

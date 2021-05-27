@@ -47,4 +47,3 @@ Read-Only:
 - **network_detection_mode** (String) Network Detection Mode for Workload Interface
 
 
-

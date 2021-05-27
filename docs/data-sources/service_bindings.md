@@ -26,7 +26,7 @@ data "illumio-core_service_bindings" "example" {
 
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
-- **max_results** (String) Maximum number of virtual service bindings to return. The integer should be a non-zero positive integer 
+- **max_results** (String) Maximum number of virtual service bindings to return. The integer should be a non-zero positive integer
 - **virtual_service** (String) Virtual service URI
 - **workload** (String) Workload URI
 
@@ -44,9 +44,9 @@ Read-Only:
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data Set identifier
 - **href** (String) URI of Service Binding
-- **port_overrides** (Set of Object) Port Overrides for Service Bindings (see [below for nested schema](#nestedobjatt--items--port_overrides))
+- **port_overrides** (List of Object) Port Overrides for Service Bindings (see [below for nested schema](#nestedobjatt--items--port_overrides))
 - **virtual_service** (Map of String) Virtual service href
-- **workload** (Set of Object) Workload Object for Service Bindings (see [below for nested schema](#nestedobjatt--items--workload))
+- **workload** (List of Object) Workload Object for Service Bindings (see [below for nested schema](#nestedobjatt--items--workload))
 
 <a id="nestedobjatt--items--port_overrides"></a>
 ### Nested Schema for `items.port_overrides`

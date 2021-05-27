@@ -11,6 +11,7 @@ description: |-
 
 Represents Illumio Workload
 
+
 Example Usage
 ------------
 
@@ -25,6 +26,7 @@ data "illumio-core_workload" "example" {
 ### Required
 
 - **href** (String) URI of the Workload
+
 ### Read-Only
 
 - **agent_to_pce_certificate_authentication_id** (String) PKI Certificate identifier to be used by the PCE for authenticating the VEN
@@ -48,9 +50,9 @@ data "illumio-core_workload" "example" {
 - **firewall_coexistence** (List of Object) Firewall coexistence mode (see [below for nested schema](#nestedatt--firewall_coexistence))
 - **hostname** (String) The hostname of this workload
 - **ignored_interface_names** (List of String) Ignored Interface Names for Workload
-- **interfaces** (List of Object) List of interfaces for workload (see [below for nested schema](#nestedatt--interfaces))
-- **ike_authentication_certificate** IKE authentication certificate for certificate-based Secure Connect and Machine Auth
-- **labels** (List of Object) List of lists of label URIs (see [below for nested schema](#nestedatt--labels))
+- **ike_authentication_certificate** (Map of String) IKE authentication certificate for certificate-based Secure Connect and Machine Auth
+- **interfaces** (List of Object) A unique identifier within the external data source (see [below for nested schema](#nestedatt--interfaces))
+- **labels** (List of Object) List of label URIs (see [below for nested schema](#nestedatt--labels))
 - **name** (String) Name of the Workload
 - **online** (Boolean) Determines if this workload is online
 - **os_detail** (String) Additional OS details - just displayed to end-user
@@ -62,7 +64,7 @@ data "illumio-core_workload" "example" {
 - **services** (List of Object) Service report for Workload (see [below for nested schema](#nestedatt--services))
 - **updated_at** (String) Timestamp when this Workload was last updated
 - **updated_by** (Map of String) User who last updated this Workload
-- **ven** (List of String) VENS for Workload
+- **ven** (Map of String) VENS for Workload
 - **visibility_level** (String) Visibility Level of workload(s) to return
 - **vulnerabilities_summary** (List of Object) Vulnerabilities summary associated with the workload (see [below for nested schema](#nestedatt--vulnerabilities_summary))
 
@@ -74,6 +76,7 @@ Read-Only:
 - **href** (String) URI of container cluster
 - **name** (String) Name of container cluster
 
+
 <a id="nestedatt--detected_vulnerabilities"></a>
 ### Nested Schema for `detected_vulnerabilities`
 
@@ -82,18 +85,37 @@ Read-Only:
 - **ip_address** (String) The IP address of the host where the vulnerability is found
 - **port** (Number) The port that is associated with the vulnerability
 - **port_exposure** (Number) The exposure of the port based on the current policy
+- **port_wide_exposure** (List of Object) High end of an IP range(see [below for nested schema](#nestedobjatt--detected_vulnerabilities--port_wide_exposure))
 - **proto** (Number) The protocol that is associated with the vulnerability
-- **vulnerability** (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability **vulnerability_report** (Set of Object) Vulnerability Report for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
-- **workload** (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
+- **vulnerability** (List of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability))
+- **vulnerability_report** (List of Object) Vulnerability Report for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
+- **workload** (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--workload))
+
+<a id="nestedobjatt--detected_vulnerabilities--port_wide_exposure"></a>
+### Nested Schema for `detected_vulnerabilities.port_wide_exposure`
+
+Read-Only:
+
+- **any** (Boolean) The boolean value representing if at least one port is exposed to internet (any rule) on the workload
+- **ip_list** (Boolean) The boolean value representing if at least one port is exposed to ip_list(s) on the workload
+
+
+<a id="nestedobjatt--detected_vulnerabilities--vulnerability"></a>
+### Nested Schema for `detected_vulnerabilities.vulnerability`
+
+Read-Only:
+
+- **href** (String) The URI of the vulnerability class to which this vulnerability belongs to
+- **name** (String) The title/name of the vulnerability
+- **score** (Number) The normalized score of the vulnerability within the range of 0 to 100
+
 
 <a id="nestedobjatt--detected_vulnerabilities--vulnerability_report"></a>
 ### Nested Schema for `detected_vulnerabilities.vulnerability_report`
 
 Read-Only:
 
-- **href** (String) The URI of the workload to which this vulnerability belongs to
-- **name** (String) The title/name of the vulnerability
-- **score** (Number) The normalized score of the vulnerability within the range of 0 to 100
+- **href** (String) The URI of the report to which this vulnerability belongs to
 
 
 <a id="nestedobjatt--detected_vulnerabilities--workload"></a>
@@ -103,6 +125,8 @@ Read-Only:
 
 - **href** (String) The URI of the workload to which this vulnerability belongs to
 
+
+
 <a id="nestedatt--firewall_coexistence"></a>
 ### Nested Schema for `firewall_coexistence`
 
@@ -110,10 +134,12 @@ Read-Only:
 
 - **illumio_primary** (Boolean) Illumio is the primary firewall if set to true
 
+
 <a id="nestedatt--interfaces"></a>
 ### Nested Schema for `interfaces`
 
 Read-Only:
+
 
 - **address** (String) Address of the Interface
 - **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0
@@ -131,6 +157,7 @@ Read-Only:
 Read-Only:
 
 - **href** (String) URI of the labels
+
 
 <a id="nestedatt--selectively_enforced_services"></a>
 ### Nested Schema for `selectively_enforced_services`
@@ -152,7 +179,6 @@ Read-Only:
 - **uptime_seconds** (Number) How long since the last reboot of this box - used as a timestamp for this
 
 <a id="nestedobjatt--services--open_service_ports"></a>
-
 ### Nested Schema for `services.open_service_ports`
 
 Read-Only:

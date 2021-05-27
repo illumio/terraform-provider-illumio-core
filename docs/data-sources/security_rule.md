@@ -24,11 +24,11 @@ data "illumio-core_security_rule" "example" {
 
 ### Required
 
-- **href** (String) URI of security rule
+- **href** (String) URI of Security Rule
 
 ### Read-Only
 
-- **consumers** (Set of Object) consumers of Security Rule (see [below for nested schema](#nestedatt--consumers))
+- **consumers** (List of Object) Consumers for Security Rule (see [below for nested schema](#nestedatt--consumers))
 - **created_at** (String) Timestamp when this security rule was first created
 - **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
@@ -37,10 +37,10 @@ data "illumio-core_security_rule" "example" {
 - **enabled** (Boolean) Enabled flag. Determines whether this rule will be enabled in ruleset or not
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **ingress_services** (List of Object) Collection of Ingress Services (see [below for nested schema](#nestedatt--ingress_services))
+- **ingress_services** (List of Object) Collection of Ingress Service (see [below for nested schema](#nestedatt--ingress_services))
 - **machine_auth** (Boolean) Determines whether machine authentication is enabled
-- **providers** (Set of Object) providers of Security Rule (see [below for nested schema](#nestedatt--providers))
-- **resolve_labels_as** (List of Object) resolve_label_as of Security rule (see [below for nested schema](#nestedatt--resolve_labels_as))
+- **providers** (List of Object) providers for Security Rule (see [below for nested schema](#nestedatt--providers))
+- **resolve_labels_as** (List of Object) resolve label as for Security rule (see [below for nested schema](#nestedatt--resolve_labels_as))
 - **sec_connect** (Boolean) Determines whether a secure connection is established
 - **stateless** (Boolean) Determines whether packet filtering is stateless for the rule
 - **unscoped_consumers** (Boolean) Set the scope for rule consumers to All

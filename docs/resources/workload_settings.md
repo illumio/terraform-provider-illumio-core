@@ -30,30 +30,32 @@ resource "illumio-core_workload_settings" "example" {
 
 ### Required
 
-- **workload_disconnected_timeout_seconds** (Block Set) Workload Disconnected Timeout Seconds for Workload Settings (see [below for nested schema](#nestedblock--workload_disconnected_timeout_seconds))
-- **workload_goodbye_timeout_seconds** (Block Set) Workload Goodbye Timeout Seconds for Workload Settings (see [below for nested schema](#nestedblock--workload_goodbye_timeout_seconds))
+- **workload_disconnected_timeout_seconds** (Block Set, Min: 1) Workload Disconnected Timeout Seconds for Workload Settings (see [below for nested schema](#nestedblock--workload_disconnected_timeout_seconds))
+- **workload_goodbye_timeout_seconds** (Block Set, Min: 1) Workload Goodbye Timeout Seconds for Workload Settings (see [below for nested schema](#nestedblock--workload_goodbye_timeout_seconds))
+
 
 ### Read-Only
 
 - **href** (String) URI of the Workload Settings
 
-<a id="nestedatt--workload_disconnected_timeout_seconds"></a>
+<a id="nestedblock--workload_disconnected_timeout_seconds"></a>
 ### Nested Schema for `workload_disconnected_timeout_seconds`
 
 Optional:
 
 - **scope** (Block Set) Assigned labels for Workload Disconnected Timeout Seconds (see [below for nested schema](#nestedblock--workload_disconnected_timeout_seconds--scope))
-- **value** (Number) Property value associated with the scope.  Allowed range is 300 - 2147483647 or -1
+- **value** (Number) Property value associated with the scope. Allowed range is 300 - 2147483647 or -1
 
-<a id="nestedobjatt--workload_disconnected_timeout_seconds--scope"></a>
+<a id="nestedblock--workload_disconnected_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_disconnected_timeout_seconds.scope`
 
 Optional:
 
 - **href** (String) Label URI
 
-<a id="nestedatt--workload_goodbye_timeout_seconds"></a>
 
+
+<a id="nestedblock--workload_goodbye_timeout_seconds"></a>
 ### Nested Schema for `workload_goodbye_timeout_seconds`
 
 Optional:
@@ -61,13 +63,12 @@ Optional:
 - **scope** (Block Set) Assigned labels for Workload Goodbye Timeout Seconds (see [below for nested schema](#nestedblock--workload_goodbye_timeout_seconds--scope))
 - **value** (Number) Property value associated with the scope. Allowed range is 300 - 2147483647 or -1
 
-<a id="nestedobjatt--workload_goodbye_timeout_seconds--scope"></a>
+<a id="nestedblock--workload_goodbye_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_goodbye_timeout_seconds.scope`
 
 Optional:
 
 - **href** (String) Label URI
-
 
 ## Importing ##
 

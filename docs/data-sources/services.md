@@ -57,7 +57,7 @@ Read-Only:
 - **update_type** (Map of String) Type of update
 - **updated_at** (String) Timestamp when this Service was last updated
 - **updated_by** (Map of String) User who last updated this Service
-- **windows_services** (List of Object) (see [below for nested schema](#nestedobjatt--items--windows_services))
+- **windows_services** (List of Object) windows_services for Services (see [below for nested schema](#nestedobjatt--items--windows_services))
 
 <a id="nestedobjatt--items--service_ports"></a>
 ### Nested Schema for `items.service_ports`

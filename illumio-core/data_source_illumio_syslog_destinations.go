@@ -31,7 +31,7 @@ func datasourceIllumioSyslogDestinations() *schema.Resource {
 						"pce_scope": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "",
+							Description: "pce_scope for syslog destinations",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

@@ -8,7 +8,7 @@ on:
       - illumio-core/*.go
       - scripts/acccoveragecheck.sh
 jobs:
-  terrafmt:
+  acctests:
     runs-on: ubuntu-latest
     steps:
       -
@@ -25,7 +25,8 @@ jobs:
       -
         name: Run Acc. Tests
         run: bash scripts/acccoveragecheck.sh
-        # env:
+        env:
+          CGO_ENABLED: 0
           # Required to run acc tests successfully
           # TODO set below env vars in secrets
           # TF_ACC: 1

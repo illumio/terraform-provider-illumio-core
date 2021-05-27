@@ -2,6 +2,8 @@
 
 set -e -u
 
+go mod vendor
+
 # TODO remove run flag once acc. tests job setup is done
 go test ./illumio-core -run="TestProvider" -coverprofile=cover.out
 

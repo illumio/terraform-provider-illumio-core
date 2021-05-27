@@ -41,6 +41,7 @@ resource "illumio-core_ip_list" "example" {
 
 - **name** (String) Name of the IP List. The name should be between 1 to 255 characters
 
+### Optional
 
 - **description** (String) Description of the IP List
 - **external_data_reference** (String) A unique identifier within the external data source
@@ -52,13 +53,13 @@ resource "illumio-core_ip_list" "example" {
 
 - **created_at** (String) Timestamp when this IP List was first created
 - **created_by** (Map of String) User who created this IP List
-- **href** (String) URI of this IP List
 - **deleted_at** (String) Timestamp when this IP List was last deleted
 - **deleted_by** (Map of String) User who last deleted this IP List
+- **href** (String) URI of this IP List
 - **updated_at** (String) Timestamp when this IP List was last updated
 - **updated_by** (Map of String) User who last updated this IP List
 
-<a id="nestedatt--fqdns"></a>
+<a id="nestedblock--fqdns"></a>
 ### Nested Schema for `fqdns`
 
 Required:
@@ -69,7 +70,8 @@ Optional:
 
 - **description** (String) Description of FQDN
 
-<a id="nestedatt--ip_ranges"></a>
+
+<a id="nestedblock--ip_ranges"></a>
 ### Nested Schema for `ip_ranges`
 
 Required:
@@ -80,6 +82,6 @@ Optional:
 
 - **description** (String) Description of IP Range
 - **exclusion** (Boolean) Whether this IP address is an exclusion. Exclusions must be a strict subset of inclusive IP addresses
-- **to_ip** (String) High end of an IP range. The IP given should be in CIDR form i.e. "0.0.0.0/0"
+- **to_ip** (String) High end of an IP range
 
 

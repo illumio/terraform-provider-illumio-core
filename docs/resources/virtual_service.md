@@ -7,6 +7,8 @@ description: |-
   Manages Illumio Virtual Service
 ---
 
+
+
 # illumio-core_virtual_service (Resource)
 
 Manages Illumio Virtual Service
@@ -75,6 +77,7 @@ resource "illumio-core_virtual_service" "example" {
 - **created_by** (Map of String) User who created this virtual service
 - **deleted_at** (String) Timestamp when this virtual service was last deleted
 - **deleted_by** (Map of String) User who deleted this virtual service
+- **href** (String) URI of Virtual Service
 - **pce_fqdn** (String) PCE FQDN for this container cluster. Used in Supercluster only
 - **updated_at** (String) Timestamp when this virtual service was last updated
 - **updated_by** (Map of String) User who last updated this virtual service

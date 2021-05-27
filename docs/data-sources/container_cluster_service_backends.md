@@ -24,7 +24,7 @@ data "illumio-core_container_cluster_service_backends" "example" {
 
 ### Required
 
-- **container_cluster_href** (String) URI of Container Cluster 
+- **container_cluster_href** (String) URI of Container Cluster
 
 ### Read-Only
 

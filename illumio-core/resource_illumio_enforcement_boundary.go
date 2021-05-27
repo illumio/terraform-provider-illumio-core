@@ -76,13 +76,13 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 			"providers": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "providers for Enforcement Boundary. Only one actor can be specified in one illumio_provider block",
+				Description: "providers for Enforcement Boundary. Only one actor can be specified in one providers block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"actors": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "actors for illumio_provider. Valid value is \"ams\"",
+							Description:  "actors for providers. Valid value is \"ams\"",
 							ValidateFunc: validation.StringInSlice(validENProducerConsumerActors, false),
 						},
 						"label": {
@@ -112,13 +112,13 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 			"consumers": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block",
+				Description: "Consumers for Enforcement Boundary. Only one actor can be specified in one consumers block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"actors": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "actors for consumers parameter. Allowed values are \"ams\" and \"container_host\"",
+							Description:  "actors for consumers parameter. Allowed values is \"ams\"",
 							ValidateFunc: validation.StringInSlice(validENProducerConsumerActors, false),
 						},
 						"label": {

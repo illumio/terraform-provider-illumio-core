@@ -42,6 +42,7 @@ data "illumio-core_label_groups" "example" {
 
 Read-Only:
 
+
 - **created_at** (String) Timestamp when this Label Group was first created
 - **created_by** (Map of String) User who created this Label Group
 - **deleted_at** (String) Timestamp when this Label Group was last deleted
@@ -51,9 +52,9 @@ Read-Only:
 - **external_data_set** (String) External Data set Identifier
 - **href** (String) URI of Label Group
 - **key** (String) Key in key-value pair of contained labels or Label Groups
-- **labels** (Set of Object) Contained labels (see [below for nested schema](#nestedobjatt--items--labels))
+- **labels** (List of Object) Contained labels (see [below for nested schema](#nestedobjatt--items--labels))
 - **name** (String) Name of the Label Group
-- **sub_groups** (Set of Object)Contained Label Group (see [below for nested schema](#nestedobjatt--items--sub_groups))
+- **sub_groups** (List of Object)Contained Label Group (see [below for nested schema](#nestedobjatt--items--sub_groups))
 - **update_type** (String) Type of Update
 - **updated_at** (String) Timestamp when this Label Group was last updated
 - **updated_by** (Map of String) User who last updated this Label Group

@@ -11,6 +11,7 @@ description: |-
 
 Manages Illumio Workload
 
+
 Example Usage
 ------------
 
@@ -43,7 +44,6 @@ resource "illumio-core_workload" "example" {
     enforcement_mode = "visibility_only"
 }  
 ```
-
 ## Schema
 
 ### Optional
@@ -59,7 +59,7 @@ resource "illumio-core_workload" "example" {
 - **hostname** (String) The hostname of this workload. The hostname should be up to 255 characters
 - **interfaces** (Block Set) Workload network interfaces (see [below for nested schema](#nestedblock--interfaces))
 - **labels** (Block Set) Assigned labels for workload (see [below for nested schema](#nestedblock--labels))
-- **name** (String) Name of the Workload. The hostname should be up to 255 characters
+- **name** (String) Name of the Workload. The name should be up to 255 characters
 - **online** (Boolean) Determines if this workload is online. Default value: false
 - **os_detail** (String) Additional OS details - just displayed to end-user. The os_details should be up to 255 characters
 - **os_id** (String) OS identifier for Workload. The os_id should be up to 255 characters
@@ -87,7 +87,7 @@ resource "illumio-core_workload" "example" {
 - **services** (List of Object) Service report for Workload (see [below for nested schema](#nestedatt--services))
 - **updated_at** (String) Timestamp when this label group was last updated
 - **updated_by** (Map of String) User who last updated this label group
-- **ven** (List of String) VENS for Workload
+- **ven** (Map of String) VENS for Workload
 - **visibility_level** (String) Visibility Level of workload(s) to return
 - **vulnerabilities_summary** (List of Object) Vulnerabilities summary associated with the workload (see [below for nested schema](#nestedatt--vulnerabilities_summary))
 
@@ -96,28 +96,30 @@ resource "illumio-core_workload" "example" {
 
 Required:
 
-- **address** (String) The Address to assign to this interface. The address should in the IPv4 or IPv6 format.
+- **link_state** (String) Link State for the workload Interface. Allowed values are "up", "down", and "unknown"
 - **name** (String) Name of Interface. The name should be up to 255 characters
 
 Optional:
 
-- **cidr_block** (Number) CIDR BLOCK of the Interface. The number of bits in the subnet /24 is 255.255.255.0
-- **default_gateway_address** (Boolean) Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format
+- **address** (String) The Address to assign to this interface. The address should in the IPv4 or IPv6 format
+- **cidr_block** (Number) CIDR BLOCK of the Interface
+- **default_gateway_address** (String) Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format
 - **friendly_name** (String) User-friendly name for interface. The name should be up to 255 characters
-- **link_state** (String) Link State for the workload Interface. Allowed values are "up", "down", and "unknown"
 
 Read-Only:
 
+- **loopback** (Boolean) Loopback for Workload Interface
 - **network** (Map of String) Href of Network of the Interface
 - **network_detection_mode** (String) Network Detection Mode of the Interface
 
-<a id="nestedblock--labels"></a>
 
+<a id="nestedblock--labels"></a>
 ### Nested Schema for `labels`
 
 Required:
 
 - **href** (String) URI of label
+
 
 <a id="nestedatt--container_cluster"></a>
 ### Nested Schema for `container_cluster`
@@ -134,20 +136,31 @@ Read-Only:
 
 - **ip_address** (String) The IP address of the host where the vulnerability is found
 - **port** (Number) The port that is associated with the vulnerability
-- **port_exposure** (Number) The exposure of the port based on the current policy.
+- **port_exposure** (Number) The exposure of the port based on the current policy
+- **port_wide_exposure** (List of Object) High end of an IP range(see [below for nested schema](#nestedobjatt--detected_vulnerabilities--port_wide_exposure))
 - **proto** (Number) The protocol that is associated with the vulnerability
-- **vulnerability** (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability **vulnerability_report** (Set of Object) Vulnerability Report for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
+- **vulnerability** (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability))
+- **vulnerability_report** (Set of Object) Vulnerability Report for Workload(see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 - **workload** (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--workload))
+
+<a id="nestedobjatt--detected_vulnerabilities--port_wide_exposure"></a>
+### Nested Schema for `detected_vulnerabilities.port_wide_exposure`
+
+Read-Only:
+
+- **any** (Boolean) The boolean value representing if at least one port is exposed to internet (any rule) on the workload
+- **ip_list** (Boolean) The boolean value representing if at least one port is exposed to ip_list(s) on the workload
 
 
 <a id="nestedobjatt--detected_vulnerabilities--vulnerability"></a>
-### Nested Schema for `detected_vulnerabilities.workload`
+### Nested Schema for `detected_vulnerabilities.vulnerability`
 
 Read-Only:
 
 - **href** (String) The URI of the workload to which this vulnerability belongs to
 - **name** (String) The title/name of the vulnerability
 - **score** (Number) The normalized score of the vulnerability within the range of 0 to 100
+
 
 <a id="nestedobjatt--detected_vulnerabilities--vulnerability_report"></a>
 ### Nested Schema for `detected_vulnerabilities.vulnerability_report`
@@ -164,6 +177,8 @@ Read-Only:
 
 - **href** (String) The URI of the workload to which this vulnerability belongs to
 
+
+
 <a id="nestedatt--firewall_coexistence"></a>
 ### Nested Schema for `firewall_coexistence`
 
@@ -176,6 +191,7 @@ Read-Only:
 ### Nested Schema for `selectively_enforced_services`
 
 Read-Only:
+
 
 - **href** (String) URI of Selectively Enforced Services
 - **port** (Integer) Port number, or the starting port of a range. If unspecified, this will apply to all ports for the given protocol. Minimum and maximum value for port is 0 and 65535 respectively.
@@ -191,7 +207,6 @@ Read-Only:
 - **created_at** (String) Timestamp when this service was first created
 - **open_service_ports** (List of Object) A list of open ports (see [below for nested schema] (#nestedobjatt--services--open_service_ports))
 - **uptime_seconds** (Number) How long since the last reboot of this box - used as a timestamp for this
-
 
 <a id="nestedobjatt--services--open_service_ports"></a>
 ### Nested Schema for `services.open_service_ports`

@@ -11,7 +11,6 @@ description: |-
 
 Represents Illumio VENs
 
-
 Example Usage
 ------------
 ```hcl
@@ -66,8 +65,8 @@ Read-Only:
 - **active_pce_fqdn** (String) The FQDN of the PCE that the VEN last connected to
 - **caps** (List of String) Permission types
 - **conditions** (List of Object) (see [below for nested schema](#nestedobjatt--items--conditions))
-- **container_cluster** (List of Object) container_cluster details for ven. Single element list (see [below for nested schema](#nestedobjatt--items--container_cluster))
- **created_at** (String) The time (rfc3339 timestamp) at which this VEN was created
+- **container_cluster** (List of Object) container_cluster details for ven. Single element list(see [below for nested schema](#nestedobjatt--items--container_cluster))
+- **created_at** (String) The time (rfc3339 timestamp) at which this VEN was created
 - **created_by** (Map of String) The href of the user who created this VEN
 - **description** (String) The description of the VEN
 - **hostname** (String) The hostname of the host managed by the VEN
@@ -88,7 +87,7 @@ Read-Only:
 - **updated_at** (String) The time (rfc3339 timestamp) at which this VEN was last updated
 - **updated_by** (Map of String) The href of the user who last updated this VEN
 - **version** (String) Software version of the VEN
-- **workloads** (List of Object) (see [below for nested schema](#nestedobjatt--items--workloads))
+- **workloads** (List of Object) collection of Workloads (see [below for nested schema](#nestedobjatt--items--workloads))
 
 <a id="nestedobjatt--items--conditions"></a>
 ### Nested Schema for `items.conditions`
@@ -127,6 +126,7 @@ Read-Only:
 - **href** (String) The URI of the container cluster managed by this VEN
 - **name** (String) The name of the container cluster managed by this VEN, only present in expanded representations
 
+
 <a id="nestedobjatt--items--interfaces"></a>
 ### Nested Schema for `items.interfaces`
 
@@ -142,7 +142,6 @@ Read-Only:
 - **name** (String) Interface name
 - **network** (Map of String) Network that the interface belongs to
 - **network_detection_mode** (String) Network Detection Mode
-
 
 <a id="nestedobjatt--items--labels"></a>
 ### Nested Schema for `items.labels`
@@ -167,11 +166,10 @@ Read-Only:
 
 Read-Only:
 
-
 - **enforcement_mode** (String) Policy enforcement mode
 - **hostname** (String) The hostname of this workload
 - **href** (String) URI of the Workload
-- **interfaces** (Set of Object) Network interfaces of the workload (see [below for nested schema](#nestedobjatt--items--workloads--interfaces))
+- **interfaces** (List of Object) Network interfaces of the workload (see [below for nested schema](#nestedobjatt--items--workloads--interfaces))
 - **labels** (List of Object) Labels assigned to the host managed by the VEN (see [below for nested schema](#nestedobjatt--items--workloads--labels))
 - **mode** (String) Policy enforcement mode
 - **name** (String) The short friendly name of the workload

@@ -24,7 +24,7 @@ data "illumio-core_rule_set" "example" {
 
 ### Required
 
-- **href** (String) URI of ruleset
+- **href** (String) URI of Ruleset
 
 
 ### Read-Only
@@ -51,11 +51,19 @@ data "illumio-core_rule_set" "example" {
 Read-Only:
 
 - **actors** (List of Object) actors for IP Table Rule (see [below for nested schema](#nestedobjatt--ip_tables_rules--actors))
+- **created_at** (String) Timestamp when this ruleset was first created
+- **created_by** (Map of String) User who created this ruleset
+- **deleted_at** (String) Timestamp when this ruleset was deleted
+- **deleted_by** (Map of String) User who deleted this ruleset
 - **description** (String) Description of the Ip Tables Rules
 - **enabled** (Boolean) Enabled flag. Determines whether this IP Tables Rule is enabled or not
 - **href** (String) URI of the Ip Tables Rules
 - **ip_version** (String) IP version for the rules to be applied to
 - **statements** (List of Object) statements for in this IP Tables Rule (see [below for nested schema](#nestedobjatt--ip_tables_rules--statements))
+- **update_type** (String) Type of update
+- **updated_at** (String) Timestamp when this ruleset was last updated
+- **updated_by** (Map of String) User who last updated this ruleset
+
 
 <a id="nestedobjatt--ip_tables_rules--actors"></a>
 ### Nested Schema for `ip_tables_rules.actors`
@@ -84,7 +92,7 @@ Read-Only:
 
 Read-Only:
 
-- **consumers** (Set of Object) Consumers for Security Rule (see [below for nested schema](#nestedobjatt--rules--consumers))
+- **consumers** (List of Object) Consumers for Security Rule (see [below for nested schema](#nestedobjatt--rules--consumers))
 - **created_at** (String) Timestamp when this security rule was first created
 - **created_by** (Map of String) User who created this security rule
 - **deleted_at** (String) Timestamp when this security rule was deleted
@@ -96,7 +104,7 @@ Read-Only:
 - **href** (String) URI of Security Rule
 - **ingress_services** (List of Object) Collection of Ingress Services (see [below for nested schema](#nestedobjatt--rules--ingress_services))
 - **machine_auth** (Boolean) Determines whether machine authentication is enabled
-- **providers** (Set of Object) providers for Security Rule (see [below for nested schema](#nestedobjatt--rules--providers))
+- **providers** (List of Object) providers for Security Rule (see [below for nested schema](#nestedobjatt--rules--providers))
 - **resolve_labels_as** (List of Object) resolve label as for Security rule (see [below for nested schema](#nestedobjatt--rules--resolve_labels_as))
 - **sec_connect** (Boolean) Determines whether a secure connection is established
 - **stateless** (Boolean) Determines whether packet filtering is stateless for the rule

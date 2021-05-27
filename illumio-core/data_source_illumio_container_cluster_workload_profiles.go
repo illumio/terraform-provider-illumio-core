@@ -182,19 +182,19 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Filter by linked container workload profiles",
+				Description:      `Filter by linked container workload profiles. Allowed values are "true" and "false"`,
 			},
 			"managed": {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringABoolean(),
-				Description:      "Filter by managed state",
+				Description:      `Filter by managed state. Allowed values are "true" and "false"`,
 			},
 			"max_results": {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ValidateDiagFunc: isStringGreaterThanZero(),
-				Description:      "Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer",
+				Description:      "Maximum number of container workload to return. The integer should be a non-zero positive integer",
 			},
 			"name": {
 				Type:        schema.TypeString,

@@ -6,7 +6,6 @@ subcategory: ""
 description: |-
   Represents Illumio Syslog Destination
 ---
-
 # illumio-core_syslog_destination (Data Source)
 
 Represents Illumio Syslog Destination
@@ -31,7 +30,7 @@ data "illumio-core_syslog_destination" "example" {
 - **audit_event_logger** (List of Object) audit_event_logger details for destination. Single element list (see [below for nested schema](#nestedatt--audit_event_logger))
 - **description** (String) Description of the destination
 - **node_status_logger** (List of Object) node_status_logger details for destination. Single element list (see [below for nested schema](#nestedatt--node_status_logger))
-- **pce_scope** (List of String)
+- **pce_scope** (List of String) pce_scope for syslog destinations
 - **remote_syslog** (List of Object) remote_syslog details for destination. Single element list (see [below for nested schema](#nestedatt--remote_syslog))
 - **traffic_event_logger** (List of Object) traffic_event_logger details for destination. Single element list (see [below for nested schema](#nestedatt--traffic_event_logger))
 - **type** (String) Destination type
@@ -44,6 +43,7 @@ Read-Only:
 - **configuration_event_included** (Boolean) Configuration (Northbound) auditable events
 - **min_severity** (String) Minimum severity level of audit event messages
 - **system_event_included** (Boolean) System (PCE) auditable events
+
 
 
 <a id="nestedatt--node_status_logger"></a>

@@ -32,9 +32,9 @@ data "illumio-core_service_binding" "example" {
 - **container_workload** (Map of String) Container Workload href
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data Set identifier
-- **port_overrides** (Set of Object) Port Overrides for Service Bindings (see [below for nested schema](#nestedatt--port_overrides))
+- **port_overrides** (List of Object) Port Overrides for Service Bindings (see [below for nested schema](#nestedatt--port_overrides))
 - **virtual_service** (Map of String) Virtual service href
-- **workload** (Set of Object) Workload Object for Service Bindings (see [below for nested schema](#nestedatt--workload))
+- **workload** (List of Object) Workload Object for Service Bindings (see [below for nested schema](#nestedatt--workload))
 
 <a id="nestedatt--port_overrides"></a>
 ### Nested Schema for `port_overrides`

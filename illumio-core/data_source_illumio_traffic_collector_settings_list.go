@@ -30,7 +30,7 @@ func datasourceIllumioTrafficCollectorSettingsList() *schema.Resource {
 		ReadContext: datasourceIllumioTrafficCollectorSettingsListRead,
 
 		SchemaVersion: version,
-		Description:   "Represents Illumio Traffic Collector Settings",
+		Description:   "Represents List of Illumio Traffic Collector Settings ",
 
 		Schema: map[string]*schema.Schema{
 			"items": {

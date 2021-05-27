@@ -31,7 +31,7 @@ data "illumio-core_enforcement_boundaries" "example" {
 
 ### Optional
 
-- **labels** (String) List of label URIs, encoded as a JSON string
+- **labels** (String) List of lists of label URIs, encoded as a JSON string
 - **max_results** (String) Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer
 - **name** (String) Filter by name supports partial matching
 - **pversion** (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
@@ -49,20 +49,20 @@ data "illumio-core_enforcement_boundaries" "example" {
 Read-Only:
 
 - **caps** (List of String) CAPS for Enforcement Boundary
-- **consumer** (Set of Object) Consumers for Enforcement Boundary (see [below for nested schema](#nestedobjatt--items--consumer))
+- **consumer** (List of Object) Consumers for Enforcement Boundary (see [below for nested schema](#nestedobjatt--items--consumer))
 - **created_at** (String) Timestamp when this Enforcement Boundary was first created
 - **created_by** (Map of String) User who created this Enforcement Boundary
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
 - **href** (String) Href of Enforcement Boundary
-- **providers** (Set of Object) Providers for Enforcement Boundary (see [below for nested schema](#nestedobjatt--items--providers))
-- **ingress_service** (Set of Object)  Collection of Ingress Service (see [below for nested schema](#nestedobjatt--items--ingress_service))
+- **ingress_service** (List of Object)  Collection of Ingress Service (see [below for nested schema](#nestedobjatt--items--ingress_service))
 - **name** (String) Name of the Enforcement Boundary
+- **providers** (List of Object) Providers for Enforcement Boundary (see [below for nested schema](#nestedobjatt--items--providers))
 - **updated_at** (String) Timestamp when this Enforcement Boundary was last updated
 - **updated_by** (Map of String) User who last updated this Enforcement Boundary
 
-<a id="nestedobjatt--items--consumer"></a>
-### Nested Schema for `items.consumer`
+<a id="nestedobjatt--items--consumers"></a>
+### Nested Schema for `items.consumers`
 
 Read-Only:
 
@@ -71,29 +71,40 @@ Read-Only:
 - **label** (List of Object) Href of Label  (see [below for nested schema](#nestedobjatt--items--consumer--label))
 - **label_group** (List of Object) Href of Label Group (see [below for nested schema](#nestedobjatt--items--consumer--label_group))
 
-<a id="nestedobjatt--items--consumer--ip_list"></a>
-### Nested Schema for `items.consumer.ip_list`
+<a id="nestedobjatt--items--consumers--ip_list"></a>
+### Nested Schema for `items.consumers.ip_list`
 
 Read-Only:
 
 - **href** (String) Href of IP List
 
 
-<a id="nestedobjatt--items--consumer--label"></a>
-### Nested Schema for `items.consumer.label`
+<a id="nestedobjatt--items--consumers--label"></a>
+### Nested Schema for `items.consumers.label`
 
 Read-Only:
 
 - **href** (String) Href of Label
 
 
-<a id="nestedobjatt--items--consumer--label_group"></a>
-### Nested Schema for `items.consumer.label_group`
+<a id="nestedobjatt--items--consumers--label_group"></a>
+### Nested Schema for `items.consumers.label_group`
 
 Read-Only:
 
 - **href** (String) Href of Label Group
 
+
+
+<a id="nestedobjatt--items--ingress_service"></a>
+### Nested Schema for `items.ingress_service`
+
+Read-Only:
+
+- **href** (String) URI of Ingress Service
+- **port** (String) Port number used with protocol or starting port when specifying a range
+- **proto** (String) Protocol number
+- **to_port** (String) Upper end of port range
 
 
 <a id="nestedobjatt--items--providers"></a>
@@ -128,17 +139,5 @@ Read-Only:
 Read-Only:
 
 - **href** (String) Href of Label Group
-
-
-
-<a id="nestedobjatt--items--ingress_service"></a>
-### Nested Schema for `items.ingress_service`
-
-Read-Only:
-
-- **href** (String) URI of Ingress Service
-- **port** (String) Port number used with protocol or starting port when specifying a range
-- **proto** (String) Protocol number
-- **to_port** (String) Upper end of port range
 
 

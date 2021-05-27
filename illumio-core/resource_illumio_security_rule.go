@@ -155,13 +155,13 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 		"providers": {
 			Type:        schema.TypeSet,
 			Required:    true,
-			Description: "providers for Security Rule. Only one actor can be specified in one illumio_provider block",
+			Description: "providers for Security Rule. Only one actor can be specified in one providers block",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"actors": {
 						Type:         schema.TypeString,
 						Optional:     true,
-						Description:  "actors for illumio_provider. Allowed value is \"ams\"",
+						Description:  "actors for providers. Allowed value is \"ams\"",
 						ValidateFunc: validation.StringInSlice(validSRProducerActors, false),
 					},
 					"label": {

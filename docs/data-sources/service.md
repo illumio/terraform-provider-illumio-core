@@ -39,10 +39,10 @@ data "illumio-core_service" "example" {
 - **name** (String) The short friendly name of the service
 - **process_name** (String) The process name
 - **service_ports** (List of Object) Service ports of Illumio Service (see [below for nested schema](#nestedatt--service_ports))
-- **update_type** (Map of String) Type of update
+- **update_type** (String) Type of update
 - **updated_at** (String) Timestamp when this Service was last updated
 - **updated_by** (Map of String) User who last updated this Service
-- **windows_services** (List of Object) (see [below for nested schema](#nestedatt--windows_services))
+- **windows_services** (List of Object) windows_services for services (see [below for nested schema](#nestedatt--windows_services))
 
 <a id="nestedatt--service_ports"></a>
 ### Nested Schema for `service_ports`

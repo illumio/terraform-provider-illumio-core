@@ -121,8 +121,9 @@ func datasourceIllumioService() *schema.Resource {
 				Description: "Service ports of Illumio Service",
 			},
 			"windows_services": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "windows_services for services",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"service_name": {

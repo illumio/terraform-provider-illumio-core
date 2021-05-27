@@ -35,7 +35,7 @@ Read-Only:
 - **description** (String) Description of the destination
 - **href** (String) URI of the destination
 - **node_status_logger** (List of Object) node_status_logger details for destination. Single element list (see [below for nested schema](#nestedobjatt--items--node_status_logger))
-- **pce_scope** (List of String)
+- **pce_scope** (List of String) pce_scope for syslog destinations
 - **remote_syslog** (List of Object) remote_syslog details for destination. Single element list (see [below for nested schema](#nestedobjatt--items--remote_syslog))
 - **traffic_event_logger** (List of Object) traffic_event_logger details for destination. Single element list (see [below for nested schema](#nestedobjatt--items--traffic_event_logger))
 - **type** (String) Destination type

@@ -11,6 +11,7 @@ description: |-
 
 Represents Illumio Virtual Services
 
+
 Example Usage
 ------------
 
@@ -57,6 +58,7 @@ Read-Only:
 - **href** (String) URI of label
 - **key** (String) Key in key-value pair
 - **value** (String) Value in key-value pair
+
 
 <a id="nestedatt--service"></a>
 ### Nested Schema for `service`

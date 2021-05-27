@@ -36,9 +36,10 @@ resource "illumio-core_enforcement_boundary" "example" {
 ### Required
 
 - **consumers** (Block Set, Min: 1) Consumers for Enforcement Boundary. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedblock--consumers))
-- **providers** (Block Set, Min: 1) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
 - **ingress_services** (Block Set, Min: 1) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedblock--ingress_services))
 - **name** (String) Name of the Enforcement Boundary
+- **providers** (Block Set, Min: 1) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
+
 
 ### Read-Only
 
@@ -56,7 +57,7 @@ resource "illumio-core_enforcement_boundary" "example" {
 
 Optional:
 
-- **actors** (String) actors for consumers parameter. Valid value is "ams"
+- **actors** (String) actors for consumers parameter. Allowed values is "ams"
 - **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--consumers--ip_list))
 - **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--consumers--label))
 - **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--consumers--label_group))
@@ -84,6 +85,17 @@ Required:
 
 - **href** (String) URI of Label Group
 
+
+
+<a id="nestedblock--ingress_services"></a>
+### Nested Schema for `ingress_services`
+
+Optional:
+
+- **href** (String) URI of Service
+- **port** (String) Port number used with protocol or starting port when specifying a range. Allowed range is 0-65535
+- **proto** (String) Protocol number. Allowed values are 6 (TCP) and 17 (UDP)
+- **to_port** (String) Upper end of port range. Allowed range is 0-65535
 
 
 <a id="nestedblock--providers"></a>
@@ -120,13 +132,3 @@ Required:
 - **href** (String) URI of Label Group
 
 
-
-<a id="nestedblock--ingress_services"></a>
-### Nested Schema for `ingress_services`
-
-Optional:
-
-- **href** (String) URI of Service
-- **port** (String) Port number used with protocol or starting port when specifying a range. Allowed range is 0-65535
-- **proto** (String) Protocol number. Allowed values are 6 (TCP) and 17 (UDP)
-- **to_port** (String) Upper end of port range. Allowed range is 0-65535

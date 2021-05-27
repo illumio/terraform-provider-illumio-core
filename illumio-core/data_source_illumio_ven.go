@@ -123,7 +123,7 @@ func datasourceIllumioVEN() *schema.Resource {
 		ReadContext: datasourceIllumioVENRead,
 
 		SchemaVersion: version,
-		Description:   "Manages Illumio VEN",
+		Description:   "Represents Illumio VEN",
 
 		Schema: map[string]*schema.Schema{
 			"href": {

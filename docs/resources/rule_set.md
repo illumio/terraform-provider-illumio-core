@@ -76,7 +76,7 @@ resource "illumio-core_rule_set" "example" {
 ### Required
 
 - **name** (String) Name of Ruleset. Valid name should be between 1 to 255 characters
-- **scopes** (Block Set, Min: 1) scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scopes block (see [below for nested schema](#nestedblock--scopes))
+- **scopes** (Block List, Min: 1) scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scope block (see [below for nested schema](#nestedblock--scopes))
 
 ### Optional
 
@@ -85,7 +85,7 @@ resource "illumio-core_rule_set" "example" {
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ip_tables_rules** (Block Set) Collection of IP Tables Rules (see [below for nested schema](#nestedblock--ip_tables_rules))
-- **rule** (Block Set) Collection of Security Rules (see [below for nested schema](#nestedblock--rule))
+- **rules** (Block Set) Collection of Security Rules (see [below for nested schema](#nestedblock--rules))
 
 ### Read-Only
 
@@ -109,7 +109,7 @@ Optional:
 <a id="nestedblock--scopes--label"></a>
 ### Nested Schema for `scopes.label`
 
-Optional:
+Required:
 
 - **href** (String) URI of Label
 
@@ -117,7 +117,7 @@ Optional:
 <a id="nestedblock--scopes--label_group"></a>
 ### Nested Schema for `scopes.label_group`
 
-Optional:
+Required:
 
 - **href** (String) URI of Label Group
 
@@ -153,7 +153,7 @@ Read-Only:
 
 Optional:
 
-- **actors** (String) Set this if rule actors are all workloads. Allowed value: "ams"
+- **actors** (String) Set this if rule actors are all workloads. Allowed value is "ams"
 - **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--ip_tables_rules--actors--label))
 - **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--ip_tables_rules--actors--label_group))
 - **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--ip_tables_rules--actors--workload))
@@ -194,22 +194,22 @@ Required:
 
 
 
-<a id="nestedblock--rule"></a>
-### Nested Schema for `rule`
+<a id="nestedblock--rules"></a>
+### Nested Schema for `rules`
 
 Required:
 
-- **consumers** (Block Set, Min: 1) Consumers for Security Rule. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedblock--rule--consumers))
+- **consumers** (Block Set, Min: 1) Consumers for Security Rule. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedblock--rules--consumers))
 - **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not
-- **providers** (Block Set, Min: 1) providers for Security Rule. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--rule--providers))
-- **resolve_labels_as** (Block List, Min: 1, Max: 1) resolve label as for Security rule (see [below for nested schema](#nestedblock--rule--resolve_labels_as))
+- **providers** (Block Set, Min: 1) providers for Security Rule. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--rules--providers))
+- **resolve_labels_as** (Block List, Min: 1, Max: 1) resolve label as for Security rule (see [below for nested schema](#nestedblock--rules--resolve_labels_as))
 
 Optional:
 
 - **description** (String) Description of Security Rule
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
-- **ingress_services** (Block Set) Collection of Ingress Services. If resolve_label_as.providers list includes "workloads" then ingress_services is required. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedblock--rule--ingress_services))
+- **ingress_services** (Block Set) Collection of Ingress Service. If resolve_label_as.providers list includes "workloads" then ingress_service is required. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedblock--rules--ingress_services))
 - **machine_auth** (Boolean) Determines whether machine authentication is enabled. Defaule Value: false
 - **sec_connect** (Boolean) Determines whether a secure connection is established. Defaule Value: false
 - **stateless** (Boolean) Determines whether packet filtering is stateless for the rule. Defaule Value: false
@@ -226,52 +226,52 @@ Read-Only:
 - **updated_at** (String) Timestamp when this security rule was last updated
 - **updated_by** (Map of String) User who last updated this security rule
 
-<a id="nestedblock--rule--consumers"></a>
-### Nested Schema for `rule.consumers`
+<a id="nestedblock--rules--consumers"></a>
+### Nested Schema for `rules.consumers`
 
 Optional:
 
 - **actors** (String) actors for consumers parameter. Allowed values are "ams" and "container_host"
-- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--rule--consumers--ip_list))
-- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--rule--consumers--label))
-- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--rule--consumers--label_group))
-- **virtual_service** (Block Set, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--rule--consumers--virtual_service))
-- **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--rule--consumers--workload))
+- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--rules--consumers--ip_list))
+- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--rules--consumers--label))
+- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--rules--consumers--label_group))
+- **virtual_service** (Block Set, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--rules--consumers--virtual_service))
+- **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--rules--consumers--workload))
 
-<a id="nestedblock--rule--consumers--ip_list"></a>
-### Nested Schema for `rule.consumers.ip_list`
+<a id="nestedblock--rules--consumers--ip_list"></a>
+### Nested Schema for `rules.consumers.ip_list`
 
 Required:
 
 - **href** (String) URI of IP List
 
 
-<a id="nestedblock--rule--consumers--label"></a>
-### Nested Schema for `rule.consumers.label`
+<a id="nestedblock--rules--consumers--label"></a>
+### Nested Schema for `rules.consumers.label`
 
 Required:
 
 - **href** (String) URI of Label
 
 
-<a id="nestedblock--rule--consumers--label_group"></a>
-### Nested Schema for `rule.consumers.label_group`
+<a id="nestedblock--rules--consumers--label_group"></a>
+### Nested Schema for `rules.consumers.label_group`
 
 Required:
 
 - **href** (String) URI of Label Group
 
 
-<a id="nestedblock--rule--consumers--virtual_service"></a>
-### Nested Schema for `rule.consumers.virtual_service`
+<a id="nestedblock--rules--consumers--virtual_service"></a>
+### Nested Schema for `rules.consumers.virtual_service`
 
 Required:
 
 - **href** (String) URI of Virtual Service
 
 
-<a id="nestedblock--rule--consumers--workload"></a>
-### Nested Schema for `rule.consumers.workload`
+<a id="nestedblock--rules--consumers--workload"></a>
+### Nested Schema for `rules.consumers.workload`
 
 Required:
 
@@ -279,61 +279,61 @@ Required:
 
 
 
-<a id="nestedblock--rule--providers"></a>
-### Nested Schema for `rule.providers`
+<a id="nestedblock--rules--providers"></a>
+### Nested Schema for `rules.providers`
 
 Optional:
 
-- **actors** (String) actors for providers. Allowed value is "ams"
-- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--rule--providers--ip_list))
-- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--rule--providers--label))
-- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--rule--providers--label_group))
-- **virtual_server** (Block Set, Max: 1) Href of Virtual Server (see [below for nested schema](#nestedblock--rule--providers--virtual_server))
-- **virtual_service** (Block Set, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--rule--providers--virtual_service))
-- **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--rule--providers--workload))
+- **actors** (String) actors for provider. Allowed value is "ams"
+- **ip_list** (Block Set, Max: 1) Href of IP List (see [below for nested schema](#nestedblock--rules--providers--ip_list))
+- **label** (Block Set, Max: 1) Href of Label (see [below for nested schema](#nestedblock--rules--providers--label))
+- **label_group** (Block Set, Max: 1) Href of Label Group (see [below for nested schema](#nestedblock--rules--providers--label_group))
+- **virtual_server** (Block Set, Max: 1) Href of Virtual Server (see [below for nested schema](#nestedblock--rules--providers--virtual_server))
+- **virtual_service** (Block Set, Max: 1) Href of Virtual Service (see [below for nested schema](#nestedblock--rules--providers--virtual_service))
+- **workload** (Block Set, Max: 1) Href of Workload (see [below for nested schema](#nestedblock--rules--providers--workload))
 
-<a id="nestedblock--rule--providers--ip_list"></a>
-### Nested Schema for `rule.providers.ip_list`
+<a id="nestedblock--rules--providers--ip_list"></a>
+### Nested Schema for `rules.providers.ip_list`
 
 Required:
 
 - **href** (String) URI of IP List
 
 
-<a id="nestedblock--rule--providers--label"></a>
-### Nested Schema for `rule.providers.label`
+<a id="nestedblock--rules--providers--label"></a>
+### Nested Schema for `rules.providers.label`
 
 Required:
 
 - **href** (String) URI of Label
 
 
-<a id="nestedblock--rule--providers--label_group"></a>
-### Nested Schema for `rule.providers.label_group`
+<a id="nestedblock--rules--providers--label_group"></a>
+### Nested Schema for `rules.providers.label_group`
 
 Required:
 
 - **href** (String) URI of Label Group
 
 
-<a id="nestedblock--rule--providers--virtual_server"></a>
-### Nested Schema for `rule.providers.virtual_server`
+<a id="nestedblock--rules--providers--virtual_server"></a>
+### Nested Schema for `rules.providers.virtual_server`
 
 Required:
 
 - **href** (String) URI of Virtual Server
 
 
-<a id="nestedblock--rule--providers--virtual_service"></a>
-### Nested Schema for `rule.providers.virtual_service`
+<a id="nestedblock--rules--providers--virtual_service"></a>
+### Nested Schema for `rules.providers.virtual_service`
 
 Required:
 
 - **href** (String) URI of Virtual Service
 
 
-<a id="nestedblock--rule--providers--workload"></a>
-### Nested Schema for `rule.providers.workload`
+<a id="nestedblock--rules--providers--workload"></a>
+### Nested Schema for `rules.providers.workload`
 
 Required:
 
@@ -341,8 +341,8 @@ Required:
 
 
 
-<a id="nestedblock--rule--resolve_labels_as"></a>
-### Nested Schema for `rule.resolve_labels_as`
+<a id="nestedblock--rules--resolve_labels_as"></a>
+### Nested Schema for `rules.resolve_labels_as`
 
 Required:
 
@@ -350,8 +350,8 @@ Required:
 - **providers** (Set of String) providers for resolve_labels_as. Allowed values are "workloads", "virtual_services"
 
 
-<a id="nestedblock--rule--ingress_services"></a>
-### Nested Schema for `rule.ingress_services`
+<a id="nestedblock--rules--ingress_services"></a>
+### Nested Schema for `rules.ingress_services`
 
 Optional:
 

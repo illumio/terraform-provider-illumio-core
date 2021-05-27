@@ -30,7 +30,7 @@ func resourceIllumioIPList() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "Name of the IP List",
+				Description:      "Name of the IP List. The name should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"description": {
@@ -52,7 +52,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"from_ip": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "IP address or a low end of IP range. Might be specified with CIDR notation",
+							Description: "IP address or a low end of IP range. Might be specified with CIDR notation. The IP given should be in CIDR format example \"0.0.0.0/0\"",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.Any(validation.IsIPAddress, validation.IsCIDR),
 							),
@@ -60,7 +60,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"to_ip": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "High end of an IP range. Might be specified with CIDR notation",
+							Description: "High end of an IP range",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.IsIPAddress,
 							),

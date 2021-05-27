@@ -34,7 +34,7 @@ func resourceIllumioService() *schema.Resource {
 			"name": {
 				Type:             schema.TypeString,
 				Required:         true,
-				Description:      "Name of the Service (does not need to be unique)",
+				Description:      "Name of the Service (does not need to be unique). The name should be between 1 to 255 characters",
 				ValidateDiagFunc: nameValidation,
 			},
 			"description": {
@@ -51,7 +51,7 @@ func resourceIllumioService() *schema.Resource {
 				Type:             schema.TypeString,
 				ValidateDiagFunc: nameValidation,
 				Optional:         true,
-				Description:      "The process name",
+				Description:      "The process name. The name should be between 1 to 255 characters",
 			},
 			"service_ports": {
 				Type:        schema.TypeSet,

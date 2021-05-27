@@ -26,14 +26,14 @@ data "illumio-core_enforcement_boundary" "example" {
 ### Read-Only
 
 - **caps** (List of String) CAPS for Enforcement Boundary
-- **consumers** (Set of Object) Consumers for Enforcement Boundary. Only one actor can be specified in one consumers block (see [below for nested schema](#nestedatt--consumers))
+- **consumers** (List of Object) Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block (see [below for nested schema](#nestedatt--consumers))
 - **created_at** (String) Timestamp when this Enforcement Boundary was first created
 - **created_by** (Map of String) User who created this Enforcement Boundary
 - **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
 - **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
-- **providers** (Block Set) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
-- **ingress_services** (Set of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_services))
+- **ingress_services** (List of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_services))
 - **name** (String) Name of the Enforcement Boundary
+- **providers** (Block List) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
 - **updated_at** (String) Timestamp when this Enforcement Boundary was last updated
 - **updated_by** (Map of String) User who last updated this Enforcement Boundary
 
@@ -52,7 +52,7 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String) Href of IP List
+- **href** (String)
 
 
 <a id="nestedobjatt--consumers--label"></a>
@@ -60,7 +60,7 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String) Href of Label
+- **href** (String)
 
 
 <a id="nestedobjatt--consumers--label_group"></a>
@@ -70,6 +70,18 @@ Read-Only:
 
 - **href** (String) Href of Label Group
 
+
+
+
+<a id="nestedatt--ingress_services"></a>
+### Nested Schema for `ingress_services`
+
+Read-Only:
+
+- **href** (String) URI of Ingress Service
+- **port** (String) Port number used with protocol or starting port when specifying a range
+- **proto** (String) Protocol number
+- **to_port** (String) Upper end of port range
 
 
 <a id="nestedblock--providers"></a>
@@ -106,13 +118,3 @@ Read-Only:
 - **href** (String) Href of Label Group
 
 
-
-<a id="nestedatt--ingress_services"></a>
-### Nested Schema for `ingress_services`
-
-Read-Only:
-
-- **href** (String) URI of Ingress Service
-- **port** (String) Port number used with protocol or starting port when specifying a range
-- **proto** (String) Protocol number
-- **to_port** (String) Upper end of port range

@@ -31,7 +31,7 @@ resource "illumio-core_service_binding" "example" {
 
 ### Required
 
-- **virtual_service** (Block List, Max: 1) Virtual service href (see [below for nested schema](#nestedblock--virtual_service))
+- **virtual_service** (Block List, Min: 1, Max: 1) Virtual service href (see [below for nested schema](#nestedblock--virtual_service))
 
 ### Optional
 
@@ -39,7 +39,7 @@ resource "illumio-core_service_binding" "example" {
 - **external_data_reference** (String) External Data reference identifier
 - **external_data_set** (String) External Data Set identifier
 - **port_overrides** (Block Set) Port Overrides for Service Bindings (see [below for nested schema](#nestedblock--port_overrides))
-- **workload** (Block Set, List: 1) Workload Object for Service Bindings (see [below for nested schema](#nestedblock--workload))
+- **workload** (Block List, Max: 1) Workload Object for Service Bindings (see [below for nested schema](#nestedblock--workload))
 
 ### Read-Only
 
@@ -72,7 +72,7 @@ Required:
 Optional:
 
 - **new_to_port** (Number) Overriding port range ending port. Allowed range is 0 - 65535
-- **port** (Number) Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range.
+- **port** (Number) Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range
 - **proto** (Number) Transport protocol in the original service which to override. Allowed values are 6 (TCP) and 17 (UDP)
 
 

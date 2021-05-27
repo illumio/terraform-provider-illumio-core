@@ -59,7 +59,7 @@ resource "illumio-core_security_rule" "example" {
 - **enabled** (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not
 - **providers** (Block Set, Min: 1) providers for Security Rule. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
 - **resolve_labels_as** (Block List, Min: 1, Max: 1) resolve label as for Security rule (see [below for nested schema](#nestedblock--resolve_labels_as))
-- **rule_set_href** (String) URI of Ruleset, in which security rule will be added.
+- **rule_set_href** (String) URI of Ruleset, in which security rule will be added
 
 ### Optional
 
@@ -203,8 +203,8 @@ Required:
 
 Required:
 
-- **consumers** (List of String) consumers for resolve_labels_as. Allowed values are "workloads", "virtual_services"
-- **providers** (List of String) providers for resolve_labels_as. Allowed values are "workloads", "virtual_services"
+- **consumers** (Set of String) consumers for resolve_labels_as. Allowed values are "workloads", "virtual_services"
+- **providers** (Set of String) providers for resolve_labels_as. Allowed values are "workloads", "virtual_services"
 
 
 <a id="nestedblock--ingress_services"></a>

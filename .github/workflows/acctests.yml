@@ -23,11 +23,8 @@ jobs:
         with:
           go-version: 1.16
       -
-        name: Install Dependencies
-        run: apt update && apt install bc -y
-      -
         name: Run Acc. Tests
-        run: sh scripts/acccoveragecheck.sh
+        run: bash scripts/acccoveragecheck.sh
         # env:
           # Required to run acc tests successfully
           # TODO set below env vars in secrets

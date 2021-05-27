@@ -6,7 +6,11 @@ set -e -u
 go test ./illumio-core -run="TestProvider" -coverprofile=cover.out
 
 perc=`go tool cover -func=cover.out | tail -n 1 | sed -Ee 's!^[^[:digit:]]+([[:digit:]]+(\.[[:digit:]]+)?)%$!\1!'`
-res=`echo "$perc >= 70.0" | bc`
-test "$res" -eq 1 && exit 0
-echo "Insufficient coverage: $perc" >&2
-exit 1
+res=${perc%.*}
+if [[ "$int" -gt "70" ]];
+  then
+    echo "Coverage: $perc PASS"
+  else
+    echo "Coverage: $perc FAIL" >&2
+    exit 1
+fi

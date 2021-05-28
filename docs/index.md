@@ -54,7 +54,7 @@ resource "illumio-core_label_group" "env_lg" {
 provider "illumio-core" {
     # ... other configuration parameters
     proxy_url = "http:10.0.1.111:3128"
-    proxy_creds = "root:password"
+    proxy_creds = "username:password"
 }
 ```
 
@@ -167,6 +167,7 @@ resource "illumio-core_label_group" "env_lg" {
 3. Remove `env_dev` and run `terraform apply`. 
 
  **To identify such dependency, refer to the below list of versioned resources which can have reference to non-versioned resources.**
+
 - label_group: label
 - rule_set: label, workload
 - virtual_service: label

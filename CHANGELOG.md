@@ -1,1 +1,4 @@
-<!-- Add section after first release to track changes -->
+
+## 0.1.0 (May 31, 2021)
+
+- Initial Release

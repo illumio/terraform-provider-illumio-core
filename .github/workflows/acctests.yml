@@ -27,6 +27,7 @@ jobs:
         run: bash scripts/acccoveragecheck.sh
         env:
           CGO_ENABLED: 0
+          ACC_TEST_COV_THRESHOLD: 70
           # Required to run acc tests successfully
           # TODO set below env vars in secrets
           # TF_ACC: 1

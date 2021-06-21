@@ -15,23 +15,23 @@ resource "illumio-core_workload" "vm10" {
 }
 
 
-resource "illumio-core_workload_interface" "vm10" {
+resource "illumio-core_workload_interface" "vm10_intf_1" {
   workload_href = illumio-core_workload.vm10.href
-  name = "policy-1-interface-1"
-  link_state = "up"
-  address = "10.20.30.0"
+  name          = "policy-1-interface-1"
+  link_state    = "up"
+  address       = "10.20.30.0"
 }
-resource "illumio-core_workload_interface" "vm10" {
+resource "illumio-core_workload_interface" "vm10_intf_2" {
   workload_href = illumio-core_workload.vm10.href
-  name = "policy-1-interface-2"
-  link_state = "up"
-  address = "fd00::200:a:1:a21"
+  name          = "policy-1-interface-2"
+  link_state    = "up"
+  address       = "fd00::200:a:1:a21"
 }
-resource "illumio-core_workload_interface" "vm10" {
+resource "illumio-core_workload_interface" "vm10_intf_3" {
   workload_href = illumio-core_workload.vm10.href
-  name = "policy-1-interface-3"
-  link_state = "up"
-  address = "10.1.10.34"
+  name          = "policy-1-interface-3"
+  link_state    = "up"
+  address       = "10.1.10.34"
 }
 
 resource "illumio-core_workload" "vm11" {
@@ -50,21 +50,21 @@ resource "illumio-core_workload" "vm11" {
   }
 }
 
-resource "illumio-core_workload_interface" "vm11" {
+resource "illumio-core_workload_interface" "vm11_intf_1" {
   workload_href = illumio-core_workload.vm11.href
-  name = "policy-1-interface-1"
-  link_state = "up"
-  address = "10.20.30.0"
+  name          = "policy-1-interface-1"
+  link_state    = "up"
+  address       = "10.20.30.0"
 }
-resource "illumio-core_workload_interface" "vm11" {
+resource "illumio-core_workload_interface" "vm11_intf_2" {
   workload_href = illumio-core_workload.vm11.href
-  name = "policy-1-interface-2"
-  link_state = "up"
-  address = "fd00::200:a:1:a21"
+  name          = "policy-1-interface-2"
+  link_state    = "up"
+  address       = "fd00::200:a:1:a21"
 }
-resource "illumio-core_workload_interface" "vm11" {
+resource "illumio-core_workload_interface" "vm11_intf_3" {
   workload_href = illumio-core_workload.vm11.href
-  name = "policy-1-interface-3"
-  link_state = "up"
-  address = "10.1.10.34"
+  name          = "policy-1-interface-3"
+  link_state    = "up"
+  address       = "10.1.10.34"
 }

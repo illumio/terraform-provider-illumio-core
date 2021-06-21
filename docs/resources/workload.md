@@ -49,7 +49,6 @@ resource "illumio-core_workload" "example" {
 - **external_data_reference** (String) A unique identifier within the external data source
 - **external_data_set** (String) The data source from which a resource originates
 - **hostname** (String) The hostname of this workload. The hostname should be up to 255 characters
-<!-- - **interfaces** (Block Set) Workload network interfaces (see [below for nested schema](#nestedblock--interfaces)) -->
 - **labels** (Block Set) Assigned labels for workload (see [below for nested schema](#nestedblock--labels))
 - **name** (String) Name of the Workload. The name should be up to 255 characters
 - **online** (Boolean) Determines if this workload is online. Default value: false
@@ -82,28 +81,6 @@ resource "illumio-core_workload" "example" {
 - **ven** (Map of String) VENS for Workload
 - **visibility_level** (String) Visibility Level of workload(s) to return
 - **vulnerabilities_summary** (List of Object) Vulnerabilities summary associated with the workload (see [below for nested schema](#nestedatt--vulnerabilities_summary))
-
-<!-- <a id="nestedblock--interfaces"></a>
-### Nested Schema for `interfaces`
-
-Required:
-
-- **link_state** (String) Link State for the workload Interface. Allowed values are "up", "down", and "unknown"
-- **name** (String) Name of Interface. The name should be up to 255 characters
-
-Optional:
-
-- **address** (String) The Address to assign to this interface. The address should in the IPv4 or IPv6 format
-- **cidr_block** (Number) CIDR BLOCK of the Interface
-- **default_gateway_address** (String) Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format
-- **friendly_name** (String) User-friendly name for interface. The name should be up to 255 characters
-
-Read-Only:
-
-- **loopback** (Boolean) Loopback for Workload Interface
-- **network** (Map of String) Href of Network of the Interface
-- **network_detection_mode** (String) Network Detection Mode of the Interface -->
-
 
 <a id="nestedblock--labels"></a>
 ### Nested Schema for `labels`

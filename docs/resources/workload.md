@@ -24,14 +24,6 @@ resource "illumio-core_workload" "example" {
     hostname = "example hostname"
     service_principal_name = "example spn"
     public_ip = "0.0.0.0"
-    interfaces {
-        name = "example interface"
-        link_state = "up"
-        address = "0.0.0.0"
-        cidr_block = 0
-        default_gateway_address = "0.0.0.0"
-        friendly_name = "example friendly name"
-    }
     service_provider = "example service provider"
     data_center = "example data center"
     data_center_zone = "example data center zone"

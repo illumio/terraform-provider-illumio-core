@@ -35,13 +35,6 @@
               "external_data_reference": "example reference",
               "external_data_set": "example set",
               "hostname": "example hostname",
-              "interfaces": [
-                {
-                  "address": "10.10.3.10",
-                  "link_state": "up",
-                  "name": "example interface"
-                }
-              ],
               "labels": [
                 {
                   "href": "/orgs/1/labels/1"

@@ -48,26 +48,6 @@ resource "illumio-core_rule_set" "example" {
       href = "/orgs/1/sec_policy/draft/label_groups/65d0ad0f-329a-4ddc-8919-bd0220051fc7"
     }
   }
-
-  rules {
-    enabled       = true
-    resolve_labels_as {
-      consumers = ["workloads"]
-      providers = ["workloads"]
-    }
-    consumers {
-      actors = "ams"
-    }
-    providers {
-      label {
-        href = "/orgs/1/labels/715"
-      }
-    }
-    ingress_services {
-      proto = 6
-      port  = 1
-    }
-  }
 }
 ```
 

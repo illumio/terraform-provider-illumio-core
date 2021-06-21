@@ -22,11 +22,6 @@ resource "illumio-core_workload" "example" {
   external_data_reference = "example reference"
   hostname               = "example hostname"
   service_principal_name = "example spn 99"
-  interfaces {
-    name       = "example interface"
-    link_state = "up"
-    address    = "10.10.3.10"
-  }
   service_provider = "example service provider"
   data_center      = "example data center"
   data_center_zone = "example data center zone"

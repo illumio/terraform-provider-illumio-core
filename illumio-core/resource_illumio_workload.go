@@ -65,76 +65,7 @@ func resourceIllumioWorkload() *schema.Resource {
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IsIPAddress,
 				),
-			},
-			// "interfaces": {
-			// 	Type:        schema.TypeSet,
-			// 	Computed:    true,
-			// 	Description: "Workload network interfaces",
-			// 	Elem: &schema.Resource{
-			// 		Schema: map[string]*schema.Schema{
-			// 			"name": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Name of Interface. The name should be up to 255 characters",
-			// 				// ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
-			// 			},
-			// 			"link_state": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Link State for the workload Interface. Allowed values are \"up\", \"down\", and \"unknown\" ",
-			// 				// ValidateDiagFunc: validation.ToDiagFunc(
-			// 				// 	validation.StringInSlice(ValidWorkloadInterfaceLinkStateValues, false),
-			// 				// ),
-			// 			},
-			// 			"address": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "The Address to assign to this interface. The address should in the IPv4 or IPv6 format",
-			// 				// ValidateDiagFunc: validation.ToDiagFunc(
-			// 				// 	validation.IsIPAddress,
-			// 				// ),
-			// 			},
-			// 			"cidr_block": {
-			// 				Type:        schema.TypeInt,
-			// 				Computed:    true,
-			// 				Description: "CIDR BLOCK of the Interface",
-			// 			},
-			// 			"default_gateway_address": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format",
-			// 				// ValidateDiagFunc: validation.ToDiagFunc(
-			// 				// 	validation.IsIPAddress,
-			// 				// ),
-			// 			},
-			// 			"network": {
-			// 				Type:        schema.TypeMap,
-			// 				Computed:    true,
-			// 				Description: "Href of Network of the Interface",
-			// 				Elem: &schema.Schema{
-			// 					Type: schema.TypeString,
-			// 				},
-			// 			},
-			// 			"network_detection_mode": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Network Detection Mode of the Interface",
-			// 			},
-			// 			"friendly_name": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "User-friendly name for interface. The name should be up to 255 characters",
-			// 				// ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
-			// 			},
-			// 			"loopback": {
-			// 				Type:        schema.TypeBool,
-			// 				Computed:    true,
-			// 				Description: "Loopback for Workload Interface",
-			// 			},
-			// 		},
-			// 	},
-			// },
-			"service_provider": {
+			}, "service_provider": {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Description:      "Service provider for Workload. The service_provider should be up to 255 characters",
@@ -611,9 +542,6 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	if items, ok := d.GetOk("labels"); ok {
 		workload.Labels = models.GetHrefs(items.(*schema.Set).List())
 	}
-	// if items, ok := d.GetOk("interfaces"); ok {
-	// 	workload.Interfaces = expandIllumioWorkloadInterface(items.(*schema.Set).List())
-	// }
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
 		return diag.FromErr(err)
@@ -674,23 +602,6 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			d.Set(key, nil)
 		}
 	}
-
-	// key := "interfaces"
-	// if data.Exists(key) {
-	// 	d.Set("interfaces", extractMapArray(data.S(key), []string{
-	// 		"name",
-	// 		"loopback",
-	// 		"link_state",
-	// 		"address",
-	// 		"cidr_block",
-	// 		"default_gateway_address",
-	// 		"network",
-	// 		"network_detection_mode",
-	// 		"friendly_name",
-	// 	}))
-	// } else {
-	// 	d.Set(key, nil)
-	// }
 
 	key := "services"
 	if data.Exists(key) {
@@ -861,8 +772,6 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 
 	workload.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
 
-	// workload.Interfaces = expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
-
 	if diags.HasError() {
 		return diags
 	}
@@ -887,19 +796,3 @@ func resourceIllumioWorkloadDelete(ctx context.Context, d *schema.ResourceData, 
 	d.SetId("")
 	return diagnostics
 }
-
-// func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {
-// 	var wi []models.WorkloadInterface
-// 	for _, e := range arr {
-// 		elem := e.(map[string]interface{})
-// 		wi = append(wi, models.WorkloadInterface{
-// 			Name:                  elem["name"].(string),
-// 			LinkState:             elem["link_state"].(string),
-// 			Address:               elem["address"].(string),
-// 			CidrBlock:             elem["cidr_block"].(int),
-// 			DefaultGatewayAddress: elem["default_gateway_address"].(string),
-// 			FriendlyName:          elem["friendly_name"].(string),
-// 		})
-// 	}
-// 	return wi
-// }

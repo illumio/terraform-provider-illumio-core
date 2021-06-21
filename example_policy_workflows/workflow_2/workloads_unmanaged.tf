@@ -12,22 +12,26 @@ resource "illumio-core_workload" "vm10" {
   labels {
     href = illumio-core_label.policy_2_loc1.href
   }
-  interfaces {
-    name       = "policy-1-interface-1"
-    link_state = "up"
-    address    = "10.20.30.0"
-  }
-  interfaces {
-    name       = "policy-1-interface-2"
-    link_state = "up"
-    address    = "fd00::200:a:1:a21"
-  }
-  interfaces {
-    name       = "policy-1-interface-3"
-    link_state = "up"
-    address    = "10.1.10.34"
-  }
+}
 
+
+resource "illumio-core_workload_interface" "vm10" {
+  workload_href = illumio-core_workload.vm10.href
+  name = "policy-1-interface-1"
+  link_state = "up"
+  address = "10.20.30.0"
+}
+resource "illumio-core_workload_interface" "vm10" {
+  workload_href = illumio-core_workload.vm10.href
+  name = "policy-1-interface-2"
+  link_state = "up"
+  address = "fd00::200:a:1:a21"
+}
+resource "illumio-core_workload_interface" "vm10" {
+  workload_href = illumio-core_workload.vm10.href
+  name = "policy-1-interface-3"
+  link_state = "up"
+  address = "10.1.10.34"
 }
 
 resource "illumio-core_workload" "vm11" {
@@ -44,19 +48,23 @@ resource "illumio-core_workload" "vm11" {
   labels {
     href = illumio-core_label.policy_2_loc2.href
   }
-  interfaces {
-    name       = "policy-1-interface-1"
-    link_state = "up"
-    address    = "10.20.30.0"
-  }
-  interfaces {
-    name       = "policy-1-interface-2"
-    link_state = "up"
-    address    = "fd00::200:a:1:a21"
-  }
-  interfaces {
-    name       = "policy-1-interface-3"
-    link_state = "up"
-    address    = "10.1.10.34"
-  }
+}
+
+resource "illumio-core_workload_interface" "vm11" {
+  workload_href = illumio-core_workload.vm11.href
+  name = "policy-1-interface-1"
+  link_state = "up"
+  address = "10.20.30.0"
+}
+resource "illumio-core_workload_interface" "vm11" {
+  workload_href = illumio-core_workload.vm11.href
+  name = "policy-1-interface-2"
+  link_state = "up"
+  address = "fd00::200:a:1:a21"
+}
+resource "illumio-core_workload_interface" "vm11" {
+  workload_href = illumio-core_workload.vm11.href
+  name = "policy-1-interface-3"
+  link_state = "up"
+  address = "10.1.10.34"
 }

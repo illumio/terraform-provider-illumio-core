@@ -793,8 +793,8 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		Enabled:               d.Get("enabled").(bool),
-		Rules:                 nil,
-		IPTablesRules:         nil,
+		// Rules:                 nil,
+		IPTablesRules: nil,
 	}
 
 	scopes, errs := expandIllumioRuleSetScopes(d.Get("scopes").([]interface{}))

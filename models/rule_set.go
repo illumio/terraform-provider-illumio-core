@@ -126,14 +126,14 @@ package models
 */
 
 type RuleSet struct {
-	Name                  string                 `json:"name"`
-	Description           string                 `json:"description"`
-	ExternalDataSet       string                 `json:"external_data_set"`
-	ExternalDataReference string                 `json:"external_data_reference"`
-	Enabled               bool                   `json:"enabled"`
-	Scopes                [][]*RuleSetScope      `json:"scopes"`
-	Rules                 []*SecurityRule        `json:"rules"`
-	IPTablesRules         []*RuleSetIPTablesRule `json:"ip_tables_rules"`
+	Name                  string            `json:"name"`
+	Description           string            `json:"description"`
+	ExternalDataSet       string            `json:"external_data_set"`
+	ExternalDataReference string            `json:"external_data_reference"`
+	Enabled               bool              `json:"enabled"`
+	Scopes                [][]*RuleSetScope `json:"scopes"`
+	// Rules                 []*SecurityRule        `json:"rules"`
+	IPTablesRules []*RuleSetIPTablesRule `json:"ip_tables_rules"`
 }
 
 type RuleSetScope struct {
@@ -209,24 +209,24 @@ func (r *RuleSet) ToMap() (map[string]interface{}, error) {
 	}
 	m["scopes"] = sps
 
-	if r.Rules != nil {
-		rls := []map[string]interface{}{}
-		for _, rule := range r.Rules {
-			rl, _ := rule.ToMap()
+	// if r.Rules != nil {
+	// 	rls := []map[string]interface{}{}
+	// 	for _, rule := range r.Rules {
+	// 		rl, _ := rule.ToMap()
 
-			if rl["external_data_set"] == nil {
-				delete(rl, "external_data_set")
-			}
+	// 		if rl["external_data_set"] == nil {
+	// 			delete(rl, "external_data_set")
+	// 		}
 
-			if rl["external_data_reference"] == nil {
-				delete(rl, "external_data_reference")
-			}
+	// 		if rl["external_data_reference"] == nil {
+	// 			delete(rl, "external_data_reference")
+	// 		}
 
-			rls = append(rls, rl)
-		}
+	// 		rls = append(rls, rl)
+	// 	}
 
-		m["rules"] = rls
-	}
+	// 	m["rules"] = rls
+	// }
 
 	if r.IPTablesRules != nil {
 		iptrs := []map[string]interface{}{}

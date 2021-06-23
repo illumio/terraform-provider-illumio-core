@@ -43,24 +43,24 @@ package models
 */
 
 type Workload struct {
-	Name                                  string              `json:"name"`
-	Description                           string              `json:"description"`
-	ExternalDataSet                       string              `json:"external_data_set"`
-	ExternalDataReference                 string              `json:"external_data_reference"`
-	Hostname                              string              `json:"hostname"`
-	ServicePrincipalName                  string              `json:"service_principal_name"`
-	PublicIP                              string              `json:"public_ip"`
-	Interfaces                            []WorkloadInterface `json:"interfaces"`
-	AgentToPceCertificateAuthenticationID string              `json:"agent_to_pce_certificate_authentication_id"`
-	DistinguishedName                     string              `json:"distinguished_name"`
-	ServiceProvider                       string              `json:"service_provider"`
-	DataCenter                            string              `json:"data_center"`
-	DataCenterZone                        string              `json:"data_center_zone"`
-	OsID                                  string              `json:"os_id"`
-	OsDetail                              string              `json:"os_detail"`
-	Online                                bool                `json:"online"`
-	Labels                                []Href              `json:"labels"`
-	EnforcementMode                       string              `json:"enforcement_mode"`
+	Name                  string `json:"name"`
+	Description           string `json:"description"`
+	ExternalDataSet       string `json:"external_data_set"`
+	ExternalDataReference string `json:"external_data_reference"`
+	Hostname              string `json:"hostname"`
+	ServicePrincipalName  string `json:"service_principal_name"`
+	PublicIP              string `json:"public_ip"`
+	// Interfaces                            []WorkloadInterface `json:"interfaces"`
+	AgentToPceCertificateAuthenticationID string `json:"agent_to_pce_certificate_authentication_id"`
+	DistinguishedName                     string `json:"distinguished_name"`
+	ServiceProvider                       string `json:"service_provider"`
+	DataCenter                            string `json:"data_center"`
+	DataCenterZone                        string `json:"data_center_zone"`
+	OsID                                  string `json:"os_id"`
+	OsDetail                              string `json:"os_detail"`
+	Online                                bool   `json:"online"`
+	Labels                                []Href `json:"labels"`
+	EnforcementMode                       string `json:"enforcement_mode"`
 }
 
 // ToMap - Returns map for Workload model
@@ -103,28 +103,28 @@ func (w *Workload) ToMap() (map[string]interface{}, error) {
 	if w.ExternalDataSet != "" {
 		workloadAttrMap["external_data_set"] = w.ExternalDataSet
 	}
-	wMapArr := []map[string]interface{}{}
-	for _, o := range w.Interfaces {
-		m := make(map[string]interface{})
-		if o.Name != "" {
-			m["name"] = o.Name
-		}
-		if o.LinkState != "" {
-			m["link_state"] = o.LinkState
-		}
-		if o.Address != "" {
-			m["address"] = o.Address
-		}
-		m["cidr_block"] = o.CidrBlock
-		if o.DefaultGatewayAddress != "" {
-			m["default_gateway_address"] = o.DefaultGatewayAddress
-		}
-		if o.FriendlyName != "" {
-			m["friendly_name"] = o.FriendlyName
-		}
-		wMapArr = append(wMapArr, m)
-	}
-	workloadAttrMap["interfaces"] = wMapArr
+	// wMapArr := []map[string]interface{}{}
+	// for _, o := range w.Interfaces {
+	// 	m := make(map[string]interface{})
+	// 	if o.Name != "" {
+	// 		m["name"] = o.Name
+	// 	}
+	// 	if o.LinkState != "" {
+	// 		m["link_state"] = o.LinkState
+	// 	}
+	// 	if o.Address != "" {
+	// 		m["address"] = o.Address
+	// 	}
+	// 	m["cidr_block"] = o.CidrBlock
+	// 	if o.DefaultGatewayAddress != "" {
+	// 		m["default_gateway_address"] = o.DefaultGatewayAddress
+	// 	}
+	// 	if o.FriendlyName != "" {
+	// 		m["friendly_name"] = o.FriendlyName
+	// 	}
+	// 	wMapArr = append(wMapArr, m)
+	// }
+	// workloadAttrMap["interfaces"] = wMapArr
 
 	return workloadAttrMap, nil
 }

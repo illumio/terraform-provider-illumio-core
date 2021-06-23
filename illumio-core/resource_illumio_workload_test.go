@@ -47,11 +47,11 @@ func testAccCheckIllumioWorkloadConfig_basic(val string) string {
 		description            = "%s"
 		hostname               = "acc. test workload hostname"
 		distinguished_name     = "acc. test distinguished name"
-		interfaces {
-			name       = "acc. test workload interface"
-			link_state = "up"
-			address    = "10.10.3.10"
-		}
+		// interfaces {
+		// 	name       = "acc. test workload interface"
+		// 	link_state = "up"
+		// 	address    = "10.10.3.10"
+		// }
 		labels {
 			href = "/orgs/1/labels/1"
 		}
@@ -85,9 +85,9 @@ func testAccCheckIllumioWorkloadExists(name string, lgAttr map[string]interface{
 			"hostname",
 			"description",
 			"labels.0.href",
-			"interfaces.0.name",
-			"interfaces.0.link_state",
-			"interfaces.0.address",
+			// "interfaces.0.name",
+			// "interfaces.0.link_state",
+			// "interfaces.0.address",
 			"service_provider",
 			"distinguished_name",
 		} {
@@ -101,15 +101,15 @@ func testAccCheckIllumioWorkloadExists(name string, lgAttr map[string]interface{
 func testAccCheckIllumioWorkloadAttributes(val string, lgAttr map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		expectation := map[string]interface{}{
-			"name":                    "acc. test workload",
-			"hostname":                "acc. test workload hostname",
-			"description":             val,
-			"labels.0.href":           "/orgs/1/labels/1",
-			"interfaces.0.name":       "acc. test workload interface",
-			"interfaces.0.link_state": "up",
-			"interfaces.0.address":    "10.10.3.10",
-			"service_provider":        "acc. test service provider",
-			"distinguished_name":      "acc. test distinguished name",
+			"name":          "acc. test workload",
+			"hostname":      "acc. test workload hostname",
+			"description":   val,
+			"labels.0.href": "/orgs/1/labels/1",
+			// "interfaces.0.name":       "acc. test workload interface",
+			// "interfaces.0.link_state": "up",
+			// "interfaces.0.address":    "10.10.3.10",
+			"service_provider":   "acc. test service provider",
+			"distinguished_name": "acc. test distinguished name",
 		}
 		for k, v := range expectation {
 			if lgAttr[k] != v {

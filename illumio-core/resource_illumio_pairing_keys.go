@@ -186,6 +186,8 @@ func resourceIllumioPairingKeysCreate(ctx context.Context, d *schema.ResourceDat
 
 func resourceIllumioPairingKeysUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if d.HasChange("pairing_profile_href") {
+		old, _ := d.GetChange("pairing_profile_href")
+		d.Set("pairing_profile_href", old)
 		return diag.Errorf("[illumio-core_pairing_keys] Can not change pairing_profile_href once set")
 	}
 	activationTokens := d.Get("activation_tokens").([]interface{})

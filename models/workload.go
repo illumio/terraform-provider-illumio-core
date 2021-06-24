@@ -43,14 +43,13 @@ package models
 */
 
 type Workload struct {
-	Name                  string `json:"name"`
-	Description           string `json:"description"`
-	ExternalDataSet       string `json:"external_data_set"`
-	ExternalDataReference string `json:"external_data_reference"`
-	Hostname              string `json:"hostname"`
-	ServicePrincipalName  string `json:"service_principal_name"`
-	PublicIP              string `json:"public_ip"`
-	// Interfaces                            []WorkloadInterface `json:"interfaces"`
+	Name                                  string `json:"name"`
+	Description                           string `json:"description"`
+	ExternalDataSet                       string `json:"external_data_set"`
+	ExternalDataReference                 string `json:"external_data_reference"`
+	Hostname                              string `json:"hostname"`
+	ServicePrincipalName                  string `json:"service_principal_name"`
+	PublicIP                              string `json:"public_ip"`
 	AgentToPceCertificateAuthenticationID string `json:"agent_to_pce_certificate_authentication_id"`
 	DistinguishedName                     string `json:"distinguished_name"`
 	ServiceProvider                       string `json:"service_provider"`
@@ -61,6 +60,11 @@ type Workload struct {
 	Online                                bool   `json:"online"`
 	Labels                                []Href `json:"labels"`
 	EnforcementMode                       string `json:"enforcement_mode"`
+	/* Following code is commented to prevent the race condition
+	 * between Workload and Workload Interface Resources. Preserved for future use.
+	 * Bug#15
+	 */
+	// Interfaces                            []WorkloadInterface `json:"interfaces"`
 }
 
 // ToMap - Returns map for Workload model
@@ -103,6 +107,11 @@ func (w *Workload) ToMap() (map[string]interface{}, error) {
 	if w.ExternalDataSet != "" {
 		workloadAttrMap["external_data_set"] = w.ExternalDataSet
 	}
+
+	/* Following code is commented to prevent the race condition
+	 * between Workload and Workload Interface Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// wMapArr := []map[string]interface{}{}
 	// for _, o := range w.Interfaces {
 	// 	m := make(map[string]interface{})

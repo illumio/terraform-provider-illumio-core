@@ -66,6 +66,10 @@ func resourceIllumioWorkload() *schema.Resource {
 					validation.IsIPAddress,
 				),
 			},
+			/* Following code is commented to prevent the race condition
+			 * between Workload and Workload Interface Resources. Preserved for future use.
+			 * Bug#15
+			 */
 			// "interfaces": {
 			// 	Type:        schema.TypeSet,
 			// 	Computed:    true,
@@ -611,6 +615,10 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	if items, ok := d.GetOk("labels"); ok {
 		workload.Labels = models.GetHrefs(items.(*schema.Set).List())
 	}
+	/* Following code is commented to prevent the race condition
+	 * between Workload and Workload Interface Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// if items, ok := d.GetOk("interfaces"); ok {
 	// 	workload.Interfaces = expandIllumioWorkloadInterface(items.(*schema.Set).List())
 	// }
@@ -675,6 +683,10 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 		}
 	}
 
+	/* Following code is commented to prevent the race condition
+	 * between Workload and Workload Interface Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// key := "interfaces"
 	// if data.Exists(key) {
 	// 	d.Set("interfaces", extractMapArray(data.S(key), []string{
@@ -861,6 +873,10 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 
 	workload.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
 
+	/* Following code is commented to prevent the race condition
+	 * between Workload and Workload Interface Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// workload.Interfaces = expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 
 	if diags.HasError() {
@@ -888,6 +904,10 @@ func resourceIllumioWorkloadDelete(ctx context.Context, d *schema.ResourceData, 
 	return diagnostics
 }
 
+/* Following code is commented to prevent the race condition
+ * between Workload and Workload Interface Resources. Preserved for future use.
+ * Bug#15
+ */
 // func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {
 // 	var wi []models.WorkloadInterface
 // 	for _, e := range arr {

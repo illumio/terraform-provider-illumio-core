@@ -126,14 +126,18 @@ package models
 */
 
 type RuleSet struct {
-	Name                  string            `json:"name"`
-	Description           string            `json:"description"`
-	ExternalDataSet       string            `json:"external_data_set"`
-	ExternalDataReference string            `json:"external_data_reference"`
-	Enabled               bool              `json:"enabled"`
-	Scopes                [][]*RuleSetScope `json:"scopes"`
+	Name                  string                 `json:"name"`
+	Description           string                 `json:"description"`
+	ExternalDataSet       string                 `json:"external_data_set"`
+	ExternalDataReference string                 `json:"external_data_reference"`
+	Enabled               bool                   `json:"enabled"`
+	Scopes                [][]*RuleSetScope      `json:"scopes"`
+	IPTablesRules         []*RuleSetIPTablesRule `json:"ip_tables_rules"`
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// Rules                 []*SecurityRule        `json:"rules"`
-	IPTablesRules []*RuleSetIPTablesRule `json:"ip_tables_rules"`
 }
 
 type RuleSetScope struct {
@@ -209,6 +213,10 @@ func (r *RuleSet) ToMap() (map[string]interface{}, error) {
 	}
 	m["scopes"] = sps
 
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// if r.Rules != nil {
 	// 	rls := []map[string]interface{}{}
 	// 	for _, rule := range r.Rules {

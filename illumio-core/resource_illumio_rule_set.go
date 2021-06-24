@@ -122,6 +122,10 @@ func resourceIllumioRuleSet() *schema.Resource {
 					},
 				},
 			},
+			/* Following code is commented to prevent the race condition
+			 * between RuleSet and SecurityRule Resources. Preserved for future use.
+			 * Bug#15
+			 */
 			// "rules": {
 			// 	Type:        schema.TypeSet,
 			// 	Optional:    true,
@@ -309,6 +313,10 @@ func expandIllumioRuleSet(d *schema.ResourceData) (*models.RuleSet, *diag.Diagno
 	diags = append(diags, *errs...)
 	ruleSet.Scopes = scopes
 
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
 	// diags = append(diags, *errs...)
 	// ruleSet.Rules = rules
@@ -366,6 +374,10 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 	return sps, &diags
 }
 
+/* Following code is commented to prevent the race condition
+ * between RuleSet and SecurityRule Resources. Preserved for future use.
+ * Bug#15
+ */
 // func expandIllumioRuleSetSecurityRules(rules []interface{}) ([]*models.SecurityRule, *diag.Diagnostics) {
 // 	var diags diag.Diagnostics
 // 	rls := []*models.SecurityRule{}
@@ -682,6 +694,10 @@ func resourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m i
 		d.Set("scopes", nil)
 	}
 
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// if data.Exists("rules") {
 	// 	d.Set("rules", extractResourceRuleSetSecurityRules(data.S("rules")))
 	// } else {
@@ -730,6 +746,10 @@ func extractResourceRuleSetIPTablesRules(data *gabs.Container) []map[string]inte
 	return ms
 }
 
+/* Following code is commented to prevent the race condition
+ * between RuleSet and SecurityRule Resources. Preserved for future use.
+ * Bug#15
+ */
 // func extractResourceRuleSetSecurityRules(data *gabs.Container) []map[string]interface{} {
 
 // 	srKeys := []string{
@@ -801,6 +821,10 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 	diags = append(diags, *errs...)
 	ruleSet.Scopes = scopes
 
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
 	// if d.HasChange("rules") {
 	// 	rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
 	// 	ruleSet.Rules = rules

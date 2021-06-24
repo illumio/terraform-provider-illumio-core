@@ -48,26 +48,6 @@ resource "illumio-core_rule_set" "example" {
       href = "/orgs/1/sec_policy/draft/label_groups/65d0ad0f-329a-4ddc-8919-bd0220051fc7"
     }
   }
-
-  rules {
-    enabled       = true
-    resolve_labels_as {
-      consumers = ["workloads"]
-      providers = ["workloads"]
-    }
-    consumers {
-      actors = "ams"
-    }
-    providers {
-      label {
-        href = "/orgs/1/labels/715"
-      }
-    }
-    ingress_services {
-      proto = 6
-      port  = 1
-    }
-  }
 }
 ```
 
@@ -85,7 +65,7 @@ resource "illumio-core_rule_set" "example" {
 - **external_data_reference** (String) External data reference identifier
 - **external_data_set** (String) External data set identifier
 - **ip_tables_rules** (Block Set) Collection of IP Tables Rules (see [below for nested schema](#nestedblock--ip_tables_rules))
-- **rules** (Block Set) Collection of Security Rules (see [below for nested schema](#nestedblock--rules))
+<!-- - **rules** (Block Set) Collection of Security Rules (see [below for nested schema](#nestedblock--rules)) -->
 
 ### Read-Only
 
@@ -194,7 +174,7 @@ Required:
 
 
 
-<a id="nestedblock--rules"></a>
+<!-- <a id="nestedblock--rules"></a>
 ### Nested Schema for `rules`
 
 Required:
@@ -359,4 +339,4 @@ Optional:
 - **port** (String) Port number used with protocol or starting port when specifying a range. Allowed range is 0-65535
 - **proto** (String) Protocol number. Allowed values are 6 (TCP) and 17 (UDP)
 - **to_port** (String) Upper end of port range. Allowed range is 0-65535
-
+ -->

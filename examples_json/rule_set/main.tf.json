@@ -55,41 +55,6 @@
                 }
               ],
               "name": "example",
-              "rules": [
-                {
-                  "consumers": [
-                    {
-                      "actors": "ams"
-                    }
-                  ],
-                  "enabled": false,
-                  "ingress_services": [
-                    {
-                      "port": 4,
-                      "proto": 6
-                    }
-                  ],
-                  "providers": [
-                    {
-                      "label": [
-                        {
-                          "href": "/orgs/1/labels/715"
-                        }
-                      ]
-                    }
-                  ],
-                  "resolve_labels_as": [
-                    {
-                      "consumers": [
-                        "workloads"
-                      ],
-                      "providers": [
-                        "workloads"
-                      ]
-                    }
-                  ]
-                }
-              ],
               "scopes": [
                 {
                   "label": [

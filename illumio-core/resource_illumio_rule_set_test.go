@@ -76,34 +76,34 @@ func testAccCheckIllumioRuleSetConfig_basic(val string) string {
 		  }
 		}
 	  
-		rules {
-		  enabled = false
-		  resolve_labels_as {
-			consumers = ["workloads"]
-			providers = ["workloads"]
-		  }
+		// rules {
+		//   enabled = false
+		//   resolve_labels_as {
+		// 	consumers = ["workloads"]
+		// 	providers = ["workloads"]
+		//   }
 	  
-		  consumers {
-			actors = "ams"
-		  }
+		//   consumers {
+		// 	actors = "ams"
+		//   }
 	  	  
-		  providers {
-			label {
-			  href = "/orgs/1/labels/715"
-			}
-		  }
+		//   providers {
+		// 	label {
+		// 	  href = "/orgs/1/labels/715"
+		// 	}
+		//   }
 	  
-		  providers {
-			label {
-			  href = "/orgs/1/labels/294"
-			}
-		  }
+		//   providers {
+		// 	label {
+		// 	  href = "/orgs/1/labels/294"
+		// 	}
+		//   }
 	  
-		  ingress_services {
-			proto = 6
-			port  = 4
-		  }
-		}
+		//   ingress_services {
+		// 	proto = 6
+		// 	port  = 4
+		//   }
+		// }
 	  }
 	`, val)
 }
@@ -133,7 +133,7 @@ func testAccCheckIllumioRuleSetExists(name string, lgAttr map[string]interface{}
 			"description",
 			"ip_tables_rules.0.enabled",
 			"ip_tables_rules.0.statements.0.table_name",
-			"rules.0.enabled",
+			// "rules.0.enabled",
 		} {
 			lgAttr[k] = cont.S(strings.Split(k, ".")...).Data()
 		}
@@ -149,7 +149,7 @@ func testAccCheckIllumioRuleSetAttributes(val string, lgAttr map[string]interfac
 			"description":               val,
 			"ip_tables_rules.0.enabled": false,
 			"ip_tables_rules.0.statements.0.table_name": "nat",
-			"rules.0.enabled": false,
+			// "rules.0.enabled": false,
 		}
 		for k, v := range expectation {
 			if lgAttr[k] != v {

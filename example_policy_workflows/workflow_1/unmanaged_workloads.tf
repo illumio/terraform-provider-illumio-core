@@ -31,20 +31,24 @@ resource "illumio-core_workload" "policy-1-workload-10" {
       href = illumio-core_label.policy-1-loc2.href
     }
     enforcement_mode = "full"
-    interfaces {
-      name = "policy-1-interface-1"
-      link_state = "up"
-      address = "10.20.30.0"
-    }
-    interfaces {
-      name = "policy-1-interface-2"
-      link_state = "up"
-      address = "fd00::200:a:1:a21"
-    }
-    interfaces {
-      name = "policy-1-interface-3"
-      link_state = "up"
-      address = "10.1.10.34"
-    }
     #enforcement_mode doesnot have illuminated as a value
+}
+
+resource "illumio-core_workload_interface" "policy-1-workload-interface-1" {
+  workload_href = illumio-core_workload.policy-1-workload-10.href
+  name = "policy-1-interface-1"
+  link_state = "up"
+  address = "10.20.30.0"
+}
+resource "illumio-core_workload_interface" "policy-1-workload-interface-2" {
+  workload_href = illumio-core_workload.policy-1-workload-10.href
+  name = "policy-1-interface-2"
+  link_state = "up"
+  address = "fd00::200:a:1:a21"
+}
+resource "illumio-core_workload_interface" "policy-1-workload-interface-3" {
+  workload_href = illumio-core_workload.policy-1-workload-10.href
+  name = "policy-1-interface-3"
+  link_state = "up"
+  address = "10.1.10.34"
 }

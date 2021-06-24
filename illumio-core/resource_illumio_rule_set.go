@@ -122,14 +122,18 @@ func resourceIllumioRuleSet() *schema.Resource {
 					},
 				},
 			},
-			"rules": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of Security Rules",
-				Elem: &schema.Resource{
-					Schema: securityRuleResourceBaseSchemaMap(),
-				},
-			},
+			/* Following code is commented to prevent the race condition
+			 * between RuleSet and SecurityRule Resources. Preserved for future use.
+			 * Bug#15
+			 */
+			// "rules": {
+			// 	Type:        schema.TypeSet,
+			// 	Optional:    true,
+			// 	Description: "Collection of Security Rules",
+			// 	Elem: &schema.Resource{
+			// 		Schema: securityRuleResourceBaseSchemaMap(),
+			// 	},
+			// },
 			"ip_tables_rules": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -309,9 +313,13 @@ func expandIllumioRuleSet(d *schema.ResourceData) (*models.RuleSet, *diag.Diagno
 	diags = append(diags, *errs...)
 	ruleSet.Scopes = scopes
 
-	rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
-	diags = append(diags, *errs...)
-	ruleSet.Rules = rules
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
+	// rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
+	// diags = append(diags, *errs...)
+	// ruleSet.Rules = rules
 
 	ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rules").(*schema.Set).List())
 	diags = append(diags, *errs...)
@@ -366,201 +374,205 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 	return sps, &diags
 }
 
-func expandIllumioRuleSetSecurityRules(rules []interface{}) ([]*models.SecurityRule, *diag.Diagnostics) {
-	var diags diag.Diagnostics
-	rls := []*models.SecurityRule{}
+/* Following code is commented to prevent the race condition
+ * between RuleSet and SecurityRule Resources. Preserved for future use.
+ * Bug#15
+ */
+// func expandIllumioRuleSetSecurityRules(rules []interface{}) ([]*models.SecurityRule, *diag.Diagnostics) {
+// 	var diags diag.Diagnostics
+// 	rls := []*models.SecurityRule{}
 
-	for _, rule := range rules {
-		r := rule.(map[string]interface{})
-		rl := &models.SecurityRule{
-			Enabled:               r["enabled"].(bool),
-			Description:           r["description"].(string),
-			ExternalDataSet:       r["external_data_set"].(string),
-			ExternalDataReference: r["external_data_reference"].(string),
-			SecConnect:            r["sec_connect"].(bool),
-			Stateless:             r["stateless"].(bool),
-			MachineAuth:           r["machine_auth"].(bool),
-			UnscopedConsumers:     r["unscoped_consumers"].(bool),
-		}
+// 	for _, rule := range rules {
+// 		r := rule.(map[string]interface{})
+// 		rl := &models.SecurityRule{
+// 			Enabled:               r["enabled"].(bool),
+// 			Description:           r["description"].(string),
+// 			ExternalDataSet:       r["external_data_set"].(string),
+// 			ExternalDataReference: r["external_data_reference"].(string),
+// 			SecConnect:            r["sec_connect"].(bool),
+// 			Stateless:             r["stateless"].(bool),
+// 			MachineAuth:           r["machine_auth"].(bool),
+// 			UnscopedConsumers:     r["unscoped_consumers"].(bool),
+// 		}
 
-		if rl.HasConflicts() {
-			diags = append(diags, diag.Errorf("[illumio-core_rule_set] Exactly one of [\"sec_connect\", \"machine_auth\", \"stateless\"] can be set to true inside rules")...)
-		}
+// 		if rl.HasConflicts() {
+// 			diags = append(diags, diag.Errorf("[illumio-core_rule_set] Exactly one of [\"sec_connect\", \"machine_auth\", \"stateless\"] can be set to true inside rules")...)
+// 		}
 
-		resLabelAs, errs := expandIllumioRuleSetSRResolveLabelsAs(r["resolve_labels_as"].([]interface{})[0])
-		diags = append(diags, errs...)
-		rl.ResolveLabelsAs = resLabelAs
+// 		resLabelAs, errs := expandIllumioRuleSetSRResolveLabelsAs(r["resolve_labels_as"].([]interface{})[0])
+// 		diags = append(diags, errs...)
+// 		rl.ResolveLabelsAs = resLabelAs
 
-		ingServs, errs := expandIllumioRuleSetSRIngressService(
-			r["ingress_services"].(*schema.Set).List(),
-			rl.ResolveLabelsAs.ProviderIsVirtualService(),
-		)
-		diags = append(diags, errs...)
-		rl.IngressServices = ingServs
+// 		ingServs, errs := expandIllumioRuleSetSRIngressService(
+// 			r["ingress_services"].(*schema.Set).List(),
+// 			rl.ResolveLabelsAs.ProviderIsVirtualService(),
+// 		)
+// 		diags = append(diags, errs...)
+// 		rl.IngressServices = ingServs
 
-		povs, errs := expandIllumioRuleSetSRProviders(r["providers"].(*schema.Set).List())
-		diags = append(diags, errs...)
-		rl.Providers = povs
+// 		povs, errs := expandIllumioRuleSetSRProviders(r["providers"].(*schema.Set).List())
+// 		diags = append(diags, errs...)
+// 		rl.Providers = povs
 
-		cons, errs := expandIllumioRuleSetSRConsumers(r["consumers"].(*schema.Set).List())
-		diags = append(diags, errs...)
-		rl.Consumers = cons
+// 		cons, errs := expandIllumioRuleSetSRConsumers(r["consumers"].(*schema.Set).List())
+// 		diags = append(diags, errs...)
+// 		rl.Consumers = cons
 
-		rls = append(rls, rl)
-	}
+// 		rls = append(rls, rl)
+// 	}
 
-	return rls, &diags
-}
+// 	return rls, &diags
+// }
 
-func expandIllumioRuleSetSRResolveLabelsAs(o interface{}) (*models.SecurityRuleResolveLabelAs, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	resLabelsAs := o.(map[string]interface{})
+// func expandIllumioRuleSetSRResolveLabelsAs(o interface{}) (*models.SecurityRuleResolveLabelAs, diag.Diagnostics) {
+// 	var diags diag.Diagnostics
+// 	resLabelsAs := o.(map[string]interface{})
 
-	rProvs := getStringList(resLabelsAs["providers"].(*schema.Set).List())
-	rCons := getStringList(resLabelsAs["consumers"].(*schema.Set).List())
+// 	rProvs := getStringList(resLabelsAs["providers"].(*schema.Set).List())
+// 	rCons := getStringList(resLabelsAs["consumers"].(*schema.Set).List())
 
-	if !validateList(rProvs, validSRResLabelAsValues) {
-		diags = append(diags, diag.Errorf(`[illumio-core_rule_set] Invalid value for resolve_value_as.providers, allowed values are "workloads" and "virtual_services" inside rules`)...)
-	}
+// 	if !validateList(rProvs, validSRResLabelAsValues) {
+// 		diags = append(diags, diag.Errorf(`[illumio-core_rule_set] Invalid value for resolve_value_as.providers, allowed values are "workloads" and "virtual_services" inside rules`)...)
+// 	}
 
-	if !validateList(rCons, validSRResLabelAsValues) {
-		diags = append(diags, diag.Errorf(`[illumio-core_rule_set] Invalid value for resolve_value_as.consumers, allowed values are "workloads" and "virtual_services" inside rules`)...)
-	}
+// 	if !validateList(rCons, validSRResLabelAsValues) {
+// 		diags = append(diags, diag.Errorf(`[illumio-core_rule_set] Invalid value for resolve_value_as.consumers, allowed values are "workloads" and "virtual_services" inside rules`)...)
+// 	}
 
-	v := &models.SecurityRuleResolveLabelAs{
-		Providers: rProvs,
-		Consumers: rCons,
-	}
+// 	v := &models.SecurityRuleResolveLabelAs{
+// 		Providers: rProvs,
+// 		Consumers: rCons,
+// 	}
 
-	return v, diags
-}
+// 	return v, diags
+// }
 
-func expandIllumioRuleSetSRIngressService(inServices []interface{}, setEmpty bool) ([]map[string]interface{}, diag.Diagnostics) {
-	var diags diag.Diagnostics
+// func expandIllumioRuleSetSRIngressService(inServices []interface{}, setEmpty bool) ([]map[string]interface{}, diag.Diagnostics) {
+// 	var diags diag.Diagnostics
 
-	iss := []map[string]interface{}{}
+// 	iss := []map[string]interface{}{}
 
-	// Throw error if virtual_services is the only value set in resolve_label_as.provider and ingress_service's resource is non empty
-	if setEmpty && len(inServices) > 0 {
-		diags = append(diags, diag.Errorf("[illumio-core_rule_set] If the only value in the providers of resolve_label_as block is \"virtual_services\", then setting ingress_services is not allowed inside rules")...)
-	}
+// 	// Throw error if virtual_services is the only value set in resolve_label_as.provider and ingress_service's resource is non empty
+// 	if setEmpty && len(inServices) > 0 {
+// 		diags = append(diags, diag.Errorf("[illumio-core_rule_set] If the only value in the providers of resolve_label_as block is \"virtual_services\", then setting ingress_services is not allowed inside rules")...)
+// 	}
 
-	if !setEmpty {
-		if len(inServices) == 0 {
-			diags = append(diags, diag.Errorf("[illumio-core_rule_set] At least one ingress_service must be specified if providers of resolve_label_as block has \"workloads\" inside rules")...)
-		}
-		for _, service := range inServices {
-			s := service.(map[string]interface{})
+// 	if !setEmpty {
+// 		if len(inServices) == 0 {
+// 			diags = append(diags, diag.Errorf("[illumio-core_rule_set] At least one ingress_service must be specified if providers of resolve_label_as block has \"workloads\" inside rules")...)
+// 		}
+// 		for _, service := range inServices {
+// 			s := service.(map[string]interface{})
 
-			m := make(map[string]interface{})
+// 			m := make(map[string]interface{})
 
-			if isRuleSetSRIngressServiceSchemaValid(s, &diags) {
-				if s["href"].(string) != "" {
-					m["href"] = s["href"].(string)
-				}
+// 			if isRuleSetSRIngressServiceSchemaValid(s, &diags) {
+// 				if s["href"].(string) != "" {
+// 					m["href"] = s["href"].(string)
+// 				}
 
-				if v, ok := getInt(s["proto"]); ok {
-					m["proto"] = v
-					if vPort, ok := getInt(s["port"]); ok {
-						m["port"] = vPort
-						if vToPort, ok := getInt(s["to_port"]); ok {
-							if vToPort <= vPort {
-								diags = append(diags, diag.Errorf(" [illumio-core_rule_set] Value of to_port can't be less or equal to value of port inside ingress_services, inside rules")...)
-							} else {
-								m["to_port"] = vToPort
-							}
-						}
-					}
-				}
-			}
+// 				if v, ok := getInt(s["proto"]); ok {
+// 					m["proto"] = v
+// 					if vPort, ok := getInt(s["port"]); ok {
+// 						m["port"] = vPort
+// 						if vToPort, ok := getInt(s["to_port"]); ok {
+// 							if vToPort <= vPort {
+// 								diags = append(diags, diag.Errorf(" [illumio-core_rule_set] Value of to_port can't be less or equal to value of port inside ingress_services, inside rules")...)
+// 							} else {
+// 								m["to_port"] = vToPort
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
 
-			iss = append(iss, m)
-		}
-	}
+// 			iss = append(iss, m)
+// 		}
+// 	}
 
-	return iss, diags
-}
+// 	return iss, diags
+// }
 
 // Validates schema of the security_rule.ingress_service parameter.
 //
 // Verifes if required fileds are defined or not.
-func isRuleSetSRIngressServiceSchemaValid(s map[string]interface{}, diags *diag.Diagnostics) bool {
-	hrefOk := s["href"].(string) != ""
-	protoOk := s["proto"].(string) != ""
-	portOk := s["port"].(string) != ""
-	toPortOk := s["to_port"].(string) != ""
+// func isRuleSetSRIngressServiceSchemaValid(s map[string]interface{}, diags *diag.Diagnostics) bool {
+// 	hrefOk := s["href"].(string) != ""
+// 	protoOk := s["proto"].(string) != ""
+// 	portOk := s["port"].(string) != ""
+// 	toPortOk := s["to_port"].(string) != ""
 
-	switch {
-	case !hrefOk && !protoOk:
-		*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] Atleast one of [href, proto] is required inside ingress_services, inside rules")...)
+// 	switch {
+// 	case !hrefOk && !protoOk:
+// 		*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] Atleast one of [href, proto] is required inside ingress_services, inside rules")...)
 
-	case hrefOk && protoOk:
-		*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] Exactly one of [href, proto] is allowed inside ingress_services, inside rules")...)
+// 	case hrefOk && protoOk:
+// 		*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] Exactly one of [href, proto] is allowed inside ingress_services, inside rules")...)
 
-	case hrefOk:
-		if portOk || toPortOk { // If port or to_port are defined with href, return error
-			*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] port/proto is not allowed with href inside ingress_services, inside rules")...)
-			return false
-		}
-		return true
+// 	case hrefOk:
+// 		if portOk || toPortOk { // If port or to_port are defined with href, return error
+// 			*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] port/proto is not allowed with href inside ingress_services, inside rules")...)
+// 			return false
+// 		}
+// 		return true
 
-	case protoOk:
-		if !portOk && toPortOk { // If to_port is defined without port, return error
-			*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] port is required with to_port inside ingress_services, inside rules")...)
-			return false
-		}
-		return true
-	}
+// 	case protoOk:
+// 		if !portOk && toPortOk { // If to_port is defined without port, return error
+// 			*diags = append(*diags, diag.Errorf("[illumio-core_rule_set] port is required with to_port inside ingress_services, inside rules")...)
+// 			return false
+// 		}
+// 		return true
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
-func expandIllumioRuleSetSRProviders(providers []interface{}) ([]*models.SecurityRuleProvider, diag.Diagnostics) {
-	provs := []*models.SecurityRuleProvider{}
+// func expandIllumioRuleSetSRProviders(providers []interface{}) ([]*models.SecurityRuleProvider, diag.Diagnostics) {
+// 	provs := []*models.SecurityRuleProvider{}
 
-	for _, provider := range providers {
-		p := provider.(map[string]interface{})
-		prov := &models.SecurityRuleProvider{
-			Actors:         p["actors"].(string),
-			Label:          getHrefObj(p["label"]),
-			LabelGroup:     getHrefObj(p["label_group"]),
-			Workload:       getHrefObj(p["workload"]),
-			VirtualService: getHrefObj(p["virtual_service"]),
-			VirtualServer:  getHrefObj(p["virtual_server"]),
-			IPList:         getHrefObj(p["ip_list"]),
-		}
-		if !prov.HasOneActor() {
-			return nil, diag.Errorf("[illumio-core_rule_set] Provider block can have only one rule actor inside rules")
-		}
+// 	for _, provider := range providers {
+// 		p := provider.(map[string]interface{})
+// 		prov := &models.SecurityRuleProvider{
+// 			Actors:         p["actors"].(string),
+// 			Label:          getHrefObj(p["label"]),
+// 			LabelGroup:     getHrefObj(p["label_group"]),
+// 			Workload:       getHrefObj(p["workload"]),
+// 			VirtualService: getHrefObj(p["virtual_service"]),
+// 			VirtualServer:  getHrefObj(p["virtual_server"]),
+// 			IPList:         getHrefObj(p["ip_list"]),
+// 		}
+// 		if !prov.HasOneActor() {
+// 			return nil, diag.Errorf("[illumio-core_rule_set] Provider block can have only one rule actor inside rules")
+// 		}
 
-		provs = append(provs, prov)
-	}
-	return provs, diag.Diagnostics{}
-}
+// 		provs = append(provs, prov)
+// 	}
+// 	return provs, diag.Diagnostics{}
+// }
 
-func expandIllumioRuleSetSRConsumers(consumers []interface{}) ([]*models.SecurityRuleConsumer, diag.Diagnostics) {
-	cons := []*models.SecurityRuleConsumer{}
+// func expandIllumioRuleSetSRConsumers(consumers []interface{}) ([]*models.SecurityRuleConsumer, diag.Diagnostics) {
+// 	cons := []*models.SecurityRuleConsumer{}
 
-	for _, consumer := range consumers {
-		p := consumer.(map[string]interface{})
+// 	for _, consumer := range consumers {
+// 		p := consumer.(map[string]interface{})
 
-		con := &models.SecurityRuleConsumer{
-			Actors:         p["actors"].(string),
-			Label:          getHrefObj(p["label"]),
-			LabelGroup:     getHrefObj(p["label_group"]),
-			Workload:       getHrefObj(p["workload"]),
-			VirtualService: getHrefObj(p["virtual_service"]),
-			IPList:         getHrefObj(p["ip_list"]),
-		}
+// 		con := &models.SecurityRuleConsumer{
+// 			Actors:         p["actors"].(string),
+// 			Label:          getHrefObj(p["label"]),
+// 			LabelGroup:     getHrefObj(p["label_group"]),
+// 			Workload:       getHrefObj(p["workload"]),
+// 			VirtualService: getHrefObj(p["virtual_service"]),
+// 			IPList:         getHrefObj(p["ip_list"]),
+// 		}
 
-		if !con.HasOneActor() {
-			return nil, diag.Errorf("[illumio-core_rule_set] Consumer block can have only one rule actor inside rules")
-		}
-		cons = append(cons, con)
-	}
+// 		if !con.HasOneActor() {
+// 			return nil, diag.Errorf("[illumio-core_rule_set] Consumer block can have only one rule actor inside rules")
+// 		}
+// 		cons = append(cons, con)
+// 	}
 
-	return cons, diag.Diagnostics{}
-}
+// 	return cons, diag.Diagnostics{}
+// }
 
 func expandIllumioRuleSetIPTablesRules(ipTableRules []interface{}) ([]*models.RuleSetIPTablesRule, *diag.Diagnostics) {
 	var diags diag.Diagnostics
@@ -682,11 +694,15 @@ func resourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m i
 		d.Set("scopes", nil)
 	}
 
-	if data.Exists("rules") {
-		d.Set("rules", extractResourceRuleSetSecurityRules(data.S("rules")))
-	} else {
-		d.Set("rules", nil)
-	}
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
+	// if data.Exists("rules") {
+	// 	d.Set("rules", extractResourceRuleSetSecurityRules(data.S("rules")))
+	// } else {
+	// 	d.Set("rules", nil)
+	// }
 
 	if data.Exists("ip_tables_rules") {
 		d.Set("ip_tables_rules", extractResourceRuleSetIPTablesRules(data.S("ip_tables_rules")))
@@ -730,56 +746,60 @@ func extractResourceRuleSetIPTablesRules(data *gabs.Container) []map[string]inte
 	return ms
 }
 
-func extractResourceRuleSetSecurityRules(data *gabs.Container) []map[string]interface{} {
+/* Following code is commented to prevent the race condition
+ * between RuleSet and SecurityRule Resources. Preserved for future use.
+ * Bug#15
+ */
+// func extractResourceRuleSetSecurityRules(data *gabs.Container) []map[string]interface{} {
 
-	srKeys := []string{
-		"href",
-		"enabled",
-		"description",
-		"external_data_set",
-		"external_data_reference",
-		"sec_connect",
-		"stateless",
-		"machine_auth",
-		"unscoped_consumers",
-		"update_type",
-		"created_at",
-		"updated_at",
-		"deleted_at",
-		"created_by",
-		"updated_by",
-		"deleted_by",
-	}
+// 	srKeys := []string{
+// 		"href",
+// 		"enabled",
+// 		"description",
+// 		"external_data_set",
+// 		"external_data_reference",
+// 		"sec_connect",
+// 		"stateless",
+// 		"machine_auth",
+// 		"unscoped_consumers",
+// 		"update_type",
+// 		"created_at",
+// 		"updated_at",
+// 		"deleted_at",
+// 		"created_by",
+// 		"updated_by",
+// 		"deleted_by",
+// 	}
 
-	srs := []map[string]interface{}{}
-	for _, secRuleData := range data.Children() {
-		sr := extractMap(secRuleData, srKeys)
+// 	srs := []map[string]interface{}{}
+// 	for _, secRuleData := range data.Children() {
+// 		sr := extractMap(secRuleData, srKeys)
 
-		rlaKey := "resolve_labels_as"
-		if secRuleData.Exists(rlaKey) {
-			sr[rlaKey] = extractSecurityRuleResolveLabelAs(secRuleData.S(rlaKey))
-		}
+// 		rlaKey := "resolve_labels_as"
+// 		if secRuleData.Exists(rlaKey) {
+// 			sr[rlaKey] = extractSecurityRuleResolveLabelAs(secRuleData.S(rlaKey))
+// 		}
 
-		prkey := "providers"
-		if secRuleData.Exists(prkey) {
-			sr[prkey] = extractResourceRuleActors(secRuleData.S(prkey))
-		}
+// 		prkey := "providers"
+// 		if secRuleData.Exists(prkey) {
+// 			sr[prkey] = extractResourceRuleActors(secRuleData.S(prkey))
+// 		}
 
-		cnKeys := "consumers"
-		if secRuleData.Exists(cnKeys) {
-			sr[cnKeys] = extractResourceRuleActors(secRuleData.S(cnKeys))
-		}
+// 		cnKeys := "consumers"
+// 		if secRuleData.Exists(cnKeys) {
+// 			sr[cnKeys] = extractResourceRuleActors(secRuleData.S(cnKeys))
+// 		}
 
-		isKey := "ingress_services"
-		if secRuleData.Exists(isKey) {
-			sr[isKey] = extractResourceSecurityRuleIngressService(secRuleData.S(isKey))
-		}
+// 		isKey := "ingress_services"
+// 		if secRuleData.Exists(isKey) {
+// 			sr[isKey] = extractResourceSecurityRuleIngressService(secRuleData.S(isKey))
+// 		}
 
-		srs = append(srs, sr)
-	}
+// 		srs = append(srs, sr)
+// 	}
 
-	return srs
-}
+// 	return srs
+// }
 
 func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
@@ -793,19 +813,23 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		Enabled:               d.Get("enabled").(bool),
-		Rules:                 nil,
-		IPTablesRules:         nil,
+		// Rules:                 nil,
+		IPTablesRules: nil,
 	}
 
 	scopes, errs := expandIllumioRuleSetScopes(d.Get("scopes").([]interface{}))
 	diags = append(diags, *errs...)
 	ruleSet.Scopes = scopes
 
-	if d.HasChange("rules") {
-		rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
-		ruleSet.Rules = rules
-		diags = append(diags, *errs...)
-	}
+	/* Following code is commented to prevent the race condition
+	 * between RuleSet and SecurityRule Resources. Preserved for future use.
+	 * Bug#15
+	 */
+	// if d.HasChange("rules") {
+	// 	rules, errs := expandIllumioRuleSetSecurityRules(d.Get("rules").(*schema.Set).List())
+	// 	ruleSet.Rules = rules
+	// 	diags = append(diags, *errs...)
+	// }
 
 	if d.HasChange("ip_tables_rules") {
 		ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rules").(*schema.Set).List())

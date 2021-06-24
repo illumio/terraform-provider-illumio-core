@@ -1,11 +1,13 @@
 resource "illumio-core_ip_list" "policy-1-iplist1" {
     name = "policy-1-iplist1"
     description = "Ip list testing."
-
-    dynamic "ip_ranges" {
-        for_each = illumio-core_workload.policy-1-workload-10.interfaces
-        content {
-            from_ip = ip_ranges.value.address
-        }
+    ip_ranges {
+        from_ip = illumio-core_workload_interface.policy-1-workload-interface-1.address
+    }
+    ip_ranges {
+        from_ip = illumio-core_workload_interface.policy-1-workload-interface-2.address
+    }
+    ip_ranges {
+        from_ip = illumio-core_workload_interface.policy-1-workload-interface-3.address
     }
 }

@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1"
-      source  = "illumio.com/labs/illumio-core"
+      version = "0.1.0"
+      source  = "illumio/illumio-core"
     }
   }
 }
@@ -21,7 +21,8 @@ resource "illumio-core_ip_list" "example" {
   description = "example desc"
   ip_ranges {
     from_ip = "1.1.0.0/24"
-    to_ip = "0.0.0.0/0"
+    // from_ip = "1.1.0.0"
+    // to_ip = "1.1.0.254"
     description = "example ip_ranges description"
     exclusion = false
   }

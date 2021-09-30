@@ -21,6 +21,7 @@ resource "illumio-core_ip_list" "example" {
   description = "example desc"
   ip_ranges {
     from_ip = "1.1.0.0/24"
+    // from_ip can be either CIDR by itself or individual IP together with to_ip
     // from_ip = "1.1.0.0"
     // to_ip = "1.1.0.254"
     description = "example ip_ranges description"

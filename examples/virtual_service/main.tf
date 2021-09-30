@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1"
-      source = "illumio.com/labs/illumio-core"
+      version = "0.1.0"
+      source  = "illumio/illumio-core"
     }
   }
 }

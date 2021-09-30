@@ -72,8 +72,8 @@
       "required_providers": [
         {
           "illumio-core": {
-            "source": "illumio.com/labs/illumio-core",
-            "version": "0.1"
+            "source": "illumio/illumio-core",
+            "version": "0.1.0"
           }
         }
       ]

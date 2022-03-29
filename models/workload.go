@@ -47,23 +47,23 @@ import (
 */
 
 type Workload struct {
-	Name                                  string              `json:"name,omitempty"`
-	Description                           string              `json:"description,omitempty"`
-	ExternalDataSet                       string              `json:"external_data_set,omitempty"`
-	ExternalDataReference                 string              `json:"external_data_reference,omitempty"`
-	Hostname                              string              `json:"hostname,omitempty"`
-	ServicePrincipalName                  string              `json:"service_principal_name,omitempty"`
-	PublicIP                              string              `json:"public_ip,omitempty"`
-	AgentToPceCertificateAuthenticationID string              `json:"agent_to_pce_certificate_authentication_id,omitempty"`
-	DistinguishedName                     string              `json:"distinguished_name,omitempty"`
-	ServiceProvider                       string              `json:"service_provider,omitempty"`
-	DataCenter                            string              `json:"data_center,omitempty"`
-	DataCenterZone                        string              `json:"data_center_zone,omitempty"`
-	OsID                                  string              `json:"os_id,omitempty"`
-	OsDetail                              string              `json:"os_detail,omitempty"`
-	Online                                bool                `json:"online,omitempty"`
-	Labels                                []Href              `json:"labels,omitempty"`
-	EnforcementMode                       string              `json:"enforcement_mode,omitempty"`
+	Name                                  string `json:"name,omitempty"`
+	Description                           string `json:"description,omitempty"`
+	ExternalDataSet                       string `json:"external_data_set,omitempty"`
+	ExternalDataReference                 string `json:"external_data_reference,omitempty"`
+	Hostname                              string `json:"hostname,omitempty"`
+	ServicePrincipalName                  string `json:"service_principal_name,omitempty"`
+	PublicIP                              string `json:"public_ip,omitempty"`
+	AgentToPceCertificateAuthenticationID string `json:"agent_to_pce_certificate_authentication_id,omitempty"`
+	DistinguishedName                     string `json:"distinguished_name,omitempty"`
+	ServiceProvider                       string `json:"service_provider,omitempty"`
+	DataCenter                            string `json:"data_center,omitempty"`
+	DataCenterZone                        string `json:"data_center_zone,omitempty"`
+	OsID                                  string `json:"os_id,omitempty"`
+	OsDetail                              string `json:"os_detail,omitempty"`
+	Online                                bool   `json:"online,omitempty"`
+	Labels                                []Href `json:"labels,omitempty"`
+	EnforcementMode                       string `json:"enforcement_mode,omitempty"`
 
 	/* Following code is commented to prevent the race condition
 	 * between Workload and Workload Interface Resources. Preserved for future use.

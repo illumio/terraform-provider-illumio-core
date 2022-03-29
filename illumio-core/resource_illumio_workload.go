@@ -5,6 +5,8 @@ package illumiocore
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -850,37 +852,7 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 	var diags diag.Diagnostics
 
 	workload := &models.Workload{}
-
-	workload.ServicePrincipalName = d.Get("service_principal_name").(string)
-	workload.AgentToPceCertificateAuthenticationID = d.Get("agent_to_pce_certificate_authentication_id").(string)
-
-	if d.HasChange("enforcement_mode") {
-		workload.EnforcementMode = d.Get("enforcement_mode").(string)
-	}
-	if d.HasChange("public_ip") {
-		workload.PublicIP = d.Get("public_ip").(string)
-	}
-
-	workload.Name = d.Get("name").(string)
-	workload.Description = d.Get("description").(string)
-	workload.ExternalDataSet = d.Get("external_data_set").(string)
-	workload.ExternalDataReference = d.Get("external_data_reference").(string)
-	workload.ServiceProvider = d.Get("service_provider").(string)
-	workload.DataCenter = d.Get("data_center").(string)
-	workload.DataCenterZone = d.Get("data_center_zone").(string)
-	workload.OsID = d.Get("os_id").(string)
-	workload.OsDetail = d.Get("os_detail").(string)
-	workload.Online = d.Get("online").(bool)
-	workload.DistinguishedName = d.Get("distinguished_name").(string)
-	workload.Hostname = d.Get("hostname").(string)
-
-	workload.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
-
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// workload.Interfaces = expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
+	populateFromResourceData(workload, d)
 
 	if diags.HasError() {
 		return diags
@@ -905,6 +877,37 @@ func resourceIllumioWorkloadDelete(ctx context.Context, d *schema.ResourceData, 
 	}
 	d.SetId("")
 	return diagnostics
+}
+
+func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
+	val := reflect.TypeOf(*w)
+
+	// iterate over the Workload struct fields and
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		fieldType := field.Type.Kind()
+		jsonTag := field.Tag.Get("json")
+		parts := strings.Split(jsonTag, ",")
+		jsonFieldName := parts[0]
+
+		if d.HasChange(jsonFieldName) {
+			if fieldType == reflect.Slice || fieldType == reflect.Array {
+				continue
+			}
+			resourceValue := reflect.ValueOf(d.Get(parts[0]))
+			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(resourceValue)
+		}
+	}
+
+	if d.HasChange("labels") {
+		w.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	}
+
+	/* Following code is commented to prevent the race condition
+	 * between Workload and Workload Interface Resources. Preserved for future use.
+	 * Bug#15
+	 */
+	// w.Interfaces = expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 }
 
 /* Following code is commented to prevent the race condition

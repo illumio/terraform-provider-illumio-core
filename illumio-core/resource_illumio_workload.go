@@ -585,6 +585,9 @@ func resourceIllumioWorkload() *schema.Resource {
 				Description: "User who deleted this label group",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

@@ -90,6 +90,9 @@ func resourceIllumioLabel() *schema.Resource {
 				},
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

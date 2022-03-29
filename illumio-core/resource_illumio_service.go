@@ -201,6 +201,9 @@ func resourceIllumioService() *schema.Resource {
 				Description: "Type of update",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

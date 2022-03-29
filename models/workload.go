@@ -2,6 +2,10 @@
 
 package models
 
+import (
+	"encoding/json"
+)
+
 /* Sample
 {
   "name": "string",
@@ -43,23 +47,24 @@ package models
 */
 
 type Workload struct {
-	Name                                  string `json:"name"`
-	Description                           string `json:"description"`
-	ExternalDataSet                       string `json:"external_data_set"`
-	ExternalDataReference                 string `json:"external_data_reference"`
-	Hostname                              string `json:"hostname"`
-	ServicePrincipalName                  string `json:"service_principal_name"`
-	PublicIP                              string `json:"public_ip"`
-	AgentToPceCertificateAuthenticationID string `json:"agent_to_pce_certificate_authentication_id"`
-	DistinguishedName                     string `json:"distinguished_name"`
-	ServiceProvider                       string `json:"service_provider"`
-	DataCenter                            string `json:"data_center"`
-	DataCenterZone                        string `json:"data_center_zone"`
-	OsID                                  string `json:"os_id"`
-	OsDetail                              string `json:"os_detail"`
-	Online                                bool   `json:"online"`
-	Labels                                []Href `json:"labels"`
-	EnforcementMode                       string `json:"enforcement_mode"`
+	Name                                  string              `json:"name,omitempty"`
+	Description                           string              `json:"description,omitempty"`
+	ExternalDataSet                       string              `json:"external_data_set,omitempty"`
+	ExternalDataReference                 string              `json:"external_data_reference,omitempty"`
+	Hostname                              string              `json:"hostname,omitempty"`
+	ServicePrincipalName                  string              `json:"service_principal_name,omitempty"`
+	PublicIP                              string              `json:"public_ip,omitempty"`
+	AgentToPceCertificateAuthenticationID string              `json:"agent_to_pce_certificate_authentication_id,omitempty"`
+	DistinguishedName                     string              `json:"distinguished_name,omitempty"`
+	ServiceProvider                       string              `json:"service_provider,omitempty"`
+	DataCenter                            string              `json:"data_center,omitempty"`
+	DataCenterZone                        string              `json:"data_center_zone,omitempty"`
+	OsID                                  string              `json:"os_id,omitempty"`
+	OsDetail                              string              `json:"os_detail,omitempty"`
+	Online                                bool                `json:"online,omitempty"`
+	Labels                                []Href              `json:"labels,omitempty"`
+	EnforcementMode                       string              `json:"enforcement_mode,omitempty"`
+
 	/* Following code is commented to prevent the race condition
 	 * between Workload and Workload Interface Resources. Preserved for future use.
 	 * Bug#15
@@ -69,71 +74,13 @@ type Workload struct {
 
 // ToMap - Returns map for Workload model
 func (w *Workload) ToMap() (map[string]interface{}, error) {
-	workloadAttrMap := make(map[string]interface{})
-
-	workloadAttrMap["name"] = w.Name
-	workloadAttrMap["hostname"] = w.Hostname
-	workloadAttrMap["description"] = w.Description
-	workloadAttrMap["distinguished_name"] = w.DistinguishedName
-	workloadAttrMap["service_provider"] = w.ServiceProvider
-	workloadAttrMap["data_center"] = w.DataCenter
-	workloadAttrMap["data_center_zone"] = w.DataCenterZone
-	workloadAttrMap["os_id"] = w.OsID
-	workloadAttrMap["os_detail"] = w.OsDetail
-
-	workloadAttrMap["online"] = w.Online
-	workloadAttrMap["labels"] = GetHrefMaps(w.Labels)
-	workloadAttrMap["agent_to_pce_certificate_authentication_id"] = nil
-	if w.AgentToPceCertificateAuthenticationID != "" {
-		workloadAttrMap["agent_to_pce_certificate_authentication_id"] = w.AgentToPceCertificateAuthenticationID
-	}
-	workloadAttrMap["service_principal_name"] = nil
-	if w.ServicePrincipalName != "" {
-		workloadAttrMap["service_principal_name"] = w.ServicePrincipalName
-	}
-	if w.PublicIP != "" {
-		workloadAttrMap["public_ip"] = w.PublicIP
-	}
-	if w.EnforcementMode != "" {
-		workloadAttrMap["enforcement_mode"] = w.EnforcementMode
+	encodedWorkload, err := json.Marshal(w)
+	if err != nil {
+		return nil, err
 	}
 
-	workloadAttrMap["external_data_reference"] = nil
-	if w.ExternalDataReference != "" {
-		workloadAttrMap["external_data_reference"] = w.ExternalDataReference
-	}
+	var result map[string]interface{}
+	json.Unmarshal([]byte(encodedWorkload), &result)
 
-	workloadAttrMap["external_data_set"] = nil
-	if w.ExternalDataSet != "" {
-		workloadAttrMap["external_data_set"] = w.ExternalDataSet
-	}
-
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// wMapArr := []map[string]interface{}{}
-	// for _, o := range w.Interfaces {
-	// 	m := make(map[string]interface{})
-	// 	if o.Name != "" {
-	// 		m["name"] = o.Name
-	// 	}
-	// 	if o.LinkState != "" {
-	// 		m["link_state"] = o.LinkState
-	// 	}
-	// 	if o.Address != "" {
-	// 		m["address"] = o.Address
-	// 	}
-	// 	m["cidr_block"] = o.CidrBlock
-	// 	if o.DefaultGatewayAddress != "" {
-	// 		m["default_gateway_address"] = o.DefaultGatewayAddress
-	// 	}
-	// 	if o.FriendlyName != "" {
-	// 		m["friendly_name"] = o.FriendlyName
-	// 	}
-	// 	wMapArr = append(wMapArr, m)
-	// }
-	// workloadAttrMap["interfaces"] = wMapArr
-
-	return workloadAttrMap, nil
+	return result, nil
 }

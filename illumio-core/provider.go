@@ -126,6 +126,7 @@ func Provider() *schema.Provider {
 			"illumio-core_security_rule":                      resourceIllumioSecurityRule(),
 			"illumio-core_rule_set":                           resourceIllumioRuleSet(),
 			"illumio-core_workload":                           resourceIllumioWorkload(),
+			"illumio-core_managed_workload":                   resourceIllumioManagedWorkload(),
 			"illumio-core_workloads_unpair":                   resourceIllumioWorkloadsUnpair(),
 			"illumio-core_service":                            resourceIllumioService(),
 			"illumio-core_syslog_destination":                 resourceIllumioSyslogDestination(),

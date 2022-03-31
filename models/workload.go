@@ -62,8 +62,9 @@ type Workload struct {
 	OsID                                  string `json:"os_id,omitempty"`
 	OsDetail                              string `json:"os_detail,omitempty"`
 	Online                                bool   `json:"online,omitempty"`
-	Labels                                []Href `json:"labels,omitempty"`
-	EnforcementMode                       string `json:"enforcement_mode,omitempty"`
+	// don't omitempty for labels - an empty array should remove all labels from the workload
+	Labels          []Href `json:"labels"`
+	EnforcementMode string `json:"enforcement_mode,omitempty"`
 
 	/* Following code is commented to prevent the race condition
 	 * between Workload and Workload Interface Resources. Preserved for future use.

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"unsafe"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -173,8 +174,8 @@ func resourceIllumioWorkload() *schema.Resource {
 			"online": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Determines if this workload is online. Default value: false",
-				Default:     false,
+				Description: "Determines if this workload is online. Default value: true",
+				Default:     true,
 			},
 			"labels": {
 				Type:        schema.TypeSet,
@@ -597,36 +598,11 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
-	workload := &models.Workload{
-		Name:                                  d.Get("name").(string),
-		Description:                           d.Get("description").(string),
-		ExternalDataSet:                       d.Get("external_data_set").(string),
-		ExternalDataReference:                 d.Get("external_data_reference").(string),
-		Hostname:                              d.Get("hostname").(string),
-		ServicePrincipalName:                  d.Get("service_principal_name").(string),
-		PublicIP:                              d.Get("public_ip").(string),
-		ServiceProvider:                       d.Get("service_provider").(string),
-		DataCenter:                            d.Get("data_center").(string),
-		DataCenterZone:                        d.Get("data_center_zone").(string),
-		OsID:                                  d.Get("os_id").(string),
-		OsDetail:                              d.Get("os_detail").(string),
-		Online:                                d.Get("online").(bool),
-		EnforcementMode:                       d.Get("enforcement_mode").(string),
-		AgentToPceCertificateAuthenticationID: d.Get("agent_to_pce_certificate_authentication_id").(string),
-		DistinguishedName:                     d.Get("distinguished_name").(string),
-	}
-	if items, ok := d.GetOk("labels"); ok {
-		workload.Labels = models.GetHrefs(items.(*schema.Set).List())
-	}
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// if items, ok := d.GetOk("interfaces"); ok {
-	// 	workload.Interfaces = expandIllumioWorkloadInterface(items.(*schema.Set).List())
-	// }
+	workload := &models.Workload{}
+	populateFromResourceData(workload, d)
+
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
 		return diag.FromErr(err)
@@ -882,7 +858,7 @@ func resourceIllumioWorkloadDelete(ctx context.Context, d *schema.ResourceData, 
 func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
 	val := reflect.TypeOf(*w)
 
-	// iterate over the Workload struct fields and
+	// iterate over the Workload struct fields and set values
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
 		fieldType := field.Type.Kind()
@@ -890,18 +866,24 @@ func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
 		parts := strings.Split(jsonTag, ",")
 		jsonFieldName := parts[0]
 
-		if d.HasChange(jsonFieldName) {
+		// boolean fields must be set as pointers in the struct
+		// for JSON marshalling to correctly parse nil/false values.
+		// to accommodate this, we create a pointer Value referencing
+		// the ResourceData field, converted to the proper type using NewAt
+		if fieldType == reflect.Ptr {
+			dataVal := d.Get(jsonFieldName)
+			p := reflect.NewAt(field.Type.Elem(), unsafe.Pointer(&dataVal))
+			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(p)
+		} else if d.HasChange(jsonFieldName) {
 			if fieldType == reflect.Slice || fieldType == reflect.Array {
 				continue
 			}
-			resourceValue := reflect.ValueOf(d.Get(parts[0]))
+			resourceValue := reflect.ValueOf(d.Get(jsonFieldName))
 			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(resourceValue)
 		}
 	}
 
-	if d.HasChange("labels") {
-		w.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
-	}
+	w.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
 
 	/* Following code is commented to prevent the race condition
 	 * between Workload and Workload Interface Resources. Preserved for future use.

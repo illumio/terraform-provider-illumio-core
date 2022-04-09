@@ -29,7 +29,7 @@ resource "illumio-core_workload" "example" {
     data_center_zone = "example data center zone"
     os_detail = "example os details"
     os_id = "example os id"
-    online = false
+    online = true
     labels{
       href = "/orgs/1/labels/1"
     }
@@ -52,7 +52,7 @@ resource "illumio-core_workload" "example" {
 <!-- - **interfaces** (Block Set) Workload network interfaces (see [below for nested schema](#nestedblock--interfaces)) -->
 - **labels** (Block Set) Assigned labels for workload (see [below for nested schema](#nestedblock--labels))
 - **name** (String) Name of the Workload. The name should be up to 255 characters
-- **online** (Boolean) Determines if this workload is online. Default value: false
+- **online** (Boolean) Determines if this workload is online. Default value: true
 - **os_detail** (String) Additional OS details - just displayed to end-user. The os_details should be up to 255 characters
 - **os_id** (String) OS identifier for Workload. The os_id should be up to 255 characters
 - **public_ip** (String) The public IP address of the server. The public IP should in the IPv4 or IPv6 format

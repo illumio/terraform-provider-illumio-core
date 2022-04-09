@@ -18,8 +18,8 @@ func TestAccIllumioWS_Read(t *testing.T) {
 			{
 				Config: testAccCheckIllumioWSDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(dataSourceName, "workload_disconnected_timeout_seconds"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "workload_goodbye_timeout_seconds"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "workload_disconnected_timeout_seconds.0.value"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "workload_goodbye_timeout_seconds.0.value"),
 				),
 			},
 		},

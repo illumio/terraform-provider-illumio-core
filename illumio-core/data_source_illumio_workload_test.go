@@ -14,7 +14,7 @@ var prefixWorkload string = "TF-ACC-WL"
 
 func TestAccIllumioWorkload_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_workload.wl_test"
-	resourceName := "illumio-core_workload.wl_test"
+	resourceName := "illumio-core_unmanaged_workload.wl_test"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
@@ -55,7 +55,7 @@ resource "illumio-core_label" "wl_test" {
 	value = %[1]q
 }
 
-resource "illumio-core_workload" "wl_test" {
+resource "illumio-core_unmanaged_workload" "wl_test" {
 	name               = %[2]q
 	description        = "Terraform Workload test"
 	hostname           = "example.workload"
@@ -68,7 +68,7 @@ resource "illumio-core_workload" "wl_test" {
 }
 
 data "illumio-core_workload" "wl_test" {
-	href = illumio-core_workload.wl_test.href
+	href = illumio-core_unmanaged_workload.wl_test.href
 }
 `, rName1, rName2)
 }

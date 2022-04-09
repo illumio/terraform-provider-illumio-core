@@ -37,14 +37,14 @@ func testAccCheckIllumioWLIDataSourceConfig_basic() string {
 	rName1 := acctest.RandomWithPrefix(prefixWLI)
 
 	return fmt.Sprintf(`
-resource "illumio-core_workload" "wli_test" {
+resource "illumio-core_unmanaged_workload" "wli_test" {
 	name               = %[1]q
 	description        = "Terraform Workload Interface test"
 	hostname           = "example.workload"
 }
 
 resource "illumio-core_workload_interface" "wli_test" {
-	workload_href = illumio-core_workload.wli_test.href
+	workload_href = illumio-core_unmanaged_workload.wli_test.href
 	name = "eth0"
 	friendly_name = "Terraform Workload Interface"
 	link_state = "up"

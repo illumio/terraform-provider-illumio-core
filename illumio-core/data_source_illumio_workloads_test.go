@@ -34,13 +34,13 @@ func testAccCheckIllumioWLLDataSourceConfig_basic() string {
 	rName2 := acctest.RandomWithPrefix(prefixWLL)
 
 	return fmt.Sprintf(`
-resource "illumio-core_workload" "wll1" {
+resource "illumio-core_unmanaged_workload" "wll1" {
 	name               = %[1]q
 	description        = "Terraform Workloads test 1"
 	hostname           = "jumpbox1"
 }
 
-resource "illumio-core_workload" "wll2" {
+resource "illumio-core_unmanaged_workload" "wll2" {
 	name               = %[1]q
 	description        = "Terraform Workloads test 2"
 	hostname           = "jumpbox2"
@@ -49,8 +49,8 @@ resource "illumio-core_workload" "wll2" {
 data "illumio-core_workloads" "wll" {
 	# enforce dependencies
 	depends_on = [
-		illumio-core_workload.wll1,
-		illumio-core_workload.wll2,
+		illumio-core_unmanaged_workload.wll1,
+		illumio-core_unmanaged_workload.wll2,
 	]
 }
 `, rName1, rName2)

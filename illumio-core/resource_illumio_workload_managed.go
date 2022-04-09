@@ -15,8 +15,8 @@ import (
 func resourceIllumioManagedWorkload() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceIllumioManagedWorkloadCreate,
-		ReadContext:   resourceIllumioWorkloadRead,
-		UpdateContext: resourceIllumioWorkloadUpdate,
+		ReadContext:   resourceIllumioUnmanagedWorkloadRead, // reuse unmanaged workload read/update
+		UpdateContext: resourceIllumioUnmanagedWorkloadUpdate,
 		DeleteContext: resourceIllumioManagedWorkloadDelete,
 		Description:   "Manages Illumio Managed Workload",
 

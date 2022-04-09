@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "illumio-core_workload": [
+      "illumio-core_unmanaged_workload": [
         {
           "example": [
             {
@@ -24,7 +24,7 @@
   ],
   "resource": [
     {
-      "illumio-core_workload": [
+      "illumio-core_unmanaged_workload": [
         {
           "example": [
             {

@@ -19,12 +19,12 @@ var (
 	ValidWorkloadEnforcementModeValues    = []string{"idle", "visibility_only", "full", "selective"}
 )
 
-func resourceIllumioWorkload() *schema.Resource {
+func resourceIllumioUnmanagedWorkload() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceIllumioWorkloadCreate,
-		ReadContext:   resourceIllumioWorkloadRead,
-		UpdateContext: resourceIllumioWorkloadUpdate,
-		DeleteContext: resourceIllumioWorkloadDelete,
+		CreateContext: resourceIllumioUnmanagedWorkloadCreate,
+		ReadContext:   resourceIllumioUnmanagedWorkloadRead,
+		UpdateContext: resourceIllumioUnmanagedWorkloadUpdate,
+		DeleteContext: resourceIllumioUnmanagedWorkloadDelete,
 		Description:   "Manages Illumio Workload",
 
 		SchemaVersion: version,
@@ -593,7 +593,7 @@ func resourceIllumioWorkload() *schema.Resource {
 	}
 }
 
-func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIllumioUnmanagedWorkloadCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
@@ -607,10 +607,10 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 		return diag.FromErr(err)
 	}
 	d.SetId(data.S("href").Data().(string))
-	return resourceIllumioWorkloadRead(ctx, d, m)
+	return resourceIllumioUnmanagedWorkloadRead(ctx, d, m)
 }
 
-func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIllumioUnmanagedWorkloadRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
@@ -820,7 +820,7 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 	return diagnostics
 }
 
-func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIllumioUnmanagedWorkloadUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
@@ -838,10 +838,10 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 		return diag.FromErr(err)
 	}
 
-	return resourceIllumioWorkloadRead(ctx, d, m)
+	return resourceIllumioUnmanagedWorkloadRead(ctx, d, m)
 }
 
-func resourceIllumioWorkloadDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
@@ -870,10 +870,9 @@ func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
 		// with omitempty set. to accommodate this, create a pointer
 		// Value referencing the ResourceData field
 		if fieldType == reflect.Ptr {
-			dataVal := d.Get(jsonFieldName)
-			refVal := reflect.ValueOf(dataVal) // reflect as a Value so we can cast from interface{}
-			p := reflect.New(refVal.Type())    // create a pointer of the reflected type
-			p.Elem().Set(refVal)               // set the value of the pointer
+			resourceValue := reflect.ValueOf(d.Get(jsonFieldName)) // reflect as a Value so we can cast from interface{}
+			p := reflect.New(resourceValue.Type())                 // create a pointer of the reflected type
+			p.Elem().Set(resourceValue)                            // set the value of the pointer
 			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(p)
 		} else if d.HasChange(jsonFieldName) {
 			if fieldType == reflect.Slice || fieldType == reflect.Array {

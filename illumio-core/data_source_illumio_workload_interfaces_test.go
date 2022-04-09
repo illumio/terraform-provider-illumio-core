@@ -33,28 +33,28 @@ func testAccCheckIllumioWLILDataSourceConfig_basic() string {
 	rName1 := acctest.RandomWithPrefix(prefixWLIL)
 
 	return fmt.Sprintf(`
-resource "illumio-core_workload" "wlil_test" {
+resource "illumio-core_unmanaged_workload" "wlil_test" {
 	name               = %[1]q
 	description        = "Terraform Workload Interfaces test"
 	hostname           = "example.workload"
 }
 
 resource "illumio-core_workload_interface" "wlil_test1" {
-	workload_href = illumio-core_workload.wlil_test.href
+	workload_href = illumio-core_unmanaged_workload.wlil_test.href
 	name = "eth0"
 	friendly_name = "Terraform Workload Interface 1"
 	link_state = "up"
 }
 
 resource "illumio-core_workload_interface" "wlil_test2" {
-	workload_href = illumio-core_workload.wlil_test.href
+	workload_href = illumio-core_unmanaged_workload.wlil_test.href
 	name = "eth1"
 	friendly_name = "Terraform Workload Interface 2"
 	link_state = "up"
 }
 
 data "illumio-core_workload_interfaces" "wlil_test" {
-	workload_href = illumio-core_workload.wlil_test.href
+	workload_href = illumio-core_unmanaged_workload.wlil_test.href
 
 	# enforce dependencies
 	depends_on = [

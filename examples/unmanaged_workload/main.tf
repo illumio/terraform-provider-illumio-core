@@ -15,7 +15,7 @@ provider "illumio-core" {
   org_id          = 1
 }
 
-resource "illumio-core_workload" "example" {
+resource "illumio-core_unmanaged_workload" "example" {
   name        = "example workload name"
   description = "example Desc"
   external_data_set       = "example set"

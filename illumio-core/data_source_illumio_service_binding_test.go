@@ -56,7 +56,7 @@ resource "illumio-core_virtual_service" "sb_test" {
 	]
 }
 
-resource "illumio-core_workload" "sb_test" {
+resource "illumio-core_unmanaged_workload" "sb_test" {
 	name               = %[2]q
 	description        = "Terraform Service Binding test"
 	hostname           = "example.workload"
@@ -67,7 +67,7 @@ resource "illumio-core_service_binding" "sb_test" {
 		href = illumio-core_virtual_service.sb_test.href
 	}
 	workload {
-		href = illumio-core_workload.sb_test.href
+		href = illumio-core_unmanaged_workload.sb_test.href
 	}
 }
 

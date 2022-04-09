@@ -1,4 +1,4 @@
-resource "illumio-core_workload" "policy-1-workload-1" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-1" {
     name = "vm1"
     labels {
       href = illumio-core_label.policy-1-role1.href
@@ -16,7 +16,7 @@ resource "illumio-core_workload" "policy-1-workload-1" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-2" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-2" {
     name = "vm2"
     labels {
       href = illumio-core_label.policy-1-role1.href
@@ -34,7 +34,7 @@ resource "illumio-core_workload" "policy-1-workload-2" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-3" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-3" {
     name = "vm3"
     labels {
       href = illumio-core_label.policy-1-role2.href
@@ -52,7 +52,7 @@ resource "illumio-core_workload" "policy-1-workload-3" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-4" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-4" {
     name = "vm4"
     labels {
       href = illumio-core_label.policy-1-role2.href
@@ -70,7 +70,7 @@ resource "illumio-core_workload" "policy-1-workload-4" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-5" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-5" {
     name = "vm5"
     labels {
       href = illumio-core_label.policy-1-role1.href
@@ -88,7 +88,7 @@ resource "illumio-core_workload" "policy-1-workload-5" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-6" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-6" {
     name = "vm6"
     labels {
       href = illumio-core_label.policy-1-role1.href
@@ -106,7 +106,7 @@ resource "illumio-core_workload" "policy-1-workload-6" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-7" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-7" {
     name = "vm7"
     labels {
       href = illumio-core_label.policy-1-role2.href
@@ -124,7 +124,7 @@ resource "illumio-core_workload" "policy-1-workload-7" {
     #enforcement_mode doesnot have enforced as a value
 }
 
-resource "illumio-core_workload" "policy-1-workload-8" {
+resource "illumio-core_unmanaged_workload" "policy-1-workload-8" {
     name = "vm8"
     labels {
       href = illumio-core_label.policy-1-role2.href

@@ -1,22 +1,22 @@
 ---
 layout: "illumio-core"
-page_title: "illumio-core_workload Resource - terraform-provider-illumio-core"
-sidebar_current: "docs-illumio-core-resoruce-workload"
+page_title: "illumio-core_unmanaged_workload Resource - terraform-provider-illumio-core"
+sidebar_current: "docs-illumio-core-unmanaged-resoruce-workload"
 subcategory: ""
 description: |-
-  Manages Illumio Workload
+  Manages an Unmanaged Workload in the Illumio PCE
 ---
 
-# illumio-core_workload (Resource)
+# illumio-core_unmanaged_workload (Resource)
 
-Manages Illumio Workload
+Manages an Unmanaged Workload in the Illumio PCE
 
 
 Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_workload" "example" {
+resource "illumio-core_unmanaged_workload" "example" {
     name = "example workload name"
     description = "example Desc"
     external_data_set ="example set"

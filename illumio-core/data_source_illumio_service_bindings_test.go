@@ -51,13 +51,13 @@ resource "illumio-core_virtual_service" "sbl_test" {
 	}
 }
 
-resource "illumio-core_workload" "sbl_test1" {
+resource "illumio-core_unmanaged_workload" "sbl_test1" {
 	name               = %[2]q
 	description        = "Terraform Service Bindings test"
 	hostname           = "example.workload1"
 }
 
-resource "illumio-core_workload" "sbl_test2" {
+resource "illumio-core_unmanaged_workload" "sbl_test2" {
 	name               = %[3]q
 	description        = "Terraform Service Bindings test"
 	hostname           = "example.workload2"
@@ -68,7 +68,7 @@ resource "illumio-core_service_binding" "sbl_test1" {
 		href = illumio-core_virtual_service.sbl_test.href
 	}
 	workload {
-		href = illumio-core_workload.sbl_test1.href
+		href = illumio-core_unmanaged_workload.sbl_test1.href
 	}
 }
 
@@ -77,7 +77,7 @@ resource "illumio-core_service_binding" "sbl_test2" {
 		href = illumio-core_virtual_service.sbl_test.href
 	}
 	workload {
-		href = illumio-core_workload.sbl_test2.href
+		href = illumio-core_unmanaged_workload.sbl_test2.href
 	}
 }
 

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
-	"unsafe"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -867,12 +866,14 @@ func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
 		jsonFieldName := parts[0]
 
 		// boolean fields must be set as pointers in the struct
-		// for JSON marshalling to correctly parse nil/false values.
-		// to accommodate this, we create a pointer Value referencing
-		// the ResourceData field, converted to the proper type using NewAt
+		// for JSON marshalling to correctly marshal nil/false values
+		// with omitempty set. to accommodate this, create a pointer
+		// Value referencing the ResourceData field
 		if fieldType == reflect.Ptr {
 			dataVal := d.Get(jsonFieldName)
-			p := reflect.NewAt(field.Type.Elem(), unsafe.Pointer(&dataVal))
+			refVal := reflect.ValueOf(dataVal) // reflect as a Value so we can cast from interface{}
+			p := reflect.New(refVal.Type())    // create a pointer of the reflected type
+			p.Elem().Set(refVal)               // set the value of the pointer
 			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(p)
 		} else if d.HasChange(jsonFieldName) {
 			if fieldType == reflect.Slice || fieldType == reflect.Array {

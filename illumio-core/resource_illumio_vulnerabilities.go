@@ -69,19 +69,21 @@ func resourceIllumioVulnerabilities() *schema.Resource {
 
 func resourceIllumioVulnerabilitiesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
+	illumioClient := pConfig.IllumioClient
 
 	err := makeBatchedClientCalls(d, pConfig)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(fmt.Sprintf("/orgs/%v/vulnerabilities", pConfig.OrgID))
+	d.SetId(fmt.Sprintf("/orgs/%v/vulnerabilities", illumioClient.OrgID))
 
 	return resourceIllumioVulnerabilitiesRead(ctx, d, m)
 }
 
 func makeBatchedClientCalls(d *schema.ResourceData, pConfig Config) error {
-	href := fmt.Sprintf("/orgs/%v/vulnerabilities", pConfig.OrgID)
+	illumioClient := pConfig.IllumioClient
+	href := fmt.Sprintf("/orgs/%v/vulnerabilities", illumioClient.OrgID)
 
 	if v, ok := d.GetOk("vulnerability"); ok {
 		batch := batchifyVulnerabilityList(v.([]interface{}))

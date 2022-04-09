@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/Jeffail/gabs/v2"
@@ -36,8 +37,11 @@ var (
 )
 
 func main() {
-	orgID := "" // Fetch org ID from file after reading
 	pceHost := os.Getenv("ILLUMIO_PCE_HOST")
+	orgID, err := strconv.Atoi(os.Getenv("ILLUMIO_PCE_ORG_ID"))
+	if err != nil {
+		orgID = 1
+	}
 	apiKeyUsername := os.Getenv("ILLUMIO_API_KEY_USERNAME")
 	apiKeySecret := os.Getenv("ILLUMIO_API_KEY_SECRET")
 	if pceHost == "" || apiKeyUsername == "" || apiKeySecret == "" {
@@ -51,6 +55,7 @@ func main() {
 
 	illumioV2Client, err := client.NewV2(
 		os.Getenv("ILLUMIO_PCE_HOST"),
+		orgID,
 		os.Getenv("ILLUMIO_API_KEY_USERNAME"),
 		os.Getenv("ILLUMIO_API_KEY_SECRET"),
 		30,
@@ -89,7 +94,7 @@ func main() {
 		}
 
 		row := strings.Split(line, ",")
-		oid, rtype, href := row[0], row[1], row[2]
+		rtype, href := row[0], row[1]
 		if href == "" {
 			continue
 		}
@@ -97,13 +102,12 @@ func main() {
 			// Href already present in set, skipping
 			continue
 		}
-		orgID = oid // set orgID to use in api call
 		hrefs = append(hrefs, href)
 		rtypes = append(rtypes, rtype)
 		hrefSet[href] = true
 
 	}
-	_, cont, err := illumioV2Client.Get(fmt.Sprintf("/orgs/%s/sec_policy/pending", orgID), nil)
+	_, cont, err := illumioV2Client.Get(fmt.Sprintf("/orgs/%d/sec_policy/pending", orgID), nil)
 	if err != nil {
 		log.Printf("[ERROR] Error in fetching pending security policy : %v", err)
 		os.Exit(1)
@@ -125,7 +129,7 @@ func main() {
 			UpdateDesc:   "Provisioned by terraform",
 			ChangeSubset: cs,
 		}
-		_, data, err := illumioV2Client.Create(fmt.Sprintf("/orgs/%s/sec_policy", orgID), secPolicy)
+		_, data, err := illumioV2Client.Create(fmt.Sprintf("/orgs/%d/sec_policy", orgID), secPolicy)
 		if err != nil {
 			_ = file.Close()
 			log.Printf("[DEBUG] Error while provisioning: %v", err)

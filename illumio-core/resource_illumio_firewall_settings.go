@@ -169,7 +169,7 @@ func resourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.Resource
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%d/sec_policy/draft/firewall_settings", orgID), nil)
 	if err != nil {
@@ -246,7 +246,7 @@ func resourceIllumioFirewallSettingsUpdate(ctx context.Context, d *schema.Resour
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "firewall_settings", d.Id())
+	pConfig.StoreHref("firewall_settings", d.Id())
 
 	return resourceIllumioFirewallSettingsRead(ctx, d, m)
 }

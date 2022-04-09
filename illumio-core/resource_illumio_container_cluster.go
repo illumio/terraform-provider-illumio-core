@@ -127,7 +127,7 @@ func resourceIllumioContainerClusterCreate(ctx context.Context, d *schema.Resour
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	cc := &models.ContainerCluster{
 		Name:        d.Get("name").(string),

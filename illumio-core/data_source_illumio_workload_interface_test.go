@@ -4,87 +4,54 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSWorkloadInterface *schema.Provider
+var prefixWLI string = "TF-ACC-WLI"
 
-func TestAccIllumioWorkloadInterface_Read(t *testing.T) {
-	workloadInterfaceAttr := map[string]interface{}{}
+func TestAccIllumioWLI_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_workload_interface.wli_test"
+	resourceName := "illumio-core_workload_interface.wli_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSWorkloadInterface),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioWorkloadInterfaceDataSourceConfig_basic(),
+				Config: testAccCheckIllumioWLIDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceWorkloadInterfaceExists("data.illumio-core_workload_interface.test", workloadInterfaceAttr),
-					testAccCheckIllumioWorkloadInterfaceDataSourceAttributes(workloadInterfaceAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "friendly_name", resourceName, "friendly_name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "link_state", resourceName, "link_state"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioWorkloadInterfaceDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_workload_interface" "test" {
-		href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22/interfaces/acc-test-WI"
-	}
-	`
+func testAccCheckIllumioWLIDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixWLI)
+
+	return fmt.Sprintf(`
+resource "illumio-core_workload" "wli_test" {
+	name               = %[1]q
+	description        = "Terraform Workload Interface test"
+	hostname           = "example.workload"
 }
 
-func testAccCheckIllumioDataSourceWorkloadInterfaceExists(name string, workloadInterfaceAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("Workload Interface %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSWorkloadInterface).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"link_state",
-			"friendly_name",
-			"name",
-		} {
-			workloadInterfaceAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
-	}
+resource "illumio-core_workload_interface" "wli_test" {
+	workload_href = illumio-core_workload.wli_test.href
+	name = "eth0"
+	friendly_name = "Terraform Workload Interface"
+	link_state = "up"
 }
 
-func testAccCheckIllumioWorkloadInterfaceDataSourceAttributes(workloadInterfaceAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"link_state":    "up",
-			"friendly_name": "acc-test friendly name",
-			"name":          "acc-test-WI",
-		}
-		for k, v := range expectation {
-			if workloadInterfaceAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, workloadInterfaceAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_workload_interface" "wli_test" {
+	href = illumio-core_workload_interface.wli_test.href
+}
+`, rName1)
 }

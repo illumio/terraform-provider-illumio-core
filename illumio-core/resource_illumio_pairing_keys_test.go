@@ -3,43 +3,35 @@
 package illumiocore
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
+	"os"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerPKs *schema.Provider
+var prefixPK string = "TF-ACC-PK"
 
 func TestAccIllumioPairingKeys_CreateUpdate(t *testing.T) {
-	pksAttr := map[string]interface{}{}
+	resourceName := "illumio-core_pairing_keys.pk_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerPKs),
-		// CheckDestroy:      testAccCheckIllumioGeneralizeDestroy(providerPKs, "illumio-core_pairing_keys", true),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
-			{
-				Config: testAccCheckIllumioPairingKeysConfig_basic(2),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingKeysExists("illumio-core_pairing_keys.test", pksAttr),
-					testAccCheckIllumioPairingKeysAttributes(2, pksAttr),
-				),
-			},
-			{
-				Config: testAccCheckIllumioPairingKeysConfig_basic(3),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingKeysExists("illumio-core_pairing_keys.test", pksAttr),
-					testAccCheckIllumioPairingKeysAttributes(3, pksAttr),
-				),
-			},
 			{
 				Config: testAccCheckIllumioPairingKeysConfig_basic(1),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioPairingKeysExists("illumio-core_pairing_keys.test", pksAttr),
-					testAccCheckIllumioPairingKeysAttributes(1, pksAttr),
+					resource.TestCheckResourceAttr(resourceName, "activation_tokens.#", "1"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioPairingKeysConfig_basic(2),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "activation_tokens.#", "2"),
 				),
 			},
 		},
@@ -47,41 +39,36 @@ func TestAccIllumioPairingKeys_CreateUpdate(t *testing.T) {
 }
 
 func testAccCheckIllumioPairingKeysConfig_basic(val int) string {
+	rName1 := acctest.RandomWithPrefix(prefixPK)
+
+	if e := os.Getenv("ILLUMIO_AES_GCM_KEY"); e == "" {
+		keyBytes := make([]byte, 32)
+		_, _ = rand.Read(keyBytes)
+
+		pairingKey := hex.EncodeToString(keyBytes)
+		os.Setenv("ILLUMIO_AES_GCM_KEY", pairingKey)
+	}
+
 	return fmt.Sprintf(`
-	resource "illumio-core_pairing_keys" "test" {
-		pairing_profile_href = "/orgs/1/pairing_profiles/1"
-		token_count = %d
-	}
-	`, val)
+resource "illumio-core_pairing_profile" "pk_test" {
+	name    = %[1]q
+	enabled = false
+
+	allowed_uses_per_key  = "unlimited"
+	role_label_lock       = true
+	app_label_lock        = true
+	env_label_lock        = true
+	loc_label_lock        = true
+	log_traffic           = false
+	log_traffic_lock      = true
+	visibility_level      = "flow_off"
+	visibility_level_lock = false
+	enforcement_mode      = "visibility_only"
 }
 
-func testAccCheckIllumioPairingKeysExists(name string, attr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("Pairing Keys %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-		attr["activation_tokens.#"] = rs.Primary.Attributes["activation_tokens.#"]
-		return nil
-	}
+resource "illumio-core_pairing_keys" "pk_test" {
+	pairing_profile_href = illumio-core_pairing_profile.pk_test.href
+	token_count          = %[2]d
 }
-
-func testAccCheckIllumioPairingKeysAttributes(val int, attr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"activation_tokens.#": fmt.Sprint(val),
-		}
-		for k, v := range expectation {
-			if attr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, attr[k], v)
-			}
-		}
-
-		return nil
-	}
+`, rName1, val)
 }

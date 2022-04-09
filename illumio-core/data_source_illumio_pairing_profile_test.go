@@ -4,27 +4,39 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSPP *schema.Provider
+var prefixPP string = "TF-ACC-PP"
 
 func TestAccIllumioPP_Read(t *testing.T) {
-	ppAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_pairing_profile.pp_test"
+	resourceName := "illumio-core_pairing_profile.pp_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSPP),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioPPDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourcePPExists("data.illumio-core_pairing_profile.test", ppAttr),
-					testAccCheckIllumioPPDataSourceAttributes(ppAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "enabled", resourceName, "enabled"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "labels", resourceName, "labels"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "allowed_uses_per_key", resourceName, "allowed_uses_per_key"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "role_label_lock", resourceName, "role_label_lock"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "app_label_lock", resourceName, "app_label_lock"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "env_label_lock", resourceName, "env_label_lock"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "loc_label_lock", resourceName, "loc_label_lock"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "log_traffic", resourceName, "log_traffic"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "log_traffic_lock", resourceName, "log_traffic_lock"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "visibility_level", resourceName, "visibility_level"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "visibility_level_lock", resourceName, "visibility_level_lock"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "enforcement_mode", resourceName, "enforcement_mode"),
 				),
 			},
 		},
@@ -32,62 +44,37 @@ func TestAccIllumioPP_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioPPDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_pairing_profile" "test" {
-		href = "/orgs/1/pairing_profiles/32"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixPP)
+	rName2 := acctest.RandomWithPrefix(prefixPP)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "pp_test" {
+	key   = "role"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourcePPExists(name string, ppAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_pairing_profile" "pp_test" {
+	name    = %[2]q
+	enabled = false
 
-		if !ok {
-			return fmt.Errorf("Pairing Profile %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSPP).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"name",
-			"description",
-			"total_use_count",
-			"enabled",
-			"is_default",
-		} {
-			ppAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+	labels {
+		href = illumio-core_label.pp_test.href
 	}
+
+	allowed_uses_per_key  = "unlimited"
+	role_label_lock       = true
+	app_label_lock        = true
+	env_label_lock        = false
+	loc_label_lock        = true
+	log_traffic           = false
+	log_traffic_lock      = true
+	visibility_level      = "flow_off"
+	visibility_level_lock = false
+	enforcement_mode      = "visibility_only"
 }
 
-func testAccCheckIllumioPPDataSourceAttributes(ppAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"name":            "Acc. test pp name",
-			"description":     "Acc. test pp description",
-			"total_use_count": float64(0),
-			"enabled":         true,
-			"is_default":      false,
-		}
-		for k, v := range expectation {
-			if ppAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ppAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_pairing_profile" "pp_test" {
+	href = illumio-core_pairing_profile.pp_test.href
+}
+`, rName1, rName2)
 }

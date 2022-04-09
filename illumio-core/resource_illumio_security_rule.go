@@ -331,7 +331,7 @@ func resourceIllumioSecurityRuleCreate(ctx context.Context, d *schema.ResourceDa
 		return diag.Errorf(err.Error())
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", hrefRuleSet)
+	pConfig.StoreHref("rule_sets", hrefRuleSet)
 
 	d.SetId(data.S("href").Data().(string))
 
@@ -676,7 +676,7 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 
 	ruleSetHREF := d.Get("rule_set_href").(string)
 
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", ruleSetHREF)
+	pConfig.StoreHref("rule_sets", ruleSetHREF)
 
 	return resourceIllumioSecurityRuleRead(ctx, d, m)
 }
@@ -693,7 +693,7 @@ func resourceIllumioSecurityRuleDelete(ctx context.Context, d *schema.ResourceDa
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", ruleSetHREF)
+	pConfig.StoreHref("rule_sets", ruleSetHREF)
 
 	d.SetId("")
 	return diagnostics

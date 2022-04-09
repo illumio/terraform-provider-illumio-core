@@ -6,53 +6,52 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSWorkloadL *schema.Provider
+var prefixWLL string = "TF-ACC-WLL"
 
-func TestAccIllumioWorkloadL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
+func TestAccIllumioWLL_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_workloads.wll"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSWorkloadL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioWorkloadLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioWLLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceWorkloadLExists("data.illumio-core_workloads.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioWorkloadLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_workloads" "test" {
-		max_results = 5
-	}
-	`
+func testAccCheckIllumioWLLDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixWLL)
+	rName2 := acctest.RandomWithPrefix(prefixWLL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_workload" "wll1" {
+	name               = %[1]q
+	description        = "Terraform Workloads test 1"
+	hostname           = "jumpbox1"
 }
 
-func testAccCheckIllumioDataSourceWorkloadLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_workload" "wll2" {
+	name               = %[1]q
+	description        = "Terraform Workloads test 2"
+	hostname           = "jumpbox2"
+}
 
-		if !ok {
-			return fmt.Errorf("List of Workloads %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
-	}
+data "illumio-core_workloads" "wll" {
+	# enforce dependencies
+	depends_on = [
+		illumio-core_workload.wll1,
+		illumio-core_workload.wll2,
+	]
+}
+`, rName1, rName2)
 }

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -239,8 +240,7 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	diags := diag.Diagnostics{}
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	vs := &models.VirtualService{
 		Name:                  d.Get("name").(string),
@@ -320,10 +320,15 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	// pConfig.StoreHref(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
+
+	draftHref := data.S("href").Data().(string)
+
 	// Provisioning instantly as only active version can be used for service binding
-	pConfig.ProvisionAResource(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
-	d.SetId(data.S("href").Data().(string))
+	pConfig.ProvisionAResource("virtual_services", draftHref)
+	activeHref := strings.Replace(draftHref, "/draft/", "/active/", 1)
+
+	// Make sure the ID is set to the active HREF for other objects to reference
+	d.SetId(activeHref)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }
 
@@ -428,7 +433,7 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	diags := diag.Diagnostics{}
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	href := d.Id()
+	draftHref := strings.Replace(d.Id(), "/active/", "/draft/", 1)
 
 	vs := &models.VirtualService{
 		Name:                  d.Get("name").(string),
@@ -505,12 +510,12 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	if diags.HasError() {
 		return diags
 	}
-	_, err := illumioClient.Update(href, vs)
+	_, err := illumioClient.Update(draftHref, vs)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "virtual_services", href)
-	d.SetId(href)
+
+	pConfig.ProvisionAResource("virtual_services", draftHref)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }
 
@@ -518,13 +523,14 @@ func resourceIllumioVirtualServiceDelete(ctx context.Context, d *schema.Resource
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	href := d.Id()
+	draftHref := strings.Replace(d.Id(), "/active/", "/draft/", 1)
 
-	_, err := illumioClient.Delete(href)
+	_, err := illumioClient.Delete(draftHref)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "virtual_services", href)
+
+	pConfig.ProvisionAResource("virtual_services", draftHref)
 	d.SetId("")
 	return diagnostics
 }

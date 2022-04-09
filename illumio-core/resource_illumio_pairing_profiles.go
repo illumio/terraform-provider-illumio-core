@@ -248,7 +248,7 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 		pairingProfile.Labels = models.GetHrefs(items.(*schema.Set).List())
 	}
 
-	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/pairing_profiles", pConfig.OrgID), pairingProfile)
+	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/pairing_profiles", illumioClient.OrgID), pairingProfile)
 	if diags.HasError() {
 		return diags
 	}

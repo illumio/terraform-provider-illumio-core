@@ -5,30 +5,39 @@ package client
 import (
 	"log"
 	"os"
+	"strconv"
 	"testing"
 
 	"golang.org/x/time/rate"
 )
 
 var (
-	apiHost      = os.Getenv("TEST_API_HOST")
-	apiUsername  = os.Getenv("TEST_API_USERNAME")
-	apiKeySecret = os.Getenv("TEST_API_KEY_SECRET")
+	apiHost      = os.Getenv("ILLUMIO_PCE_HOST")
+	orgID        int
+	apiUsername  = os.Getenv("ILLUMIO_API_KEY_USERNAME")
+	apiKeySecret = os.Getenv("ILLUMIO_API_KEY_SECRET")
 )
 
 func init() {
 	if apiHost == "" {
-		log.Fatal("Illumio Host for  tests is missing, please set in TEST_API_HOST env var")
-	}
-	if apiUsername == "" || apiKeySecret == "" {
+		log.Fatal("Illumio Host for tests is missing, please set in ILLUMIO_PCE_HOST env var")
+	} else if apiUsername == "" || apiKeySecret == "" {
 		log.Fatal("Credentials for client tests is missing, " +
-			"please set in [TEST_API_USERNAME, TEST_API_KEY_SECRET] env var")
+			"please set in [ILLUMIO_API_KEY_USERNAME, ILLUMIO_API_KEY_SECRET] env var")
+	}
+
+	var err error
+	orgID, err = strconv.Atoi(os.Getenv("ILLUMIO_PCE_ORG_ID"))
+
+	if err != nil {
+		orgID = 1
 	}
 }
 
 func GetTestClient() (*V2, error) {
 	return NewV2(
 		apiHost,
+		orgID,
 		apiUsername,
 		apiKeySecret,
 		30,

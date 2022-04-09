@@ -4,85 +4,75 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSServiceBinding *schema.Provider
+var prefixSB string = "TF-ACC-SB"
 
-func TestAccIllumioServiceBinding_Read(t *testing.T) {
-	serviceBindingAttr := map[string]interface{}{}
+func TestAccIllumioSB_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_service_binding.sb_test"
+	resourceName := "illumio-core_service_binding.sb_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSServiceBinding),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioServiceBindingDataSourceConfig_basic(),
+				Config: testAccCheckIllumioSBDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceServiceBindingExists("data.illumio-core_service_binding.test", serviceBindingAttr),
-					testAccCheckIllumioServiceBindingDataSourceAttributes(serviceBindingAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "virtual_service", resourceName, "virtual_service"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "workload", resourceName, "workload"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioServiceBindingDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_service_binding" "test" {
-		href = "/orgs/1/service_bindings/5087544a-84b7-47c4-9d82-3ca1732d3242"
+func testAccCheckIllumioSBDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixSB)
+	rName2 := acctest.RandomWithPrefix(prefixSB)
+
+	return fmt.Sprintf(`
+resource "illumio-core_virtual_service" "sb_test" {
+	name = %[1]q
+	description = "Terraform Service Binding test"
+	apply_to = "host_only"
+
+	service_ports {
+		proto = 6
+		port = 1234
 	}
-	`
+
+	service_addresses {
+		fqdn = "*.illumio.com"
+	}
+
+	ip_overrides = [
+		"1.2.3.4"
+	]
 }
 
-func testAccCheckIllumioDataSourceServiceBindingExists(name string, serviceBindingAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_workload" "sb_test" {
+	name               = %[2]q
+	description        = "Terraform Service Binding test"
+	hostname           = "example.workload"
+}
 
-		if !ok {
-			return fmt.Errorf("Service Binding %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSServiceBinding).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"workload.href",
-			"virtual_service.href",
-		} {
-			serviceBindingAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+resource "illumio-core_service_binding" "sb_test" {
+	virtual_service {
+		href = illumio-core_virtual_service.sb_test.href
+	}
+	workload {
+		href = illumio-core_workload.sb_test.href
 	}
 }
 
-func testAccCheckIllumioServiceBindingDataSourceAttributes(serviceBindingAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"workload.href":        "/orgs/1/workloads/c754a713-2bde-4427-af1f-bff145be509b",
-			"virtual_service.href": "/orgs/1/sec_policy/active/virtual_services/9fa52991-3c2e-4be1-9e66-189e0bb724e2",
-		}
-		for k, v := range expectation {
-			if serviceBindingAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, serviceBindingAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_service_binding" "sb_test" {
+	href = illumio-core_service_binding.sb_test.href
+}
+`, rName1, rName2)
 }

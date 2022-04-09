@@ -278,7 +278,7 @@ func resourceIllumioRuleSetCreate(ctx context.Context, d *schema.ResourceData, m
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	ruleSet, diags := expandIllumioRuleSet(d)
 
@@ -291,7 +291,7 @@ func resourceIllumioRuleSetCreate(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf(err.Error())
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", data.S("href").Data().(string))
+	pConfig.StoreHref("rule_sets", data.S("href").Data().(string))
 
 	d.SetId(data.S("href").Data().(string))
 
@@ -845,7 +845,7 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", d.Id())
+	pConfig.StoreHref("rule_sets", d.Id())
 
 	return resourceIllumioRuleSetRead(ctx, d, m)
 }
@@ -860,7 +860,7 @@ func resourceIllumioRuleSetDelete(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "rule_sets", href)
+	pConfig.StoreHref("rule_sets", href)
 
 	d.SetId("")
 	return diagnostics

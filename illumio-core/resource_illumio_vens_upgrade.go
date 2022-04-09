@@ -46,7 +46,7 @@ func resourceIllumioVENsUpgrade() *schema.Resource {
 func resourceIllumioVENsUpgradeCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	href := fmt.Sprintf("/orgs/%v/vens/upgrade", orgID)
 

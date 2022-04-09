@@ -212,7 +212,7 @@ func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m
 	illumioClient := pConfig.IllumioClient
 	var diags diag.Diagnostics
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	service := &models.Service{
 		Name:                  d.Get("name").(string),
@@ -247,7 +247,7 @@ func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "services", data.S("href").Data().(string))
+	pConfig.StoreHref("services", data.S("href").Data().(string))
 	d.SetId(data.S("href").Data().(string))
 	return resourceIllumioServiceRead(ctx, d, m)
 }
@@ -509,7 +509,7 @@ func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "services", d.Id())
+	pConfig.StoreHref("services", d.Id())
 	return resourceIllumioServiceRead(ctx, d, m)
 }
 
@@ -524,7 +524,7 @@ func resourceIllumioServiceDelete(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "services", href)
+	pConfig.StoreHref("services", href)
 	d.SetId("")
 	return diags
 }

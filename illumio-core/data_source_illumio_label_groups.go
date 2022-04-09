@@ -248,7 +248,7 @@ func datasourceIllumioLabelGroupsRead(ctx context.Context, d *schema.ResourceDat
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 	pversion := d.Get("pversion").(string)
 
 	paramKeys := []string{

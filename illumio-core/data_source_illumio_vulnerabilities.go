@@ -95,7 +95,7 @@ func dataSourceIllumioVulnerabilitiesRead(ctx context.Context, d *schema.Resourc
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	paramKeys := []string{
 		"max_results",

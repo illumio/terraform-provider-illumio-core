@@ -4,91 +4,63 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSVirtualService *schema.Provider
+var prefixVS string = "TF-ACC-VS"
 
-func TestAccIllumioVirtualService_Read(t *testing.T) {
-	virtualserAttr := map[string]interface{}{}
+func TestAccIllumioVS_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_virtual_service.vs_test"
+	resourceName := "illumio-core_virtual_service.vs_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSVirtualService),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioVirtualServiceDataSourceConfig_basic(),
+				Config: testAccCheckIllumioVSDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceVirtualServiceExists("data.illumio-core_virtual_service.test", virtualserAttr),
-					testAccCheckIllumioVirtualServiceDataSourceAttributes(virtualserAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "apply_to", resourceName, "apply_to"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "service_ports", resourceName, "service_ports"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "service_addresses", resourceName, "service_addresses"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "ip_overrides", resourceName, "ip_overrides"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioVirtualServiceDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_virtual_service" "test" {
-		href = "/orgs/1/sec_policy/draft/virtual_services/91a20432-bec8-4b2b-9a2d-9185c9dd75e4"
+func testAccCheckIllumioVSDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixVS)
+
+	return fmt.Sprintf(`
+resource "illumio-core_virtual_service" "vs_test" {
+	name = %[1]q
+	description = "Terraform Virtual Service test"
+	apply_to = "host_only"
+
+	service_ports {
+		proto = 6
+		port = 1234
 	}
-	`
+
+	service_addresses {
+		fqdn = "*.illumio.com"
+	}
+
+	ip_overrides = [
+		"1.2.3.4"
+	]
 }
 
-func testAccCheckIllumioDataSourceVirtualServiceExists(name string, virtualserAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("Virtual Service %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSVirtualService).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"description",
-			"name",
-			"service_ports.0.proto",
-			"labels.0.href",
-			"service_addresses.0.ip",
-		} {
-			virtualserAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
-	}
+data "illumio-core_virtual_service" "vs_test" {
+	href = illumio-core_virtual_service.vs_test.href
 }
-
-func testAccCheckIllumioVirtualServiceDataSourceAttributes(virtualserAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"description":            "acc-test description",
-			"name":                   "acc-test-VS",
-			"service_ports.0.proto":  float64(6),
-			"labels.0.href":          "/orgs/1/labels/1",
-			"service_addresses.0.ip": "1.1.1.1",
-		}
-		for k, v := range expectation {
-			if virtualserAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, virtualserAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+`, rName1)
 }

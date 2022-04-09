@@ -6,50 +6,61 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSWorkloadInterfacesL *schema.Provider
+var prefixWLIL string = "TF-ACC-WLIL"
 
-func TestAccIllumioWorkloadInterfacesL_Read(t *testing.T) {
+func TestAccIllumioWLIL_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_workload_interfaces.wlil_test"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSWorkloadInterfacesL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioWorkloadInterfacesLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioWLILDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceWorkloadInterfacesLExists("data.illumio-core_workload_interfaces.test"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioWorkloadInterfacesLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_workload_interfaces" "test" {
-		workload_href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
-	}
-	`
+func testAccCheckIllumioWLILDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixWLIL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_workload" "wlil_test" {
+	name               = %[1]q
+	description        = "Terraform Workload Interfaces test"
+	hostname           = "example.workload"
 }
 
-func testAccCheckIllumioDataSourceWorkloadInterfacesLExists(name string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_workload_interface" "wlil_test1" {
+	workload_href = illumio-core_workload.wlil_test.href
+	name = "eth0"
+	friendly_name = "Terraform Workload Interface 1"
+	link_state = "up"
+}
 
-		if !ok {
-			return fmt.Errorf("List of Workload Interfaces %s not found", name)
-		}
+resource "illumio-core_workload_interface" "wlil_test2" {
+	workload_href = illumio-core_workload.wlil_test.href
+	name = "eth1"
+	friendly_name = "Terraform Workload Interface 2"
+	link_state = "up"
+}
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
+data "illumio-core_workload_interfaces" "wlil_test" {
+	workload_href = illumio-core_workload.wlil_test.href
 
-		// listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
-	}
+	# enforce dependencies
+	depends_on = [
+		illumio-core_workload_interface.wlil_test1,
+		illumio-core_workload_interface.wlil_test2,
+	]
+}
+`, rName1)
 }

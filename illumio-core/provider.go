@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -34,7 +35,7 @@ const (
 
 	hrefFilename = "hrefs.csv"
 
-	defaultorgID = 1
+	defaultOrgID = 1
 )
 
 var (
@@ -78,10 +79,15 @@ func Provider() *schema.Provider {
 				Description: "The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`",
 			},
 			orgIDKey: {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     defaultorgID,
-				Description: "ID of the Organization. Default value: 1",
+				Type:     schema.TypeInt,
+				Optional: true,
+				DefaultFunc: func() (interface{}, error) {
+					if orgID, err := strconv.Atoi(os.Getenv("ILLUMIO_PCE_ORG_ID")); err == nil {
+						return orgID, nil
+					}
+					return defaultOrgID, nil
+				},
+				Description: "ID of the Organization. Can also be set by environment variable `ILLUMIO_PCE_ORG_ID`. Default value: 1",
 			},
 			timeoutKey: {
 				Type:        schema.TypeInt,
@@ -204,6 +210,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	}
 	illumioV2Client, err := client.NewV2(
 		d.Get(pceHostKey).(string),
+		d.Get(orgIDKey).(int),
 		d.Get(apiUsernameKey).(string),
 		d.Get(apiSecretKey).(string),
 		d.Get(timeoutKey).(int),
@@ -225,7 +232,6 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	}
 	providerConfig := Config{
 		IllumioClient: illumioV2Client,
-		OrgID:         d.Get(orgIDKey).(int),
 		HrefFilename:  hrefFilename,
 	}
 	return providerConfig, diagnostics
@@ -271,18 +277,17 @@ func validateInput(d *schema.ResourceData) diag.Diagnostics {
 // Config Configuration for provider
 type Config struct {
 	IllumioClient *client.V2
-	OrgID         int
 	HrefFilename  string
 }
 
 // StoreHref - Writes href to hrefs.csv file for provisioning of resource
-func (c Config) StoreHref(orgID int, resourceType, href string) {
+func (c Config) StoreHref(resourceType, href string) {
 	fileMutex.Lock()
 	defer fileMutex.Unlock()
 
 	fp, err := os.OpenFile(c.HrefFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err == nil {
-		_, err = fp.WriteString(fmt.Sprintf("%d,%s,%s\n", orgID, resourceType, href))
+		_, err = fp.WriteString(fmt.Sprintf("%s,%s\n", resourceType, href))
 		if err != nil {
 			panic(errors.New("couldn't write to file"))
 		}
@@ -292,7 +297,7 @@ func (c Config) StoreHref(orgID int, resourceType, href string) {
 }
 
 // ProvisionAResource - Provision a single resource
-func (c Config) ProvisionAResource(orgID int, resourceType, href string) error {
+func (c Config) ProvisionAResource(resourceType, href string) error {
 	log.Printf("ProvisionAResource - %s", href)
 	cs := models.SecurityPolicyChangeSubset{}
 	cs.AppendHref(resourceType, href)
@@ -300,6 +305,6 @@ func (c Config) ProvisionAResource(orgID int, resourceType, href string) error {
 		UpdateDesc:   "Provisioned by Terraform",
 		ChangeSubset: cs,
 	}
-	_, _, err := c.IllumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy", orgID), secPolicy)
+	_, _, err := c.IllumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy", c.IllumioClient.OrgID), secPolicy)
 	return err
 }

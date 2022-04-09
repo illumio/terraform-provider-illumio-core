@@ -6,52 +6,53 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSLabelsL *schema.Provider
+var prefixLL string = "TF-ACC-LL"
 
-func TestAccIllumioLabelsL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
+func TestAccIllumioLL_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_labels.ll_test"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSLabelsL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioLabelsLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioLLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceLabelsLExists("data.illumio-core_labels.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioLabelsLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_labels" "test" {
-		max_results = "5"
-	}
-	`
+func testAccCheckIllumioLLDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixLL)
+	rName2 := acctest.RandomWithPrefix(prefixLL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "ll_test1" {
+	key   = "app"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceLabelsLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_label" "ll_test2" {
+	key   = "app"
+	value = %[2]q
+}
 
-		if !ok {
-			return fmt.Errorf("List of Labels %s not found", name)
-		}
+data "illumio-core_labels" "ll_test" {
+	# lookup based on partial match
+	value = %[3]q
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
-	}
+	# enforce dependencies
+	depends_on = [
+		illumio-core_label.ll_test1,
+		illumio-core_label.ll_test2,
+	]
+}
+`, rName1, rName2, prefixLL)
 }

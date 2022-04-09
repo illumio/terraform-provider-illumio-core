@@ -4,28 +4,41 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSWorkload *schema.Provider
+var prefixWorkload string = "TF-ACC-WL"
 
 func TestAccIllumioWorkload_Read(t *testing.T) {
-	workloadAttr := map[string]interface{}{}
+	dataSourceName := "data.illumio-core_workload.wl_test"
+	resourceName := "illumio-core_workload.wl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSWorkload),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioWorkloadDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceWorkloadExists("data.illumio-core_workload.test", workloadAttr),
-					testAccCheckIllumioWorkloadDataSourceAttributes(workloadAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "hostname", resourceName, "hostname"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "service_principal_name", resourceName, "service_principal_name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "enforcement_mode", resourceName, "enforcement_mode"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "visibility_level", resourceName, "visibility_level"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "distinguished_name", resourceName, "distinguished_name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "public_ip", resourceName, "public_ip"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "data_center", resourceName, "data_center"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "data_center_zone", resourceName, "data_center_zone"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "os_id", resourceName, "os_id"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "os_detail", resourceName, "os_detail"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "service_provider", resourceName, "service_provider"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "online", resourceName, "online"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "labels", resourceName, "labels"),
 				),
 			},
 		},
@@ -33,58 +46,29 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioWorkloadDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_workload" "test" {
-		href = "/orgs/1/workloads/d42a430e-b20b-4b2d-853f-2d39fa4cea22"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixWorkload)
+	rName2 := acctest.RandomWithPrefix(prefixWorkload)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "wl_test" {
+	key   = "role"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceWorkloadExists(name string, workloadAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_workload" "wl_test" {
+	name               = %[2]q
+	description        = "Terraform Workload test"
+	hostname           = "example.workload"
+	distinguished_name = ""
+	service_provider   = "SPN"
 
-		if !ok {
-			return fmt.Errorf("Workload %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSWorkload).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"enforcement_mode",
-			"visibility_level",
-			"name",
-		} {
-			workloadAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+	labels {
+		href = illumio-core_label.wl_test.href
 	}
 }
 
-func testAccCheckIllumioWorkloadDataSourceAttributes(workloadAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"enforcement_mode": "visibility_only",
-			"visibility_level": "flow_summary",
-			"name":             "acc-test-Workload",
-		}
-		for k, v := range expectation {
-			if workloadAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, workloadAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_workload" "wl_test" {
+	href = illumio-core_workload.wl_test.href
+}
+`, rName1, rName2)
 }

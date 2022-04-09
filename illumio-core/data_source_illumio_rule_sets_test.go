@@ -6,24 +6,23 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSRSL *schema.Provider
+var prefixRSL string = "TF-ACC-RSL"
 
 func TestAccIllumioRSL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
+	dataSourceName := "data.illumio-core_rule_sets.rsl_test"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSRSL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioRSLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceRSLExists("data.illumio-core_rule_sets.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
@@ -31,27 +30,47 @@ func TestAccIllumioRSL_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioRSLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_rule_sets" "test" {
-		max_results = "5"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixRSL)
+	rName2 := acctest.RandomWithPrefix(prefixRSL)
+	rName3 := acctest.RandomWithPrefix(prefixRSL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "rsl_test" {
+	key   = "env"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceRSLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_rule_set" "rsl_test1" {
+	name = %[2]q
+	description = "Terraform Rule Sets test"
 
-		if !ok {
-			return fmt.Errorf("List of Rulesets %s not found", name)
+	scopes {
+		label {
+			href = illumio-core_label.rsl_test.href
 		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
 	}
+}
+
+resource "illumio-core_rule_set" "rsl_test2" {
+	name = %[3]q
+	description = "Terraform Rule Sets test"
+
+	scopes {
+		label {
+			href = illumio-core_label.rsl_test.href
+		}
+	}
+}
+
+data "illumio-core_rule_sets" "rsl_test" {
+	# lookup based on partial match
+	name = %[4]q
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_rule_set.rsl_test1,
+		illumio-core_rule_set.rsl_test2,
+	]
+}
+`, rName1, rName2, rName3, prefixRSL)
 }

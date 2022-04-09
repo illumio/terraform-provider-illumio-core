@@ -156,7 +156,7 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	paramKeys := []string{
 		"external_data_set",

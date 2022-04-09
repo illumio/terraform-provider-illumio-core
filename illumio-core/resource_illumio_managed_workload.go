@@ -37,7 +37,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 			"hostname": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The hostname of this workload. The hostname should be up to 255 characters",
+				Description: "The hostname of this workload. Set by the VEN.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -53,7 +53,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 			"public_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The public IP address of the server. The public IP should in the IPv4 or IPv6 format",
+				Description: "The public IP address of the server. Set by the VEN.",
 			},
 			"service_provider": {
 				Type:             schema.TypeString,
@@ -76,17 +76,17 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 			"os_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "OS identifier for Workload. The os_id should be up to 255 characters",
+				Description: "OS identifier for Workload. Set by the VEN.",
 			},
 			"os_detail": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Additional OS details - just displayed to end-user. The os_details should be up to 255 characters",
+				Description: "Additional OS details - just displayed to end-user. Set by the VEN.",
 			},
 			"online": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "Determines if this workload is online.",
+				Description: "Determines if this workload is online. Set by the VEN.",
 			},
 			"labels": {
 				Type:        schema.TypeSet,
@@ -521,11 +521,11 @@ func resourceIllumioManagedWorkloadDelete(ctx context.Context, d *schema.Resourc
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	// unpair the VEN so we can delete the workload record
 	hrefs := []models.Href{}
 	hrefs = append(hrefs, *getHrefObj(d.Get("ven")))
 
-	unpairUri := fmt.Sprintf("/orgs/%v/vens/unpair", pConfig.OrgID)
+	// unpair the VEN - this will also remove the workload record
+	unpairUri := fmt.Sprintf("/orgs/%v/vens/unpair", illumioClient.OrgID)
 	venUnpair := &models.VENsUnpair{
 		FirewallRestore: "default",
 		Hrefs:           hrefs,

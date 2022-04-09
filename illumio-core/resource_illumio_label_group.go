@@ -152,7 +152,7 @@ func resourceIllumioLabelGroupCreate(ctx context.Context, d *schema.ResourceData
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	labelGroup := &models.LabelGroup{
 		Name:                  d.Get("name").(string),
@@ -171,7 +171,7 @@ func resourceIllumioLabelGroupCreate(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "label_groups", data.S("href").Data().(string))
+	pConfig.StoreHref("label_groups", data.S("href").Data().(string))
 	d.SetId(data.S("href").Data().(string))
 	return resourceIllumioLabelGroupRead(ctx, d, m)
 }
@@ -256,7 +256,7 @@ func resourceIllumioLabelGroupUpdate(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "label_groups", d.Id())
+	pConfig.StoreHref("label_groups", d.Id())
 
 	return resourceIllumioLabelGroupRead(ctx, d, m)
 }
@@ -271,7 +271,7 @@ func resourceIllumioLabelGroupDelete(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "label_groups", href)
+	pConfig.StoreHref("label_groups", href)
 	d.SetId("")
 	return diagnostics
 }

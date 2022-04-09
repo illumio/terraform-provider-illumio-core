@@ -100,7 +100,7 @@ func resourceIllumioLabelCreate(ctx context.Context, d *schema.ResourceData, m i
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	label := &models.Label{
 		Key:                   d.Get("key").(string),

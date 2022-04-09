@@ -4,27 +4,30 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSEB *schema.Provider
+var prefixEB string = "TF-ACC-EB"
 
 func TestAccIllumioEB_Read(t *testing.T) {
-	ebAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_enforcement_boundary.eb_test"
+	resourceName := "illumio-core_enforcement_boundary.eb_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSEB),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioEBDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceEBExists("data.illumio-core_enforcement_boundary.test", ebAttr),
-					testAccCheckIllumioEBDataSourceAttributes(ebAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "providers", resourceName, "providers"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "consumers", resourceName, "consumers"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "ingress_services", resourceName, "ingress_services"),
 				),
 			},
 		},
@@ -32,59 +35,60 @@ func TestAccIllumioEB_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioEBDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_enforcement_boundary" "test" {
-		href = "/orgs/1/sec_policy/draft/enforcement_boundaries/37"
-	}
-	`
-}
+	rName1 := acctest.RandomWithPrefix(prefixEB)
+	rName2 := acctest.RandomWithPrefix(prefixEB)
+	rName3 := acctest.RandomWithPrefix(prefixEB)
+	rName4 := acctest.RandomWithPrefix(prefixEB)
 
-func testAccCheckIllumioDataSourceEBExists(name string, ebAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("Enforcement Boundary %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSEB).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"name",
-			"providers.0.label.href",
-			"consumers.0.ip_list.href",
-			"ingress_services.0.href",
-		} {
-			ebAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-		return nil
+	return fmt.Sprintf(`
+resource "illumio-core_service" "eb_test" {
+	name          = %[1]q
+	description   = "Terraform Enforcement Boundary test"
+	service_ports {
+		proto = 6
+		port = 1
+		to_port = 1023
 	}
 }
 
-func testAccCheckIllumioEBDataSourceAttributes(ebAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"name":                     "Acc. test name",
-			"providers.0.label.href":   "/orgs/1/labels/1",
-			"consumers.0.ip_list.href": "/orgs/1/sec_policy/draft/ip_lists/1",
-			"ingress_services.0.href":  "/orgs/1/sec_policy/draft/services/3",
-		}
-		for k, v := range expectation {
-			if ebAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ebAttr[k], v)
-			}
-		}
-
-		return nil
+resource "illumio-core_ip_list" "eb_test" {
+	name        = %[2]q
+	description = "Terraform Enforcement Boundary test"
+	ip_ranges {
+		from_ip = "10.1.0.0"
+		to_ip = "10.10.0.0"
+		description = "Terraform Enforcement Boundary test"
+		exclusion = false
 	}
+	fqdns {
+		fqdn = "app.example.com"
+	}
+}
+
+resource "illumio-core_label" "eb_test" {
+	key   = "role"
+	value = %[3]q
+}
+
+resource "illumio-core_enforcement_boundary" "eb_test" {
+	name = %[4]q
+	ingress_services {
+		href = illumio-core_service.eb_test.href
+	}
+	consumers {
+		ip_list {
+			href = illumio-core_ip_list.eb_test.href
+		}
+	}
+	providers {
+		label {
+			href = illumio-core_label.eb_test.href
+		}
+	}
+}
+
+data "illumio-core_enforcement_boundary" "eb_test" {
+	href = illumio-core_enforcement_boundary.eb_test.href
+}
+`, rName1, rName2, rName3, rName4)
 }

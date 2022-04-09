@@ -282,7 +282,7 @@ func dataSourceIllumioPairingProfilesRead(ctx context.Context, d *schema.Resourc
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	href := fmt.Sprintf("/orgs/%v/pairing_profiles", orgID)
 

@@ -6,52 +6,66 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSLabelGsL *schema.Provider
+var prefixLGL string = "TF-ACC-LGL"
 
-func TestAccIllumioLabelGsL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
+func TestAccIllumioLGL_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_label_groups.lgl_test"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSLabelGsL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioLabelGsLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioLGLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceLabelGsLExists("data.illumio-core_label_groups.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioLabelGsLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_label_groups" "test" {
-		max_results = "5"
-	}
-	`
+func testAccCheckIllumioLGLDataSourceConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixLGL)
+	rName2 := acctest.RandomWithPrefix(prefixLGL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "lgl_test" {
+	key   = "app"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceLabelGsLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_label_group" "lgl_test1" {
+	key           = "app"
+	name          = %[2]q
+	description   = "Terraform Label Group subgroup"
+}
 
-		if !ok {
-			return fmt.Errorf("List of Label Groups %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
+resource "illumio-core_label_group" "lgl_test2" {
+	key           = "app"
+	name          = %[3]q
+	description   = "Terraform Label Group test"
+	labels {
+		href = illumio-core_label.lgl_test.href
 	}
+	sub_groups {
+		href = illumio-core_label_group.lgl_test1.href
+	}
+}
+
+data "illumio-core_label_groups" "lgl_test" {
+	# lookup based on partial match
+	name = %[3]q
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_label_group.lgl_test1,
+		illumio-core_label_group.lgl_test2,
+	]
+}
+`, rName1, rName2, prefixLGL)
 }

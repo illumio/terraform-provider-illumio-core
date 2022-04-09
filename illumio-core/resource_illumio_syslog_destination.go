@@ -172,7 +172,7 @@ func resourceIllumioSyslogDestinationCreate(ctx context.Context, d *schema.Resou
 	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	syslogDest := expandIllumioSyslogdestination(d, &diags)
 

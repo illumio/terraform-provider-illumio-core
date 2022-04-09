@@ -150,7 +150,7 @@ func resourceIllumioServiceBindingCreate(ctx context.Context, d *schema.Resource
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	ServiceBinding := &models.ServiceBinding{
 		ExternalDataSet:       d.Get("external_data_set").(string),

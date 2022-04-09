@@ -4,27 +4,30 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSRS *schema.Provider
+var prefixRS string = "TF-ACC-RS"
 
 func TestAccIllumioRS_Read(t *testing.T) {
-	ppAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_rule_set.rs_test"
+	resourceName := "illumio-core_rule_set.rs_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSRS),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioRSDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceRSExists("data.illumio-core_rule_set.test", ppAttr),
-					testAccCheckIllumioRSDataSourceAttributes(ppAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "ip_tables_rules", resourceName, "ip_tables_rules"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "scopes", resourceName, "scopes"),
 				),
 			},
 		},
@@ -32,62 +35,49 @@ func TestAccIllumioRS_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioRSDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_rule_set" "test" {
-		href = "/orgs/1/sec_policy/draft/rule_sets/54"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixRS)
+	rName2 := acctest.RandomWithPrefix(prefixRS)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "rs_test" {
+	key   = "env"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceRSExists(name string, ppAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_rule_set" "rs_test" {
+	name = %[2]q
+	description = "Terraform Rule Set test"
 
-		if !ok {
-			return fmt.Errorf("Ruleset %s not found", name)
+	ip_tables_rules {
+		actors {
+			actors = "ams"
 		}
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSRS).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"name",
-			"description",
-			"enabled",
-			"scopes.0.0.label.href",
-			"rules.0.enabled",
-		} {
-			ppAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckIllumioRSDataSourceAttributes(ppAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"name":                  "Acc. test name",
-			"description":           "Acc. test description",
-			"enabled":               true,
-			"scopes.0.0.label.href": "/orgs/1/labels/69",
-			"rules.0.enabled":       true,
-		}
-		for k, v := range expectation {
-			if ppAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ppAttr[k], v)
+		actors {
+			label {
+				href = illumio-core_label.rs_test.href
 			}
 		}
 
-		return nil
+		enabled = false
+
+		ip_version = 6
+		statements {
+			table_name = "nat"
+			chain_name = "PREROUTING"
+			parameters = "value"
+		}
 	}
+
+	scopes {
+		label {
+			href = illumio-core_label.rs_test.href
+		}
+	}
+}
+
+data "illumio-core_rule_set" "rs_test" {
+	href = illumio-core_rule_set.rs_test.href
+}
+`, rName1, rName2)
 }

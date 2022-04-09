@@ -11,14 +11,14 @@ import (
 
 /* Sample
 {
- "href": "string",
+  "href": "string",
   "name": "string",
-  "Description": "sring",
+  "description": "sring",
   "external_data_set": nul,
   "external_data_reference":null,
   "ip_ranges": [
     {
-     "Description": "string",
+      "description": "string",
       "from_ip": "string",
       "to_ip": "string",
       "exclusion": true
@@ -26,21 +26,21 @@ import (
   ],
   "fdns": [
     {
-     "fqdn": "string",
-      "Description": "sring"
+      "fqdn": "string",
+      "description": "sring"
     }
   ],
   "ceated_at": "2021-03-02T02:37:59Z",
   "updated_at": "2021-03-02T02:37:59Z",
   "deleted_at": "2021-03-02T02:37:59Z",
   "created_by": {
-    "href": "strig"
+    "href": "string"
   },
-  "udated_by": {
-    "href": "strig"
+  "updated_by": {
+    "href": "string"
   },
-  "dleted_by": {
-    "href": "strig"
+  "deleted_by": {
+    "href": "string"
   }
 }
 */

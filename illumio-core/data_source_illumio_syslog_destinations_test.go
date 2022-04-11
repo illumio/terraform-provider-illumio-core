@@ -16,6 +16,8 @@ import (
 func TestAccIllumioSDL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_syslog_destinations.sdl_test"
 
+	// don't parallelize this test as it will conflict with
+	// the syslog_destination test
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,

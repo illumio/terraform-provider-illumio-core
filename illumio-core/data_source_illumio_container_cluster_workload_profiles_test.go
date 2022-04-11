@@ -15,7 +15,7 @@ var prefixCCWPL string = "TF-ACC-CCWPL"
 func TestAccIllumioCCWPL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_container_cluster_workload_profiles.ccwpl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

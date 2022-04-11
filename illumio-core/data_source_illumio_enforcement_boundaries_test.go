@@ -15,7 +15,7 @@ var prefixEBL string = "TF-ACC-EBL"
 func TestAccIllumioEBL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_enforcement_boundaries.ebl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

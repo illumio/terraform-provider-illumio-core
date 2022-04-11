@@ -15,7 +15,7 @@ var prefixLL string = "TF-ACC-LL"
 func TestAccIllumioLL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_labels.ll_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

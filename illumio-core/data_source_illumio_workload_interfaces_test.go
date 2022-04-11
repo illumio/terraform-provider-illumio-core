@@ -15,7 +15,7 @@ var prefixWLIL string = "TF-ACC-WLIL"
 func TestAccIllumioWLIL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_workload_interfaces.wlil_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

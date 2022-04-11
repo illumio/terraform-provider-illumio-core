@@ -15,7 +15,7 @@ var prefixCCL string = "TF-ACC-CCL"
 func TestAccIllumioCCL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_container_clusters.ccl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

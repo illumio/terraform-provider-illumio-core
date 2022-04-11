@@ -15,7 +15,7 @@ var prefixVSL string = "TF-ACC-VSL"
 func TestAccIllumioVSL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_virtual_services.vsl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

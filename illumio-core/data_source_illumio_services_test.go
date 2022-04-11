@@ -15,7 +15,7 @@ var prefixSL string = "TF-ACC-SL"
 func TestAccIllumioSL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_services.sl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

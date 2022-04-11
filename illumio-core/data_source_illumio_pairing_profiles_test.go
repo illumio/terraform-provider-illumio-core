@@ -15,7 +15,7 @@ var prefixPPL string = "TF-ACC-PPL"
 func TestAccIllumioPPL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_pairing_profiles.ppl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

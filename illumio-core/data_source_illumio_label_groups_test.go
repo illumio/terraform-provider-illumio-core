@@ -15,7 +15,7 @@ var prefixLGL string = "TF-ACC-LGL"
 func TestAccIllumioLGL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_label_groups.lgl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

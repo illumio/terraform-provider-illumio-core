@@ -15,7 +15,7 @@ var prefixIPL string = "TF-ACC-IPL"
 func TestAccIllumioIPL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_ip_lists.ipl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

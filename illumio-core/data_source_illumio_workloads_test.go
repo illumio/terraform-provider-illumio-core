@@ -15,7 +15,7 @@ var prefixWLL string = "TF-ACC-WLL"
 func TestAccIllumioWLL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_workloads.wll"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
@@ -41,17 +41,19 @@ resource "illumio-core_unmanaged_workload" "wll1" {
 }
 
 resource "illumio-core_unmanaged_workload" "wll2" {
-	name               = %[1]q
+	name               = %[2]q
 	description        = "Terraform Workloads test 2"
 	hostname           = "jumpbox2"
 }
 
 data "illumio-core_workloads" "wll" {
+	name = %[3]q
+
 	# enforce dependencies
 	depends_on = [
 		illumio-core_unmanaged_workload.wll1,
 		illumio-core_unmanaged_workload.wll2,
 	]
 }
-`, rName1, rName2)
+`, rName1, rName2, prefixWLL)
 }

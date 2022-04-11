@@ -15,7 +15,7 @@ var prefixRSL string = "TF-ACC-RSL"
 func TestAccIllumioRSL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_rule_sets.rsl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

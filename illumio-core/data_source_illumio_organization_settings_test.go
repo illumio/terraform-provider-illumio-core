@@ -11,7 +11,7 @@ import (
 func TestAccIllumioOS_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_organization_settings.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

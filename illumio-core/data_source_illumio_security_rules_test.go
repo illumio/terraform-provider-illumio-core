@@ -15,7 +15,7 @@ var prefixSRL string = "TF-ACC-SRL"
 func TestAccIllumioSRL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_security_rules.srl_test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

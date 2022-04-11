@@ -54,10 +54,10 @@ func main() {
 	}
 
 	illumioV2Client, err := client.NewV2(
-		os.Getenv("ILLUMIO_PCE_HOST"),
+		pceHost,
 		orgID,
-		os.Getenv("ILLUMIO_API_KEY_USERNAME"),
-		os.Getenv("ILLUMIO_API_KEY_SECRET"),
+		apiKeyUsername,
+		apiKeySecret,
 		30,
 		rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), // limits API calls 125/min
 		10,

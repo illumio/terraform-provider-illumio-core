@@ -123,6 +123,8 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			// DEPRECATED - here for backwards compatibility. Will be removed in 1.0.0
+			"illumio-core_workload":                           resourceIllumioWorkload(),
 			"illumio-core_firewall_settings":                  resourceIllumioFirewallSettings(),
 			"illumio-core_ip_list":                            resourceIllumioIPList(),
 			"illumio-core_label_group":                        resourceIllumioLabelGroup(),

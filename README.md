@@ -1,55 +1,44 @@
 <a href="https://terraform.io">
-    <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" alt="Terraform logo" title="Terraform" align="right" height="50" />
+    <img src="https://raw.githubusercontent.com/hashicorp/terraform-website/master/public/img/logo-hashicorp.svg" alt="Terraform logo" title="Terraform" align="right" height="35" />
 </a>
 
-# Terraform Provider for Illumio-Core
+# Terraform Provider for Illumio Core  
 
-The Terraform Illumio-Core provider is a plugin for Terraform that one can use with Terraform to work with Illumio Core. Using this provider, Illumio security policies can be created and applied to your workloads.. 
+The Terraform Illumio provider allows users to define HCL configuration to manage resources in the Illumio Policy Compute Engine (PCE).  
 
-For more information about Illumio, please visit https://www.illumio.com
+For more information about Illumio, please visit the [Illumio Website](https://www.illumio.com). Documentation about the Illumio Core product can be found on the [Illumio documentation portal](https://docs.illumio.com).  
 
-Documentation about Illumio Core can be found at [Illumio Docs portal](https://docs.illumio.com)
+The provider can be used to manage policy and objects within the Illumio Policy Compute Engine. Objects that can be managed in Terraform include, but are not limited to:
 
-The following versions of Illumio Core are supported:
-- Illumio Core 21.2
+- Workloads
+- Labels
+- IP Lists
+- Services
+- Security Rules and Rulesets
+- Enforcement Boundaries
+- Pairing Profiles and Pairing Keys
 
-In case of a security finding in the Terraform Illumio-Core Provider, please inform security@illumio.com
+See [the documentation](https://registry.terraform.io/providers/illumio/illumio-core/latest/docs) for a more comprehensive list.  
 
-## Getting Started
+The following versions of the Illumio Core Policy Compute Engine are currently supported:  
+- PCE v21.2
+- PCE v21.5
 
-- [Using the provider](docs/index.md)
-- [Develop, Build, Test, and Debug the provider](./DEVELOPMENT.md)
+## Getting Started  
 
-The primary use-case for the Illumio Core provider is managing the following resources:
-- labels
-- iplists
-- pairing profiles and pairing keys
-- workloads 
-- rules and rulesets using labels, and iplists
-This use-case is verified and validated with Acceptance tests.  Over time, other use-cases will be developed. 
-
-If you have a specific policy use-case for this provider, please contact opensource@illumio.com  
-
-### Security Policy Provisioning  
-
-When Illumio policy is created or updated, the changes are staged as `draft`.
-Illumio policy needs to be provisioned to make the policy changes `active`.
-
-This provisioning is only done after all the changes are complete.
-To execute provisioning, a separate tool `provision` is provided.
-
-This `provision` tool should be executed after running `terraform apply`. 
-For example: `terrafrom apply && provision`
-
-Similarly, after running `terraform destroy`, the changes are made active using provision. 
+- [Using the provider](https://registry.terraform.io/providers/illumio/illumio-core/latest/docs)
+- [Provider development](DEVELOPMENT.md)
+- [Usage examples](./examples/README.md)
 
 ## Contributing
 
-To contribute, please refer the [contributor guidelines](./CONTRIBUTING.md)
+For information on how you can contribute to the provider, please refer to the [contributor guidelines](.github/CONTRIBUTING.md).
+
+If you believe you have found a security issue or vulnerability in the provider or in the Illumio Core product, please refer to the [Security document](.github/SECURITY.md) for steps on how to contact the Illumio security team. **Please do not file a public issue.**
 
 ## Support
 
 The Illumio-Core Terraform Provider is released and distributed as open source software subject to the [LICENSE](LICENSE). 
-Please read the entire [LICENSE](LICENSE) for additional information regarding the permissions and limitations. 
+Please read the entire [LICENSE](LICENSE) for additional information regarding the permissions and limitations.  
 
 For bugs and feature requests, please open a Github Issue and label it appropriately. 

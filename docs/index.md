@@ -20,10 +20,10 @@ Sample provider configuration:
 # Configure provider with proxy (authentication)
 provider "illumio-core" {
     # PCE connection config
-    pce_host     = "https://pce.my-company.com:8443"
-    api_username = "api_xxxxxx"
-    api_secret   = "xxxxxxxxxx"
-    org_id       = 10
+    pce_host        = "https://pce.my-company.com:8443"
+    api_username    = "api_xxxxxx"
+    api_secret      = "xxxxxxxxxx"
+    org_id          = 10
 
     # HTTP request config
     request_timeout = 60
@@ -31,8 +31,8 @@ provider "illumio-core" {
     max_retries     = 5
 
     # TLS config
-    ca_file = "/path/to/devtest-selfsign.pem"
-    insecure = yes
+    ca_file         = "/path/to/devtest-selfsign.pem"
+    insecure        = yes
 
     # Proxy config
     proxy_url       = "http://10.0.1.111:3128"
@@ -60,24 +60,26 @@ terraform {
 # TF variables and set up the provider
 
 variable "pce_url" {
-  type = string
+  type        = string
   description = "URL of the Illumio Policy Compute Engine to connect to"
 }
 
 variable "pce_org_id" {
-  type = number
+  type        = number
   description = "Illumio PCE Organization ID number"
-  default = 1
+  default     = 1
 }
 
 variable "pce_api_key" {
-  type = string
+  type        = string
   description = "Illumio PCE API key username"
+  sensitive   = true
 }
 
 variable "pce_api_secret" {
-  type = string
+  type        = string
   description = "Illumio PCE API key secret"
+  sensitive   = true
 }
 
 provider "illumio-core" {
@@ -140,11 +142,14 @@ resource "illumio-core_unmanaged_workload" "nginx_lb_ny" {
 After copying the HCL to a local `.tf` file, you can run it with
 
 ```sh
-$ terraform plan -out example-plan \
-  -var "pce_url=${ILLUMIO_PCE_HOST}" \
-  -var "pce_org_id=${ILLUMIO_PCE_ORG_ID}" \
-  -var "pce_api_key=${ILLUMIO_API_KEY_USERNAME}" \
-  -var "pce_api_secret=${ILLUMIO_API_KEY_SECRET}"
+$ terraform init
+$ terraform plan -out example-plan
+# Answer the prompts to configure the connection to your PCE
+var.pce_api_key
+  Illumio PCE API key username
+
+  Enter a value: api-xxx
+...
 $ terraform apply example-plan
 ```
 

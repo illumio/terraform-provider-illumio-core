@@ -99,10 +99,10 @@ func makeBatchedClientCalls(d *schema.ResourceData, pConfig Config) error {
 	return nil
 }
 
-func batchifyVulnerabilityList(vulnerabilities []interface{}) []*models.VulnerailityList {
+func batchifyVulnerabilityList(vulnerabilities []interface{}) []*models.VulnerabilityList {
 	listSize := len(vulnerabilities)
 
-	result := []*models.VulnerailityList{}
+	result := []*models.VulnerabilityList{}
 
 	for i := 0; i < listSize; i = i + 1000 {
 		ub := i
@@ -118,7 +118,7 @@ func batchifyVulnerabilityList(vulnerabilities []interface{}) []*models.Vulnerai
 	return result
 }
 
-func expandIllumioVulnerabilityList(vulnerabilitylist []interface{}) *models.VulnerailityList {
+func expandIllumioVulnerabilityList(vulnerabilitylist []interface{}) *models.VulnerabilityList {
 	list := []models.Vulnerability{}
 	for _, vulnerability := range vulnerabilitylist {
 		v := vulnerability.(map[string]interface{})
@@ -131,7 +131,7 @@ func expandIllumioVulnerabilityList(vulnerabilitylist []interface{}) *models.Vul
 		})
 	}
 
-	return &models.VulnerailityList{
+	return &models.VulnerabilityList{
 		Values: list,
 	}
 }

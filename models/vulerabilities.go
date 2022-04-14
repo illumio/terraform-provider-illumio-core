@@ -20,11 +20,11 @@ func (v *Vulnerability) ToMap() map[string]interface{} {
 	}
 }
 
-type VulnerailityList struct {
+type VulnerabilityList struct {
 	Values []Vulnerability
 }
 
-func (o *VulnerailityList) ToMap() (map[string]interface{}, error) {
+func (o *VulnerabilityList) ToMap() (map[string]interface{}, error) {
 	vls := []map[string]interface{}{}
 	for _, v := range o.Values {
 		vls = append(vls, v.ToMap())

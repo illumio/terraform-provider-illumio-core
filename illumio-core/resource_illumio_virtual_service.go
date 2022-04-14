@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -321,14 +320,10 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 		return diag.FromErr(err)
 	}
 
-	draftHref := data.S("href").Data().(string)
+	href := data.S("href").Data().(string)
 
-	// Provisioning instantly as only active version can be used for service binding
-	pConfig.ProvisionAResource("virtual_services", draftHref)
-	activeHref := strings.Replace(draftHref, "/draft/", "/active/", 1)
-
-	// Make sure the ID is set to the active HREF for other objects to reference
-	d.SetId(activeHref)
+	pConfig.StoreHref("virtual_services", href)
+	d.SetId(href)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }
 
@@ -433,7 +428,7 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	diags := diag.Diagnostics{}
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	draftHref := strings.Replace(d.Id(), "/active/", "/draft/", 1)
+	href := d.Id()
 
 	vs := &models.VirtualService{
 		Name:                  d.Get("name").(string),
@@ -510,12 +505,12 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	if diags.HasError() {
 		return diags
 	}
-	_, err := illumioClient.Update(draftHref, vs)
+	_, err := illumioClient.Update(href, vs)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	pConfig.ProvisionAResource("virtual_services", draftHref)
+	pConfig.StoreHref("virtual_services", href)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }
 
@@ -523,14 +518,14 @@ func resourceIllumioVirtualServiceDelete(ctx context.Context, d *schema.Resource
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	draftHref := strings.Replace(d.Id(), "/active/", "/draft/", 1)
+	href := d.Id()
 
-	_, err := illumioClient.Delete(draftHref)
+	_, err := illumioClient.Delete(href)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	pConfig.ProvisionAResource("virtual_services", draftHref)
+	pConfig.StoreHref("virtual_services", href)
 	d.SetId("")
 	return diagnostics
 }

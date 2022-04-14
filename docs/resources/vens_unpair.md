@@ -11,6 +11,8 @@ description: |-
 
 Manages Illumio VENs Unpair
 
+!> **WARNING:** This resource is deprecated as of v0.2.0 and will be removed in v1.0.0
+
 Example Usage
 ------------
 

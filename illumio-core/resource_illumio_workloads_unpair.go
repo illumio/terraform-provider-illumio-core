@@ -20,8 +20,9 @@ func resourceIllumioWorkloadsUnpair() *schema.Resource {
 		UpdateContext: resourceIllumioWorkloadsUnpairUpdate,
 		DeleteContext: resourceIllumioWorkloadsUnpairDelete,
 
-		SchemaVersion: version,
-		Description:   "Manages Illumio Workloads Unpair",
+		SchemaVersion:      version,
+		Description:        "Manages Illumio Workloads Unpair",
+		DeprecationMessage: "DEPRECATED in v0.2.0. Will be removed in v1.0.0. Use resource/unmanaged_workload and resource/managed_workload instead.",
 
 		Schema: map[string]*schema.Schema{
 			"workloads": {

@@ -17,6 +17,7 @@ $ git clone https://github.com/illumio/terraform-provider-illumio-core
 $ cd terraform-provider-illumio-core/examples/
 $ cp .env.example .env
 # update .env with your PCE connection details
+$ source .env
 $ cd enforcement_boundary/
 ```
 
@@ -27,6 +28,8 @@ $ terraform init
 $ terraform plan -out example-plan
 $ terraform apply example-plan
 ```
+
+> **Note:** some examples may require additional setup or customization. For any that do, see the included READMEs for details  
 
 ## Remove Example Objects  
 

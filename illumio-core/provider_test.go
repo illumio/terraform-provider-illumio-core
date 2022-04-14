@@ -3,11 +3,13 @@
 package illumiocore
 
 import (
+	"context"
 	"os"
 	"sync"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 const ProviderName = "illumio-core"
@@ -44,8 +46,14 @@ func testAccPreCheck(t *testing.T) {
 				missing = append(missing, envKey)
 			}
 		}
+
 		if len(missing) > 0 {
 			t.Fatalf("Required environment variables missing: %v", missing)
+		}
+
+		err := TestAccProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(nil))
+		if err != nil {
+			t.Fatal(err)
 		}
 	})
 }

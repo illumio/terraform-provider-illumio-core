@@ -1,60 +1,42 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_rule_set" "example" {
-  href = "/orgs/1/sec_policy/draft/rule_sets/70"
+resource "illumio-core_label" "app_core_services" {
+  key   = "app"
+  value = "A-CORE-SERVICES"
 }
 
-resource "illumio-core_rule_set" "example" {
-  name = "example"
+resource "illumio-core_label" "env_dev" {
+  key   = "env"
+  value = "E-DEV"
+}
 
-  ip_tables_rules {
-    description = "example desc"
-    actors {
-      actors = "ams"
-    }
-    actors {
-      label {
-        href = "/orgs/1/labels/69"
-      }
-    }
-
-    enabled = false
-
-    ip_version = 6
-    statements {
-      table_name = "nat"
-      chain_name = "PREROUTING"
-      parameters = "value"
-    }
-  }
+resource "illumio-core_rule_set" "core_services_dev" {
+  name = "RS-CORE-SERVICES-DEV"
 
   scopes {
     label {
-      href = "/orgs/1/labels/69"
+      href = illumio-core_label.app_core_services.href
     }
-    label_group {
-      href = "/orgs/1/sec_policy/draft/label_groups/65d0ad0f-329a-4ddc-8919-bd0220051fc7"
-    }
-  }
 
-  scopes {
     label {
-      href = "/orgs/1/labels/94"
+      href = illumio-core_label.env_dev.href
     }
   }
+}
+
+data "illumio-core_rule_set" "core_services_dev" {
+  href = illumio-core_rule_set.core_services_dev.href
 }

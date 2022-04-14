@@ -1,58 +1,34 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  # pce_host              = "https://2x2devtest59.ilabs.io:8443"
-  # api_username          = ""
-  # api_secret            = ""
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_service" "example" {
-  href = "/orgs/1/sec_policy/draft/services/3"
-}
-
-resource "illumio-core_service" "example_with_service_ports" {
-  name = "example"
-  service_ports {
-    proto = "-1"
-  }
+resource "illumio-core_service" "rdp" {
+  name        = "S-RDP"
+  description = "TCP and UDP Remote Desktop Protocol ports"
 
   service_ports {
-    proto = "6"
-    port  = "15"
+    # Illumio uses the IANA protocol numbers to identify the service proto
+    proto = "6"  # TCP
+    port  = "3389"
   }
 
   service_ports {
-    proto     = "1"
-    icmp_type = "5"
-    icmp_code = "5"
+    proto = "17"  # UDP
+    port  = "3389"
   }
 }
 
-resource "illumio-core_service" "example_with_windows_services" {
-  name         = "example"
-  process_name = "value"
-  windows_services {
-    proto = "-1"
-  }
-
-  windows_services {
-    proto        = "6"
-    process_name = "example"
-  }
-
-  windows_services {
-    proto     = "1"
-    icmp_type = "5"
-    icmp_code = "5"
-  }
-
+data "illumio-core_service" "rdp" {
+  href = illumio-core_service.rdp.href
 }

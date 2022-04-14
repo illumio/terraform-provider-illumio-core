@@ -1,25 +1,23 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-//  pce_host              = "https://pce.my-company.com:8443"
-//  api_username          = "api_xxxxxx"
-//  api_secret            = "big-secret"
-  request_timeout       = 30
-  org_id                = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_label" "example" {
-  href = "/orgs/1/labels/1"
+resource "illumio-core_label" "role_db" {
+  key   = "role"
+  value = "R-DB"
 }
 
-resource "illumio-core_label" "example" {
-  key     = "role"
-  value   = "example role"
+data "illumio-core_label" "role_db" {
+  href = illumio-core_label.role_db.href
 }

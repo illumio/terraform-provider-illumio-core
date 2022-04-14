@@ -1,38 +1,39 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
-
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-resource "illumio-core_ip_list" "example" {
-  name        = "example name"
-  description = "example desc"
+resource "illumio-core_ip_list" "local" {
+  name        = "IPL-LOCAL"
+  description = "Local addresses"
+
   ip_ranges {
-    from_ip = "1.1.0.0/24"
-    // from_ip can be either CIDR by itself or individual IP together with to_ip
-    // from_ip = "1.1.0.0"
-    // to_ip = "1.1.0.254"
-    description = "example ip_ranges description"
-    exclusion = false
+    # from_ip can be a CIDR range or individual IP
+    from_ip = "192.168.0.0/16"
+    description = "Internal network range"
   }
+
+  ip_ranges {
+    from_ip = "127.0.0.1"
+    description = "Loopback address"
+  }
+
   fqdns {
-    fqdn = "app.example.com"
-    description = "example fqdn description"
+    fqdn = "*.localdomain"
+    description = "Default localdomain VBox hostnames"
   }
 }
 
-data "illumio-core_ip_list" "example" {
-  href = "/orgs/1/sec_policy/draft/ip_lists/1"
+data "illumio-core_ip_list" "local" {
+  href = illumio-core_ip_list.local.href
 }

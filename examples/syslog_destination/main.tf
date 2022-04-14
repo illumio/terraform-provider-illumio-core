@@ -1,28 +1,27 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  # pce_host              = "https://2x2devtest59.ilabs.io:8443"
-  # api_username          = ""
-  # api_secret            = ""
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_syslog_destination" "example" {
-  href = "/orgs/1/settings/syslog/destinations/11a4cfdf-a78e-4144-bbbc-67faec728df1"
+locals {
+  # split on : to strip method and port, then strip the leading //
+  pce_hostname = substr(split(":", var.pce_url)[1], 2, -1)
 }
 
-resource "illumio-core_syslog_destination" "example" {
-  type        = "remote_syslog"
-  pce_scope   = ["crest-mnc.ilabs.io"]
-  description = "test"
+resource "illumio-core_syslog_destination" "local" {
+  type        = "local_syslog"
+  pce_scope   = [local.pce_hostname]
+  description = "Local syslog destination config"
 
   audit_event_logger {
     configuration_event_included = false
@@ -39,12 +38,8 @@ resource "illumio-core_syslog_destination" "example" {
   node_status_logger {
     node_status_included = false
   }
+}
 
-  remote_syslog {
-    protocol        = 6
-    address         = "35.164.106.210"
-    port            = 5141
-    tls_enabled     = false
-    tls_verify_cert = false
-  }
+data "illumio-core_syslog_destination" "local" {
+  href = illumio-core_syslog_destination.local.href
 }

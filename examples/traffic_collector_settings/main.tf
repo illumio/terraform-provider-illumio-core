@@ -1,30 +1,29 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_traffic_collector_settings" "example" {
-  href = "/orgs/draft/settings/traffic_collector/9c186bde-27aa-495b-89ac-8401f62ffbe8"
-}
-
-resource "illumio-core_traffic_collector_settings" "example" {
-  action       = "drop"
+resource "illumio-core_traffic_collector_settings" "drop_local_tcp" {
   transmission = "broadcast"
+  action       = "drop"
+
+  # drop all localhost TCP traffic
   target {
-    dst_ip   = "1.1.1.2"
-    dst_port = -1
-    proto    = 6
+    dst_ip = "127.0.0.1"
+    proto  = "6"
   }
+}
+
+data "illumio-core_traffic_collector_settings" "drop_local_tcp" {
+  href = illumio-core_traffic_collector_settings.drop_local_tcp.href
 }

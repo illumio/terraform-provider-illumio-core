@@ -1,21 +1,38 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
-
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_container_clusters" "example" {
-  max_results = "5"
+resource "illumio-core_container_cluster" "kube_aws" {
+  name        = "CC-KUBE-AWS"
+  description = "Kubernetes Cluster on AWS"
+}
+
+resource "illumio-core_container_cluster" "kube_gcp" {
+  name        = "CC-KUBE-GCP"
+  description = "Kubernetes Cluster on GCP"
+}
+
+data "illumio-core_container_clusters" "kube_clusters" {
+	# lookup all Kube clusters by name with a partial match
+  name = "CC-KUBE-"
+  max_results = 2
+
+  # the implicit dependency on the container cluster resources
+  # needs to be made explicit in order for the data source to
+  # populate correctly
+  depends_on = [
+    illumio-core_container_cluster.kube_aws,
+    illumio-core_container_cluster.kube_gcp,
+  ]
 }

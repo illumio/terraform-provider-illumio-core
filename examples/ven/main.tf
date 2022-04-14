@@ -1,27 +1,22 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
-}
-
-data "illumio-core_ven" "example" {
-  href = "/orgs/1/vens/80ec4e0a-e628-41c2-b79a-866f72a6b070"
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
 resource "illumio-core_ven" "example" {
-  status = "suspended"
-  name = "example name"
-  description = "example description"
-  target_pce_fqdn = "example.fqdn"
+  status = "active"
+}
+
+data "illumio-core_ven" "example" {
+  href = illumio-core_ven.example.href
 }

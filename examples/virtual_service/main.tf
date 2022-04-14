@@ -1,50 +1,75 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-//  pce_host              = "https://pce.my-company.com:8443"
-//  api_username          = "api_xxxxxx"
-//  api_secret            = "big-secret"
-  request_timeout       = 30
-  org_id                = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_virtual_service" "example"{
-  href = "/orgs/1/sec_policy/draft/virtual_services/e2e82190-350c-4034-8096-b67e30123baf"
+resource "illumio-core_label" "role_db" {
+  key   = "role"
+  value = "R-DB"
 }
 
-resource "illumio-core_virtual_service" "example" {
-  name = "example name"
-  description = "example desc"
-  apply_to = "host_only"
+resource "illumio-core_label" "app_crm" {
+  key   = "app"
+  value = "A-CRM"
+}
+
+resource "illumio-core_label" "env_qa" {
+  key   = "env"
+  value = "E-QA"
+}
+
+resource "illumio-core_label" "loc_au" {
+  key   = "loc"
+  value = "L-AU"
+}
+
+resource "illumio-core_service" "mysql" {
+  name        = "S-MYSQL"
+  description = "TCP and UDP Remote Desktop Protocol ports"
+
   service_ports {
-    proto = 6
+    # Illumio uses the IANA protocol numbers to identify the service proto
+    proto = "6"  # TCP
+    port  = "3389"
   }
-  service_ports {
-    proto = 17
-    port = 80
-    to_port = 443
+}
+
+resource "illumio-core_virtual_service" "crm_db" {
+  name        = "VS-CRM-DB"
+  description = "CRM Application database virtual service"
+  apply_to    = "host_only"
+
+  service {
+    href = illumio-core_service.mysql.href
   }
-  service_addresses {
-    fqdn = "*.illumio.com"
-  }
-  service_addresses {
-    ip = "1.1.1.1"
-    port = "80"
-  }
-  service_addresses {
-    ip = "1.1.1.2"
-    network_href = "/orgs/1/networks/b8007bd8-4b16-41b5-b500-5ea236d49d61"
-  }
+
   labels {
-    href = "/orgs/1/labels/1"
+    href = illumio-core_label.role_db.href
   }
-  ip_overrides = [ "1.2.3.4" ]
+
+  labels {
+    href = illumio-core_label.app_crm.href
+  }
+
+  labels {
+    href = illumio-core_label.env_qa.href
+  }
+
+  labels {
+    href = illumio-core_label.loc_au.href
+  }
 }
 
+data "illumio-core_virtual_service" "crm_db" {
+  href = illumio-core_virtual_service.crm_db.href
+}

@@ -1,39 +1,63 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-resource "illumio-core_unmanaged_workload" "example" {
-  name        = "example workload name"
-  description = "example Desc"
-  external_data_set       = "example set"
-  external_data_reference = "example reference"
-  hostname               = "example hostname"
-  service_principal_name = "example spn 99"
-  service_provider = "example service provider"
-  data_center      = "example data center"
-  data_center_zone = "example data center zone"
-  os_detail        = "example os details"
-  os_id            = "example os id"
-  online           = false
-  labels {
-    href = "/orgs/1/labels/1"
-  }
+resource "illumio-core_label" "role_cluster_worker" {
+	key   = "role"
+	value = "R-CLUSTER-WORKER"
+}
+
+resource "illumio-core_label" "app_jenkins" {
+	key   = "app"
+	value = "A-JENKINS"
+}
+
+resource "illumio-core_label" "env_dev" {
+	key   = "env"
+	value = "E-DEV"
+}
+
+resource "illumio-core_label" "loc_eu" {
+	key   = "loc"
+	value = "L-EU"
+}
+
+resource "illumio-core_unmanaged_workload" "jenkins_worker01" {
+  name             = "jenkins_w01"
+  hostname         = "w01.jenkins.lab.illum.io"
+  public_ip        = "172.22.8.211"
+  description      = "Jenkins worker - EU - dev"
   enforcement_mode = "visibility_only"
+  online           = true
+
+  labels {
+    href = illumio-core_label.role_cluster_worker.href
+  }
+
+  labels {
+    href = illumio-core_label.app_jenkins.href
+  }
+
+  labels {
+    href = illumio-core_label.env_dev.href
+  }
+
+  labels {
+    href = illumio-core_label.loc_eu.href
+  }
 }
 
-data "illumio-core_workload" "example" {
-  href = "/orgs/1/workloads/e683b686-8afe-4675-88a1-4463395f0482"
+data "illumio-core_workload" "jenkins_worker01" {
+	href = illumio-core_unmanaged_workload.jenkins_worker01.href
 }

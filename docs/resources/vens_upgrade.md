@@ -11,6 +11,7 @@ description: |-
 
 Manages Illumio VENs Upgrade
 
+!> This resource is deprecated as of v0.2.0 and will be removed in v1.0.0. VENs should be unpaired by deleting the associated `managed_workload` resource
 
 Example Usage
 ------------

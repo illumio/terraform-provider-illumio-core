@@ -19,8 +19,9 @@ func resourceIllumioVENsUpgrade() *schema.Resource {
 		UpdateContext: resourceIllumioVENsUpgradeUpdate,
 		DeleteContext: resourceIllumioVENsUpgradeDelete,
 
-		SchemaVersion: version,
-		Description:   "Manages Illumio VENs Upgrade",
+		SchemaVersion:      version,
+		Description:        "Manages Illumio VENs Upgrade",
+		DeprecationMessage: "DEPRECATED in v0.2.0. Will be removed in v1.0.0. Use resource/unmanaged_workload and resource/managed_workload instead.",
 
 		Schema: map[string]*schema.Schema{
 			"vens": {

@@ -3,160 +3,222 @@ layout: "illumio-core"
 page_title: "Provider: Illumio Core"
 sidebar_current: "docs-illumio-core-index"
 description: |-
-  The Illumio Core provider is used to interact with the resources provided by Illumio Core APIs.
+  The Illumio Core provider is used to interact with and manage resources in the Illumio Policy Compute Engine (PCE).
 ---
 
-
 Overview
---------------------------------------------------
-Terraform provider Illumio Core is a Terraform plugin that can be used to manage the Illumio resources on the Illumio PCE platform by leveraging the advantages of Terraform. 
-Illumio Core Terraform provider lets users represent the infrastructure as a code and provides a way to enforce state on the infrastructure managed by the Terraform provider. 
-Customers can use this provider to integrate the Terraform configuration with the DevOps pipeline to manage the Illumio Resource in a more flexible, consistent, and reliable way.
+------------
+The Illumio Terraform provider can be used to manage resources and policy objects on the Illumio Policy Compute Engine (PCE). Users can represent their infrastructure and policy as code and manage the PCE state using Terraform. The resulting configuration can be leveraged in a broader security automation pipeline to manage network policy in a flexible, consistent, and reliable way.  
 
 Illumio Core Provider
 ------------
-The Illumio Core provider is used to interact with the resources provided by Illumio Core APIs.
-The provider needs to be configured with the PCE host and API key details before it can be used.
+The Illumio Core provider is used to interact with and manage resources in the Illumio PCE. At a minimum, the PCE URL and API key credentials must be provided to connect the provider to the PCE.  
 
-Example Usage
-------------
-
-```hcl
-
-#configure provider with your illumio host and api key details.
-provider "illumio-core" {
-    pce_host              = "https://pce.my-company.com:8443"
-    api_username          = "api_xxxxxx"
-    api_secret            = "big-secret"
-    org_id                = 1
-    request_timeout       = 30
-    backoff_time          = 10
-    max_retries           = 3
-}
-
-resource "illumio-core_label" "env_dev" {
-  key     = "env"
-  value   = "dev"
-}
-
-resource "illumio-core_label_group" "env_lg" {
-  key           = "env"
-  name          = "Dev Group"
-  description   = "Label group for dev environments"
-  labels {
-    href = illumio-core_label.env_dev.href
-  }
-}
-```
+Sample provider configuration:  
 
 ```hcl
 # Configure provider with proxy (authentication)
 provider "illumio-core" {
-    # ... other configuration parameters
-    proxy_url = "http:10.0.1.111:3128"
-    proxy_creds = "username:password"
+    # PCE connection config
+    pce_host     = "https://pce.my-company.com:8443"
+    api_username = "api_xxxxxx"
+    api_secret   = "xxxxxxxxxx"
+    org_id       = 10
+
+    # HTTP request config
+    request_timeout = 60
+    backoff_time    = 5
+    max_retries     = 5
+
+    # TLS config
+    ca_file = "/path/to/devtest-selfsign.pem"
+    insecure = yes
+
+    # Proxy config
+    proxy_url       = "http://10.0.1.111:3128"
+    proxy_creds     = "username:password"
 }
 ```
+
+Some attributes can also be specified using environment variables. Refer to the [schema](#provider-schema) for details.  
+
+Example Usage
+------------
+
+The following HCL (try it out by copying it to a `main.tf` file locally!) sets up an unmanaged workload in the PCE:  
 
 ```hcl
-# Configure provider with disabling server cert verification
+terraform {
+  required_providers {
+    illumio-core = {
+      source  = "illumio/illumio-core"
+    }
+  }
+}
+
+# Configure the PCE connection information as 
+# TF variables and set up the provider
+
+variable "pce_url" {
+  type = string
+  description = "URL of the Illumio Policy Compute Engine to connect to"
+}
+
+variable "pce_org_id" {
+  type = number
+  description = "Illumio PCE Organization ID number"
+  default = 1
+}
+
+variable "pce_api_key" {
+  type = string
+  description = "Illumio PCE API key username"
+}
+
+variable "pce_api_secret" {
+  type = string
+  description = "Illumio PCE API key secret"
+}
+
 provider "illumio-core" {
-    # ... other configuration parameters
-    insecure = true
+    pce_host     = var.pce_url
+    org_id       = var.pce_org_id
+    api_username = var.pce_api_key
+    api_secret   = var.pce_api_secret
+}
+
+# Define labels to be used by the workload
+
+resource "illumio-core_label" "role_load_balancer" {
+  key   = "role"
+  value = "R-LB"
+}
+
+resource "illumio-core_label" "app_core_services" {
+  key   = "app"
+  value = "A-CORE-SERVICES"
+}
+
+resource "illumio-core_label" "env_prod" {
+  key   = "env"
+  value = "E-PROD"
+}
+
+resource "illumio-core_label" "loc_new_york" {
+  key   = "loc"
+  value = "L-NY"
+}
+
+# Define unmanaged workloads to represent application servers
+
+resource "illumio-core_unmanaged_workload" "nginx_lb_ny" {
+  name             = "nginx"
+  hostname         = "ny.lb.illum.io"
+  public_ip        = "10.10.10.1"
+  description      = "NGINX load balancing proxy - NY - Prod"
+  enforcement_mode = "full"
+  online           = true
+
+  labels {
+    href = illumio-core_label.role_load_balancer.href
+  }
+
+  labels {
+    href = illumio-core_label.app_core_services.href
+  }
+
+  labels {
+    href = illumio-core_label.env_prod.href
+  }
+
+  labels {
+    href = illumio-core_label.loc_new_york.href
+  }
 }
 ```
 
-```hcl
-# Configure provider for server with self-signed server certificate
-provider "illumio-core" {
-    # ... other configuration parameters
-    ca_file = "devtest-selfsign.pem"
-}
+After copying the HCL to a local `.tf` file, you can run it with
+
+```sh
+$ terraform plan -out example-plan \
+  -var "pce_url=${ILLUMIO_PCE_HOST}" \
+  -var "pce_org_id=${ILLUMIO_PCE_ORG_ID}" \
+  -var "pce_api_key=${ILLUMIO_API_KEY_USERNAME}" \
+  -var "pce_api_secret=${ILLUMIO_API_KEY_SECRET}"
+$ terraform apply example-plan
 ```
 
-Some of the attributes can be specified via environment variables. Refer to the schema for attributes that can be configured via environment variables.
-
+Want to see more detailed examples? Check out the [GitHub repository](https://github.com/illumio/terraform-provider-illumio-core/tree/main/examples) for usage examples for each resource, as well as more detailed end-to-end policy workflows.  
 
 Provisioning
 ------------
-Currently, terraform does not support the post-processing of resources. To provision changes, provision command can be used.
 
--> Currently, there is a plan to provide provision binary via [release page](https://github.com/illumio/terraform-provider-illumio-core/releases). In case, the plan does not work, one should follow the below steps.
+Currently, terraform does not support post-processing of resources. As such, in order to accommodate the draft versioning of policy objects in the PCE, a separate binary is provided to provision changes made by Terraform actions as a batch.  
 
+-> The provisioning binary is provided with each [release](https://github.com/illumio/terraform-provider-illumio-core/releases). If there are issues with the provisioning binary, file an issue on the [provider GitHub repository](https://github.com/illumio/terraform-provider-illumio-core/issues) or reach out directly to the [Illumio App Integrations team](mailto:app-integrations@illumio.com).  
 
-To run provision, clone the provider repo and follow the commands.
+To build from source, clone the provider repo and build the `provision` binary:  
 
-```bash
-cd cmd/provision
-go build -o provision  # provision.exe for windows
+```sh
+$ git clone https://github.com/illumio/terraform-provider-illumio-core
+$ cd terraform-provider-illumio-core/cmd/provision
+$ go build -o provision  # provision.exe for windows
 ```
 
-Move the provision binary to the root dir of your tf module.
-To use the provision command, The required environment variables must be set  (`ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_PCE_HOST`).
-Note that the same environment variables can be used to configure the provider.
+Move the `provision` binary to a directory in your PATH or your Terraform working directory.  
 
+To use the provision command, the following environment variables must be set: `ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME`, `ILLUMIO_PCE_HOST`, and optionally `ILLUMIO_PCE_ORG_ID` if using an organization other than the default (1).  
 
-Now provision command can be used with terraform apply
+The `provision` command can now be run after a Terraform operation to move created and updated policy objects from `draft` to `active` state:  
 
 ```bash
-terraform apply && provision
+$ terraform apply && provision
 ```
 
-### Managing Versioned and Non-versioned Resources Together
+Managing Object Dependencies
+------------
 
-**Non-Versioned Resource**: Resource which does not require provisioning 
+Many objects in the PCE depend on or are referenced by other objects. These dependencies, coupled with the current approach to provisioning, can lead to situations with hanging objects when running apply or destory operations.    
 
-While managing versioned and non-versioned resources together, if you want to destroy a non-versioned resource that is already linked with the versioned resource then you must unlink/delete the versioned resource and provision it first. You can perform the following steps for the same:
-  -  Unlink the non-versioned resources from versioned resources OR destroy the versioned resources and then provision them using provisioning binary
-  - Perform the deletion of non-versioned resources
+There are two approaches if you want to destroy an object referenced by a versioned resource. You can either unlink or delete the object.  
 
-For example, to delete the label `env_dev` which is referred in `env_lg`
+For example, consider the following HCL defining a Label `env_dev` referenced by a Label Group `env_preprod`:  
 
 ```hcl
-# label is non-versioned resource
 resource "illumio-core_label" "env_dev" {
   key     = "env"
-  value   = "dev"
+  value   = "E-DEV"
 }
 
-# label_group is versioned resource
-resource "illumio-core_label_group" "env_lg" {
+resource "illumio-core_label_group" "env_preprod" {
   key           = "env"
-  name          = "Dev Group"
-  description   = "Label group for dev environments"
+  name          = "E-LG-PREPROD"
+  description   = "Label group for pre-production environments"
+
   labels {
     href = illumio-core_label.env_dev.href
   }
 }
 ```
 
-1. To delete the label `env_dev`, we first need to either delete `env_lg` OR unlink `env_dev` from `env_lg`. We chose to unlink here. But we can not delete `env_dev` until we provision `env_lg`.
+The dependency here is explicitly defined; the `env_preprod` Label Group must be removed in order to remove the `env_dev` Label. Let's look at unlinking the object first:  
 
 ```hcl
-# label is non-versioned resource
 resource "illumio-core_label" "env_dev" {
   key     = "env"
-  value   = "dev"
+  value   = "E-DEV"
 }
 
-# label_group is versioned resource
-resource "illumio-core_label_group" "env_lg" {
+resource "illumio-core_label_group" "env_preprod" {
   key           = "env"
-  name          = "Dev Group"
-  description   = "Label group for dev environments"
-  # labels {
-  #   href = illumio-core_label.env_dev.href
-  # }
+  name          = "E-LG-PREPROD"
+  description   = "Label group for pre-production environments"
 }
 ```
 
-2. Run `terraform apply && provision` on the above configuration.
+Updating the Label Group will now remove the link between the two objects. Once we run `terraform apply` and provision this change, the dependency no longer exists and the `env_dev` label can be removed as normal.  
 
 ```hcl
-
-# Removed `env_dev`
-
-# label_group is versioned resource
 resource "illumio-core_label_group" "env_lg" {
   key           = "env"
   name          = "Dev Group"
@@ -164,31 +226,43 @@ resource "illumio-core_label_group" "env_lg" {
 }
 ```
 
-3. Remove `env_dev` and run `terraform apply`. 
+Now we can run `terraform apply` again to remove the `env_dev` Label object.  
 
- **To identify such dependency, refer to the below list of versioned resources which can have reference to non-versioned resources.**
+If we want to delete both objects, the same example can be removed with two calls to `terraform destroy`:
 
-- label_group: label
-- rule_set: label, workload
-- virtual_service: label
-- firewall_settings: label
-- enforcement_boundary: label
+```sh
+$ terraform destroy
+# The first call to destroy will stage the deletion of
+# the Label Group in draft mode. The change must then 
+# be provisioned to remove it completely.
+$ provision
+# Now, another call to `terraform destroy` will remove the
+# Label object as well.
+$ terraform destroy
+```
 
+Some examples of objects with dependent relationships include, but are not limited to
 
-## Schema
+- Labels within Label Groups
+- Labels and Label Groups defined in a Rule Set scope
+- Services referenced by a Virtual Service, Rule, or Enforcement Boundary
+- etc.
+
+Provider Schema
+------------
 
 ### Required
 
+- **pce_host** (String) Host URL of Illumio PCE. This can also be set by environment variable `ILLUMIO_PCE_HOST`
 - **api_secret** (String, Sensitive) Secret of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_SECRET`
 - **api_username** (String) Username of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_USERNAME`
-- **pce_host** (String) Host URL of Illumio PCE. This can also be set by environment variable `ILLUMIO_PCE_HOST`
 
 ### Optional
 
+- **org_id** (Number) ID of the Organization. This can also be set by environment variable `ILLUMIO_PCE_ORG_ID`. Default value: 1
+- **request_timeout** (Number) Timeout for HTTP requests. Default value: 30
 - **backoff_time** (Number) Backoff Time (in seconds) on getting 429 (Too Many Requests). Default value: 10. Note: A default rate limit of 125 requests/min is already in place. A jitter of 1-5 seconds will be added to backoff time to randomize backoff.
 - **max_retries** (Number) Maximum retries for an API request. Default value: 3
-- **org_id** (Number) ID of the Organization. Default value: 1
-- **request_timeout** (Number) Timeout for HTTP requests. Default value: 30
 - **proxy_url** (String) Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`
 - **proxy_creds** (String) Proxy credential in format `username:password`. This can also be set by environment variable `ILLUMIO_PROXY_CREDENTIALS`
 - **ca_file** (String) The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`

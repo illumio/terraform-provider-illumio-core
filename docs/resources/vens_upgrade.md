@@ -18,15 +18,14 @@ Example Usage
 ```hcl
 resource "illumio-core_vens_upgrade" "example" {
   release = "21.2.0-7828"
+
   vens {
-    href = "/orgs/1/vens/e6eaccb3-39b0-44db-907d-d61c6ff1f8f6"
+    href = illumio-core_ven.example.href
   }
-  vens {
-    href = "/orgs/1/vens/8754058f-819f-4c50-91f1-da6e9af28918"
-  }
-  vens {
-    href = "/orgs/1/vens/11635f19-625f-436c-a299-43d1883145d5"
-  }
+}
+
+resource "illumio-core_ven" "example" {
+  ...
 }
 ```
 
@@ -34,14 +33,12 @@ resource "illumio-core_vens_upgrade" "example" {
 
 ### Required
 
-- **release** (String) The software release to upgrade to
-- **vens** (Block Set, Min: 1) List of VENs to unpair. Max Items allowed: 25000 (see [below for nested schema](#nestedblock--vens))
+- `release` (String) The software release to upgrade to
+- `vens` (Block Set, Min: 1) List of VENs to unpair. Max Items allowed: 25000 (see [below for nested schema](#nestedblock--vens))
 
 <a id="nestedblock--vens"></a>
 ### Nested Schema for `vens`
 
 Required:
 
-- **href** (String) URI of VEN
-
-
+- `href` (String) URI of VEN

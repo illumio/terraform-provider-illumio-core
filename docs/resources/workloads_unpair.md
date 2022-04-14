@@ -11,7 +11,7 @@ description: |-
 
 Manages Illumio Workloads Unpair
 
-!> **WARNING:** This resource is deprecated as of v0.2.0 and will be removed in v1.0.0
+!> This resource is deprecated as of v0.2.0 and will be removed in v1.0.0. VENs should be unpaired by deleting the associated `managed_workload` resource
 
 Example Usage
 ------------
@@ -19,33 +19,28 @@ Example Usage
 ```hcl
 resource "illumio-core_workloads_unpair" "example" {
   workloads {
-    href = "/orgs/1/workloads/7c3789ea-661b-49c3-b3ba-8eb180f5f3d2"
-  }
-  workloads {
-    href = "/orgs/1/workloads/1d230cf4-6718-44b8-8ffa-64383a4dbee1"
-  }
-  workloads {
-    href = "/orgs/1/workloads/11635f19-625f-436c-a299-43d1883145d5"
+    href = illumio-core_managed_workload.example.href
   }
 }
 
+resource "illumio-core_managed_workload" "example" {
+  ...
+}
 ```
 
 ## Schema
 
 ### Required
 
-- **workloads** (Block Set, Min: 1) List of Workloads to unpair. Max Items allowed: 1000 (see [below for nested schema](#nestedblock--workloads))
+- `workloads` (Block Set, Min: 1) List of Workloads to unpair. Max Items allowed: 1000 (see [below for nested schema](#nestedblock--workloads))
 
 ### Optional
 
-- **ip_table_restore** (String) The desired state of IP tables after the agent is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"
+- `ip_table_restore` (String) The desired state of IP tables after the agent is uninstalled. Allowed values are "saved", "default" and "disable". Default value: "default"
 
 <a id="nestedblock--workloads"></a>
 ### Nested Schema for `workloads`
 
 Required:
 
-- **href** (String) URI of Workload
-
-
+- `href` (String) URI of Workload

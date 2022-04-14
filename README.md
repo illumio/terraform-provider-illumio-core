@@ -1,5 +1,5 @@
 <a href="https://terraform.io">
-    <img src="https://raw.githubusercontent.com/hashicorp/terraform-website/master/public/img/logo-hashicorp.svg" alt="Terraform logo" title="Terraform" align="right" height="35" />
+    <img src="https://raw.githubusercontent.com/hashicorp/terraform-website/master/public/img/logo-hashicorp.svg" alt="Terraform logo" title="Terraform" align="right" valign="center" height="75px" />
 </a>
 
 # Terraform Provider for Illumio Core  

@@ -17,7 +17,6 @@ The Illumio Core provider is used to interact with and manage resources in the I
 Sample provider configuration:  
 
 ```hcl
-# Configure provider with proxy (authentication)
 provider "illumio-core" {
     # PCE connection config
     pce_host        = "https://pce.my-company.com:8443"
@@ -258,17 +257,17 @@ Provider Schema
 
 ### Required
 
-- **pce_host** (String) Host URL of Illumio PCE. This can also be set by environment variable `ILLUMIO_PCE_HOST`
-- **api_secret** (String, Sensitive) Secret of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_SECRET`
-- **api_username** (String) Username of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_USERNAME`
+- `pce_host` (String) Host URL of Illumio PCE. This can also be set by environment variable `ILLUMIO_PCE_HOST`
+- `api_secret` (String, Sensitive) Secret of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_SECRET`
+- `api_username` (String) Username of API Key. This can also be set by environment variable `ILLUMIO_API_KEY_USERNAME`
 
 ### Optional
 
-- **org_id** (Number) ID of the Organization. This can also be set by environment variable `ILLUMIO_PCE_ORG_ID`. Default value: 1
-- **request_timeout** (Number) Timeout for HTTP requests. Default value: 30
-- **backoff_time** (Number) Backoff Time (in seconds) on getting 429 (Too Many Requests). Default value: 10. Note: A default rate limit of 125 requests/min is already in place. A jitter of 1-5 seconds will be added to backoff time to randomize backoff.
-- **max_retries** (Number) Maximum retries for an API request. Default value: 3
-- **proxy_url** (String) Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`
-- **proxy_creds** (String) Proxy credential in format `username:password`. This can also be set by environment variable `ILLUMIO_PROXY_CREDENTIALS`
-- **ca_file** (String) The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`
-- **insecure** (String) Allow insecure TLS. Only `yes` will mark it insecure. This can also be set by environment variable `ILLUMIO_ALLOW_INSECURE_TLS`
+- `org_id` (Number) ID of the Organization. This can also be set by environment variable `ILLUMIO_PCE_ORG_ID`. Default value: 1
+- `request_timeout` (Number) Timeout for HTTP requests. Default value: 30
+- `backoff_time` (Number) Backoff Time (in seconds) on getting 429 (Too Many Requests). Default value: 10. Note: A default rate limit of 125 requests/min is already in place. A jitter of 1-5 seconds will be added to backoff time to randomize backoff.
+- `max_retries` (Number) Maximum retries for an API request. Default value: 3
+- `proxy_url` (String) Proxy Server URL with port number. This can also be set by environment variable `ILLUMIO_PROXY_URL`
+- `proxy_creds` (String) Proxy credential in format `username:password`. This can also be set by environment variable `ILLUMIO_PROXY_CREDENTIALS`
+- `ca_file` (String) The path to CA certificate file (PEM). In case, certificate is based on legacy CN instead of ASN, set env. variable `GODEBUG=x509ignoreCN=0`. This can also be set by environment variable `ILLUMIO_CA_FILE`
+- `insecure` (String) Allow insecure TLS. Only `yes` will mark it insecure. This can also be set by environment variable `ILLUMIO_ALLOW_INSECURE_TLS`

@@ -69,19 +69,21 @@ func resourceIllumioVulnerabilities() *schema.Resource {
 
 func resourceIllumioVulnerabilitiesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
+	illumioClient := pConfig.IllumioClient
 
 	err := makeBatchedClientCalls(d, pConfig)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(fmt.Sprintf("/orgs/%v/vulnerabilities", pConfig.OrgID))
+	d.SetId(fmt.Sprintf("/orgs/%v/vulnerabilities", illumioClient.OrgID))
 
 	return resourceIllumioVulnerabilitiesRead(ctx, d, m)
 }
 
 func makeBatchedClientCalls(d *schema.ResourceData, pConfig Config) error {
-	href := fmt.Sprintf("/orgs/%v/vulnerabilities", pConfig.OrgID)
+	illumioClient := pConfig.IllumioClient
+	href := fmt.Sprintf("/orgs/%v/vulnerabilities", illumioClient.OrgID)
 
 	if v, ok := d.GetOk("vulnerability"); ok {
 		batch := batchifyVulnerabilityList(v.([]interface{}))
@@ -97,10 +99,10 @@ func makeBatchedClientCalls(d *schema.ResourceData, pConfig Config) error {
 	return nil
 }
 
-func batchifyVulnerabilityList(vulnerabilities []interface{}) []*models.VulnerailityList {
+func batchifyVulnerabilityList(vulnerabilities []interface{}) []*models.VulnerabilityList {
 	listSize := len(vulnerabilities)
 
-	result := []*models.VulnerailityList{}
+	result := []*models.VulnerabilityList{}
 
 	for i := 0; i < listSize; i = i + 1000 {
 		ub := i
@@ -116,7 +118,7 @@ func batchifyVulnerabilityList(vulnerabilities []interface{}) []*models.Vulnerai
 	return result
 }
 
-func expandIllumioVulnerabilityList(vulnerabilitylist []interface{}) *models.VulnerailityList {
+func expandIllumioVulnerabilityList(vulnerabilitylist []interface{}) *models.VulnerabilityList {
 	list := []models.Vulnerability{}
 	for _, vulnerability := range vulnerabilitylist {
 		v := vulnerability.(map[string]interface{})
@@ -129,7 +131,7 @@ func expandIllumioVulnerabilityList(vulnerabilitylist []interface{}) *models.Vul
 		})
 	}
 
-	return &models.VulnerailityList{
+	return &models.VulnerabilityList{
 		Values: list,
 	}
 }

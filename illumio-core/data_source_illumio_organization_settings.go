@@ -49,7 +49,7 @@ func datasourceIllumioOrganizationSettingsRead(ctx context.Context, d *schema.Re
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/events", orgID), nil)
 	if err != nil {

@@ -9,7 +9,7 @@ type Href struct {
 
 // GetHrefs - Returns objects of Href from [{"href": "..."}, ...]
 func GetHrefs(arr []interface{}) []Href {
-	var hrefs []Href
+	hrefs := make([]Href, 0)
 	for _, elem := range arr {
 		hrefs = append(hrefs, Href{
 			Href: elem.(map[string]interface{})["href"].(string),

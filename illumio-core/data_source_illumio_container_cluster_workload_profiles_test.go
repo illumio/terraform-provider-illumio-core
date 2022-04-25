@@ -6,53 +6,81 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSCCWPL *schema.Provider
+var prefixCCWPL string = "TF-ACC-CCWPL"
 
 func TestAccIllumioCCWPL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_container_cluster_workload_profiles.ccwpl_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSCCWPL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioCCWPLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioCCWPLConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceCCWPLExists("data.illumio-core_container_cluster_workload_profiles.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					// Container clusters have a Default Workload Profile, included
+					// with the two created below there should be 3 total
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "3"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioCCWPLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_container_cluster_workload_profiles" "test" {
-		max_results = "5"
-  		container_cluster_href = "/orgs/1/container_clusters/f959d2d0-fe56-4bd9-8132-b7a31d1cbdde"
-	}
-	`
+func testAccCheckIllumioCCWPLConfig_basic() string {
+	rName1 := acctest.RandomWithPrefix(prefixCCWPL)
+	rName2 := acctest.RandomWithPrefix(prefixCCWPL)
+	rName3 := acctest.RandomWithPrefix(prefixCCWPL)
+	rName4 := acctest.RandomWithPrefix(prefixCCWPL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "ccwpl_test" {
+	key   = "app"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceCCWPLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_container_cluster" "ccwpl_test" {
+	name = %[2]q
+	description = "Terraform Container Cluster Workload Profile test"
+}
 
-		if !ok {
-			return fmt.Errorf("List of Container Clusters Workload Profiles %s not found", name)
-		}
+resource "illumio-core_container_cluster_workload_profile" "ccwpl_test1" {
+	container_cluster_href = illumio-core_container_cluster.ccwpl_test.href
+	name = %[3]q
+	description = "Terraform Container Cluster Workload Profile test"
+	managed = true
+	enforcement_mode = "visibility_only"
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
+	assign_labels {
+		href = illumio-core_label.ccwpl_test.href
 	}
+}
+
+resource "illumio-core_container_cluster_workload_profile" "ccwpl_test2" {
+	container_cluster_href = illumio-core_container_cluster.ccwpl_test.href
+	name = %[4]q
+	description = "Terraform Container Cluster Workload Profile test"
+	managed = true
+	enforcement_mode = "visibility_only"
+
+	assign_labels {
+		href = illumio-core_label.ccwpl_test.href
+	}
+}
+
+data "illumio-core_container_cluster_workload_profiles" "ccwpl_test" {
+	# lookup based on partial match
+	container_cluster_href = illumio-core_container_cluster.ccwpl_test.href
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_container_cluster_workload_profile.ccwpl_test1,
+		illumio-core_container_cluster_workload_profile.ccwpl_test2,
+	]
+}
+`, rName1, rName2, rName3, rName4)
 }

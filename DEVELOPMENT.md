@@ -2,37 +2,24 @@
 
 ## Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) (0.13, 0.14) (to run acceptance tests)
-- [Go](https://golang.org/doc/install) 1.16 (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) (0.13+) (to run acceptance tests)
+- [Go](https://golang.org/doc/install) 1.16+ (to build the provider plugin)
 
 ## Quick Start
 
 If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (please check the [requirements](#requirements) before proceeding).
 
-*Note:* This project uses [Go Modules](https://blog.golang.org/using-go-modules) making it safe to work with it outside of your existing [GOPATH](http://golang.org/doc/code.html#GOPATH). The instructions that follow assume a directory in your home directory outside of the standard GOPATH (i.e `$HOME/development/terraform-providers/`).
+> This project uses [Go Modules](https://blog.golang.org/using-go-modules) making it safe to work with it outside of your existing [GOPATH](http://golang.org/doc/code.html#GOPATH). The instructions that follow assume you're using a directory in your home directory outside of the standard GOPATH  
 
-Clone repository to: `$HOME/development/terraform-providers/`
+Clone the repository, then run the following `make` commands to install the necessary tools and build a local version of the provider:  
 
 ```sh
-$ mkdir -p $HOME/development/terraform-providers/; cd $HOME/development/terraform-providers/
 $ git clone git@github.com:terraform-providers/terraform-provider-illumio-core
-...
-```
-
-Enter the provider directory and run `make tools`. This will install the needed tools for the provider.
-
-```sh
 $ make tools
-```
-
-To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
-
-```sh
 $ make build
-...
-$ $GOPATH/bin/terraform-provider-illumio-core
-...
 ```
+
+`make build` compile the provider and put the binary under `$GOPATH/bin/terraform-provider-illumio-core`.
 
 ### Build binaries for multiple platform
 
@@ -43,45 +30,59 @@ $ $GOPATH/bin/terraform-provider-illumio-core
 
 ## Using the Provider
 
-Move the generated binary from the build step to the [plugin directory](https://www.terraform.io/docs/cli/config/config-file.html#implied-local-mirror-directories)/illumio.com/labs/illumio-core/`<version>`/`<os>_<arch>`. Examples for `<os>_<arch>` are `windows_amd64`, `linux_arm`, `darwin_amd64`, etc. After placing it into your plugins directory, run `terraform init` to initialize it.
+It's recommended to use local [Developer Overrides](https://www.terraform.io/cli/config/config-file#development-overrides-for-provider-developers) while working on the provider. If using the build steps above, the following `.terraformrc` or `terraform.rc` configuration will set up overrides for the Illumio provider:  
 
-*Note:* Make sure `ILLUMIO_PCE_HOST`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_API_KEY_SECRET` variables are set.
+```hcl
+provider_installation {
+  dev_overrides {
+    "illumio/illumio-core" = "/path/to/GOPATH/bin"
+  }
 
-Example
+  direct {}
+}
+```
+
+Move the generated binary from the build step to the [plugin directory](https://www.terraform.io/docs/cli/config/config-file.html#implied-local-mirror-directories)/illumio/illumio-core/`<version>`/`<os>_<arch>`. Examples for `<os>_<arch>` are `windows_amd64`, `linux_arm`, `darwin_amd64`, etc. After placing it into your plugins directory, run `terraform init` to initialize it.  
+
+> **Note:** PCE connection parameters for the provider can also be set with the `ILLUMIO_PCE_HOST`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_API_KEY_SECRET` environment variables. Optionally, the `ILLUMIO_PCE_ORG_ID` variable can be set to specify a non-default Organization ID. See the [Provider documentation](https://registry.terraform.io/providers/illumio/illumio-core/latest/docs) for details.  
+
+Example:
+
 ```hcl
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1"
-      source  = "illumio.com/labs/illumio-core"
+      source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  request_timeout = 30
-  org_id          = 1
+  pce_host      = "https://pce.my-company.com:8443"
+  api_username  = "api_xxxxxx"
+  api_secret    = "xxxxxxxxxx"
+  org_id        = 10
 }
 
 resource "illumio-core_container_cluster" "example" {
-    name = "contianer cluster name"
-    description = "contianer cluster desc"
+    name        = "Container cluster name"
+    description = "Container cluster desc"
 }
 ```
 
 ## Testing the Provider
 
-In order to test the provider, you can run `make test`.
+Unit tests can be run for the provider with `make test`.  
 
-*Note:* Make sure `ILLUMIO_PCE_HOST`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_API_KEY_SECRET` variables are set. For windows, copy env.example.bat to env.bat and replace dummy values with credentials and then execute the bat file with command promt.
+> **Note:** the `ILLUMIO_PCE_HOST`, `ILLUMIO_API_KEY_USERNAME` and `ILLUMIO_API_KEY_SECRET` variables must be set for tests to run. Organization IDs other than the default (1) can be set with `ILLUMIO_PCE_ORG_ID`.  
 
 ```sh
 $ make test
 ```
 
-In order to run the full suite of Acceptance tests, run `make testacc`.
+In order to run the full suite of acceptance tests, run `make testacc`.  
 
-*Note:* Acceptance tests create real resources, and often cost money to run. Please read [Running and Writing Acceptance Tests](contributing/running-and-writing-acceptance-tests.md) in the contribution guidelines for more information on usage.
+> **Note:** Acceptance tests create real resources in the PCE, and may cost money to run.  
 
 ```sh
 $ make testacc
@@ -95,109 +96,18 @@ To check code lines covered - `go tool cover -html=cover.out`
 
 *Note: Current code coverage artifacts available at [here](.code-coverage/)*
 
-## Debugging and Troubleshooting
+## Debugging and Troubleshooting  
 
 - Set environment variable `TF_LOG` to one of the log levels `TRACE`, `DEBUG`, `INFO`, `WARN` or `ERROR`
 - Set environment variable `TF_LOG_PATH` to write logs in a file. e.g. `TF_LOG_PATH=tf.log`
 
-For more details visit - [Terraform Debugging](https://www.terraform.io/docs/internals/debugging.html)
+For more details, see the [Terraform Debugging](https://www.terraform.io/docs/internals/debugging.html) documentation.  
 
-## Documentation
+## Documentation  
 
-Once done with changes/development of any resource/datasource, document the changes.
+Once done with changes/development of any resource/datasource, document the changes.  
 
 - Update parameter/description as per the resource changes.
 - If a resource is designed to behave in a specific way that might be strange to the end-user, that should be documented.
 - Add an example usage section and add different examples about how to use it.
 - Document any environment variable on which resource/datasource is dependent in the example usage section or in the argument description itself.
-
-## JSON Format TF Configuration Files
-- The user can also use the JSON format TF configuration files similar to HCL configuration files. 
-- Please refer to the github link for conversion of HCL to JSON format TF configuration files and vice versa. Note - In the output JSON file generated after conversion of the corresponding HCL file using the above tool, please convert the  terraform.required_providers[0].illumio-core (highlighted in bold in the below JSON example) from List to Map.
-- Below is an example of the HCL and the corresponding JSON file.
-
-### HCL (.tf file)
-
-```hcl
-terraform {
-  required_providers {
-    illumio-core = {
-      version = "0.1"
-      source  = "illumio.com/labs/illumio-core"
-    }
-  }
-}
-
-provider "illumio-core" {
-  request_timeout = 30
-  org_id          = 1
-}
-
-resource "illumio-core_rule_set" "name" {
-  name = "example-json-hcl"
-  scopes {
-    label {
-      href = "/orgs/1/labels/69"
-    }
-    label {
-      href = "/orgs/1/labels/1"
-    }
-    label_group {
-      href = "/orgs/1/sec_policy/draft/label_groups/64126bda-0f9d-47fc-846b-0f9adbe290d6"
-    }
-  }
-}
-```
-
-### JSON (.tf.json file)
-
-```JSON
-{
-    "resource": {
-        "illumio-core_rule_set": {
-            "name-json": {
-                "name": "example-hcl-json",
-                "scopes": [
-                    {
-                        "label": [
-                            {
-                                "href": "/orgs/1/labels/69"
-                            },
-                            {
-                                "href": "/orgs/1/labels/1"
-                            }
-                        ],
-                        "label_group": [
-                            {
-                                "href": "/orgs/1/sec_policy/draft/label_groups/64126bda-0f9d-47fc-846b-0f9adbe290d6"
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
-    },
-    "provider": [
-        {
-            "illumio-core": [
-                {
-                    "org_id": 1,
-                    "request_timeout": 30
-                }
-            ]
-        }
-    ],
-    "terraform": [
-        {
-            "required_providers": [
-                {
-                    "illumio-core": {
-                        "source": "illumio.com/labs/illumio-core",
-                        "version": "0.1"
-                    }
-                }
-            ]
-        }
-    ]
-}
-```

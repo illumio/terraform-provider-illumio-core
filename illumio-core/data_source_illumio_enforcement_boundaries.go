@@ -242,7 +242,7 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 		params["service_address.proto"] = value.(string)
 	}
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/enforcement_boundaries", pConfig.OrgID, pversion), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/sec_policy/%v/enforcement_boundaries", illumioClient.OrgID, pversion), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

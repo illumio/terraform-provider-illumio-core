@@ -4,27 +4,36 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSSR *schema.Provider
+var prefixSR string = "TF-ACC-SR"
 
 func TestAccIllumioSR_Read(t *testing.T) {
-	ppAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_security_rule.sr_test"
+	resourceName := "illumio-core_security_rule.sr_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSSR),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioSRDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceSRExists("data.illumio-core_security_rule.test", ppAttr),
-					testAccCheckIllumioSRDataSourceAttributes(ppAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "enabled", resourceName, "enabled"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "resolve_labels_as", resourceName, "resolve_labels_as"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "ingress_services", resourceName, "ingress_services"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "consumers", resourceName, "consumers"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "providers", resourceName, "providers"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "sec_connect", resourceName, "sec_connect"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "stateless", resourceName, "stateless"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "machine_auth", resourceName, "machine_auth"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "unscoped_consumers", resourceName, "unscoped_consumers"),
 				),
 			},
 		},
@@ -32,62 +41,75 @@ func TestAccIllumioSR_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioSRDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_security_rule" "test" {
-		href = "/orgs/1/sec_policy/draft/rule_sets/54/sec_rules/56"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixSR)
+	rName2 := acctest.RandomWithPrefix(prefixSR)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "sr_test" {
+	key   = "loc"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceSRExists(name string, ppAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_rule_set" "sr_test" {
+	name = %[2]q
+	description = "Terraform Security Rule test"
 
-		if !ok {
-			return fmt.Errorf("Security Rule %s not found", name)
+	ip_tables_rules {
+		actors {
+			actors = "ams"
 		}
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSSR).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"description",
-			"enabled",
-			"providers.0.label.href",
-			"consumers.0.actors",
-			"network_type",
-		} {
-			ppAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckIllumioSRDataSourceAttributes(ppAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"description":            "Acc. test description",
-			"enabled":                true,
-			"providers.0.label.href": "/orgs/1/labels/715",
-			"consumers.0.actors":     "ams",
-			"network_type":           "brn",
-		}
-		for k, v := range expectation {
-			if ppAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ppAttr[k], v)
+		actors {
+			label {
+				href = illumio-core_label.sr_test.href
 			}
 		}
 
-		return nil
+		enabled = false
+
+		ip_version = 6
+		statements {
+			table_name = "nat"
+			chain_name = "PREROUTING"
+			parameters = "value"
+		}
 	}
+
+	scopes {
+		label {
+			href = illumio-core_label.sr_test.href
+		}
+	}
+}
+
+resource "illumio-core_security_rule" "sr_test" {
+	rule_set_href = illumio-core_rule_set.sr_test.href
+	enabled = true
+	description = "Terraform Security Rule test"
+
+	resolve_labels_as {
+		consumers = ["workloads"]
+		providers = ["workloads"]
+	}
+
+	consumers {
+		actors = "ams"
+	}
+
+	providers {
+		label {
+			href = illumio-core_label.sr_test.href
+		}
+	}
+
+	ingress_services {
+		proto = 6
+		port  = 1234
+	}
+}
+
+data "illumio-core_security_rule" "sr_test" {
+	href = illumio-core_security_rule.sr_test.href
+}
+`, rName1, rName2)
 }

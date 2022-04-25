@@ -1,32 +1,49 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
-
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
+resource "illumio-core_container_cluster" "kube" {
+  name        = "CC-KUBE"
+  description = "Kubernetes Container Cluster"
+}
 
-resource "illumio-core_container_cluster_workload_profile" "example" {
-  container_cluster_href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43"
-  name                   = "example name"
+resource "illumio-core_label" "location_kubernetes" {
+  key   = "loc"
+  value = "L-KUBE"
+}
+
+resource "illumio-core_label" "app_core_services" {
+  key   = "app"
+  value = "A-CORE-SERVICES"
+}
+
+resource "illumio-core_container_cluster_workload_profile" "kube_core_services" {
+  container_cluster_href = illumio-core_container_cluster.kube.href
+  name                   = "CCWP-KUBE-CORE-SERVICES"
+  description            = "Workload profile for core-services pods"
   managed                = true
+  enforcement_mode       = "visibility_only"
+
   assign_labels {
-    href = "/orgs/1/labels/1"
+    href = illumio-core_label.location_kubernetes.href
+  }
+
+  assign_labels {
+    href = illumio-core_label.app_core_services.href
   }
 }
 
-
-data "illumio-core_container_cluster_workload_profile" "example" {
-  href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43/container_workload_profiles/598888c7-a625-4507-a5c8-14f4a3c4c1d6"
+data "illumio-core_container_cluster_workload_profile" "kube_core_services" {
+  href = illumio-core_container_cluster_workload_profile.kube_core_services.href
 }

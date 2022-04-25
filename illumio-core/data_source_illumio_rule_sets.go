@@ -457,7 +457,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 
 	pversion := d.Get("pversion").(string)
 
-	href := fmt.Sprintf("/orgs/%v/sec_policy/%v/rule_sets", pConfig.OrgID, pversion)
+	href := fmt.Sprintf("/orgs/%v/sec_policy/%v/rule_sets", illumioClient.OrgID, pversion)
 
 	paramKeys := []string{
 		"description",

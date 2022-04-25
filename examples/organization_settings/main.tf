@@ -1,27 +1,26 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-resource "illumio-core_organization_settings" "example" {
-  audit_event_retention_seconds = 7776000
-  format = "JSON"
+# NOTE: the `illumio-core_organization_settings` resource cannot be created.
+# For this example to work, the PCE organization settings must be imported into terraform with
+#
+# terraform import illumio-core_organization_settings.current "/orgs/$ILLUMIO_PCE_ORG_ID/settings/events"
+resource "illumio-core_organization_settings" "current" {
+  audit_event_retention_seconds = 2592000
   audit_event_min_severity = "informational"
+  format = "JSON"
 }
 
-data "illumio-core_organization_settings" "example" {
-  
-}
-
+data "illumio-core_organization_settings" "current" {}

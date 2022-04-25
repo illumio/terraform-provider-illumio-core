@@ -12,18 +12,14 @@ import (
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
-var (
-	ValidWorkloadInterfaceLinkStateValues = []string{"up", "down", "unknown"}
-	ValidWorkloadEnforcementModeValues    = []string{"idle", "visibility_only", "full", "selective"}
-)
-
 func resourceIllumioWorkload() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceIllumioWorkloadCreate,
-		ReadContext:   resourceIllumioWorkloadRead,
-		UpdateContext: resourceIllumioWorkloadUpdate,
-		DeleteContext: resourceIllumioWorkloadDelete,
-		Description:   "Manages Illumio Workload",
+		CreateContext:      resourceIllumioWorkloadCreate,
+		ReadContext:        resourceIllumioWorkloadRead,
+		UpdateContext:      resourceIllumioWorkloadUpdate,
+		DeleteContext:      resourceIllumioWorkloadDelete,
+		Description:        "Manages Illumio Workload",
+		DeprecationMessage: "DEPRECATED in v0.2.0. Will be removed in v1.0.0. Use resource/unmanaged_workload and resource/managed_workload instead.",
 
 		SchemaVersion: version,
 
@@ -66,78 +62,6 @@ func resourceIllumioWorkload() *schema.Resource {
 					validation.IsIPAddress,
 				),
 			},
-			/* Following code is commented to prevent the race condition
-			 * between Workload and Workload Interface Resources. Preserved for future use.
-			 * Bug#15
-			 */
-			// "interfaces": {
-			// 	Type:        schema.TypeSet,
-			// 	Computed:    true,
-			// 	Description: "Workload network interfaces",
-			// 	Elem: &schema.Resource{
-			// 		Schema: map[string]*schema.Schema{
-			// 			"name": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Name of Interface. The name should be up to 255 characters",
-			// 				// ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
-			// 			},
-			// 			"link_state": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Link State for the workload Interface. Allowed values are \"up\", \"down\", and \"unknown\" ",
-			// 				// ValidateDiagFunc: validation.ToDiagFunc(
-			// 				// 	validation.StringInSlice(ValidWorkloadInterfaceLinkStateValues, false),
-			// 				// ),
-			// 			},
-			// 			"address": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "The Address to assign to this interface. The address should in the IPv4 or IPv6 format",
-			// 				// ValidateDiagFunc: validation.ToDiagFunc(
-			// 				// 	validation.IsIPAddress,
-			// 				// ),
-			// 			},
-			// 			"cidr_block": {
-			// 				Type:        schema.TypeInt,
-			// 				Computed:    true,
-			// 				Description: "CIDR BLOCK of the Interface",
-			// 			},
-			// 			"default_gateway_address": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Default Gateway Address of the Interface. The Default Gateway Address should in the IPv4 or IPv6 format",
-			// 				// ValidateDiagFunc: validation.ToDiagFunc(
-			// 				// 	validation.IsIPAddress,
-			// 				// ),
-			// 			},
-			// 			"network": {
-			// 				Type:        schema.TypeMap,
-			// 				Computed:    true,
-			// 				Description: "Href of Network of the Interface",
-			// 				Elem: &schema.Schema{
-			// 					Type: schema.TypeString,
-			// 				},
-			// 			},
-			// 			"network_detection_mode": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "Network Detection Mode of the Interface",
-			// 			},
-			// 			"friendly_name": {
-			// 				Type:        schema.TypeString,
-			// 				Computed:    true,
-			// 				Description: "User-friendly name for interface. The name should be up to 255 characters",
-			// 				// ValidateDiagFunc: checkStringZerotoTwoHundredAndFiftyFive,
-			// 			},
-			// 			"loopback": {
-			// 				Type:        schema.TypeBool,
-			// 				Computed:    true,
-			// 				Description: "Loopback for Workload Interface",
-			// 			},
-			// 		},
-			// 	},
-			// },
 			"service_provider": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -171,8 +95,8 @@ func resourceIllumioWorkload() *schema.Resource {
 			"online": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Determines if this workload is online. Default value: false",
-				Default:     false,
+				Description: "Determines if this workload is online. Default value: true",
+				Default:     true,
 			},
 			"labels": {
 				Type:        schema.TypeSet,
@@ -585,6 +509,9 @@ func resourceIllumioWorkload() *schema.Resource {
 				Description: "User who deleted this label group",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -592,36 +519,11 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
-	workload := &models.Workload{
-		Name:                                  d.Get("name").(string),
-		Description:                           d.Get("description").(string),
-		ExternalDataSet:                       d.Get("external_data_set").(string),
-		ExternalDataReference:                 d.Get("external_data_reference").(string),
-		Hostname:                              d.Get("hostname").(string),
-		ServicePrincipalName:                  d.Get("service_principal_name").(string),
-		PublicIP:                              d.Get("public_ip").(string),
-		ServiceProvider:                       d.Get("service_provider").(string),
-		DataCenter:                            d.Get("data_center").(string),
-		DataCenterZone:                        d.Get("data_center_zone").(string),
-		OsID:                                  d.Get("os_id").(string),
-		OsDetail:                              d.Get("os_detail").(string),
-		Online:                                d.Get("online").(bool),
-		EnforcementMode:                       d.Get("enforcement_mode").(string),
-		AgentToPceCertificateAuthenticationID: d.Get("agent_to_pce_certificate_authentication_id").(string),
-		DistinguishedName:                     d.Get("distinguished_name").(string),
-	}
-	if items, ok := d.GetOk("labels"); ok {
-		workload.Labels = models.GetHrefs(items.(*schema.Set).List())
-	}
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// if items, ok := d.GetOk("interfaces"); ok {
-	// 	workload.Interfaces = expandIllumioWorkloadInterface(items.(*schema.Set).List())
-	// }
+	workload := &models.Workload{}
+	populateFromResourceData(workload, d)
+
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
 		return diag.FromErr(err)
@@ -847,37 +749,7 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 	var diags diag.Diagnostics
 
 	workload := &models.Workload{}
-
-	workload.ServicePrincipalName = d.Get("service_principal_name").(string)
-	workload.AgentToPceCertificateAuthenticationID = d.Get("agent_to_pce_certificate_authentication_id").(string)
-
-	if d.HasChange("enforcement_mode") {
-		workload.EnforcementMode = d.Get("enforcement_mode").(string)
-	}
-	if d.HasChange("public_ip") {
-		workload.PublicIP = d.Get("public_ip").(string)
-	}
-
-	workload.Name = d.Get("name").(string)
-	workload.Description = d.Get("description").(string)
-	workload.ExternalDataSet = d.Get("external_data_set").(string)
-	workload.ExternalDataReference = d.Get("external_data_reference").(string)
-	workload.ServiceProvider = d.Get("service_provider").(string)
-	workload.DataCenter = d.Get("data_center").(string)
-	workload.DataCenterZone = d.Get("data_center_zone").(string)
-	workload.OsID = d.Get("os_id").(string)
-	workload.OsDetail = d.Get("os_detail").(string)
-	workload.Online = d.Get("online").(bool)
-	workload.DistinguishedName = d.Get("distinguished_name").(string)
-	workload.Hostname = d.Get("hostname").(string)
-
-	workload.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
-
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// workload.Interfaces = expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
+	populateFromResourceData(workload, d)
 
 	if diags.HasError() {
 		return diags
@@ -903,23 +775,3 @@ func resourceIllumioWorkloadDelete(ctx context.Context, d *schema.ResourceData, 
 	d.SetId("")
 	return diagnostics
 }
-
-/* Following code is commented to prevent the race condition
- * between Workload and Workload Interface Resources. Preserved for future use.
- * Bug#15
- */
-// func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {
-// 	var wi []models.WorkloadInterface
-// 	for _, e := range arr {
-// 		elem := e.(map[string]interface{})
-// 		wi = append(wi, models.WorkloadInterface{
-// 			Name:                  elem["name"].(string),
-// 			LinkState:             elem["link_state"].(string),
-// 			Address:               elem["address"].(string),
-// 			CidrBlock:             elem["cidr_block"].(int),
-// 			DefaultGatewayAddress: elem["default_gateway_address"].(string),
-// 			FriendlyName:          elem["friendly_name"].(string),
-// 		})
-// 	}
-// 	return wi
-// }

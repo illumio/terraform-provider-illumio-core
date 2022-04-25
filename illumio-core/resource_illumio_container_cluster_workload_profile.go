@@ -392,7 +392,7 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 		}
 		ccwp.Labels = labelsModel
 	}
-	
+
 	if diags.HasError() {
 		return diags
 	}

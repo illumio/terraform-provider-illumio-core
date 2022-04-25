@@ -1,38 +1,59 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
-
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-resource "illumio-core_enforcement_boundary" "example" {
-  name = "testing eb"
-  ingress_services {
-    href = "/orgs/1/sec_policy/draft/services/3"
+# use the ip_lists data source to search against the /ip_lists endpoint by name
+data "illumio-core_ip_lists" "default" {
+  # all PCE instances define a special default IP list covering all addresses
+  name = "Any (0.0.0.0/0 and ::/0)"
+  max_results = 1
+}
+
+resource "illumio-core_service" "rdp" {
+  name        = "S-RDP"
+  description = "TCP and UDP Remote Desktop Protocol ports"
+
+  service_ports {
+    # Illumio uses the IANA protocol numbers to identify the service proto
+    proto = "6"  # TCP
+    port  = "3389"
   }
+
+  service_ports {
+    proto = "17"  # UDP
+    port  = "3389"
+  }
+}
+
+resource "illumio-core_enforcement_boundary" "block_rdp" {
+  name        = "EB-RDP"
+
+  ingress_services {
+    href = illumio-core_service.rdp.href
+  }
+
   consumers {
     ip_list {
-      href = "/orgs/1/sec_policy/draft/ip_lists/1"
+      href = one(data.illumio-core_ip_lists.default.items[*].href)
     }
   }
+
   providers {
-    label {
-      href = "/orgs/1/labels/1"
-    }
+    actors = "ams"  # special notation meaning "all managed systems" - affects all workloads
   }
 }
 
-data "illumio-core_enforcement_boundary" "example" {
-  href = "/orgs/1/sec_policy/draft/enforcement_boundaries/57"
+data "illumio-core_enforcement_boundary" "block_rdp" {
+  href = illumio-core_enforcement_boundary.block_rdp.href
 }

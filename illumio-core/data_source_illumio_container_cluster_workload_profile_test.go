@@ -4,27 +4,33 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSCCWorkloadProfile *schema.Provider
+var prefixCCWP string = "TF-ACC-CCWP"
 
 func TestAccIllumioCCWP_Read(t *testing.T) {
-	ccsbAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_container_cluster_workload_profile.ccwp_test"
+	resourceName := "illumio-core_container_cluster_workload_profile.ccwp_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSCCWorkloadProfile),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioCCWPDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceCCWPxists("data.illumio-core_container_cluster_workload_profile.test", ccsbAttr),
-					testAccCheckIllumioCCWPDataSourceAttributes(ccsbAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "namespace", resourceName, "namespace"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "enforcement_mode", resourceName, "enforcement_mode"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "visibility_level", resourceName, "visibility_level"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "managed", resourceName, "managed"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "linked", resourceName, "linked"),
 				),
 			},
 		},
@@ -32,66 +38,35 @@ func TestAccIllumioCCWP_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioCCWPDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_container_cluster_workload_profile" "test" {
-		href = "/orgs/1/container_clusters/bd37cbdd-82bd-4f49-b52f-9405ba236a43/container_workload_profiles/598888c7-a625-4507-a5c8-14f4a3c4c1d6"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixCCWP)
+	rName2 := acctest.RandomWithPrefix(prefixCCWP)
+	rName3 := acctest.RandomWithPrefix(prefixCCWP)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "ccwp_test" {
+	key   = "role"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceCCWPxists(name string, ccsbAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_container_cluster" "ccwp_test" {
+	name = %[2]q
+	description = "Terraform Container Cluster test"
+}
 
-		if !ok {
-			return fmt.Errorf("Container Cluster Workload Profile %s not found", name)
-		}
+resource "illumio-core_container_cluster_workload_profile" "ccwp_test" {
+	container_cluster_href = illumio-core_container_cluster.ccwp_test.href
+	name = %[3]q
+	description = "Terraform Container Cluster Workload Profile test"
+	managed = true
+	enforcement_mode = "visibility_only"
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSCCWorkloadProfile).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"name",
-			"enforcement_mode",
-			"managed",
-			"assign_labels.0.href",
-			"labels.0.key",
-			"labels.0.assignment.href",
-			"labels.0.assignment.value",
-		} {
-			ccsbAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+	assign_labels {
+		href = illumio-core_label.ccwp_test.href
 	}
 }
 
-func testAccCheckIllumioCCWPDataSourceAttributes(ccsbAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"name":                      "Acc. test name",
-			"enforcement_mode":          "idle",
-			"managed":                   true,
-			"assign_labels.0.href":      "/orgs/1/labels/1",
-			"labels.0.key":              "role",
-			"labels.0.assignment.href":  "/orgs/1/labels/1",
-			"labels.0.assignment.value": "Web",
-		}
-		for k, v := range expectation {
-			if ccsbAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ccsbAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_container_cluster_workload_profile" "ccwp_test" {
+	href = illumio-core_container_cluster_workload_profile.ccwp_test.href
+}
+`, rName1, rName2, rName3)
 }

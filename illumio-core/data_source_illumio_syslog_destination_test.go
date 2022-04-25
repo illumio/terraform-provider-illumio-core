@@ -4,87 +4,66 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
+	"net/url"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSSyslogDestination *schema.Provider
+func TestAccIllumioSD_Read(t *testing.T) {
+	dataSourceName := "data.illumio-core_syslog_destination.sd_test"
+	resourceName := "illumio-core_syslog_destination.sd_test"
 
-func TestAccIllumioSyslogDestination_Read(t *testing.T) {
-	sysDestAttr := map[string]interface{}{}
-
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSSyslogDestination),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioSyslogDestinationDataSourceConfig_basic(),
+				Config: testAccCheckIllumioSDDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceSyslogDestinationExists("data.illumio-core_syslog_destination.test", sysDestAttr),
-					testAccCheckIllumioSyslogDestinationDataSourceAttributes(sysDestAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "type", resourceName, "type"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "pce_scope", resourceName, "pce_scope"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "audit_event_logger", resourceName, "audit_event_logger"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "traffic_event_logger", resourceName, "traffic_event_logger"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "node_status_logger", resourceName, "node_status_logger"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioSyslogDestinationDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_syslog_destination" "test" {
-		href = "/orgs/1/settings/syslog/destinations/11a4cfdf-a78e-4144-bbbc-67faec728df1"
+func testAccCheckIllumioSDDataSourceConfig_basic() string {
+	u, _ := url.Parse(os.Getenv("ILLUMIO_PCE_HOST"))
+	hostName := u.Hostname()
+
+	return fmt.Sprintf(`
+resource "illumio-core_syslog_destination" "sd_test" {
+	type        = "local_syslog"
+	pce_scope   = [%[1]q]
+	description = "Terraform Syslog Destination test"
+
+	audit_event_logger {
+	  configuration_event_included = true
+	  system_event_included        = true
+	  min_severity                 = "informational"
 	}
-	`
-}
 
-func testAccCheckIllumioDataSourceSyslogDestinationExists(name string, sysDestAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+	traffic_event_logger {
+	  traffic_flow_allowed_event_included             = true
+	  traffic_flow_potentially_blocked_event_included = false
+	  traffic_flow_blocked_event_included             = false
+	}
 
-		if !ok {
-			return fmt.Errorf("Syslog Destination %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSSyslogDestination).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"type",
-			"description",
-			"node_status_logger.node_status_included",
-		} {
-			sysDestAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+	node_status_logger {
+	  node_status_included = true
 	}
 }
 
-func testAccCheckIllumioSyslogDestinationDataSourceAttributes(sysDestAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"type":        "remote_syslog",
-			"description": "splunk-dev3",
-			"node_status_logger.node_status_included": true,
-		}
-		for k, v := range expectation {
-			if sysDestAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, sysDestAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_syslog_destination" "sd_test" {
+	href = illumio-core_syslog_destination.sd_test.href
+}
+`, hostName)
 }

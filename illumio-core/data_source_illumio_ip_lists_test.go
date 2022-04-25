@@ -6,24 +6,23 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSIPL *schema.Provider
+var prefixIPL string = "TF-ACC-IPL"
 
 func TestAccIllumioIPL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_ip_lists.ipl_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSIPL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioIPLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceIPLExists("data.illumio-core_ip_lists.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
@@ -31,27 +30,47 @@ func TestAccIllumioIPL_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioIPLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_ip_lists" "test" {
-		max_results = "5"
+	rName1 := acctest.RandomWithPrefix(prefixIPL)
+	rName2 := acctest.RandomWithPrefix(prefixIPL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_ip_list" "ipl_test1" {
+	name        = %[1]q
+	description = "Terraform IP Lists test"
+	ip_ranges {
+		from_ip = "10.1.0.0"
+		to_ip = "10.10.0.0"
+		description = "Terraform IP Lists test"
+		exclusion = false
 	}
-	`
+	fqdns {
+		fqdn = "app.example.com"
+	}
 }
 
-func testAccCheckIllumioDataSourceIPLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("List of IP Lists %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
+resource "illumio-core_ip_list" "ipl_test2" {
+	name        = %[2]q
+	description = "Terraform IP Lists test"
+	ip_ranges {
+		from_ip = "172.168.0.0"
+		to_ip = "172.168.0.255"
+		description = "Terraform IP Lists test"
+		exclusion = false
 	}
+	fqdns {
+		fqdn = "*.illum.io"
+	}
+}
+
+data "illumio-core_ip_lists" "ipl_test" {
+	# lookup based on partial match
+	name = %[3]q
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_ip_list.ipl_test1,
+		illumio-core_ip_list.ipl_test2,
+	]
+}
+`, rName1, rName2, prefixIPL)
 }

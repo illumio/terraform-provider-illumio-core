@@ -1,108 +1,26 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
-
 provider "illumio-core" {
-  //  pce_host              = "https://pce.my-company.com:8443"
-  //  api_username          = "api_xxxxxx"
-  //  api_secret            = "big-secret"
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
+# NOTE: the `illumio-core_firewall_settings` resource cannot be created.
+# For this example to work, the PCE firewall settings must be imported into terraform with
+#
+# terraform import illumio-core_firewall_settings.current "/orgs/$ILLUMIO_PCE_ORG_ID/sec_policy/draft/firewall_settings"
+resource "illumio-core_firewall_settings" "current" {
+  ike_authentication_type = "psk"
+}
 
 data "illumio-core_firewall_settings" "current" {
-    href = "/orgs/1/sec_policy/draft/firewall_settings"
-}
-
-
-# INFO: cherry-picked attributes from terraform show after import 
-resource "illumio-core_firewall_settings" "current" {
-
-    ike_authentication_type = "psk"
-    blocked_connection_reject_scopes {
-        label {
-            href = "/orgs/1/labels/1"
-        }
-        label {
-            href = "/orgs/1/labels/12"
-        }
-        label {
-            href = "/orgs/1/labels/14"
-        }
-        label {
-            href = "/orgs/1/labels/787"
-        }
-    }
-
-    containers_inherit_host_policy_scopes {
-        label {
-            href = "/orgs/1/labels/1"
-        }
-        label {
-            href = "/orgs/1/labels/11"
-        }
-        label {
-            href = "/orgs/1/labels/14"
-        }
-        label {
-            href = "/orgs/1/labels/787"
-        }
-    }
-
-    firewall_coexistence {
-        illumio_primary = true
-
-        scope {
-            href = "/orgs/1/labels/1"
-        }
-        scope {
-            href = "/orgs/1/labels/787"
-        }
-        scope {
-            href = "/orgs/1/labels/788"
-        }
-        scope {
-            href = "/orgs/1/labels/11"
-        }
-
-        workload_mode = "enforced"
-    }
-
-    loopback_interfaces_in_policy_scopes {
-        label {
-            href = "/orgs/1/labels/1"
-        }
-        label {
-            href = "/orgs/1/labels/12"
-        }
-        label {
-            href = "/orgs/1/labels/787"
-        }
-        label {
-            href = "/orgs/1/labels/788"
-        }
-    }
-
-    static_policy_scopes {
-        label {
-            href = "/orgs/1/labels/1"
-        }
-        label {
-            href = "/orgs/1/labels/12"
-        }
-        label {
-            href = "/orgs/1/labels/14"
-        }
-
-        label_group {
-            href = "/orgs/1/sec_policy/draft/label_groups/a715cd8f-04f3-4bc1-82bf-d650b01453a5"
-        }
-    }
+  href = illumio-core_firewall_settings.current.href
 }

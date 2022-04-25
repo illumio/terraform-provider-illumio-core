@@ -11,9 +11,16 @@ description: |-
 
 Represents Illumio Enforcement Boundary
 
+Example Usage
+------------
+
 ```hcl
 data "illumio-core_enforcement_boundary" "example" {
-  href = "/orgs/1/sec_policy/draft/enforcement_boundaries/57"
+  href = illumio-core_enforcement_boundary.example.href
+}
+
+resource "illumio-core_enforcement_boundary" "example" {
+  ...
 }
 ```
 
@@ -21,38 +28,38 @@ data "illumio-core_enforcement_boundary" "example" {
 
 ### Required
 
-- **href** (String) URI of this Enforcement Boundary
+- `href` (String) URI of this Enforcement Boundary
 
 ### Read-Only
 
-- **caps** (List of String) CAPS for Enforcement Boundary
-- **consumers** (List of Object) Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block (see [below for nested schema](#nestedatt--consumers))
-- **created_at** (String) Timestamp when this Enforcement Boundary was first created
-- **created_by** (Map of String) User who created this Enforcement Boundary
-- **deleted_at** (String) Timestamp when this Enforcement Boundary was last deleted
-- **deleted_by** (Map of String) User who last deleted this Enforcement Boundary
-- **ingress_services** (List of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_services))
-- **name** (String) Name of the Enforcement Boundary
-- **providers** (Block List) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
-- **updated_at** (String) Timestamp when this Enforcement Boundary was last updated
-- **updated_by** (Map of String) User who last updated this Enforcement Boundary
+- `caps` (List of String) CAPS for Enforcement Boundary
+- `consumers` (List of Object) Consumers for Enforcement Boundary. Only one actor can be specified in one consumer block (see [below for nested schema](#nestedatt--consumers))
+- `created_at` (String) Timestamp when this Enforcement Boundary was first created
+- `created_by` (Map of String) User who created this Enforcement Boundary
+- `deleted_at` (String) Timestamp when this Enforcement Boundary was last deleted
+- `deleted_by` (Map of String) User who last deleted this Enforcement Boundary
+- `ingress_services` (List of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_services))
+- `name` (String) Name of the Enforcement Boundary
+- `providers` (Block List) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
+- `updated_at` (String) Timestamp when this Enforcement Boundary was last updated
+- `updated_by` (Map of String) User who last updated this Enforcement Boundary
 
 <a id="nestedatt--consumers"></a>
 ### Nested Schema for `consumers`
 
 Read-Only:
 
-- **actors** (String) actors for consumers parameter
-- **ip_list** (List of Object) Href of IP List (see [below for nested schema](#nestedobjatt--consumers--ip_list))
-- **label** (List of Object) Href of Label (see [below for nested schema](#nestedobjatt--consumers--label))
-- **label_group** Href of Label Group (List of Object) (see [below for nested schema](#nestedobjatt--consumers--label_group))
+- `actors` (String) actors for consumers parameter
+- `ip_list` (List of Object) Href of IP List (see [below for nested schema](#nestedobjatt--consumers--ip_list))
+- `label` (List of Object) Href of Label (see [below for nested schema](#nestedobjatt--consumers--label))
+- `label_group` Href of Label Group (List of Object) (see [below for nested schema](#nestedobjatt--consumers--label_group))
 
 <a id="nestedobjatt--consumers--ip_list"></a>
 ### Nested Schema for `consumers.ip_list`
 
 Read-Only:
 
-- **href** (String)
+- `href` (String)
 
 
 <a id="nestedobjatt--consumers--label"></a>
@@ -60,7 +67,7 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String)
+- `href` (String)
 
 
 <a id="nestedobjatt--consumers--label_group"></a>
@@ -68,7 +75,7 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String) Href of Label Group
+- `href` (String) Href of Label Group
 
 
 
@@ -78,10 +85,10 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String) URI of Ingress Service
-- **port** (String) Port number used with protocol or starting port when specifying a range
-- **proto** (String) Protocol number
-- **to_port** (String) Upper end of port range
+- `href` (String) URI of Ingress Service
+- `port` (String) Port number used with protocol or starting port when specifying a range
+- `proto` (String) Protocol number
+- `to_port` (String) Upper end of port range
 
 
 <a id="nestedblock--providers"></a>
@@ -89,17 +96,17 @@ Read-Only:
 
 Read-Only:
 
-- **actors** (String) actors for providers
-- **ip_list** (List of Object) Href of IP List (see [below for nested schema](#nestedatt--providers--ip_list))
-- **label** (List of Object) Href of Label (see [below for nested schema](#nestedatt--providers--label))
-- **label_group** (List of Object) Href of Label Group (see [below for nested schema](#nestedatt--providers--label_group))
+- `actors` (String) actors for providers
+- `ip_list` (List of Object) Href of IP List (see [below for nested schema](#nestedatt--providers--ip_list))
+- `label` (List of Object) Href of Label (see [below for nested schema](#nestedatt--providers--label))
+- `label_group` (List of Object) Href of Label Group (see [below for nested schema](#nestedatt--providers--label_group))
 
 <a id="nestedatt--providers--ip_list"></a>
 ### Nested Schema for `providers.ip_list`
 
 Read-Only:
 
-- **href** (String) Href of IP List
+- `href` (String) Href of IP List
 
 
 <a id="nestedatt--providers--label"></a>
@@ -107,7 +114,7 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String) Href of Label
+- `href` (String) Href of Label
 
 
 <a id="nestedatt--providers--label_group"></a>
@@ -115,6 +122,4 @@ Read-Only:
 
 Read-Only:
 
-- **href** (String) Href of Label Group
-
-
+- `href` (String) Href of Label Group

@@ -4,27 +4,30 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSLG *schema.Provider
+var prefixLG string = "TF-ACC-LG"
 
 func TestAccIllumioLG_Read(t *testing.T) {
-	lgAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_label_group.lg_test"
+	resourceName := "illumio-core_label_group.lg_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSLG),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioLGDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceLGExists("data.illumio-core_label_group.test", lgAttr),
-					testAccCheckIllumioLGDataSourceAttributes(lgAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "labels", resourceName, "labels"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "sub_groups", resourceName, "sub_groups"),
 				),
 			},
 		},
@@ -32,64 +35,36 @@ func TestAccIllumioLG_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioLGDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_label_group" "test" {
-		href = "/orgs/1/sec_policy/draft/label_groups/b347346a-7aff-4334-ac90-6f64a7a98f05"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixLG)
+	rName2 := acctest.RandomWithPrefix(prefixLG)
+	rName3 := acctest.RandomWithPrefix(prefixLG)
+
+	return fmt.Sprintf(`
+resource "illumio-core_label" "lg_test" {
+	key   = "role"
+	value = %[1]q
 }
 
-func testAccCheckIllumioDataSourceLGExists(name string, lgAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_label_group" "lg_subgroup" {
+	key           = "role"
+	name          = %[2]q
+	description   = "Terraform Label Group subgroup"
+}
 
-		if !ok {
-			return fmt.Errorf("Label Group %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSLG).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"name",
-			"description",
-			"key",
-			"labels.0.href",
-			"labels.0.key",
-			"labels.0.value",
-		} {
-			lgAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+resource "illumio-core_label_group" "lg_test" {
+	key           = "role"
+	name          = %[3]q
+	description   = "Terraform Label Group test"
+	labels {
+		href = illumio-core_label.lg_test.href
+	}
+	sub_groups {
+		href = illumio-core_label_group.lg_subgroup.href
 	}
 }
 
-func testAccCheckIllumioLGDataSourceAttributes(lgAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"name":           "Acc. test name",
-			"description":    "Acc. test description",
-			"key":            "role",
-			"labels.0.href":  "/orgs/1/labels/2",
-			"labels.0.key":   "role",
-			"labels.0.value": "Database",
-		}
-		for k, v := range expectation {
-			if lgAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, lgAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_label_group" "lg_test" {
+	href = illumio-core_label_group.lg_test.href
+}
+`, rName1, rName2, rName3)
 }

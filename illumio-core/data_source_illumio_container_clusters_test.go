@@ -6,24 +6,23 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSCCL *schema.Provider
+var prefixCCL string = "TF-ACC-CCL"
 
 func TestAccIllumioCCL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_container_clusters.ccl_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSCCL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioCCLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceCCLExists("data.illumio-core_container_clusters.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "5"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
@@ -31,27 +30,29 @@ func TestAccIllumioCCL_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioCCLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_container_clusters" "test" {
-		max_results = "5"
-	}
-	`
+	rName1 := acctest.RandomWithPrefix(prefixCCL)
+	rName2 := acctest.RandomWithPrefix(prefixCCL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_container_cluster" "ccl_test1" {
+	name = %[1]q
+	description = "Terraform Container Cluster test"
 }
 
-func testAccCheckIllumioDataSourceCCLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
+resource "illumio-core_container_cluster" "ccl_test2" {
+	name = %[2]q
+	description = "Terraform Container Cluster test"
+}
 
-		if !ok {
-			return fmt.Errorf("List of Container Clusters %s not found", name)
-		}
+data "illumio-core_container_clusters" "ccl_test" {
+	# lookup based on partial match
+	name = %[3]q
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
-	}
+	# enforce dependencies
+	depends_on = [
+		illumio-core_container_cluster.ccl_test1,
+		illumio-core_container_cluster.ccl_test2,
+	]
+}
+`, rName1, rName2, prefixCCL)
 }

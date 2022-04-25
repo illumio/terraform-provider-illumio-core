@@ -239,8 +239,7 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	diags := diag.Diagnostics{}
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	vs := &models.VirtualService{
 		Name:                  d.Get("name").(string),
@@ -320,10 +319,11 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	// pConfig.StoreHref(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
-	// Provisioning instantly as only active version can be used for service binding
-	pConfig.ProvisionAResource(pConfig.OrgID, "virtual_services", data.S("href").Data().(string))
-	d.SetId(data.S("href").Data().(string))
+
+	href := data.S("href").Data().(string)
+
+	pConfig.StoreHref("virtual_services", href)
+	d.SetId(href)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }
 
@@ -509,8 +509,8 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "virtual_services", href)
-	d.SetId(href)
+
+	pConfig.StoreHref("virtual_services", href)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
 }
 
@@ -524,7 +524,8 @@ func resourceIllumioVirtualServiceDelete(ctx context.Context, d *schema.Resource
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "virtual_services", href)
+
+	pConfig.StoreHref("virtual_services", href)
 	d.SetId("")
 	return diagnostics
 }

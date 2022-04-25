@@ -114,7 +114,7 @@ func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resource
 	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	href := fmt.Sprintf("/orgs/%v/settings/workloads", pConfig.OrgID)
+	href := fmt.Sprintf("/orgs/%v/settings/workloads", illumioClient.OrgID)
 
 	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {

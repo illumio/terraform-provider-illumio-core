@@ -143,7 +143,7 @@ func datasourceIllumioContainerClustersRead(ctx context.Context, d *schema.Resou
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	paramKeys := []string{
 		"max_results",

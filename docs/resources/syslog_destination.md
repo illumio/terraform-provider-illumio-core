@@ -17,7 +17,7 @@ Example Usage
 ```hcl
 resource "illumio-core_syslog_destination" "example" {
   type        = "remote_syslog"
-  pce_scope   = ["company-mnc.ilabs.io"]
+  pce_scope   = ["my.pce.com"]
   description = "example description"
 
   audit_event_logger {
@@ -37,9 +37,9 @@ resource "illumio-core_syslog_destination" "example" {
   }
 
   remote_syslog {
-    protocol        = 6
-    address         = "36.164.106.210"
-    port            = 5141
+    protocol        = "6"
+    address         = "10.10.10.10"
+    port            = "5141"
     tls_enabled     = false
     tls_verify_cert = false
   }
@@ -50,62 +50,57 @@ resource "illumio-core_syslog_destination" "example" {
 
 ### Required
 
-- **audit_event_logger** (Block List, Min: 1, Max: 1) audit_event_logger details for destination (see [below for nested schema](#nestedblock--audit_event_logger))
-- **description** (String) Description of the destination
-- **node_status_logger** (Block List, Min: 1, Max: 1) node_status_logger details for destination (see [below for nested schema](#nestedblock--node_status_logger))
-- **pce_scope** (Set of String) pce_scope for destination
-- **traffic_event_logger** (Block List, Min: 1, Max: 1) traffic_event_logger details for destination (see [below for nested schema](#nestedblock--traffic_event_logger))
-- **type** (String) Destination type. Allowed values are "local_syslog" and "remote_syslog"
+- `audit_event_logger` (Block List, Min: 1, Max: 1) audit_event_logger details for destination (see [below for nested schema](#nestedblock--audit_event_logger))
+- `description` (String) Description of the destination
+- `node_status_logger` (Block List, Min: 1, Max: 1) node_status_logger details for destination (see [below for nested schema](#nestedblock--node_status_logger))
+- `pce_scope` (Set of String) pce_scope for destination
+- `traffic_event_logger` (Block List, Min: 1, Max: 1) traffic_event_logger details for destination (see [below for nested schema](#nestedblock--traffic_event_logger))
+- `type` (String) Destination type. Allowed values are "local_syslog" and "remote_syslog"
 
 ### Optional
 
-- **remote_syslog** (Block List, Max: 1) remote_syslog details for destination. Required when type is set to "remote_syslog" (see [below for nested schema](#nestedblock--remote_syslog))
+- `remote_syslog` (Block List, Max: 1) remote_syslog details for destination. Required when type is set to "remote_syslog" (see [below for nested schema](#nestedblock--remote_syslog))
 
 ### Read-Only
 
-- **href** (String) URI of the destination
+- `href` (String) URI of the destination
 
 <a id="nestedblock--audit_event_logger"></a>
 ### Nested Schema for `audit_event_logger`
 
 Required:
 
-- **configuration_event_included** (Boolean) Configuration (Northbound) auditable events
-- **min_severity** (String) Minimum severity level of audit event messages. Allowed values are "error", "warning" and "informational"
-- **system_event_included** (Boolean) System (PCE) auditable events
-
+- `configuration_event_included` (Boolean) Configuration (Northbound) auditable events
+- `min_severity` (String) Minimum severity level of audit event messages. Allowed values are "error", "warning" and "informational"
+- `system_event_included` (Boolean) System (PCE) auditable events
 
 <a id="nestedblock--node_status_logger"></a>
 ### Nested Schema for `node_status_logger`
 
 Required:
 
-- **node_status_included** (Boolean) Syslog messages regarding status of the nodes
-
+- `node_status_included` (Boolean) Syslog messages regarding status of the nodes
 
 <a id="nestedblock--traffic_event_logger"></a>
 ### Nested Schema for `traffic_event_logger`
 
 Required:
 
-- **traffic_flow_allowed_event_included** (Boolean) Set to enable traffic flow events
-- **traffic_flow_blocked_event_included** (Boolean) Set to enable traffic flow events
-- **traffic_flow_potentially_blocked_event_included** (Boolean) Set to enable traffic flow events
-
+- `traffic_flow_allowed_event_included` (Boolean) Set to enable traffic flow events
+- `traffic_flow_blocked_event_included` (Boolean) Set to enable traffic flow events
+- `traffic_flow_potentially_blocked_event_included` (Boolean) Set to enable traffic flow events
 
 <a id="nestedblock--remote_syslog"></a>
 ### Nested Schema for `remote_syslog`
 
 Required:
 
-- **address** (String) The remote syslog IP or DNS address
-- **port** (Number) The remote syslog port
-- **protocol** (Number) The protocol for streaming syslog messages. Allowed values are 6 and 17
-- **tls_enabled** (Boolean) To enable TLS
-- **tls_verify_cert** (Boolean) Perform TLS verification
+- `address` (String) The remote syslog IP or DNS address
+- `port` (Number) The remote syslog port
+- `protocol` (Number) The protocol for streaming syslog messages. Allowed values are 6 and 17
+- `tls_enabled` (Boolean) To enable TLS
+- `tls_verify_cert` (Boolean) Perform TLS verification
 
 Optional:
 
-- **tls_ca_bundle** (String) Trustee CA bundle
-
-
+- `tls_ca_bundle` (String) Trustee CA bundle

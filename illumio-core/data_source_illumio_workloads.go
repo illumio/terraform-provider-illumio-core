@@ -907,7 +907,7 @@ func dataSourceIllumioWorkloadsRead(ctx context.Context, d *schema.ResourceData,
 		params["vulnerability_summary.vulnerability_exposure_score[lte]"] = value.(string)
 	}
 
-	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/workloads", pConfig.OrgID), &params)
+	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/workloads", illumioClient.OrgID), &params)
 	if err != nil {
 		return diag.FromErr(err)
 	}

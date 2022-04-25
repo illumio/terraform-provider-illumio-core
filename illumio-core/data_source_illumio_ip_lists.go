@@ -228,7 +228,7 @@ func datasourceIllumioIPListsRead(ctx context.Context, d *schema.ResourceData, m
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 	pversion := d.Get("pversion").(string)
 
 	paramKeys := []string{

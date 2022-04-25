@@ -14,9 +14,9 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_label" "example" {
-  key     = "env"
-  value   = "example env"
+resource "illumio-core_label" "role_example" {
+  key   = "role"
+  value = "R-EXAMPLE"
 }
 ```
 
@@ -24,19 +24,19 @@ resource "illumio-core_label" "example" {
 
 ### Required
 
-- **key** (String) Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env".
-- **value** (String) Value in key-value pair
+- `key` (String) Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env".
+- `value` (String) Value in key-value pair
 
 ### Optional
 
-- **external_data_reference** (String) A unique identifier within the external data source
-- **external_data_set** (String) The data source from which a resource originates
+- `external_data_reference` (String) A unique identifier within the external data source
+- `external_data_set` (String) The data source from which a resource originates
 
 ### Read-Only
 
-- **created_at** (String) Timestamp when this label was first created
-- **created_by** (Map of String) User who created this label
-- **deleted** (Boolean) Flag to indicate whether deleted or not
-- **href** (String) URI of this label
-- **updated_at** (String) Timestamp when this label was last updated
-- **updated_by** (Map of String) User who last updated this label
+- `created_at` (String) Timestamp when this label was first created
+- `created_by` (Map of String) User who created this label
+- `deleted` (Boolean) Flag to indicate whether deleted or not
+- `href` (String) URI of this label
+- `updated_at` (String) Timestamp when this label was last updated
+- `updated_by` (Map of String) User who last updated this label

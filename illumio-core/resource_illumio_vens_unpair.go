@@ -20,8 +20,9 @@ func resourceIllumioVENsUnpair() *schema.Resource {
 		UpdateContext: resourceIllumioVENsUnpairUpdate,
 		DeleteContext: resourceIllumioVENsUnpairDelete,
 
-		SchemaVersion: version,
-		Description:   "Manages Illumio VENs Unpair",
+		SchemaVersion:      version,
+		Description:        "Manages Illumio VENs Unpair",
+		DeprecationMessage: "DEPRECATED in v0.2.0. Will be removed in v1.0.0. Use resource/unmanaged_workload and resource/managed_workload instead.",
 
 		Schema: map[string]*schema.Schema{
 			"vens": {
@@ -49,7 +50,7 @@ func resourceIllumioVENsUnpair() *schema.Resource {
 func resourceIllumioVENsUnpairCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	href := fmt.Sprintf("/orgs/%v/vens/unpair", orgID)
 

@@ -33,7 +33,8 @@ const (
 
 // V2 client for Illumio REST APIs
 type V2 struct {
-	pceHostURL   string
+	HostURL      string
+	OrgID        int
 	apiUsername  string
 	apiKeySecret string
 	httpClient   *http.Client
@@ -45,9 +46,9 @@ type V2 struct {
 // NewV2 Constructor for V2 Client
 //
 // defaultTimeout (in seconds)
-// e.g. NewV2("https://pce.my-company.com:8443", "api_xxxxxx", "big-secret", 30, rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), 10, 3, false, "", "")
-func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLimiter *rate.Limiter,
-	waitTime, maxRetries int, insecure bool, caFile, proxyURL, proxyCreds string) (*V2, error) {
+// e.g. NewV2("https://pce.my-company.com:8443", 1, "api_xxxxxx", "big-secret", 30, rate.NewLimiter(rate.Limit(float64(125)/float64(60)), 1), 10, 3, false, "", "")
+func NewV2(hostURL string, orgID int, apiUsername string, apiKeySecret string, defaultTimeout int, rateLimiter *rate.Limiter,
+	waitTime int, maxRetries int, insecure bool, caFile string, proxyURL string, proxyCreds string) (*V2, error) {
 	if !strings.HasPrefix(hostURL, "http") {
 		return nil, errors.New("hostURL scheme must be 'http(s)'")
 	}
@@ -93,7 +94,8 @@ func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLi
 	}
 
 	return &V2{
-		pceHostURL:   baseURL,
+		OrgID:        orgID,
+		HostURL:      baseURL,
 		apiUsername:  apiUsername,
 		apiKeySecret: apiKeySecret,
 		httpClient:   httpClient,
@@ -105,7 +107,7 @@ func NewV2(hostURL, apiUsername, apiKeySecret string, defaultTimeout int, rateLi
 
 // Do function performs HTTP API Call
 func (c *V2) Do(req *http.Request) (*http.Response, error) {
-	log.Printf("[DEBUG] Begining DO method %s", req.URL.String())
+	log.Printf("[DEBUG] Beginning DO method %s", req.URL.String())
 	var resp *http.Response
 	retryCount := 0
 	maxRetriesExceeded := false
@@ -152,7 +154,7 @@ func (c *V2) Do(req *http.Request) (*http.Response, error) {
 
 // PrepareRequest Creates *http.Request with required headers
 func (c *V2) PrepareRequest(method string, endpoint string, body *gabs.Container, queryParams *map[string]string) (*http.Request, error) {
-	urlString := fmt.Sprintf("%s%s", c.pceHostURL, endpoint)
+	urlString := fmt.Sprintf("%s%s", c.HostURL, endpoint)
 	// validate url
 	_, err := url.ParseRequestURI(urlString)
 	if err != nil {

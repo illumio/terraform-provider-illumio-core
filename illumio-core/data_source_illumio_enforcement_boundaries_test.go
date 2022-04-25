@@ -6,24 +6,23 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSEBL *schema.Provider
+var prefixEBL string = "TF-ACC-EBL"
 
 func TestAccIllumioEBL_Read(t *testing.T) {
-	listAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_enforcement_boundaries.ebl_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSEBL),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioEBLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceEBLExists("data.illumio-core_enforcement_boundaries.test", listAttr),
-					testAccCheckIllumioListDataSourceSize(listAttr, "3"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
 				),
 			},
 		},
@@ -31,27 +30,89 @@ func TestAccIllumioEBL_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioEBLDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_enforcement_boundaries" "test" {
-		max_results = "3"
-	  }
-	`
+	rName1 := acctest.RandomWithPrefix(prefixEBL)
+	rName2 := acctest.RandomWithPrefix(prefixEBL)
+	rName3 := acctest.RandomWithPrefix(prefixEBL)
+	rName4 := acctest.RandomWithPrefix(prefixEBL)
+	rName5 := acctest.RandomWithPrefix(prefixEBL)
+
+	return fmt.Sprintf(`
+resource "illumio-core_service" "ebl_test" {
+	name          = %[1]q
+	description   = "Terraform Enforcement Boundaries test"
+	service_ports {
+		proto = 6
+		port = 80
+	}
+
+	service_ports {
+		proto = 6
+		port = 443
+	}
 }
 
-func testAccCheckIllumioDataSourceEBLExists(name string, listAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("List of Enforcement Boundaries %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		listAttr["length"] = rs.Primary.Attributes["items.#"]
-
-		return nil
+resource "illumio-core_ip_list" "ebl_test" {
+	name        = %[2]q
+	description = "Terraform Enforcement Boundaries test"
+	ip_ranges {
+		from_ip = "10.0.0.0"
+		to_ip = "10.255.255.255"
+		description = "Terraform Enforcement Boundaries test"
+		exclusion = false
 	}
+	fqdns {
+		fqdn = "*.example.com"
+	}
+}
+
+resource "illumio-core_label" "ebl_test" {
+	key   = "role"
+	value = %[3]q
+}
+
+resource "illumio-core_enforcement_boundary" "ebl_test1" {
+	name = %[4]q
+	ingress_services {
+		href = illumio-core_service.ebl_test.href
+	}
+	consumers {
+		ip_list {
+			href = illumio-core_ip_list.ebl_test.href
+		}
+	}
+	providers {
+		label {
+			href = illumio-core_label.ebl_test.href
+		}
+	}
+}
+
+resource "illumio-core_enforcement_boundary" "ebl_test2" {
+	name = %[5]q
+	ingress_services {
+		href = illumio-core_service.ebl_test.href
+	}
+	consumers {
+		ip_list {
+			href = illumio-core_ip_list.ebl_test.href
+		}
+	}
+	providers {
+		label {
+			href = illumio-core_label.ebl_test.href
+		}
+	}
+}
+
+data "illumio-core_enforcement_boundaries" "ebl_test" {
+	# lookup based on partial match
+	name = %[6]q
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_enforcement_boundary.ebl_test1,
+		illumio-core_enforcement_boundary.ebl_test2,
+	]
+}
+`, rName1, rName2, rName3, rName4, rName5, prefixEBL)
 }

@@ -153,7 +153,7 @@ func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	ipList := &models.IPList{
 		Name:                  d.Get("name").(string),
@@ -169,7 +169,7 @@ func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m 
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "ip_lists", data.S("href").Data().(string))
+	pConfig.StoreHref("ip_lists", data.S("href").Data().(string))
 	d.SetId(data.S("href").Data().(string))
 	return resourceIllumioIPListRead(ctx, d, m)
 }
@@ -252,7 +252,7 @@ func resourceIllumioIPListUpdate(ctx context.Context, d *schema.ResourceData, m 
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	pConfig.StoreHref(pConfig.OrgID, "ip_lists", d.Id())
+	pConfig.StoreHref("ip_lists", d.Id())
 
 	return resourceIllumioIPListRead(ctx, d, m)
 }
@@ -268,7 +268,7 @@ func resourceIllumioIPListDelete(ctx context.Context, d *schema.ResourceData, m 
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "ip_lists", href)
+	pConfig.StoreHref("ip_lists", href)
 
 	d.SetId("")
 	return diagnostics

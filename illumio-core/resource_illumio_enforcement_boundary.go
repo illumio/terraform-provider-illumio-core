@@ -198,7 +198,7 @@ func resourceIllumioEnforcementBoundaryCreate(ctx context.Context, d *schema.Res
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	EnfBoun, diags := expandIllumioEnforcementBoundary(d)
 
@@ -211,7 +211,7 @@ func resourceIllumioEnforcementBoundaryCreate(ctx context.Context, d *schema.Res
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "enforcement_boundaries", data.S("href").Data().(string))
+	pConfig.StoreHref("enforcement_boundaries", data.S("href").Data().(string))
 
 	d.SetId(data.S("href").Data().(string))
 
@@ -438,7 +438,7 @@ func resourceIllumioEnforcementBoundaryUpdate(ctx context.Context, d *schema.Res
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "enforcement_boundaries", d.Id())
+	pConfig.StoreHref("enforcement_boundaries", d.Id())
 
 	return resourceIllumioEnforcementBoundaryRead(ctx, d, m)
 }
@@ -455,7 +455,7 @@ func resourceIllumioEnforcementBoundaryDelete(ctx context.Context, d *schema.Res
 		return diag.FromErr(err)
 	}
 
-	pConfig.StoreHref(pConfig.OrgID, "enforcement_boundaries", href)
+	pConfig.StoreHref("enforcement_boundaries", href)
 
 	d.SetId("")
 	return diagnostics

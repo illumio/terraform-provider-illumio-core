@@ -114,7 +114,7 @@ func datasourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resour
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	orgID := pConfig.OrgID
+	orgID := illumioClient.OrgID
 
 	_, data, err := illumioClient.Get(fmt.Sprintf("/orgs/%v/settings/workloads", orgID), nil)
 	if err != nil {

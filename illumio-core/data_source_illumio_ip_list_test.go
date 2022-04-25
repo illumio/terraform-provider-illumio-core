@@ -4,27 +4,30 @@ package illumiocore
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var providerDSIP *schema.Provider
+var prefixIP string = "TF-ACC-IP"
 
 func TestAccIllumioIP_Read(t *testing.T) {
-	ipAttr := map[string]interface{}{}
-	resource.Test(t, resource.TestCase{
+	dataSourceName := "data.illumio-core_ip_list.ip_test"
+	resourceName := "illumio-core_ip_list.ip_test"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactoriesInternal(&providerDSIP),
+		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckIllumioIPDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIllumioDataSourceIPExists("data.illumio-core_ip_list.test", ipAttr),
-					testAccCheckIllumioIPDataSourceAttributes(ipAttr),
+					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "ip_ranges", resourceName, "ip_ranges"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "fqdns", resourceName, "fqdns"),
 				),
 			},
 		},
@@ -32,60 +35,25 @@ func TestAccIllumioIP_Read(t *testing.T) {
 }
 
 func testAccCheckIllumioIPDataSourceConfig_basic() string {
-	return `
-	data "illumio-core_ip_list" "test" {
-		href = "/orgs/1/sec_policy/draft/ip_lists/27"
+	rName1 := acctest.RandomWithPrefix(prefixIP)
+
+	return fmt.Sprintf(`
+resource "illumio-core_ip_list" "ip_test" {
+	name        = %[1]q
+	description = "Terraform IP List test"
+	ip_ranges {
+		from_ip = "10.1.0.0"
+		to_ip = "10.10.0.0"
+		description = "Terraform IP List test"
+		exclusion = false
 	}
-	`
-}
-
-func testAccCheckIllumioDataSourceIPExists(name string, ipAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-
-		if !ok {
-			return fmt.Errorf("IP List %s not found", name)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("ID was not set")
-		}
-
-		pConfig := (*providerDSIP).Meta().(Config)
-		illumioClient := pConfig.IllumioClient
-
-		_, cont, err := illumioClient.Get(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
-
-		for _, k := range []string{
-			"name",
-			"description",
-			"fqdns.0.fqdn",
-			"ip_ranges.0.from_ip",
-		} {
-			ipAttr[k] = cont.S(strings.Split(k, ".")...).Data()
-		}
-
-		return nil
+	fqdns {
+		fqdn = "app.example.com"
 	}
 }
 
-func testAccCheckIllumioIPDataSourceAttributes(ipAttr map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		expectation := map[string]interface{}{
-			"name":                "Acc. test name",
-			"description":         "Acc. test description",
-			"fqdns.0.fqdn":        "app.example.com",
-			"ip_ranges.0.from_ip": "1.1.0.0/24",
-		}
-		for k, v := range expectation {
-			if ipAttr[k] != v {
-				return fmt.Errorf("Bad %s, Actual: %v, Expected: %v", k, ipAttr[k], v)
-			}
-		}
-
-		return nil
-	}
+data "illumio-core_ip_list" "ip_test" {
+	href = illumio-core_ip_list.ip_test.href
+}
+`, rName1)
 }

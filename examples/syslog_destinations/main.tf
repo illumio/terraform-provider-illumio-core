@@ -1,18 +1,47 @@
 terraform {
   required_providers {
     illumio-core = {
-      version = "0.1.0"
       source  = "illumio/illumio-core"
     }
   }
 }
 
 provider "illumio-core" {
-  # pce_host              = "https://2x2devtest59.ilabs.io:8443"
-  # api_username          = ""
-  # api_secret            = ""
-  request_timeout = 30
-  org_id          = 1
+  pce_host     = var.pce_url
+  org_id       = var.pce_org_id
+  api_username = var.pce_api_key
+  api_secret   = var.pce_api_secret
 }
 
-data "illumio-core_syslog_destinations" "example" {}
+locals {
+  # split on : to strip method and port, then strip the leading //
+  pce_hostname = substr(split(":", var.pce_url)[1], 2, -1)
+}
+
+resource "illumio-core_syslog_destination" "local" {
+  type        = "local_syslog"
+  pce_scope   = [local.pce_hostname]
+  description = "Local syslog destination config"
+
+  audit_event_logger {
+    configuration_event_included = false
+    system_event_included        = true
+    min_severity                 = "warning"
+  }
+
+  traffic_event_logger {
+    traffic_flow_allowed_event_included             = true
+    traffic_flow_potentially_blocked_event_included = false
+    traffic_flow_blocked_event_included             = false
+  }
+
+  node_status_logger {
+    node_status_included = false
+  }
+}
+
+data "illumio-core_syslog_destinations" "all" {
+  depends_on = [
+    illumio-core_syslog_destination.local,
+  ]
+}

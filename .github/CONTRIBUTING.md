@@ -1,47 +1,40 @@
-# Contributing Guide
+# Contributing Guide  
 
-## Sign the CLA
+## GitHub workflow  
 
-Before you can contribute, you will need to sign the [Contributor License Agreement](CLA.md).
+Github workflow followed by the project:  
 
-## GitHub workflow
-
-Github workflow followed by the project:
-
-- Fork the repo.
-- Create a new branch on the fork.
-- Push the branch to your fork.
+- Fork the repo
+- Create a new branch on the fork
+- Push the branch to your fork
 - Submit a pull request!
 
-## Open a Pull Request
+## Open a Pull Request  
 
-For pull requests please follow the standard [github pull request](https://help.github.com/articles/about-pull-requests/) process.
+For pull requests please follow the standard [github pull request](https://help.github.com/articles/about-pull-requests/) process.  
 
-## Bug Reporting
+You will be prompted to sign the Illumio Contributor License Agreement when you submit your PR. This step is mandatory for all contributors, but only needs to be completed once per person.  
 
-Please report any bug you found at opensource@illumio.com.
-You can also open an issue in the issue tracker.
+## Bug Reporting  
 
-Before reporting any bugs, please do a quick search if any existing bug is already reported or not. If it is already reported, please add a comment on the same issue. It helps in tracking issues.
+> If you find a bug or issue that you believe to be a security vulnerability, please see the [SECURITY](SECURITY.md) document for instructions on reporting. **Do not file a public issue.**
 
-While reporting a fresh bug, provide a minimal example to reproduce the bug. Include `.tf` files (**REMOVE ANY SECRETS**). Also include `crash.log` in case of panic.
+Please report any bugs you find as GitHub issues. If the bug needs an urgent fix, you can send an email to the Illumio [Integrations team](mailto:app-integrations@illumio.com).  
 
-## Issue Assignment
+Before reporting any bugs, please do a quick search to see if it has already been reported. If so, please add a comment on the existing issue rather than creating a new one.  
 
-Once a bug/issue is raised and acknowledged as an issue by repo maintainers.
-Anyone can work on the issue. Before start working on an issue, make sure to assign the issue to yourself or mention it in the issue. Also, update the progress on the issue regularly.
+While reporting a bug, please provide a minimal example to reproduce the issue. Include `.tf` files, **making sure to remove any secrets**. If applicable, include the `crash.log` file as well.  
 
-## Testing
+## Testing  
 
-While submitting a new resource/datasource, please make sure you add acceptance tests for them. While updating an existing resource/datasource, update test steps to test the changes done. Also, feel free to add unit tests.
+When submitting a new resource or datasource, please follow the current convention of including acceptance tests that set up, verify, and tear down the target resource. When making changes to existing resources or datasources, update the corresponding tests and add any unit tests you deem necessary to ensure the changes are working as expected and have not introduced regressions.  
 
-You can refer to the terraform [testing guideline](https://www.terraform.io/docs/extend/testing/index.html) to test resource/datasource.
+Refer to the terraform [testing guideline](https://www.terraform.io/docs/extend/testing/index.html) for instructions on testing resources and datasources.  
 
-## Documentation
+## Documentation  
 
-Documentation is an important aspect of the project. Resource and Datasource changes should reflect in their respective document files.
-Also, make sure to add an entry for change in [CHANGELOG](./CHANGELOG.md)
+Documentation is an important aspect of the project. Changes to resources or datasources should be reflected in their respective docs files. Make sure to update the [CHANGELOG](../CHANGELOG.md) describing your changes. This project follows the [CHANGELOG specification](https://www.terraform.io/plugin/sdkv2/best-practices/versioning#changelog-specification) recommended by Hashicorp.  
 
-## Development
+## Development  
 
-For Development, refer the [DEVELOPMENT GUIDE](./DEVELOPMENT.md)
+For Development, refer to the [DEVELOPMENT GUIDE](../DEVELOPMENT.md)  

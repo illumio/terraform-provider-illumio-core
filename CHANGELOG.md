@@ -1,3 +1,13 @@
+## 0.2.1 (Unreleased)
+
+NOTES:
+
+* Clean up commented code from previous change
+
+BUG FIXES:
+
+* Fix bug causing managed workload update to fail in some cases
+
 ## 0.2.0 (May 10, 2022)
 
 NOTES:
@@ -21,9 +31,9 @@ ENHANCEMENTS:
 * Improve documentation
 * Improve HCL examples and remove duplicate JSON examples
 
-BIG FIXES:
+BUG FIXES:
 
-* remove auto-provision from `resource/virtual_service` as the provision calls if the virtual service references other draft objects
+* Remove auto-provision from `resource/virtual_service` as the provision calls if the virtual service references other draft objects
 
 ## 0.1.1 (Oct 28, 2021)
 

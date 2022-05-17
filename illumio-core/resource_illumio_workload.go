@@ -585,27 +585,6 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 		}
 	}
 
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// key := "interfaces"
-	// if data.Exists(key) {
-	// 	d.Set("interfaces", extractMapArray(data.S(key), []string{
-	// 		"name",
-	// 		"loopback",
-	// 		"link_state",
-	// 		"address",
-	// 		"cidr_block",
-	// 		"default_gateway_address",
-	// 		"network",
-	// 		"network_detection_mode",
-	// 		"friendly_name",
-	// 	}))
-	// } else {
-	// 	d.Set(key, nil)
-	// }
-
 	key := "services"
 	if data.Exists(key) {
 		services := data.S(key)

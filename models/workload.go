@@ -68,12 +68,6 @@ type Workload struct {
 
 	// don't omitempty for labels - an empty array should remove all labels from the workload
 	Labels []Href `json:"labels"`
-
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// Interfaces                            []WorkloadInterface `json:"interfaces"`
 }
 
 // ToMap - Returns map for Workload model

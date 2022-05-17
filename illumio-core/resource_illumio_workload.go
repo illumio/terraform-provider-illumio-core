@@ -522,7 +522,7 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	orgID := illumioClient.OrgID
 
 	workload := &models.Workload{}
-	populateFromResourceData(workload, d)
+	populateWorkloadFromResourceData(workload, d)
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
@@ -584,27 +584,6 @@ func resourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, m 
 			d.Set(key, nil)
 		}
 	}
-
-	/* Following code is commented to prevent the race condition
-	 * between Workload and Workload Interface Resources. Preserved for future use.
-	 * Bug#15
-	 */
-	// key := "interfaces"
-	// if data.Exists(key) {
-	// 	d.Set("interfaces", extractMapArray(data.S(key), []string{
-	// 		"name",
-	// 		"loopback",
-	// 		"link_state",
-	// 		"address",
-	// 		"cidr_block",
-	// 		"default_gateway_address",
-	// 		"network",
-	// 		"network_detection_mode",
-	// 		"friendly_name",
-	// 	}))
-	// } else {
-	// 	d.Set(key, nil)
-	// }
 
 	key := "services"
 	if data.Exists(key) {
@@ -749,7 +728,7 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 	var diags diag.Diagnostics
 
 	workload := &models.Workload{}
-	populateFromResourceData(workload, d)
+	populateWorkloadFromResourceData(workload, d)
 
 	if diags.HasError() {
 		return diags

@@ -528,7 +528,7 @@ func resourceIllumioUnmanagedWorkloadCreate(ctx context.Context, d *schema.Resou
 	orgID := illumioClient.OrgID
 
 	workload := &models.Workload{}
-	populateFromResourceData(workload, d)
+	populateWorkloadFromResourceData(workload, d)
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
@@ -733,8 +733,8 @@ func resourceIllumioUnmanagedWorkloadUpdate(ctx context.Context, d *schema.Resou
 
 	var diags diag.Diagnostics
 
-	workload := &models.Workload{}
-	populateFromResourceData(workload, d)
+	var workload = &models.Workload{}
+	populateWorkloadFromResourceData(workload, d)
 
 	if diags.HasError() {
 		return diags
@@ -761,7 +761,7 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 	return diagnostics
 }
 
-func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
+func populateWorkloadFromResourceData(w *models.Workload, d *schema.ResourceData) {
 	val := reflect.TypeOf(*w)
 
 	// iterate over the Workload struct fields and set values
@@ -772,21 +772,24 @@ func populateFromResourceData(w *models.Workload, d *schema.ResourceData) {
 		parts := strings.Split(jsonTag, ",")
 		jsonFieldName := parts[0]
 
-		// boolean fields must be set as pointers in the struct
-		// for JSON marshalling to correctly marshal nil/false values
-		// with omitempty set. to accommodate this, create a pointer
-		// Value referencing the ResourceData field
-		if fieldType == reflect.Ptr {
-			resourceValue := reflect.ValueOf(d.Get(jsonFieldName)) // reflect as a Value so we can cast from interface{}
-			p := reflect.New(resourceValue.Type())                 // create a pointer of the reflected type
-			p.Elem().Set(resourceValue)                            // set the value of the pointer
-			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(p)
-		} else if d.HasChange(jsonFieldName) {
+		if d.HasChange(jsonFieldName) {
 			if fieldType == reflect.Slice || fieldType == reflect.Array {
 				continue
 			}
-			resourceValue := reflect.ValueOf(d.Get(jsonFieldName))
-			reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(resourceValue)
+
+			// boolean fields must be set as pointers in the struct
+			// for JSON marshalling to correctly marshal nil/false values
+			// with omitempty set. to accommodate this, create a pointer
+			// Value referencing the ResourceData field
+			if fieldType == reflect.Ptr {
+				resourceValue := reflect.ValueOf(d.Get(jsonFieldName)) // reflect as a Value so we can cast from interface{}
+				p := reflect.New(resourceValue.Type())                 // create a pointer of the reflected type
+				p.Elem().Set(resourceValue)                            // set the value of the pointer
+				reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(p)
+			} else {
+				resourceValue := reflect.ValueOf(d.Get(jsonFieldName))
+				reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(resourceValue)
+			}
 		}
 	}
 

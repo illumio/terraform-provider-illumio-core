@@ -522,7 +522,7 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	orgID := illumioClient.OrgID
 
 	workload := &models.Workload{}
-	populateFromResourceData(workload, d)
+	populateWorkloadFromResourceData(workload, d)
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
@@ -728,7 +728,7 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 	var diags diag.Diagnostics
 
 	workload := &models.Workload{}
-	populateFromResourceData(workload, d)
+	populateWorkloadFromResourceData(workload, d)
 
 	if diags.HasError() {
 		return diags

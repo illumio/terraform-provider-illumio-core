@@ -1,3 +1,13 @@
+## 0.2.2 (Unreleased)
+
+NOTES:
+
+* Remove reflective mapping of workload objects in favour of splitting managed/unmanaged model mapping
+
+BUG FIXES:
+
+* Fix `ignored_interface_names` parameter to be editable for `managed_workload` resources
+
 ## 0.2.1 (May 17, 2022)
 
 NOTES:

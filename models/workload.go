@@ -66,8 +66,9 @@ type Workload struct {
 	// boolean false is omitted with `omitempty` when marshalling; use a pointer to fix this behaviour
 	Online *bool `json:"online,omitempty"`
 
-	// don't omitempty for labels - an empty array should remove all labels from the workload
-	Labels []Href `json:"labels"`
+	// don't omitempty for lists - an empty array should remove all objects from the workload
+	IgnoredInterfaceNames []string `json:"ignored_interface_names"`
+	Labels                []Href   `json:"labels"`
 }
 
 // ToMap - Returns map for Workload model

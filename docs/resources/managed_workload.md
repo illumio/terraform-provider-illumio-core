@@ -71,6 +71,7 @@ resource "illumio-core_managed_workload" "aws_host1" {
 - `enforcement_mode` (String) Enforcement mode of workload(s) to return. Allowed values for enforcement modes are "idle","visibility_only","full", and "selective". Default value: "visibility_only"
 - `external_data_reference` (String) Unique identifier for the workload in the external data source
 - `external_data_set` (String) The data source from which a resource originates
+- `ignored_interface_names` (List of String) Workload interface names to ignore (e.g. `eth0`). Ignored interfaces will not be included in policy configuration provided by the PCE.
 - `labels` (Block Set) Assigned labels for workload (see [below for nested schema](#nestedblock--labels))
 - `service_principal_name` (String) The Kerberos Service Principal Name (SPN). The SPN should be between 1 to 255 characters
 - `service_provider` (String) Service provider for Workload. The service_provider should be up to 255 characters
@@ -94,7 +95,6 @@ resource "illumio-core_managed_workload" "aws_host1" {
 - `distinguished_name` (String) X.509 Subject distinguished name.
 - `firewall_coexistence` (List of Object) Firewall coexistence mode for Workload (see [below for nested schema](#nestedatt--firewall_coexistence))
 - `href` (String) URI of the Workload
-- `ignored_interface_names` (List of String) Ignored Interface Names for Workload
 - `ike_authentication_certificate` (Map of String) IKE authentication certificate for certificate-based Secure Connect and Machine Auth
 - `os_detail` (String) Additional OS details - just displayed to end-user. Set by the VEN.
 - `os_id` (String) OS identifier for Workload. Set by the VEN.

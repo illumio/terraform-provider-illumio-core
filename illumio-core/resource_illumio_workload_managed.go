@@ -15,8 +15,8 @@ import (
 func resourceIllumioManagedWorkload() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceIllumioManagedWorkloadCreate,
-		ReadContext:   resourceIllumioUnmanagedWorkloadRead, // reuse unmanaged workload read/update
-		UpdateContext: resourceIllumioUnmanagedWorkloadUpdate,
+		ReadContext:   resourceIllumioUnmanagedWorkloadRead, // reuse unmanaged workload read
+		UpdateContext: resourceIllumioManagedWorkloadUpdate,
 		DeleteContext: resourceIllumioManagedWorkloadDelete,
 		Description:   "Manages Illumio Managed Workload",
 
@@ -134,8 +134,8 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 			},
 			"ignored_interface_names": {
 				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Ignored Interface Names for Workload",
+				Optional:    true,
+				Description: "Workload interface names to ignore (e.g. `eth0`). Ignored interfaces will not be included in policy configuration provided by the PCE.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"services": {
@@ -514,6 +514,40 @@ func resourceIllumioManagedWorkloadCreate(ctx context.Context, d *schema.Resourc
 	})
 
 	return diags
+}
+
+func resourceIllumioManagedWorkloadUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	pConfig, _ := m.(Config)
+	illumioClient := pConfig.IllumioClient
+
+	var diags diag.Diagnostics
+	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
+
+	var workload = &models.Workload{
+		Name:                  d.Get("name").(string),
+		DataCenter:            d.Get("data_center").(string),
+		DataCenterZone:        d.Get("data_center_zone").(string),
+		Description:           d.Get("description").(string),
+		EnforcementMode:       d.Get("enforcement_mode").(string),
+		ExternalDataReference: d.Get("external_data_reference").(string),
+		ExternalDataSet:       d.Get("external_data_set").(string),
+		ServicePrincipalName:  d.Get("service_principal_name").(string),
+		ServiceProvider:       d.Get("service_provider").(string),
+		Labels:                labels,
+		IgnoredInterfaceNames: ignoredInterfaceNames,
+	}
+
+	if diags.HasError() {
+		return diags
+	}
+
+	_, err := illumioClient.Update(d.Id(), workload)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	return resourceIllumioUnmanagedWorkloadRead(ctx, d, m)
 }
 
 func resourceIllumioManagedWorkloadDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

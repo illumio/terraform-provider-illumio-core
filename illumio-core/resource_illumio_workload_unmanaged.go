@@ -5,8 +5,6 @@ package illumiocore
 import (
 	"context"
 	"fmt"
-	"reflect"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -526,9 +524,7 @@ func resourceIllumioUnmanagedWorkloadCreate(ctx context.Context, d *schema.Resou
 	illumioClient := pConfig.IllumioClient
 
 	orgID := illumioClient.OrgID
-
-	workload := &models.Workload{}
-	populateWorkloadFromResourceData(workload, d)
+	workload := populateUnmanagedWorkloadFromResourceData(d)
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
@@ -732,9 +728,7 @@ func resourceIllumioUnmanagedWorkloadUpdate(ctx context.Context, d *schema.Resou
 	illumioClient := pConfig.IllumioClient
 
 	var diags diag.Diagnostics
-
-	var workload = &models.Workload{}
-	populateWorkloadFromResourceData(workload, d)
+	workload := populateUnmanagedWorkloadFromResourceData(d)
 
 	if diags.HasError() {
 		return diags
@@ -761,37 +755,28 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 	return diagnostics
 }
 
-func populateWorkloadFromResourceData(w *models.Workload, d *schema.ResourceData) {
-	val := reflect.TypeOf(*w)
+func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.Workload {
+	online := d.Get("online").(bool)
+	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
-	// iterate over the Workload struct fields and set values
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
-		fieldType := field.Type.Kind()
-		jsonTag := field.Tag.Get("json")
-		parts := strings.Split(jsonTag, ",")
-		jsonFieldName := parts[0]
-
-		if d.HasChange(jsonFieldName) {
-			if fieldType == reflect.Slice || fieldType == reflect.Array {
-				continue
-			}
-
-			// boolean fields must be set as pointers in the struct
-			// for JSON marshalling to correctly marshal nil/false values
-			// with omitempty set. to accommodate this, create a pointer
-			// Value referencing the ResourceData field
-			if fieldType == reflect.Ptr {
-				resourceValue := reflect.ValueOf(d.Get(jsonFieldName)) // reflect as a Value so we can cast from interface{}
-				p := reflect.New(resourceValue.Type())                 // create a pointer of the reflected type
-				p.Elem().Set(resourceValue)                            // set the value of the pointer
-				reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(p)
-			} else {
-				resourceValue := reflect.ValueOf(d.Get(jsonFieldName))
-				reflect.ValueOf(w).Elem().FieldByName(field.Name).Set(resourceValue)
-			}
-		}
+	return &models.Workload{
+		Name:                                  d.Get("name").(string),
+		AgentToPceCertificateAuthenticationID: d.Get("agent_to_pce_certificate_authentication_id").(string),
+		DataCenter:                            d.Get("data_center").(string),
+		DataCenterZone:                        d.Get("data_center_zone").(string),
+		Description:                           d.Get("description").(string),
+		EnforcementMode:                       d.Get("enforcement_mode").(string),
+		ExternalDataReference:                 d.Get("external_data_reference").(string),
+		ExternalDataSet:                       d.Get("external_data_set").(string),
+		Hostname:                              d.Get("hostname").(string),
+		Online:                                &online,
+		OsDetail:                              d.Get("os_detail").(string),
+		OsID:                                  d.Get("os_id").(string),
+		PublicIP:                              d.Get("public_ip").(string),
+		ServicePrincipalName:                  d.Get("service_principal_name").(string),
+		ServiceProvider:                       d.Get("service_provider").(string),
+		Labels:                                labels,
+		IgnoredInterfaceNames:                 ignoredInterfaceNames,
 	}
-
-	w.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
 }

@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
 func resourceIllumioWorkload() *schema.Resource {
@@ -520,9 +519,7 @@ func resourceIllumioWorkloadCreate(ctx context.Context, d *schema.ResourceData, 
 	illumioClient := pConfig.IllumioClient
 
 	orgID := illumioClient.OrgID
-
-	workload := &models.Workload{}
-	populateWorkloadFromResourceData(workload, d)
+	workload := populateUnmanagedWorkloadFromResourceData(d)
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/workloads", orgID), workload)
 	if err != nil {
@@ -726,9 +723,7 @@ func resourceIllumioWorkloadUpdate(ctx context.Context, d *schema.ResourceData, 
 	illumioClient := pConfig.IllumioClient
 
 	var diags diag.Diagnostics
-
-	workload := &models.Workload{}
-	populateWorkloadFromResourceData(workload, d)
+	workload := populateUnmanagedWorkloadFromResourceData(d)
 
 	if diags.HasError() {
 		return diags

@@ -63,10 +63,10 @@ resource "illumio-core_service" "example" {
 - `external_data_reference` (String) External data reference identifier
 - `external_data_set` (String) External data set identifier
 - `ingress_services` (Block Set) Collection of Ingress Services. If resolve_label_as.providers list includes "workloads" then ingress_services is required. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedblock--ingress_services))
-- `machine_auth` (Boolean) Determines whether machine authentication is enabled. Defaule Value: false
-- `sec_connect` (Boolean) Determines whether a secure connection is established. Defaule Value: false
-- `stateless` (Boolean) Determines whether packet filtering is stateless for the rule. Defaule Value: false
-- `unscoped_consumers` (Boolean) Set the scope for rule consumers to All. Defaule Value: false
+- `machine_auth` (Boolean) Determines whether machine authentication is enabled. Default value: false
+- `sec_connect` (Boolean) Determines whether a secure connection is established. Default value: false
+- `stateless` (Boolean) Determines whether packet filtering is stateless for the rule. Default value: false
+- `unscoped_consumers` (Boolean) If false (the default), the created Rule will be an intra-scope rule. If true, it will be extra-scope. Default value: false
 
 ### Read-Only
 

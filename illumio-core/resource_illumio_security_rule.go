@@ -138,19 +138,19 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Determines whether a secure connection is established. Defaule Value: false",
+			Description: "Determines whether a secure connection is established. Default value: false",
 		},
 		"stateless": {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Determines whether packet filtering is stateless for the rule. Defaule Value: false",
+			Description: "Determines whether packet filtering is stateless for the rule. Default value: false",
 		},
 		"machine_auth": {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Determines whether machine authentication is enabled. Defaule Value: false",
+			Description: "Determines whether machine authentication is enabled. Default value: false",
 		},
 		"providers": {
 			Type:        schema.TypeSet,
@@ -265,7 +265,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Set the scope for rule consumers to All. Defaule Value: false",
+			Description: "If false (the default), the created Rule will be an intra-scope rule. If true, it will be extra-scope. Default value: false",
 		},
 		"update_type": {
 			Type:        schema.TypeString,

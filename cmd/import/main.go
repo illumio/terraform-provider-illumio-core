@@ -316,6 +316,7 @@ func hclFromObject(obj interface{}) string {
 	case illumioapi.VEN:
 	case illumioapi.VirtualServer:
 	case illumioapi.VirtualService:
+		return buildVirtualServiceHCL(o)
 	case illumioapi.Workload:
 		return buildWorkloadHCL(o)
 	case illumioapi.Vulnerability:
@@ -871,6 +872,95 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
 
   external_data_set       = %q
   external_data_reference = %q`, workload.ExternalDataSet, workload.ExternalDataReference))
+	}
+	hcl.WriteString(`
+}
+`)
+	return hcl.String()
+}
+
+func buildVirtualServiceHCL(virtualService illumioapi.VirtualService) string {
+	var hcl strings.Builder
+	hclName := hclNormalize(virtualService.Name)
+	address := fmt.Sprintf("illumio-core_virtual_service.%s", hclName)
+	if _, ok := tfStateMap[address]; !ok {
+		tfImportMap[address] = virtualService.Href
+	}
+
+	hcl.WriteString(fmt.Sprintf(`
+resource "illumio-core_virtual_service" %q {
+  name         = %q
+  description  = %q
+  apply_to     = %q
+`, hclName, virtualService.Name, virtualService.Description, virtualService.ApplyTo))
+
+	if len(virtualService.IPOverrides) > 0 {
+		hcl.WriteString(fmt.Sprintf(`
+  ip_overrides = ["%v"]`, strings.Join(virtualService.IPOverrides, `, "`)))
+	}
+
+	if virtualService.Service != nil {
+		hcl.WriteString(fmt.Sprintf(`
+  service {
+    href = %q
+  }
+`, virtualService.Service.Href))
+	}
+
+	for _, svcPort := range virtualService.ServicePorts {
+		svcValueMap := map[string]int{
+			"port": svcPort.Port, "to_port": svcPort.ToPort, "proto": svcPort.Protocol,
+		}
+		hcl.WriteString(`
+  service_ports {`)
+		for field, val := range svcValueMap {
+			if val != 0 {
+				hcl.WriteString(fmt.Sprintf(`
+    %-7s = "%d"`, field, val))
+			}
+		}
+		hcl.WriteString(`
+  }
+`)
+	}
+
+	for _, svcAddress := range virtualService.ServiceAddresses {
+		hcl.WriteString(`
+  service_addresses {`)
+		if svcAddress.Fqdn != "" {
+			hcl.WriteString(fmt.Sprintf(`
+    fqdn         = %q`, svcAddress.Fqdn))
+		}
+		if svcAddress.Description != "" {
+			hcl.WriteString(fmt.Sprintf(`
+    description  = %q`, svcAddress.Description))
+		}
+		if svcAddress.IP != "" {
+			hcl.WriteString(fmt.Sprintf(`
+    ip           = %q`, svcAddress.IP))
+		}
+		if svcAddress.Network != nil {
+			hcl.WriteString(fmt.Sprintf(`
+    network_href = %q`, svcAddress.Network.Href))
+		}
+		hcl.WriteString(`
+  }
+`)
+	}
+
+	for _, label := range virtualService.Labels {
+		hcl.WriteString(fmt.Sprintf(`
+  labels {
+    href = %q
+  }
+`, label.Href))
+	}
+
+	if virtualService.ExternalDataSet != "" && virtualService.ExternalDataReference != "" {
+		hcl.WriteString(fmt.Sprintf(`
+
+  external_data_set       = %q
+  external_data_reference = %q`, virtualService.ExternalDataSet, virtualService.ExternalDataReference))
 	}
 	hcl.WriteString(`
 }

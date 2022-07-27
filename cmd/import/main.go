@@ -634,7 +634,7 @@ resource "illumio-core_rule_set" %q {
   name        = %q
   description = %q
   enabled     = %v
-`, hclName, ruleSet.Name, ruleSet.Description, ruleSet.Enabled))
+`, hclName, ruleSet.Name, ruleSet.Description, *ruleSet.Enabled))
 	for _, scope := range ruleSet.Scopes {
 		hcl.WriteString(`
   scopes {`)
@@ -800,7 +800,7 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
 		}
 
 		unmanagedWorkloadProperties += (fmt.Sprintf(`
-  online      = %v`, workload.Online))
+  online                  = %v`, workload.Online))
 
 		if workload.PublicIP != "" {
 			unmanagedWorkloadProperties += (fmt.Sprintf(`
@@ -829,8 +829,7 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
 
 	hcl.WriteString(fmt.Sprintf(`
   name                    = %q
-  description             = %q
-`, workload.Name, workload.Description))
+  description             = %q`, workload.Name, workload.Description))
 
 	hcl.WriteString(unmanagedWorkloadProperties)
 
@@ -869,7 +868,6 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
 
 	if workload.ExternalDataSet != "" && workload.ExternalDataReference != "" {
 		hcl.WriteString(fmt.Sprintf(`
-
   external_data_set       = %q
   external_data_reference = %q`, workload.ExternalDataSet, workload.ExternalDataReference))
 	}
@@ -896,7 +894,8 @@ resource "illumio-core_virtual_service" %q {
 
 	if len(virtualService.IPOverrides) > 0 {
 		hcl.WriteString(fmt.Sprintf(`
-  ip_overrides = ["%v"]`, strings.Join(virtualService.IPOverrides, `, "`)))
+  ip_overrides = ["%v"]
+`, strings.Join(virtualService.IPOverrides, `, "`)))
 	}
 
 	if virtualService.Service != nil {
@@ -958,7 +957,6 @@ resource "illumio-core_virtual_service" %q {
 
 	if virtualService.ExternalDataSet != "" && virtualService.ExternalDataReference != "" {
 		hcl.WriteString(fmt.Sprintf(`
-
   external_data_set       = %q
   external_data_reference = %q`, virtualService.ExternalDataSet, virtualService.ExternalDataReference))
 	}

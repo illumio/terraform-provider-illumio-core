@@ -19,12 +19,15 @@ import (
 	"github.com/brian1917/illumioapi"
 )
 
+const illumioProviderName = "registry.terraform.io/illumio/illumio-core"
+
 var pce *illumioapi.PCE
 var currentDirectory string
 var ctx context.Context
 
 // HCL normalization regex - names can only use alphanum, dashes and underscores
 var hclNormRe = regexp.MustCompile(`[^a-zA-Z0-9_-]`)
+var containerClusterRe = regexp.MustCompile(`\/orgs\/\d+\/container_clusters\/(?P<ClusterID>[\w-]+)`)
 
 var tfStateMap = map[string]struct{}{}
 
@@ -57,8 +60,6 @@ func main() {
 
 	currentDirectory, err = os.Getwd()
 	handleError(err, true)
-
-	// TODO: if there are already tf files here, move them and reference them
 
 	log.Print("Initializing Terraform")
 	tf := initializeTerraform()
@@ -109,12 +110,22 @@ func main() {
 	handleError(err, false)
 	log.Print("Loaded all PCE objects")
 
-	log.Print("Writing main.tf")
-	// Create main.tf which includes the provider configuration
-	writeMainTf()
+	providerSchemas, err := tf.ProvidersSchema(ctx)
+	handleError(err, true)
+
+	// if the Illumio provider isn't defined, create a main.tf
+	// with the provider definition
+	if _, ok := providerSchemas.Schemas[illumioProviderName]; !ok {
+		mainTfFilePath := path.Join(currentDirectory, "main.tf")
+		if _, err := os.Stat(mainTfFilePath); err == nil {
+			log.Fatal("main.tf exists but illumio-core provider has not been defined. Exiting.")
+		}
+		log.Print("Writing main.tf")
+		// Create main.tf which includes the provider configuration
+		writeMainTf()
+	}
 
 	containerClusters := PCEObjectGroup[illumioapi.ContainerCluster]{pce.ContainerClustersSlice}
-	containerWorkloadProfiles := PCEObjectGroup[illumioapi.ContainerWorkloadProfile]{pce.ContainerWorkloadProfilesSlice}
 	ipLists := PCEObjectGroup[illumioapi.IPList]{pce.IPListsSlice}
 	labels := PCEObjectGroup[illumioapi.Label]{pce.LabelsSlice}
 	labelGroups := PCEObjectGroup[illumioapi.LabelGroup]{pce.LabelGroupsSlice}
@@ -138,23 +149,23 @@ func main() {
 	virtualServices.fromMap(pce.VirtualServices)
 
 	pceObjectMap := map[string]string{
-		"container_clusters":          containerClusters.buildHCL(),
-		"container_workload_profiles": containerWorkloadProfiles.buildHCL(),
-		"enforcement_boundaries":      enforcementBoundaries.buildHCL(),
-		"ip_lists":                    ipLists.buildHCL(),
-		"labels":                      labels.buildHCL(),
-		"label_groups":                labelGroups.buildHCL(),
-		"pairing_profiles":            pairingProfiles.buildHCL(),
-		"rule_sets":                   ruleSets.buildHCL(),
-		"security_principals":         securityPrincipals.buildHCL(),
-		"services":                    services.buildHCL(),
-		"vens":                        vens.buildHCL(),
-		"virtual_servers":             virtualServers.buildHCL(),
-		"virtual_services":            virtualServices.buildHCL(),
-		"vulnerabilities":             vulns.buildHCL(),
-		"vulnerability_reports":       vulnReports.buildHCL(),
-		"workloads":                   workloads.buildHCL(),
+		"container_clusters":     containerClusters.buildHCL(),
+		"enforcement_boundaries": enforcementBoundaries.buildHCL(),
+		"ip_lists":               ipLists.buildHCL(),
+		"labels":                 labels.buildHCL(),
+		"label_groups":           labelGroups.buildHCL(),
+		"pairing_profiles":       pairingProfiles.buildHCL(),
+		"rule_sets":              ruleSets.buildHCL(),
+		"security_principals":    securityPrincipals.buildHCL(),
+		"services":               services.buildHCL(),
+		"vens":                   vens.buildHCL(),
+		"virtual_servers":        virtualServers.buildHCL(),
+		"virtual_services":       virtualServices.buildHCL(),
+		"vulnerabilities":        vulns.buildHCL(),
+		"vulnerability_reports":  vulnReports.buildHCL(),
+		"workloads":              workloads.buildHCL(),
 		// TODO: rules
+		// TODO: container_workloads
 	}
 
 	// Create HCL entries for each object type
@@ -169,6 +180,10 @@ func main() {
 		handleError(err, false)
 	}
 
+	log.Print("Formatting TF files")
+	err = tf.FormatWrite(ctx)
+	handleError(err, false)
+
 	// run TF plan to check that we imported everything correctly
 	ok, err := tf.Plan(ctx)
 	handleError(err, true)
@@ -179,12 +194,10 @@ func main() {
 	}
 }
 
-// Runs terraform init and checks for an existing terraform.tfstate file.
-// If one exists, reaads the state into memory so we don't try to import
-// the same object twice
-// This assumes that the object hasn't been updated on the remote, but if
-// the remote is out of sync the best approach is just to rerun the import
-// from scratch
+// Runs terraform init and loads existing state. If one exists, reads the
+// state into memory so we don't try to import the same object twice.
+// This assumes that the object hasn't been updated on the remote, but any
+// change will be resolved in a refresh or apply
 func initializeTerraform() *tfexec.Terraform {
 	installer := &releases.LatestVersion{
 		Product: product.Terraform,
@@ -199,11 +212,12 @@ func initializeTerraform() *tfexec.Terraform {
 	err = tf.Init(ctx, tfexec.Upgrade(true))
 	handleError(err, true)
 
-	// fetch the existing state and store it
-	tfstateFilePath := path.Join(currentDirectory, "terraform.tfstate")
-	if _, err := os.Stat(tfstateFilePath); err == nil {
-		state, err := tf.ShowStateFile(ctx, tfstateFilePath)
-		handleError(err, true)
+	// load state from default state path
+	// TODO: custom state file definition
+	state, err := tf.Show(ctx)
+	handleError(err, false)
+
+	if state != nil {
 		stateResources := state.Values.RootModule.Resources
 		for _, res := range stateResources {
 			tfStateMap[res.Address] = struct{}{}
@@ -298,7 +312,7 @@ func hclFromObject(obj interface{}) string {
 	switch o := obj.(type) {
 	case illumioapi.ConsumingSecurityPrincipals:
 	case illumioapi.ContainerCluster:
-	case illumioapi.ContainerWorkloadProfile:
+		return buildContainerClusterHCL(o)
 	case illumioapi.EnforcementBoundary:
 		return buildEnforcementBoundaryHCL(o)
 	case illumioapi.IPList:
@@ -331,7 +345,7 @@ func hclFromObject(obj interface{}) string {
 func hclNormalize(s string) string {
 	s = strings.ToLower(s)
 	// replace all spaces first
-	s = strings.ReplaceAll(s, " ", "_")
+	s = strings.ReplaceAll(s, " ", "-")
 	// strip any remaining special characters
 	s = hclNormRe.ReplaceAllString(s, "")
 	return s
@@ -760,12 +774,12 @@ resource "illumio-core_pairing_profile" %q {
 		hcl.WriteString(fmt.Sprintf(`
   labels {
     href = %q
-  }
-`, label.Href))
+  }`, label.Href))
 	}
 
 	if pairingProfile.ExternalDataSet != "" && pairingProfile.ExternalDataReference != "" {
 		hcl.WriteString(fmt.Sprintf(`
+
   external_data_set       = %q
   external_data_reference = %q`, pairingProfile.ExternalDataSet, pairingProfile.ExternalDataReference))
 	}
@@ -862,12 +876,12 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
 		hcl.WriteString(fmt.Sprintf(`
   labels {
     href = %q
-  }
-`, label.Href))
+  }`, label.Href))
 	}
 
 	if workload.ExternalDataSet != "" && workload.ExternalDataReference != "" {
 		hcl.WriteString(fmt.Sprintf(`
+
   external_data_set       = %q
   external_data_reference = %q`, workload.ExternalDataSet, workload.ExternalDataReference))
 	}
@@ -902,8 +916,7 @@ resource "illumio-core_virtual_service" %q {
 		hcl.WriteString(fmt.Sprintf(`
   service {
     href = %q
-  }
-`, virtualService.Service.Href))
+  }`, virtualService.Service.Href))
 	}
 
 	for _, svcPort := range virtualService.ServicePorts {
@@ -919,8 +932,7 @@ resource "illumio-core_virtual_service" %q {
 			}
 		}
 		hcl.WriteString(`
-  }
-`)
+  }`)
 	}
 
 	for _, svcAddress := range virtualService.ServiceAddresses {
@@ -943,23 +955,95 @@ resource "illumio-core_virtual_service" %q {
     network_href = %q`, svcAddress.Network.Href))
 		}
 		hcl.WriteString(`
-  }
-`)
+  }`)
 	}
 
 	for _, label := range virtualService.Labels {
 		hcl.WriteString(fmt.Sprintf(`
   labels {
     href = %q
-  }
-`, label.Href))
+  }`, label.Href))
 	}
 
 	if virtualService.ExternalDataSet != "" && virtualService.ExternalDataReference != "" {
 		hcl.WriteString(fmt.Sprintf(`
+
   external_data_set       = %q
   external_data_reference = %q`, virtualService.ExternalDataSet, virtualService.ExternalDataReference))
 	}
+	hcl.WriteString(`
+}
+`)
+	return hcl.String()
+}
+
+func buildContainerClusterHCL(containerCluster illumioapi.ContainerCluster) string {
+	var hcl strings.Builder
+	hclName := hclNormalize(containerCluster.Name)
+	address := fmt.Sprintf("illumio-core_container_cluster.%s", hclName)
+	if _, ok := tfStateMap[address]; !ok {
+		tfImportMap[address] = containerCluster.Href
+	}
+
+	hcl.WriteString(fmt.Sprintf(`
+resource "illumio-core_container_cluster" %q {
+  name         = %q
+  description  = %q
+}
+`, hclName, containerCluster.Name, containerCluster.Description))
+
+	// append workload profile subobjects
+	matches := containerClusterRe.FindStringSubmatch(containerCluster.Href)
+	if len(matches) > 1 {
+		i := containerClusterRe.SubexpIndex("ClusterID")
+		workloadProfiles, _, err := pce.GetContainerWkldProfiles(map[string]string{}, matches[i])
+		handleError(err, false)
+		for _, workloadProfile := range workloadProfiles {
+			hcl.WriteString(buildContainerClusterWorkloadProfileHCL(workloadProfile, containerCluster.Href, containerCluster.Name))
+		}
+	}
+	return hcl.String()
+}
+
+func buildContainerClusterWorkloadProfileHCL(clusterWorkloadProfile illumioapi.ContainerWorkloadProfile, clusterHref, clusterName string) string {
+	var hcl strings.Builder
+	hclName := hclNormalize(fmt.Sprintf("%s-%s", clusterName, clusterWorkloadProfile.Name))
+	address := fmt.Sprintf("illumio-core_container_cluster_workload_profile.%s", hclName)
+	if _, ok := tfStateMap[address]; !ok {
+		tfImportMap[address] = clusterWorkloadProfile.Href
+	}
+
+	hcl.WriteString(fmt.Sprintf(`
+resource "illumio-core_container_cluster_workload_profile" %q {
+  container_cluster_href = %q
+  name                   = %q
+  description            = %q
+  enforcement_mode       = %q
+  managed                = %v`, hclName, clusterHref, clusterWorkloadProfile.Name,
+		clusterWorkloadProfile.Description, clusterWorkloadProfile.EnforcementMode,
+		*clusterWorkloadProfile.Managed))
+
+	for _, label := range clusterWorkloadProfile.AssignLabels {
+		hcl.WriteString(fmt.Sprintf(`
+  assign_labels {
+    href = %q
+  }`, label.Href))
+	}
+
+	for _, label := range clusterWorkloadProfile.Labels {
+		hcl.WriteString(fmt.Sprintf(`
+  labels {
+    key = %q`, label.Key))
+		if label.Assignment.Href != "" {
+			hcl.WriteString(fmt.Sprintf(`
+    assignment {
+      href  = %q
+    }`, label.Assignment.Href))
+		}
+		hcl.WriteString(`
+  }`)
+	}
+
 	hcl.WriteString(`
 }
 `)

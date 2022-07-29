@@ -140,7 +140,7 @@ func Provider() *schema.Provider {
 			"illumio-core_syslog_destination":                 resourceIllumioSyslogDestination(),
 			"illumio-core_virtual_service":                    resourceIllumioVirtualService(),
 			"illumio-core_container_cluster":                  resourceIllumioContainerCluster(),
-			"illumio-core_container_cluster_workload_profile": resourceIllumioContainerClusterWorkloadProfileWorkloadProfile(),
+			"illumio-core_container_cluster_workload_profile": resourceIllumioContainerClusterWorkloadProfile(),
 			"illumio-core_workload_interface":                 resourceIllumioWorkloadInterface(),
 			"illumio-core_ven":                                resourceIllumioVEN(),
 			"illumio-core_vens_unpair":                        resourceIllumioVENsUnpair(),

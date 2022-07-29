@@ -13,7 +13,7 @@ import (
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
-func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Resource {
+func resourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceIllumioContainerClusterWorkloadProfileCreate,
 		ReadContext:   resourceIllumioContainerClusterWorkloadProfileRead,
@@ -26,6 +26,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 			"container_cluster_href": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "URI of Container Cluster",
 			},
 			"href": {
@@ -50,11 +51,10 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Description: "Description of the container workload profile",
 			},
 			"assign_labels": {
-				Type:         schema.TypeSet,
-				Optional:     true,
-				Computed:     true,
-				ExactlyOneOf: []string{"labels", "assign_labels"},
-				Description:  "Assigned labels container workload profile",
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Assigned labels container workload profile",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {
@@ -150,12 +150,12 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this label group was first created",
+				Description: "Timestamp when this container workload profile was first created",
 			},
 			"updated_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this label group was last updated",
+				Description: "Timestamp when this container workload profile was last updated",
 			},
 			"created_by": {
 				Type:     schema.TypeMap,
@@ -163,7 +163,7 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who created this label group",
+				Description: "User who created this container workload profile",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,
@@ -171,8 +171,11 @@ func resourceIllumioContainerClusterWorkloadProfileWorkloadProfile() *schema.Res
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who last updated this label group",
+				Description: "User who last updated this container workload profile",
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }
@@ -272,7 +275,11 @@ func resourceIllumioContainerClusterWorkloadProfileRead(ctx context.Context, d *
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
+	// extract the parent HREF and set it
+	href = data.S("href").Data().(string)
+	d.Set("container_cluster_href", getParentHref(href))
+
+	d.SetId(href)
 	for _, key := range []string{
 		"href",
 		"name",

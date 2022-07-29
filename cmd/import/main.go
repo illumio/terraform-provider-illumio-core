@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -37,10 +38,6 @@ var tfImportMap = map[string]string{}
 // TODO: build another index of HREFs to HCL addresses and
 // do another pass after we write the files to replace refs.
 // this will provide dependency resolution between resources
-
-type PCEObjectGroup[T any] struct {
-	objects []T
-}
 
 func handleError(err error, exitOnErr bool) {
 	if err != nil {
@@ -101,12 +98,12 @@ func main() {
 	vulnerabilityReports, _, err := pce.GetVulnReports(emptyParams)
 	handleError(err, false)
 
-	enforcementBoundaries := PCEObjectGroup[illumioapi.EnforcementBoundary]{}
-	err = getAllObjects(pce, "/sec_policy/draft/enforcement_boundaries", &enforcementBoundaries.objects)
+	enforcementBoundaries := []illumioapi.EnforcementBoundary{}
+	err = getAllObjects(pce, "/sec_policy/draft/enforcement_boundaries", &enforcementBoundaries)
 	handleError(err, false)
 
-	pairingProfiles := PCEObjectGroup[illumioapi.PairingProfile]{}
-	err = getAllObjects(pce, "/pairing_profiles", &pairingProfiles.objects)
+	pairingProfiles := []illumioapi.PairingProfile{}
+	err = getAllObjects(pce, "/pairing_profiles", &pairingProfiles)
 	handleError(err, false)
 	log.Print("Loaded all PCE objects")
 
@@ -125,45 +122,22 @@ func main() {
 		writeMainTf()
 	}
 
-	containerClusters := PCEObjectGroup[illumioapi.ContainerCluster]{pce.ContainerClustersSlice}
-	ipLists := PCEObjectGroup[illumioapi.IPList]{pce.IPListsSlice}
-	labels := PCEObjectGroup[illumioapi.Label]{pce.LabelsSlice}
-	labelGroups := PCEObjectGroup[illumioapi.LabelGroup]{pce.LabelGroupsSlice}
-	services := PCEObjectGroup[illumioapi.Service]{pce.ServicesSlice}
-	vens := PCEObjectGroup[illumioapi.VEN]{pce.VENsSlice}
-	vulns := PCEObjectGroup[illumioapi.Vulnerability]{vulnerabilities}
-	vulnReports := PCEObjectGroup[illumioapi.VulnerabilityReport]{vulnerabilityReports}
-	workloads := PCEObjectGroup[illumioapi.Workload]{pce.WorkloadsSlice}
-
-	// some object types don't have slice equivalents, so convert the maps
-	ruleSets := PCEObjectGroup[illumioapi.RuleSet]{}
-	ruleSets.fromMap(pce.RuleSets)
-
-	securityPrincipals := PCEObjectGroup[illumioapi.ConsumingSecurityPrincipals]{}
-	securityPrincipals.fromMap(pce.ConsumingSecurityPrincipals)
-
-	virtualServers := PCEObjectGroup[illumioapi.VirtualServer]{}
-	virtualServers.fromMap(pce.VirtualServers)
-
-	virtualServices := PCEObjectGroup[illumioapi.VirtualService]{}
-	virtualServices.fromMap(pce.VirtualServices)
-
 	pceObjectMap := map[string]string{
-		"container_clusters":     containerClusters.buildHCL(),
-		"enforcement_boundaries": enforcementBoundaries.buildHCL(),
-		"ip_lists":               ipLists.buildHCL(),
-		"labels":                 labels.buildHCL(),
-		"label_groups":           labelGroups.buildHCL(),
-		"pairing_profiles":       pairingProfiles.buildHCL(),
-		"rule_sets":              ruleSets.buildHCL(),
-		"security_principals":    securityPrincipals.buildHCL(),
-		"services":               services.buildHCL(),
-		"vens":                   vens.buildHCL(),
-		"virtual_servers":        virtualServers.buildHCL(),
-		"virtual_services":       virtualServices.buildHCL(),
-		"vulnerabilities":        vulns.buildHCL(),
-		"vulnerability_reports":  vulnReports.buildHCL(),
-		"workloads":              workloads.buildHCL(),
+		"container_clusters":     buildHCL(pce.ContainerClustersSlice),
+		"enforcement_boundaries": buildHCL(enforcementBoundaries),
+		"ip_lists":               buildHCL(pce.IPListsSlice),
+		"labels":                 buildHCL(pce.LabelsSlice),
+		"label_groups":           buildHCL(pce.LabelGroupsSlice),
+		"pairing_profiles":       buildHCL(pairingProfiles),
+		"rule_sets":              buildHCL(pce.RuleSets),
+		"security_principals":    buildHCL(pce.ConsumingSecurityPrincipals),
+		"services":               buildHCL(pce.ServicesSlice),
+		"vens":                   buildHCL(pce.VENsSlice),
+		"virtual_servers":        buildHCL(pce.VirtualServers),
+		"virtual_services":       buildHCL(pce.VirtualServices),
+		"vulnerabilities":        buildHCL(vulnerabilities),
+		"vulnerability_reports":  buildHCL(vulnerabilityReports),
+		"workloads":              buildHCL(pce.WorkloadsSlice),
 		// TODO: rules
 		// TODO: container_workloads
 	}
@@ -263,47 +237,47 @@ func getAllObjects(pce *illumioapi.PCE, endpoint string, target interface{}) err
 
 // Creates the main.tf HCL file that defines the illumio provider
 func writeMainTf() {
-	contents := `terraform {
-	required_providers {
-		illumio-core = {
-			source = "illumio/illumio-core"
-		}
-	}
+	writeTfFile("main", `terraform {
+  required_providers {
+    illumio-core = {
+      source = "illumio/illumio-core"
+    }
+  }
 }
 
 provider "illumio-core" {
-	request_timeout = 30
+  request_timeout = 30
 }
-`
-	err := os.WriteFile(path.Join(currentDirectory, "main.tf"), []byte(contents), 0644)
-	handleError(err, true)
+`)
 }
 
 // Creates a .tf HCL file with the given name and contents
-func writeTfFile(objectType, hcl string) {
-	log.Printf("Writing %s.tf", objectType)
-	err := os.WriteFile(path.Join(currentDirectory, fmt.Sprintf("%s.tf", objectType)), []byte(hcl), 0644)
+func writeTfFile(fileName, hcl string) {
+	log.Printf("Writing %s.tf", fileName)
+	err := os.WriteFile(path.Join(currentDirectory, fmt.Sprintf("%s.tf", fileName)), []byte(hcl), 0644)
 	handleError(err, true)
 }
 
-// Takes an illumioapi map and populates a slice with unique
-// object values
-func (g *PCEObjectGroup[T]) fromMap(m map[string]T) {
-	for k, v := range m {
-		// each map may have multiple keys pointing to the same object, so use
-		// the HREF prefix to dedup
-		if strings.HasPrefix(k, "/orgs/") {
-			g.objects = append(g.objects, v)
-		}
-	}
-}
-
-// Iterates over the PCE object slice in the PCEObjectGroup
-// to write HCL resource blocks
-func (g *PCEObjectGroup[T]) buildHCL() string {
+// iterates over a slice or map loaded into the PCE to write HCL resource blocks
+func buildHCL(objects interface{}) string {
+	v := reflect.ValueOf(objects)
 	var hcl strings.Builder
-	for _, o := range g.objects {
-		hcl.WriteString(hclFromObject(o))
+	if v.Kind() == reflect.Slice {
+		for i := 0; i < v.Len(); i++ {
+			hcl.WriteString(hclFromObject(v.Index(i).Interface()))
+		}
+	} else if v.Kind() == reflect.Map {
+		iter := v.MapRange()
+		for iter.Next() {
+			// each map may have multiple keys pointing to the same object, so use
+			// the HREF prefix to dedup
+			if strings.HasPrefix(iter.Key().String(), "/orgs/") {
+				hcl.WriteString(hclFromObject(iter.Value().Interface()))
+			}
+		}
+		v.MapKeys()
+	} else {
+		handleError(fmt.Errorf("passed type %v to buildHCL, expected slice or map", v.Kind()), true)
 	}
 	return hcl.String()
 }

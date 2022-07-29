@@ -30,6 +30,9 @@ func resourceIllumioSecurityRule() *schema.Resource {
 		SchemaVersion: version,
 		Description:   "Manages Illumio Security Rule",
 		Schema:        securityRuleResourceSchemaMap(),
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -536,6 +539,10 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
+	// extract the parent HREF and set it
+	href := data.S("href").Data().(string)
+	d.Set("rule_set_href", getParentHref(href))
 
 	srKeys := []string{
 		"href",

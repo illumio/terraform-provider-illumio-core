@@ -765,6 +765,7 @@ resource "illumio-core_pairing_profile" %q {
 
 func buildWorkloadHCL(workload illumioapi.Workload) string {
 	var hcl strings.Builder
+	var interfacesHcl strings.Builder
 	var hclName string
 	var address string
 
@@ -809,6 +810,37 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
 			unmanagedWorkloadProperties += (fmt.Sprintf(`
   distinguished_name      = %q`, workload.DistinguishedName))
 		}
+
+		for _, workloadInterface := range workload.Interfaces {
+			interfacesHcl.WriteString(fmt.Sprintf(`
+  interfaces {
+    name                    = %q
+    address                 = %q
+`, workloadInterface.Name, workloadInterface.Address))
+
+			if workloadInterface.LinkState != "" {
+				interfacesHcl.WriteString(fmt.Sprintf(`
+    link_state              = %q`, workloadInterface.LinkState))
+			}
+
+			if workloadInterface.FriendlyName != "" {
+				interfacesHcl.WriteString(fmt.Sprintf(`
+    friendly_name           = %q`, workloadInterface.FriendlyName))
+			}
+
+			if workloadInterface.DefaultGatewayAddress != "" {
+				interfacesHcl.WriteString(fmt.Sprintf(`
+    default_gateway_address = %q`, workloadInterface.DefaultGatewayAddress))
+			}
+
+			if workloadInterface.CidrBlock != nil && *workloadInterface.CidrBlock != 0 {
+				interfacesHcl.WriteString(fmt.Sprintf(`
+    cidr_block              = %d`, *workloadInterface.CidrBlock))
+			}
+
+			interfacesHcl.WriteString(`
+  }`)
+		}
 	}
 
 	if _, ok := tfStateMap[address]; !ok {
@@ -852,6 +884,8 @@ resource "illumio-core_unmanaged_workload" %q {`, hclName))
     href = %q
   }`, label.Href))
 	}
+
+	hcl.WriteString(interfacesHcl.String())
 
 	if workload.ExternalDataSet != "" && workload.ExternalDataReference != "" {
 		hcl.WriteString(fmt.Sprintf(`

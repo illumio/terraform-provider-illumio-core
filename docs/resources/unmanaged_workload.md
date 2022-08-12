@@ -15,29 +15,66 @@ Example Usage
 ------------
 
 ```hcl
-resource "illumio-core_workload" "example" {
-  name                    = "example workload name"
-  hostname                = "example hostname"
-  public_ip               = "0.0.0.0"
-  description             = "example Desc"
-  service_principal_name  = "example spn"
-  service_provider        = "example service provider"
-  data_center             = "example data center"
-  data_center_zone        = "example data center zone"
-  os_id                   = "example os id"
-  os_detail               = "example os details"
+resource "illumio-core_unmanaged_workload" "example" {
+  name                    = "AWS CRM Web 0"
+  hostname                = "aws.ec2.apache0"
+  public_ip               = "53.125.69.221"
+  description             = "CRM Application Web Host 0"
+  service_principal_name  = ""
+  service_provider        = "aws"
+  data_center             = "aws"
+  data_center_zone        = "us-west-1"
+  os_id                   = "centos-x86_64-7.0"
+  os_detail               = ""
   enforcement_mode        = "visibility_only"
   online                  = true
-  external_data_set       = "example set"
-  external_data_reference = "example reference"
+  external_data_set       = "S3"
+  external_data_reference = "s3://hosts/crm/web0"
+
+  interfaces {
+    name = "ens0"
+    link_state = "up"
+    address = "53.125.69.221"
+    cidr_block = 28
+    default_gateway_address = "53.125.69.209"
+    friendly_name = "Public"
+  }
 
   labels {
-    href = illumio-core_label.example.href
+    href = illumio-core_label.role_R-WEB.href
+  }
+
+  labels {
+    href = illumio-core_label.app_A-CRM.href
+  }
+
+  labels {
+    href = illumio-core_label.env_E-PROD.href
+  }
+
+  labels {
+    href = illumio-core_label.loc_L-AWS-US-WEST-1.href
   }
 }
 
-resource "illumio-core_label" "example" {
-  ...
+resource "illumio-core_label" "role_R-WEB" {
+  key   = "role"
+  value = "R-WEB"
+}
+
+resource "illumio-core_label" "app_A-CRM" {
+  key   = "app"
+  value = "A-CRM"
+}
+
+resource "illumio-core_label" "env_E-PROD" {
+  key   = "env"
+  value = "E-PROD"
+}
+
+resource "illumio-core_label" "loc_L-AWS-US-WEST-1" {
+  key   = "loc"
+  value = "L-AWS-US-WEST-1"
 }
 ```
 
@@ -50,10 +87,11 @@ resource "illumio-core_label" "example" {
 - `data_center_zone` (String) Data center Zone for Workload. The data_center_zone should be up to 255 characters
 - `description` (String) The long description of the workload
 - `distinguished_name` (String) X.509 Subject distinguished name. The name should be up to 255 characters
-- `enforcement_mode` (String) Enforcement mode of workload(s) to return. Allowed values for enforcement modes are "idle","visibility_only","full", and "selective". Default value: "visibility_only"
+- `enforcement_mode` (String) Workload enforcement mode. Allowed values for enforcement modes are "idle","visibility_only","full", and "selective". Default value: "visibility_only"
 - `external_data_reference` (String) A unique identifier within the external data source
 - `external_data_set` (String) The data source from which a resource originates
 - `hostname` (String) The hostname of this workload. The hostname should be up to 255 characters
+- `interfaces` (Block Set) Workload network interfaces (see [below for nested schema](#nestedblock--interfaces))
 - `labels` (Block Set) Assigned labels for workload (see [below for nested schema](#nestedblock--labels))
 - `name` (String) Name of the Workload. The name should be up to 255 characters
 - `online` (Boolean) Determines if this workload is online. Default value: true
@@ -86,6 +124,27 @@ resource "illumio-core_label" "example" {
 - `ven` (Map of String) VENS for Workload
 - `visibility_level` (String) Visibility Level of workload(s) to return
 - `vulnerabilities_summary` (List of Object) Vulnerabilities summary associated with the workload (see [below for nested schema](#nestedatt--vulnerabilities_summary))
+
+<a id="nestedblock--interfaces"></a>
+### Nested Schema for `interfaces`
+
+Required:
+
+- `name` (String) Interface name. Can be up to 255 characters
+- `address` (String) Interface IP address. Must be in IPv4 or IPv6 format
+
+Optional:
+
+- `link_state` (String) Interface link state. Allowed values are "up", "down", and "unknown"
+- `cidr_block` (Number) Interface CIDR block bits
+- `default_gateway_address` (String) Interface Default Gateway IP address. Must be in IPv4 or IPv6 format
+- `friendly_name` (String) User-friendly interface name. Can be up to 255 characters
+
+Read-Only:
+
+- `loopback` (Boolean) Whether or not the interface represents a loopback address on the workload
+- `network` (Map of String) Interface Network object HREFs
+- `network_detection_mode` (String) Interface Network Detection Mode
 
 <a id="nestedblock--labels"></a>
 ### Nested Schema for `labels`

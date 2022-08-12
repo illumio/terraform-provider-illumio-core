@@ -39,6 +39,7 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "service_provider", resourceName, "service_provider"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "online", resourceName, "online"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "labels", resourceName, "labels"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "interfaces", resourceName, "interfaces"),
 				),
 			},
 		},
@@ -61,6 +62,18 @@ resource "illumio-core_unmanaged_workload" "wl_test" {
 	hostname           = "example.workload"
 	distinguished_name = ""
 	service_provider   = "SPN"
+
+	interfaces {
+		name       = "lo0"
+		link_state = "unknown"
+		address    = "127.0.0.1"
+	}
+
+	interfaces {
+		name       = "lo0"
+		link_state = "unknown"
+		address    = "::ffff:127.0.0.1"
+	}
 
 	labels {
 		href = illumio-core_label.wl_test.href

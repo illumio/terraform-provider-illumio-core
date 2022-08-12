@@ -2,6 +2,10 @@
 
 package models
 
+import (
+	"encoding/json"
+)
+
 //Sample
 /*
 {
@@ -15,26 +19,22 @@ package models
 */
 
 type WorkloadInterface struct {
-	Name                  string `json:"name"`
-	LinkState             string `json:"link_state"`
-	Address               string `json:"address"`
-	CidrBlock             int    `json:"cidr_block"`
-	DefaultGatewayAddress string `json:"default_gateway_address"`
-	FriendlyName          string `json:"friendly_name"`
+	Name                  string `json:"name,omitempty"`
+	LinkState             string `json:"link_state,omitempty"`
+	Address               string `json:"address,omitempty"`
+	CidrBlock             int    `json:"cidr_block,omitempty"`
+	DefaultGatewayAddress string `json:"default_gateway_address,omitempty"`
+	FriendlyName          string `json:"friendly_name,omitempty"`
 }
 
 func (w *WorkloadInterface) ToMap() (map[string]interface{}, error) {
-	workloadInterfaceAttrMap := make(map[string]interface{})
-	workloadInterfaceAttrMap["name"] = w.Name
-	workloadInterfaceAttrMap["link_state"] = w.LinkState
-	if w.Address != "" {
-		workloadInterfaceAttrMap["address"] = w.Address
+	encodedInterface, err := json.Marshal(w)
+	if err != nil {
+		return nil, err
 	}
-	workloadInterfaceAttrMap["cidr_block"] = w.CidrBlock
-	if w.DefaultGatewayAddress != "" {
-		workloadInterfaceAttrMap["default_gateway_address"] = w.DefaultGatewayAddress
-	}
-	workloadInterfaceAttrMap["friendly_name"] = w.FriendlyName
 
-	return workloadInterfaceAttrMap, nil
+	var result map[string]interface{}
+	json.Unmarshal([]byte(encodedInterface), &result)
+
+	return result, nil
 }

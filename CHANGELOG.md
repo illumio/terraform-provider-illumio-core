@@ -1,3 +1,37 @@
+## 1.0.0 (TBD)  
+
+BREAKING CHANGES:  
+
+* **resource/workload_interface has been REMOVED**  
+* **data_source/workload_interface has been REMOVED**  
+
+The PCE `/workloads/:uuid/interfaces/:name` endpoint is incompatible with Terraform in its current implementation.
+The API uses the interface name as a unique identifier, but interfaces were later changed to support multiple addresses (IPv4 and IPv6) without a change to the underlying representation expecting names and addresses to be 1-1. Since Terraform expects a unique relationship for resources to remote objects, it's not possible to define an interface with both an IPv4 and IPv6 address using HCL.  
+
+The `/workloads` API, on the other hand, *does* return multiple interface objects with the same name, and a `/workloads` POST can be used to create an interface with both IPv4 and IPv6 addresses (though they still need to be defined as distinct objects!).  
+
+As such, and because interfaces have no interaction with objects outside of the workload they belong to, the workload interface object is removed and the schema for both managed and unmanaged workloads have been updated to include an `interfaces` set.  
+
+* **resource/vens_unpair has been REMOVED**  
+
+VEN unpairing has been moved to the delete call for managed_workload resources to provide a workflow that is more consistent with Terraform's resource lifecycle. As such, the dedicated unpair resources are no longer needed.  
+
+* **resource/workloads_unpair has been REMOVED**  
+
+The PCE `/workloads/unpair` API has been deprecated in favour of `/vens/unpair` for a while, and is made doubly redundant by the addition of the managed_workload resource.  
+
+* **resource/vens_upgrade has been REMOVED**  
+
+vens_upgrade was another example of a utility resource that didn't conform to the Terraform resource lifecycle. Terraform already has the `null_resource` type and `local-exec` provisioner to handle these special cases if needed. An example of how to perform an upgrade using `local-exec` has been added to the `examples/ven_upgrade` folder.  
+
+* **resource/workload has been REMOVED**
+
+Workloads were split into the distinct managed_workload/unmanaged_workload resources in version 0.2.0. The workload resource simply duplicated unmanaged workload functionality, and is no longer necessary.
+
+NOTES:  
+
+* Add `interfaces` back into managed/unmanaged workload schema  
+
 ## 0.2.2 (May 19, 2022)
 
 NOTES:

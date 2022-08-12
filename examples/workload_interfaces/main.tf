@@ -20,29 +20,22 @@ resource "illumio-core_unmanaged_workload" "lab_gtm" {
   description      = "Lab Global Traffic Manager"
   enforcement_mode = "full"
   online           = true
-}
 
-resource "illumio-core_workload_interface" "eth0" {
-    workload_href = illumio-core_unmanaged_workload.lab_gtm.href
+  interfaces {
     name          = "eth0"
+    address       = "172.22.1.14"
     friendly_name = "Wired Network (Ethernet)"
     link_state    = "up"
-}
+  }
 
-resource "illumio-core_workload_interface" "bridge0" {
-    workload_href = illumio-core_unmanaged_workload.lab_gtm.href
-    name          = "bridge0"
-    friendly_name = "Bridge Network"
+  interfaces {
+    name          = "lo0"
+    address       = "127.0.0.1"
+    friendly_name = "Loopback Interface"
     link_state    = "up"
+  }
 }
 
 data "illumio-core_workload_interfaces" "example" {
   workload_href = illumio-core_unmanaged_workload.lab_gtm.href
-
-  # explicitly define the dependencies to ensure the resources
-  # are created before the data source is populated
-  depends_on = [
-    illumio-core_workload_interface.eth0,
-    illumio-core_workload_interface.bridge0,
-  ]
 }

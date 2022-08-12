@@ -41,6 +41,13 @@ resource "illumio-core_unmanaged_workload" "jenkins_worker01" {
   enforcement_mode = "visibility_only"
   online           = true
 
+  interfaces {
+    name       = "eth0"
+    address    = "172.22.8.211"
+    cidr_block = 28
+    link_state = "up"
+  }
+
   labels {
     href = illumio-core_label.role_cluster_worker.href
   }

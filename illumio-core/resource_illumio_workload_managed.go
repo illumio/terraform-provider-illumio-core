@@ -55,6 +55,63 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 				Computed:    true,
 				Description: "The public IP address of the server. Set by the VEN.",
 			},
+			"interfaces": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Workload network interfaces",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Interface name",
+						},
+						"link_state": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Interface link state. Can be \"up\", \"down\", or \"unknown\" ",
+						},
+						"address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Interface IP address",
+						},
+						"cidr_block": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Interface CIDR block bits",
+						},
+						"default_gateway_address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Interface Default Gateway IP address",
+						},
+						"network": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Interface Network HREFs",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"network_detection_mode": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Interface Network Detection Mode",
+						},
+						"friendly_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "User-friendly interface name",
+						},
+						"loopback": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether or not the interface represents a loopback address on the workload",
+						},
+					},
+				},
+			},
 			"service_provider": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -461,17 +518,17 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this label group was first created",
+				Description: "Timestamp when this workload was first created",
 			},
 			"updated_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this label group was last updated",
+				Description: "Timestamp when this workload was last updated",
 			},
 			"deleted_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Timestamp when this label group was last deleted",
+				Description: "Timestamp when this workload was last deleted",
 			},
 			"created_by": {
 				Type:     schema.TypeMap,
@@ -479,7 +536,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who created this label group",
+				Description: "User who created this workload",
 			},
 			"updated_by": {
 				Type:     schema.TypeMap,
@@ -487,7 +544,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who last updated this label group",
+				Description: "User who last updated this workload",
 			},
 			"deleted_by": {
 				Type:     schema.TypeMap,
@@ -495,7 +552,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "User who deleted this label group",
+				Description: "User who deleted this workload",
 			},
 		},
 		Importer: &schema.ResourceImporter{

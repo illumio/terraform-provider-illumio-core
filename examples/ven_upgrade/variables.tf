@@ -22,3 +22,8 @@ variable "pce_api_secret" {
   description = "Illumio PCE API key secret"
   sensitive   = true
 }
+
+variable "ven_version" {
+  type        = string
+  description = "Illumio PCE VEN version to upgrade to"
+}

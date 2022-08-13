@@ -96,6 +96,7 @@ resource "illumio-core_managed_workload" "aws_host1" {
 - `firewall_coexistence` (List of Object) Firewall coexistence mode for Workload (see [below for nested schema](#nestedatt--firewall_coexistence))
 - `href` (String) URI of the Workload
 - `ike_authentication_certificate` (Map of String) IKE authentication certificate for certificate-based Secure Connect and Machine Auth
+- `interfaces` (Block Set) Workload network interfaces (see [below for nested schema](#nestedblock--interfaces))
 - `os_detail` (String) Additional OS details - just displayed to end-user. Set by the VEN.
 - `os_id` (String) OS identifier for Workload. Set by the VEN.
 - `selectively_enforced_services` (List of Object) Selectively Enforced Services for Workload (see [below for nested schema](#nestedatt--selectively_enforced_services))
@@ -134,6 +135,21 @@ Read-Only:
 - `vulnerability` (Set of Object) Vulnerability for Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability))
 - `vulnerability_report` (Set of Object) Vulnerability Report for Workload(see [below for nested schema](#nestedobjatt--detected_vulnerabilities--vulnerability_report))
 - `workload` (List of Object) URI of Workload (see [below for nested schema](#nestedobjatt--detected_vulnerabilities--workload))
+
+<a id="nestedblock--interfaces"></a>
+### Nested Schema for `interfaces`
+
+Read-only:
+
+- `name` (String) Interface name. Can be up to 255 characters
+- `address` (String) Interface IP address. Must be in IPv4 or IPv6 format
+- `cidr_block` (Number) Interface CIDR block bits
+- `default_gateway_address` (String) Interface Default Gateway IP address. Must be in IPv4 or IPv6 format
+- `friendly_name` (String) User-friendly interface name. Can be up to 255 characters
+- `link_state` (String) Interface link state. Allowed values are "up", "down", and "unknown"
+- `loopback` (Boolean) Whether or not the interface represents a loopback address on the workload
+- `network` (Map of String) Interface Network object HREFs
+- `network_detection_mode` (String) Interface Network Detection Mode
 
 <a id="nestedobjatt--detected_vulnerabilities--port_wide_exposure"></a>
 ### Nested Schema for `detected_vulnerabilities.port_wide_exposure`

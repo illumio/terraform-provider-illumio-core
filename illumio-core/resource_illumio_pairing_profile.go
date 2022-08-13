@@ -215,6 +215,9 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -288,6 +291,8 @@ func resourceIllumioPairingProfileRead(ctx context.Context, d *schema.ResourceDa
 		"created_by",
 		"updated_by",
 		"is_default",
+		"key_lifespan",
+		"allowed_uses_per_key",
 		"env_label_lock",
 		"loc_label_lock",
 		"role_label_lock",

@@ -166,6 +166,14 @@ func getHrefObj(obj interface{}) *models.Href {
 	}
 }
 
+func getParentHref(href string) string {
+	re, err := regexp.Compile(orgsPrefix + "[\\w_-]+/" + uuidV4RegEx)
+	if err != nil {
+		return href
+	}
+	return re.FindString(href)
+}
+
 // Returns string list from interface type
 func getStringList(o interface{}) []string {
 	i := o.([]interface{})

@@ -1,0 +1,7 @@
+*.csv
+.DS*
+.idea/
+.log
+examples/*
+_playground/
+.VSCodeCounter/*

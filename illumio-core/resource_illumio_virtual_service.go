@@ -219,6 +219,9 @@ func resourceIllumioVirtualService() *schema.Resource {
 				Description: "User who deleted this virtual service",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

@@ -31,6 +31,22 @@ Workloads were split into the distinct managed_workload/unmanaged_workload resou
 NOTES:  
 
 * Add `interfaces` back into managed/unmanaged workload schema  
+* Add import to several objects
+  * `resource/container_cluster_workload_profile`
+  * `resource/enforcement_boundary`
+  * `resource/ip_list`
+  * `resource/pairing_profile`
+  * `resource/rule_set`
+  * `resource/security_rule`
+  * `resource/service_binding`
+  * `resource/syslog_destination`
+  * `resource/virtual_service`
+  * `resource/vulnerability`
+  * `resource/vulnerability_report`
+* Bump pinned go version to 1.18
+* Fix docs typos
+* Add arm64 to gox build targets
+* Extract parent HREF for child objects (rules/container workload profiles) on read to set for imports
 
 ## 0.2.2 (May 19, 2022)
 

@@ -53,13 +53,13 @@ resource "illumio-core_label" "example" {
 
 ### Read-Only
 
-- `created_at` (String) Timestamp when this label group was first created
-- `created_by` (Map of String) User who created this label group
+- `created_at` (String) Timestamp when this container workload profile was first created
+- `created_by` (Map of String) User who created this container workload profile
 - `href` (String) URI of the container workload profile
 - `linked` (Boolean) True if the namespace exists in the cluster and is reported by Kubelink
 - `namespace` (String) Namespace name of the container workload profile
-- `updated_at` (String) Timestamp when this label group was last updated
-- `updated_by` (Map of String) User who last updated this label group
+- `updated_at` (String) Timestamp when this container workload profile was last updated
+- `updated_by` (Map of String) User who last updated this container workload profile
 - `visibility_level` (String) Visibility Level of the container cluster workload profile
 
 <a id="nestedblock--assign_labels"></a>

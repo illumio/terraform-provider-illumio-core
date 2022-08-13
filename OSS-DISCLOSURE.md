@@ -15,12 +15,15 @@ applicable open source license(s), please contact us at opensource-requests@illu
 ********************************************************************************
 
 ## Open Source and Third Party Component Usage Summary
-| Package                     | Version                          | License       |
-| --------------------------- | -------------------------------- | ------------- |
-| github.com/Jeffail/gabs     | 2.6                              | MIT License   |
-| github.com/hashicorp/go-cty | 1.4.1                            | MIT License   |
-| github.com/hashicorp/terraform-plugin-sdk | 2.13.0 | Mozilla Public License 2.0 |
-| golang.org/x/time           | 0.0.0-20210220033141-f8bda1e9f3ba| BSD-3-Clause  |
+| Package                                      | Version                             | License                    |
+| -------------------------------------------- | ----------------------------------- | -------------------------- |
+| github.com/Jeffail/gabs                      | 2.6                                 | MIT License                |
+| github.com/hashicorp/go-cty                  | 1.4.1-0.20200414143053-d3edf31b6320 | MIT License                |
+| github.com/hashicorp/hc-install              | 0.4.0                               | Mozilla Public License 2.0 |
+| github.com/hashicorp/terraform-exec          | 0.17.2                              | Mozilla Public License 2.0 |
+| github.com/hashicorp/terraform-plugin-sdk/v2 | 2.19.0                              | Mozilla Public License 2.0 |
+| golang.org/x/time                            | 0.0.0-20210220033141-f8bda1e9f3ba   | BSD-3-Clause               |
+| github.com/brian1917/illumioapi              | 1.56.0                              | MIT License                |
 
 ## Open Source Licenses
 
@@ -82,7 +85,19 @@ SOFTWARE.
 ```
 
 ********************************************************************************
-Package: github.com/hashicorp/terraform-plugin-sdk
+Package: github.com/hashicorp/hc-install
+Source Code URL: github.com/hashicorp/hc-install
+License URL: https://github.com/hashicorp/hc-install/blob/main/LICENSE
+********************************************************************************
+
+********************************************************************************
+Package: github.com/hashicorp/terraform-exec
+Source Code URL: github.com/hashicorp/terraform-exec
+License URL: https://github.com/hashicorp/terraform-exec/blob/main/LICENSE
+********************************************************************************
+
+********************************************************************************
+Package: github.com/hashicorp/terraform-plugin-sdk/v2
 Source Code URL: github.com/hashicorp/terraform-plugin-sdk
 License URL: https://github.com/hashicorp/terraform-plugin-sdk/blob/main/LICENSE
 ********************************************************************************
@@ -477,3 +492,31 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
+********************************************************************************
+Package: github.com/brian1917/illumioapi
+Source Code URL: github.com/brian1917/illumioapi
+License URL: https://github.com/brian1917/illumioapi/blob/master/LICENSE
+********************************************************************************
+```
+MIT License
+
+Copyright (c) 2018 Brian Pitta
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

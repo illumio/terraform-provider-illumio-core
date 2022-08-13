@@ -146,6 +146,9 @@ func resourceIllumioIPList() *schema.Resource {
 				Description: "User who last deleted this IP List",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

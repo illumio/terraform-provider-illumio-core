@@ -32,6 +32,11 @@ func TestAccIllumioVS_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "ip_overrides", resourceName, "ip_overrides"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

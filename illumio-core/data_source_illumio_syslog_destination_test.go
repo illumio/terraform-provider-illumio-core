@@ -31,6 +31,11 @@ func TestAccIllumioSD_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "node_status_logger", resourceName, "node_status_logger"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

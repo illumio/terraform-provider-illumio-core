@@ -36,6 +36,11 @@ func TestAccIllumioSR_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "unscoped_consumers", resourceName, "unscoped_consumers"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

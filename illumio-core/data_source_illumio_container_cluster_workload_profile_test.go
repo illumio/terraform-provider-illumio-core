@@ -33,6 +33,11 @@ func TestAccIllumioCCWP_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "linked", resourceName, "linked"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

@@ -28,6 +28,11 @@ func TestAccIllumioLabel_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "value", resourceName, "value"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

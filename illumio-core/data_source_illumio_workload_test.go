@@ -42,6 +42,11 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "interfaces", resourceName, "interfaces"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

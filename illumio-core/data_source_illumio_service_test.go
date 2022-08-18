@@ -29,6 +29,11 @@ func TestAccIllumioService_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "service_ports", resourceName, "service_ports"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

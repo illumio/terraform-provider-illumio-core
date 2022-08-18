@@ -30,6 +30,11 @@ func TestAccIllumioCC_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "online", resourceName, "online"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

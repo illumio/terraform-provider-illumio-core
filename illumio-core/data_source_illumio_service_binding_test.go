@@ -37,6 +37,11 @@ func TestAccIllumioSB_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "workload", resourceName, "workload"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

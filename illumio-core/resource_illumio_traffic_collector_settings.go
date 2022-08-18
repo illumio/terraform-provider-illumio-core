@@ -93,6 +93,9 @@ func resourceIllumioTrafficCollectorSettings() *schema.Resource {
 				},
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

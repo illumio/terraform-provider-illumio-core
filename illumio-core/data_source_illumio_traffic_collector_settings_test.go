@@ -25,6 +25,11 @@ func TestAccIllumioTCS_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "target", resourceName, "target"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

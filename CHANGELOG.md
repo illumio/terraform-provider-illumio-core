@@ -1,4 +1,4 @@
-## 1.0.0 (TBD)  
+## 1.0.0 (Aug 19, 2022)  
 
 BREAKING CHANGES:  
 
@@ -28,7 +28,7 @@ vens_upgrade was another example of a utility resource that didn't conform to th
 
 Workloads were split into the distinct managed_workload/unmanaged_workload resources in version 0.2.0. The workload resource simply duplicated unmanaged workload functionality, and is no longer necessary.
 
-NOTES:  
+ENHANCEMENTS:
 
 * Add `interfaces` back into managed/unmanaged workload schema  
 * Add import to several objects
@@ -40,12 +40,19 @@ NOTES:
   * `resource/security_rule`
   * `resource/service_binding`
   * `resource/syslog_destination`
+  * `resource/traffic_collector_settings`
   * `resource/virtual_service`
   * `resource/vulnerability`
   * `resource/vulnerability_report`
-* Bump pinned go version to 1.18
 * Fix docs typos
+
+NOTES:  
+
+* Bump pinned go version to 1.18
 * Add arm64 to gox build targets
+
+BUG FIXES:
+
 * Extract parent HREF for child objects (rules/container workload profiles) on read to set for imports
 
 ## 0.2.2 (May 19, 2022)

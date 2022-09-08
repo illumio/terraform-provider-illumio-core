@@ -79,7 +79,7 @@ resource "illumio-core_service" "win_example" {
 
 Required:
 
-- `proto` (String) Transport protocol. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94
+- `proto` (String) Transport protocol. IANA protocol numbers between 0-255 are permitted, and -1 represents all services
 
 Optional:
 
@@ -98,6 +98,6 @@ Optional:
 - `icmp_type` (String) ICMP Type. Allowed when proto is 1 (ICMP) or 58 (ICMPv6). Allowed range is 0 - 255
 - `port` (String) Port Number. Also, the starting port when specifying a range. Allowed when value of proto is 6 or 17. Allowed range is 0 - 65535
 - `process_name` (String) Name of running process
-- `proto` (String) Transport protocol. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94
+- `proto` (String) Transport protocol. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.
 - `service_name` (String) Name of Windows Service
 - `to_port` (String) High end of port range if specifying a range. Allowed range is 0 - 65535

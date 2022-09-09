@@ -1,3 +1,9 @@
+## 1.0.1 (Sep 9, 2022)
+
+BUG FIXES:
+
+* Remove valid port slice constraint for service creation in favour of bounded int validation (-1 <= N <= 255) to support any IANA proto number
+
 ## 1.0.0 (Aug 19, 2022)  
 
 BREAKING CHANGES:  

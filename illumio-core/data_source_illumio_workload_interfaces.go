@@ -39,8 +39,8 @@ func datasourceIllumioWorkloadInterfaces() *schema.Resource {
 							Description: "Link State for Workload Interface",
 						},
 						"address": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
 							Description: "The IP Address to assign to this interface				",
 						},
 						"cidr_block": {

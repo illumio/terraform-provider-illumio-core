@@ -28,7 +28,7 @@ data "illumio-core_services" "example" {}
 - `max_results` (String) Maximum number of Services to return. The integer should be a non-zero positive integer
 - `name` (String) Name of the Service (does not need to be unique)
 - `port` (String) Specify port or port range to filter results. The range is from -1 to 65535 (0 is not supported)
-- `proto` (String) Protocol to filter on. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94
+- `proto` (String) Protocol to filter on. IANA protocol numbers between 0-255 are permitted, and -1 represents all services
 - `pversion` (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"
 
 ### Read-Only

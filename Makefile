@@ -3,10 +3,11 @@ GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=illumio-core
 
+TEST_PARALLELISM?=4
 
 default: build
 
-tools: 
+tools:
 	go mod vendor
 
 build: fmtcheck
@@ -18,7 +19,7 @@ test: fmtcheck
 		xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4
 
 testacc: fmtcheck
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -parallel=$(TEST_PARALLELISM) -timeout 120m
 
 vet:
 	@echo "go vet ."

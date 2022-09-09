@@ -110,8 +110,8 @@ func datasourceIllumioServices() *schema.Resource {
 			"proto": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Protocol to filter on. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94",
-				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validServiceProtos, false)),
+				Description:      "Protocol to filter on. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.",
+				ValidateDiagFunc: isStringInRange(-1, 255),
 			},
 			"items": {
 				Type:        schema.TypeList,

@@ -13,10 +13,6 @@ import (
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
-var (
-	validServiceProtos = []string{"-1", "1", "2", "4", "6", "17", "47", "58", "94"}
-)
-
 func resourceIllumioService() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   resourceIllumioServiceRead,
@@ -74,8 +70,8 @@ func resourceIllumioService() *schema.Resource {
 						"proto": {
 							Type:             schema.TypeString,
 							Required:         true,
-							Description:      `Transport protocol. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94`,
-							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validServiceProtos, false)),
+							Description:      `Transport protocol. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.`,
+							ValidateDiagFunc: isStringInRange(-1, 255),
 						},
 						"icmp_type": {
 							Type:             schema.TypeString,
@@ -126,8 +122,8 @@ func resourceIllumioService() *schema.Resource {
 						"proto": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      `Transport protocol. Allowed values are -1, 1, 2, 4, 6, 17, 47, 58 and 94`,
-							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validServiceProtos, false)),
+							Description:      `Transport protocol. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.`,
+							ValidateDiagFunc: isStringInRange(-1, 255),
 						},
 						"icmp_type": {
 							Type:             schema.TypeString,

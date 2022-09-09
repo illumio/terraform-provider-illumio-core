@@ -396,13 +396,13 @@ func datasourceIllumioWorkloads() *schema.Resource {
 													Description: "Transport protocol for open service ports",
 												},
 												"address": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
 													Description: "	The local address this service is bound to",
 												},
 												"port": {
-													Type:     schema.TypeInt,
-													Computed: true,
+													Type:        schema.TypeInt,
+													Computed:    true,
 													Description: "	The local port this service is bound to",
 												},
 												"process_name": {

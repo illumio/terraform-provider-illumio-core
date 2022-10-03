@@ -9,7 +9,9 @@ description: |-
 
 # illumio-core_label_group (Resource)
 
-Manages Illumio Label Group
+Manages an Illumio Label Group.  
+
+~> When removing label group sub-groups, the change will cascade to all parent groups and their HREFs will be added to the list for provisioning.  
 
 Example Usage
 ------------
@@ -54,12 +56,12 @@ resource "illumio-core_label" "loc_example2" {
 
 ### Required
 
-- `description` (String) The long description of the label group
 - `key` (String) Key in key-value pair of contained labels or label groups. Allowed values are "role", "loc", "app" and "env"
 - `name` (String) Name of the label group
 
 ### Optional
 
+- `description` (String) The long description of the label group
 - `external_data_reference` (String) A unique identifier within the external data source
 - `external_data_set` (String) The data source from which a resource originates
 - `labels` (Block Set) Contained labels (see [below for nested schema](#nestedblock--labels))

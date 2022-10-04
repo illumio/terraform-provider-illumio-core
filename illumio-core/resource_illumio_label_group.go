@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/illumio/terraform-provider-illumio-core/client"
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
@@ -35,7 +36,7 @@ func resourceIllumioLabelGroup() *schema.Resource {
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The long description of the label group",
 			},
 			"key": {
@@ -267,11 +268,41 @@ func resourceIllumioLabelGroupDelete(ctx context.Context, d *schema.ResourceData
 	illumioClient := pConfig.IllumioClient
 	href := d.Id()
 
-	_, err := illumioClient.Delete(href)
+	// if the label group is a child of any other label groups
+	// that aren't in the TF state, get their HREFs and add them
+	// to hrefs.csv for provisioning
+	parentHrefs, err := getParentGroupHrefs(illumioClient, href)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	for _, href := range parentHrefs {
+		pConfig.StoreHref("label_groups", href)
+	}
+
+	_, err = illumioClient.Delete(href)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	pConfig.StoreHref("label_groups", href)
 	d.SetId("")
 	return diagnostics
+}
+
+func getParentGroupHrefs(client *client.V2, labelGroupHref string) ([]string, error) {
+	_, data, err := client.Get(labelGroupHref+"/member_of", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	parentGroupContainers := data.Children()
+	parentHrefs := make([]string, 0, len(parentGroupContainers))
+
+	for _, child := range parentGroupContainers {
+		if child.Exists("href") {
+			parentHrefs = append(parentHrefs, child.S("href").Data().(string))
+		}
+	}
+
+	return parentHrefs, nil
 }

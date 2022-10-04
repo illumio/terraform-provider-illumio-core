@@ -122,3 +122,9 @@ func (s *SecurityPolicy) ToMap() (map[string]interface{}, error) {
 
 	return spAttrMap, nil
 }
+
+func (cs *SecurityPolicyChangeSubset) Size() int {
+	return len(cs.LabelGroups) + len(cs.Services) + len(cs.RuleSets) +
+		len(cs.IPLists) + len(cs.VirtualServices) + len(cs.EBoundaries) +
+		len(cs.FirewallSettings)
+}

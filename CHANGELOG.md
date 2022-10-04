@@ -1,3 +1,14 @@
+## 1.0.2 (Oct 4, 2022)
+
+BUG FIXES:
+
+* Fix issue where Label SubGroups whose parent group is not in the Terraform state will fail to provision
+    * Add `/member_of` call to Label Group resource delete function to add parent group HREFs to provision list
+
+ENHANCEMENTS:
+
+* Refactor `provision` binary
+
 ## 1.0.1 (Sep 9, 2022)
 
 BUG FIXES:

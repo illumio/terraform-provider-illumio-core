@@ -1,3 +1,9 @@
+## 1.0.3 (TBD)
+
+BUG FIXES:
+
+* Fix missing label sets in `unmanaged_workload` and `managed_workload` resource state
+
 ## 1.0.2 (Oct 4, 2022)
 
 BUG FIXES:

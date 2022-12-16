@@ -675,6 +675,20 @@ func resourceIllumioUnmanagedWorkloadRead(ctx context.Context, d *schema.Resourc
 		d.Set(key, nil)
 	}
 
+	key = "labels"
+	if data.Exists(key) {
+		labels := data.S(key)
+		labelI := []map[string]interface{}{}
+
+		for _, l := range labels.Children() {
+			labelI = append(labelI, extractMap(l, []string{"href"}))
+		}
+
+		d.Set(key, labelI)
+	} else {
+		d.Set(key, nil)
+	}
+
 	key = "services"
 	if data.Exists(key) {
 		services := data.S(key)

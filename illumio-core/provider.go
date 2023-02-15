@@ -125,6 +125,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"illumio-core_firewall_settings":                  resourceIllumioFirewallSettings(),
 			"illumio-core_ip_list":                            resourceIllumioIPList(),
+			"illumio-core_label_type":                         resourceIllumioLabelType(),
 			"illumio-core_label_group":                        resourceIllumioLabelGroup(),
 			"illumio-core_label":                              resourceIllumioLabel(),
 			"illumio-core_pairing_keys":                       resourceIllumioPairingKeys(),

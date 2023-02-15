@@ -73,40 +73,55 @@ var nameValidation = validation.ToDiagFunc(validation.StringLenBetween(1, 255))
 // for all resource, name attribute has character limit from 0 to 255
 var checkStringZerotoTwoHundredAndFiftyFive = validation.ToDiagFunc(validation.StringLenBetween(0, 255))
 
-var uuidV4RegEx = "[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}"
-var orgsPrefix = "^/orgs/[1-9][0-9]*/"
-var secPolicyPrefix = "sec_policy/(draft|active|[0-9]*)/"
+const (
+	HEX_COLOR_CODE_REGEX string = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+	UUID_V4_REGEX               = "[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}"
+	ORGS_PREFIX                 = "^/orgs/[1-9][0-9]*/"
+	SEC_POLICY_PREFIX           = "sec_policy/(draft|active|[0-9]*)/"
+)
 
-var isLabelHref = generateHrefValidationFunction("labels/[1-9][0-9]*", "Label")
-var isLabelGroupHref = generateHrefValidationFunction(secPolicyPrefix+"label_groups/"+uuidV4RegEx, "Label Group")
-var isIPListHref = generateHrefValidationFunction(secPolicyPrefix+"ip_lists/[1-9][0-9]*", "IP List")
-var isServiceHref = generateHrefValidationFunction(secPolicyPrefix+"services/[1-9][0-9]*", "Service")
-var isVirtualServiceHref = generateHrefValidationFunction(secPolicyPrefix+"virtual_services/"+uuidV4RegEx, "Virtual Service")
-var isWorkloadHref = generateHrefValidationFunction("workloads/"+uuidV4RegEx, "Workload")
-var isPairingProfileHref = generateHrefValidationFunction("pairing_profiles/[1-9][0-9]*", "Pairing Profile")
-var isVulnerabilityHref = generateHrefValidationFunction("vulnerabilities/.*", "Vulnerability")
-var isVENHref = generateHrefValidationFunction("vens/"+uuidV4RegEx, "VEN")
-var isContainerClusterHref = generateHrefValidationFunction("container_clusters/"+uuidV4RegEx, "Container Cluster")
-var isContainerClusterWorkloadProfileHref = generateHrefValidationFunction("container_clusters/"+uuidV4RegEx+"/container_workload_profiles/"+uuidV4RegEx, "Container Cluster Workload Profile")
-var isEnforcementBoundaryHref = generateHrefValidationFunction(secPolicyPrefix+"enforcement_boundaries/[1-9][0-9]*", "Enforcement Boundary")
-var isRuleSetHref = generateHrefValidationFunction(secPolicyPrefix+"rule_sets/[1-9][0-9]*", "Ruleset")
-var isSecurityRuleHref = generateHrefValidationFunction(secPolicyPrefix+"rule_sets/[1-9][0-9]*/sec_rules/[1-9][0-9]*", "Security Rule")
-var isFirewallSettingsHref = generateHrefValidationFunction(secPolicyPrefix+"firewall_settings", "Firewall Settings")
-var isWorkloadInterfaceHref = generateHrefValidationFunction("workloads/"+uuidV4RegEx+"/interfaces/.*", "Workload Interface")
-var isVulnerabilityReportHref = generateHrefValidationFunction("vulnerability_reports/.*", "Vulnerability Report")
-var isTrafficCollectorSettingsHref = generateHrefValidationFunction("settings/traffic_collector/"+uuidV4RegEx, "Traffic Collector Settings")
-var isSyslogDestinationHref = generateHrefValidationFunction("settings/syslog/destinations/"+uuidV4RegEx, "Syslog Destination")
-var isServiceBindingHref = generateHrefValidationFunction("service_bindings/"+uuidV4RegEx, "Service Binding")
+var (
+	isContainerClusterWorkloadProfileHref schema.SchemaValidateDiagFunc = generateHrefValidationFunction("container_clusters/"+UUID_V4_REGEX+"/container_workload_profiles/"+UUID_V4_REGEX, "Container Cluster Workload Profile")
+	isContainerClusterHref                                              = generateHrefValidationFunction("container_clusters/"+UUID_V4_REGEX, "Container Cluster")
+	isLabelHref                                                         = generateHrefValidationFunction("labels/[1-9][0-9]*", "Label")
+	isLabelGroupHref                                                    = generateHrefValidationFunction(SEC_POLICY_PREFIX+"label_groups/"+UUID_V4_REGEX, "Label Group")
+	isIPListHref                                                        = generateHrefValidationFunction(SEC_POLICY_PREFIX+"ip_lists/[1-9][0-9]*", "IP List")
+	isServiceHref                                                       = generateHrefValidationFunction(SEC_POLICY_PREFIX+"services/[1-9][0-9]*", "Service")
+	isVirtualServiceHref                                                = generateHrefValidationFunction(SEC_POLICY_PREFIX+"virtual_services/"+UUID_V4_REGEX, "Virtual Service")
+	isWorkloadHref                                                      = generateHrefValidationFunction("workloads/"+UUID_V4_REGEX, "Workload")
+	isPairingProfileHref                                                = generateHrefValidationFunction("pairing_profiles/[1-9][0-9]*", "Pairing Profile")
+	isVulnerabilityHref                                                 = generateHrefValidationFunction("vulnerabilities/.*", "Vulnerability")
+	isVENHref                                                           = generateHrefValidationFunction("vens/"+UUID_V4_REGEX, "VEN")
+	isEnforcementBoundaryHref                                           = generateHrefValidationFunction(SEC_POLICY_PREFIX+"enforcement_boundaries/[1-9][0-9]*", "Enforcement Boundary")
+	isRuleSetHref                                                       = generateHrefValidationFunction(SEC_POLICY_PREFIX+"rule_sets/[1-9][0-9]*", "Ruleset")
+	isSecurityRuleHref                                                  = generateHrefValidationFunction(SEC_POLICY_PREFIX+"rule_sets/[1-9][0-9]*/sec_rules/[1-9][0-9]*", "Security Rule")
+	isFirewallSettingsHref                                              = generateHrefValidationFunction(SEC_POLICY_PREFIX+"firewall_settings", "Firewall Settings")
+	isWorkloadInterfaceHref                                             = generateHrefValidationFunction("workloads/"+UUID_V4_REGEX+"/interfaces/.*", "Workload Interface")
+	isVulnerabilityReportHref                                           = generateHrefValidationFunction("vulnerability_reports/.*", "Vulnerability Report")
+	isTrafficCollectorSettingsHref                                      = generateHrefValidationFunction("settings/traffic_collector/"+UUID_V4_REGEX, "Traffic Collector Settings")
+	isSyslogDestinationHref                                             = generateHrefValidationFunction("settings/syslog/destinations/"+UUID_V4_REGEX, "Syslog Destination")
+	isServiceBindingHref                                                = generateHrefValidationFunction("service_bindings/"+UUID_V4_REGEX, "Service Binding")
+	isValidColorCode                                                    = hexColorCodeValidationFunction()
+)
 
 func generateHrefValidationFunction(regex string, msg string) schema.SchemaValidateDiagFunc {
 	return validation.ToDiagFunc(
 		validation.StringMatch(
 			regexp.MustCompile(
-				orgsPrefix+
+				ORGS_PREFIX+
 					regex+
 					"$",
 			),
 			fmt.Sprintf("%v href is not in the correct format", msg),
+		),
+	)
+}
+
+func hexColorCodeValidationFunction() schema.SchemaValidateDiagFunc {
+	return validation.ToDiagFunc(
+		validation.StringMatch(
+			regexp.MustCompile(HEX_COLOR_CODE_REGEX),
+			"Value provided for foreground_color must be valid hexadecimal color code",
 		),
 	)
 }
@@ -167,7 +182,7 @@ func getHrefObj(obj interface{}) *models.Href {
 }
 
 func getParentHref(href string) string {
-	re, err := regexp.Compile(fmt.Sprintf("%s(?:%s)?[a-zA-Z0-9_-]+/(?:%s|[0-9]+)", orgsPrefix, secPolicyPrefix, uuidV4RegEx))
+	re, err := regexp.Compile(fmt.Sprintf("%s(?:%s)?[a-zA-Z0-9_-]+/(?:%s|[0-9]+)", ORGS_PREFIX, SEC_POLICY_PREFIX, UUID_V4_REGEX))
 	if err != nil {
 		return href
 	}

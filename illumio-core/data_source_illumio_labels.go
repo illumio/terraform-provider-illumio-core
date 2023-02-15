@@ -61,9 +61,9 @@ func datasourceIllumioLabels() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ValidateDiagFunc: validation.ToDiagFunc(
-					validation.StringInSlice(validLabelKeys, false),
+					validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 				),
-				Description: `Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env"`,
+				Description: `Key in key-value pair. The value must be a string between 1 and 64 characters long.`,
 			},
 			"max_results": {
 				Type:             schema.TypeString,

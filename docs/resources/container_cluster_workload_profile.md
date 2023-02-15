@@ -74,7 +74,7 @@ Required:
 
 Required:
 
-- `key` (String) Key of the Label. Allowed values for key are "role", "loc", "app" and "env"
+- `key` (String) Key of the Label. The value must be a string between 1 and 64 characters long
 
 Optional:
 

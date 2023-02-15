@@ -1,3 +1,10 @@
+## 1.0.4 (TBD)
+
+BUG FIXES:
+
+* Allow arbitrary string values for label keys to work with label changes introduced in PCE v22.5
+    * NOTE: this change, while backwards compatible, removes validation guarantees for older PCE versions. Versions prior to 22.5 still restrict key values to `role`, `app`, `env`, and `loc`.
+
 ## 1.0.3 (Dec 16, 2022)
 
 BUG FIXES:

@@ -44,9 +44,9 @@ func resourceIllumioLabelGroup() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 				ValidateDiagFunc: validation.ToDiagFunc(
-					validation.StringInSlice(validLabelKeys, false),
+					validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 				),
-				Description: `Key in key-value pair of contained labels or label groups. Allowed values are "role", "loc", "app" and "env"`,
+				Description: `Key in key-value pair of contained labels or label groups. The value must be a string between 1 and 64 characters long.`,
 			},
 			"labels": {
 				Type:        schema.TypeSet,

@@ -25,7 +25,7 @@ data "illumio-core_labels" "example" {}
 - `external_data_reference` (String) A unique identifier within the external data source
 - `external_data_set` (String) The data source from which a resource originates
 - `include_deleted` (String) Include deleted labels
-- `key` (String) Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env"
+- `key` (String) Key in key-value pair. The value must be a string between 1 and 64 characters long
 - `max_results` (String) Maximum number of Labels to return. The integer should be a non-zero positive integer
 - `usage` (String) Include label usage flags as well
 - `value` (String) Value on which to filter. Supports partial matches

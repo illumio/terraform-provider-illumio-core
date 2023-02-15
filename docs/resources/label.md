@@ -24,7 +24,7 @@ resource "illumio-core_label" "role_example" {
 
 ### Required
 
-- `key` (String) Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env".
+- `key` (String) Key in key-value pair. The value must be a string between 1 and 64 characters long
 - `value` (String) Value in key-value pair
 
 ### Optional

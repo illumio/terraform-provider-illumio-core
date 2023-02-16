@@ -75,7 +75,7 @@ func resourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Key of the Label. The value must be a string between 1 and 64 characters long.",
+							Description: "Key of the Label. The value must be a string between 1 and 64 characters long",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 							),
@@ -126,7 +126,7 @@ func resourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "idle",
-				Description: "Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are \"idle\",\"visibility_only\",\"full\", and \"selective\". Default value: \"idle\" ",
+				Description: "Enforcement mode of container workload profiles to return. Allowed values for enforcement modes are \"idle\", \"visibility_only\", \"full\", and \"selective\". Default value: \"idle\"",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice(ValidWorkloadEnforcementModeValues, false),
 				),

@@ -94,7 +94,7 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 				),
-				Description: `Key in key-value pair of contained labels or label groups. The value must be a string between 1 and 64 characters long.`,
+				Description: `Key in key-value pair of contained labels or label groups. The value must be a string between 1 and 64 characters long`,
 			},
 			"max_results": {
 				Type:             schema.TypeString,

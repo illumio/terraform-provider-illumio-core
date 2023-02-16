@@ -19,7 +19,7 @@ func resourceIllumioLabelType() *schema.Resource {
 		DeleteContext: resourceIllumioLabelTypeDelete,
 
 		SchemaVersion: version,
-		Description:   "Manages Illumio Label Type",
+		Description:   "Manages Illumio Label Type. Requires PCE version 22.5.0 or higher",
 
 		Schema: map[string]*schema.Schema{
 			"href": {
@@ -94,7 +94,7 @@ func resourceIllumioLabelType() *schema.Resource {
 				Computed:    true,
 				Description: "Usage of the label type",
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type: schema.TypeBool,
 				},
 			},
 			"external_data_set": {

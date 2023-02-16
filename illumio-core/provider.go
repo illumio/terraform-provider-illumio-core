@@ -152,6 +152,8 @@ func Provider() *schema.Provider {
 			"illumio-core_firewall_settings":                   datasourceIllumioFirewallSettings(),
 			"illumio-core_ip_list":                             datasourceIllumioIPList(),
 			"illumio-core_ip_lists":                            datasourceIllumioIPLists(),
+			"illumio-core_label_type":                          datasourceIllumioLabelType(),
+			"illumio-core_label_types":                         datasourceIllumioLabelTypes(),
 			"illumio-core_label_group":                         datasourceIllumioLabelGroup(),
 			"illumio-core_label_groups":                        datasourceIllumioLabelGroups(),
 			"illumio-core_label":                               datasourceIllumioLabel(),

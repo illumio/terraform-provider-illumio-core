@@ -83,6 +83,7 @@ const (
 var (
 	isContainerClusterWorkloadProfileHref schema.SchemaValidateDiagFunc = generateHrefValidationFunction("container_clusters/"+UUID_V4_REGEX+"/container_workload_profiles/"+UUID_V4_REGEX, "Container Cluster Workload Profile")
 	isContainerClusterHref                                              = generateHrefValidationFunction("container_clusters/"+UUID_V4_REGEX, "Container Cluster")
+	isLabelTypeHref                                                     = generateHrefValidationFunction("label_dimensions/"+UUID_V4_REGEX, "Label Type")
 	isLabelHref                                                         = generateHrefValidationFunction("labels/[1-9][0-9]*", "Label")
 	isLabelGroupHref                                                    = generateHrefValidationFunction(SEC_POLICY_PREFIX+"label_groups/"+UUID_V4_REGEX, "Label Group")
 	isIPListHref                                                        = generateHrefValidationFunction(SEC_POLICY_PREFIX+"ip_lists/[1-9][0-9]*", "IP List")

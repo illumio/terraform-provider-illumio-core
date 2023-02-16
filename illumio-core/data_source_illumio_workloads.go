@@ -185,7 +185,7 @@ func datasourceIllumioWorkloads() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of workloads",
+				Description: "List of workloads",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {
@@ -314,7 +314,9 @@ func datasourceIllumioWorkloads() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Ignored Interface Names for Workload",
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"service_provider": {
 							Type:        schema.TypeString,
@@ -660,13 +662,17 @@ func datasourceIllumioWorkloads() *schema.Resource {
 							Type:        schema.TypeMap,
 							Computed:    true,
 							Description: "VENS for Workload",
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"caps": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "CAPS for Workload",
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"created_at": {
 							Type:        schema.TypeString,
@@ -684,28 +690,28 @@ func datasourceIllumioWorkloads() *schema.Resource {
 							Description: "Timestamp when this Workload was deleted",
 						},
 						"created_by": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "User who created this Workload",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who created this Workload",
 						},
 						"updated_by": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "User who last updated this Workload",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who last updated this Workload",
 						},
 						"deleted_by": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "User who deleted this Workload",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who deleted this Workload",
 						},
 					},
 				},

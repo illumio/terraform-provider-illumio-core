@@ -182,9 +182,8 @@ func resourceIllumioLabelTypeCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	// set the display info if provided
-	di := d.Get("display_info").([]interface{})
-	if len(di) > 0 {
-		displayInfo, diags := expandLabelTypeDisplayInfo(di[0])
+	if di, ok := d.GetOk("display_info"); ok {
+		displayInfo, diags := expandLabelTypeDisplayInfo(di.([]interface{})[0])
 		if diags.HasError() {
 			return diags
 		}
@@ -229,7 +228,6 @@ func resourceIllumioLabelTypeRead(ctx context.Context, d *schema.ResourceData, m
 		"deleted_by",
 		"caps",
 	} {
-
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
 		} else {
@@ -238,19 +236,19 @@ func resourceIllumioLabelTypeRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if data.Exists("display_info") {
-		d.Set("display_info", []interface{}{
-			extractMap(
-				data.S("display_info"),
-				[]string{
+		di := data.S("display_info")
+		if di.Data() != nil {
+			d.Set("display_info", []interface{}{
+				extractMap(di, []string{
 					"initial",
 					"icon",
 					"background_color",
 					"foreground_color",
 					"sort_ordinal",
 					"display_name_plural",
-				},
-			),
-		})
+				}),
+			})
+		}
 	} else {
 		d.Set("display_info", nil)
 	}

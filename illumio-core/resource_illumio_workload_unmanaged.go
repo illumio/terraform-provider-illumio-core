@@ -188,6 +188,16 @@ func unmanagedWorkloadSchema() map[string]*schema.Schema {
 						Required:    true,
 						Description: "URI of label",
 					},
+					"key": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Workload Label key",
+					},
+					"value": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Workload Label value",
+					},
 				},
 			},
 		},
@@ -636,7 +646,6 @@ func resourceIllumioUnmanagedWorkloadRead(ctx context.Context, d *schema.Resourc
 		"os_id",
 		"os_detail",
 		"online",
-		"labels",
 		"containers_inherit_host_policy",
 		"blocked_connection_action",
 		"ven",
@@ -681,7 +690,11 @@ func resourceIllumioUnmanagedWorkloadRead(ctx context.Context, d *schema.Resourc
 		labelI := []map[string]interface{}{}
 
 		for _, l := range labels.Children() {
-			labelI = append(labelI, extractMap(l, []string{"href"}))
+			labelI = append(labelI, extractMap(l, []string{
+				"href",
+				"key",
+				"value",
+			}))
 		}
 
 		d.Set(key, labelI)
@@ -859,7 +872,7 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 
 func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.Workload {
 	online := d.Get("online").(bool)
-	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	labels := expandWorkloadLabels(d.Get("labels").(*schema.Set).List())
 	interfaces := expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
@@ -883,6 +896,19 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 		Interfaces:                            interfaces,
 		IgnoredInterfaceNames:                 ignoredInterfaceNames,
 	}
+}
+
+func expandWorkloadLabels(arr []interface{}) []models.WorkloadLabel {
+	wl := make([]models.WorkloadLabel, 0, len(arr))
+	for _, e := range arr {
+		elem := e.(map[string]interface{})
+		wl = append(wl, models.WorkloadLabel{
+			Href:  elem["href"].(string),
+			Key:   elem["key"].(string),
+			Value: elem["value"].(string),
+		})
+	}
+	return wl
 }
 
 func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {

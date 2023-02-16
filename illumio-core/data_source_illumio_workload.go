@@ -357,6 +357,16 @@ func datasourceIllumioWorkload() *schema.Resource {
 							Computed:    true,
 							Description: "URI of Label",
 						},
+						"key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Workload Label key",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Workload Label value",
+						},
 					},
 				},
 			},
@@ -735,7 +745,6 @@ func dataSourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, 
 		"data_center_zone",
 		"os_id", "os_detail",
 		"online",
-		"labels",
 		"containers_inherit_host_policy",
 		"blocked_connection_action",
 		"ven",
@@ -759,7 +768,7 @@ func dataSourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, 
 
 	key := "interfaces"
 	if data.Exists(key) {
-		d.Set("interfaces", extractMapArray(data.S(key), []string{
+		d.Set(key, extractMapArray(data.S(key), []string{
 			"name",
 			"loopback",
 			"link_state",
@@ -769,6 +778,17 @@ func dataSourceIllumioWorkloadRead(ctx context.Context, d *schema.ResourceData, 
 			"network",
 			"network_detection_mode",
 			"friendly_name",
+		}))
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "labels"
+	if data.Exists(key) {
+		d.Set(key, extractMapArray(data.S(key), []string{
+			"href",
+			"key",
+			"value",
 		}))
 	} else {
 		d.Set(key, nil)

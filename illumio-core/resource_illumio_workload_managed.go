@@ -578,7 +578,7 @@ func resourceIllumioManagedWorkloadUpdate(ctx context.Context, d *schema.Resourc
 	illumioClient := pConfig.IllumioClient
 
 	var diags diag.Diagnostics
-	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	labels := expandWorkloadLabels(d.Get("labels").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
 	var workload = &models.Workload{

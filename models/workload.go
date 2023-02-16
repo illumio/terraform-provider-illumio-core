@@ -46,6 +46,12 @@ import (
 }
 */
 
+type WorkloadLabel struct {
+	Href  string `json:"href"`
+	Key   string `json:"key,omitempty"`
+	Value string `json:"value,omitempty"`
+}
+
 type Workload struct {
 	Name                                  string `json:"name,omitempty"`
 	Description                           string `json:"description,omitempty"`
@@ -68,7 +74,7 @@ type Workload struct {
 
 	// don't omitempty for lists - an empty array should remove all objects from the workload
 	IgnoredInterfaceNames []string            `json:"ignored_interface_names"`
-	Labels                []Href              `json:"labels"`
+	Labels                []WorkloadLabel     `json:"labels"`
 	Interfaces            []WorkloadInterface `json:"interfaces"`
 }
 

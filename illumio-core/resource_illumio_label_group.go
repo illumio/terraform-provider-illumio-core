@@ -103,6 +103,11 @@ func resourceIllumioLabelGroup() *schema.Resource {
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
 				Description:      "A unique identifier within the external data source",
 			},
+			"update_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of update",
+			},
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -162,12 +167,8 @@ func resourceIllumioLabelGroupCreate(ctx context.Context, d *schema.ResourceData
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
-	if items, ok := d.GetOk("labels"); ok {
-		labelGroup.Labels = models.GetHrefs(items.(*schema.Set).List())
-	}
-	if items, ok := d.GetOk("sub_groups"); ok {
-		labelGroup.SubGroups = models.GetHrefs(items.(*schema.Set).List())
-	}
+	labelGroup.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	labelGroup.SubGroups = models.GetHrefs(d.Get("sub_groups").(*schema.Set).List())
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/label_groups", orgID), labelGroup)
 	if err != nil {
 		return diag.FromErr(err)
@@ -196,6 +197,7 @@ func resourceIllumioLabelGroupRead(ctx context.Context, d *schema.ResourceData, 
 		"key",
 		"external_data_set",
 		"external_data_reference",
+		"update_type",
 		"created_at",
 		"updated_at",
 		"deleted_at",

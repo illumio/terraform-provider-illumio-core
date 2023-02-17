@@ -9,147 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-/*
-{
-  "href": "string",
-  "created_at": "2021-03-02T02:37:59Z",
-  "updated_at": "2021-03-02T02:37:59Z",
-  "deleted_at": "2021-03-02T02:37:59Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "deleted_by": {
-    "href": "string"
-  },
-  "update_type": "string",
-  "name": "string",
-  "description": "string",
-  "external_data_set": null,
-  "external_data_reference": null,
-  "enabled": true,
-  "scopes": [
-    [
-      {
-        "label": {
-          "href": "string"
-        },
-        "label_group": {
-          "href": "string"
-        }
-      }
-    ]
-  ],
-  "rules": [
-    {
-      "href": "string",
-      "enabled": true,
-      "description": "string",
-      "external_data_set": null,
-      "external_data_reference": null,
-      "ingress_services": [
-        {
-          "href": "string"
-        }
-      ],
-      "resolve_labels_as": {
-        "providers": [
-          "workloads"
-        ],
-        "consumers": [
-          "workloads"
-        ]
-      },
-      "sec_connect": true,
-      "stateless": true,
-      "machine_auth": true,
-      "providers": [
-        {
-          "actors": "ams",
-          "label": {
-            "href": "string"
-          },
-          "label_group": {
-            "href": "string"
-          },
-          "workload": {
-            "href": "string"
-          },
-          "virtual_service": {
-            "href": "string"
-          },
-          "virtual_server": {
-            "href": "string"
-          },
-          "ip_list": {
-            "href": "string"
-          }
-        }
-      ],
-      "consumers": [
-        {
-          "actors": "ams",
-          "label": {
-            "href": "string"
-          },
-          "label_group": {
-            "href": "string"
-          },
-          "workload": {
-            "href": "string"
-          },
-          "virtual_service": {
-            "href": "string"
-          },
-          "ip_list": {
-            "href": "string"
-          }
-        }
-      ],
-      "consuming_security_principals": [
-        {
-          "href": "string"
-        }
-      ],
-      "unscoped_consumers": true,
-      "update_type": "string"
-    }
-  ],
-  "ip_tables_rules": [
-    {
-      "href": "string",
-      "enabled": true,
-      "description": "string",
-      "statements": [
-        {
-          "table_name": "nat",
-          "chain_name": "PREROUTING",
-          "parameters": "string"
-        }
-      ],
-      "actors": [
-        {
-          "actors": "string",
-          "label": {
-            "href": "string"
-          },
-          "label_group": {
-            "href": "string"
-          },
-          "workload": {
-            "href": "string"
-          }
-        }
-      ],
-      "ip_version": "4"
-    }
-  ]
-}
-*/
-
 func datasourceIllumioRuleSet() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioRuleSetRead,
@@ -235,26 +94,24 @@ func datasourceIllumioRuleSet() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "scopes for Ruleset",
-				Elem: &schema.Schema{
-					Type: schema.TypeList,
-					Elem: &schema.Resource{
-						Schema: map[string]*schema.Schema{
-							"label": {
-								Type:        schema.TypeMap,
-								Computed:    true,
-								Description: "Href of Label",
-								Elem: &schema.Schema{
-									Type: schema.TypeString,
-								},
-							},
-							"label_group": {
-								Type:        schema.TypeMap,
-								Computed:    true,
-								Description: "Href of Label Group",
-								Elem: &schema.Schema{
-									Type: schema.TypeString,
-								},
-							},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"exclusion": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Boolean to specify whether or not the scope is an exclusion",
+						},
+						"label": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Label scope",
+							Elem:        labelOptionalKeyValue(false),
+						},
+						"label_group": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Label Group scope",
+							Elem:        labelGroupOptionalKeyValue(false),
 						},
 					},
 				},
@@ -313,7 +170,7 @@ func datasourceIllumioRuleSet() *schema.Resource {
 							},
 						},
 						"actors": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "actors for IP Table Rule",
 							Elem: &schema.Resource{
@@ -324,22 +181,26 @@ func datasourceIllumioRuleSet() *schema.Resource {
 										Description: "actors for IP table Rule actors",
 									},
 									"label": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeSet,
 										Computed:    true,
 										Description: "Href of Label",
-										Elem:        &schema.Schema{Type: schema.TypeString},
+										Elem:        labelOptionalKeyValue(false),
 									},
 									"label_group": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeSet,
 										Computed:    true,
-										Description: "Href of Label Group",
-										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Label Group actor",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
 									},
 									"workload": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeSet,
 										Computed:    true,
-										Description: "Href of Workload",
-										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Workload actor",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
 									},
 								},
 							},
@@ -430,6 +291,8 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 	} {
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
+		} else {
+			d.Set(key, nil)
 		}
 	}
 
@@ -506,57 +369,16 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 
 	key := "scopes"
 	if data.Exists(key) {
-		scps := []interface{}{}
-		for _, scope := range data.S(key).Children() {
-			scopeKeys := []string{"label", "label_group"}
-			scps = append(scps, extractMapArray(scope, scopeKeys))
-		}
-
-		d.Set(key, scps)
+		d.Set(key, extractResourceScopes(data.S(key)))
+	} else {
+		d.Set(key, nil)
 	}
 
-	key = "ip_table_rules"
+	key = "ip_tables_rules"
 	if data.Exists(key) {
-		iptrKeys := []string{
-			"href",
-			"enabled",
-			"description",
-			"ip_version",
-			"update_type",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-		}
-
-		statKey := "statements"
-		statKeys := []string{
-			"table_name",
-			"chain_name",
-			"parameters",
-		}
-
-		actorsKey := "actors"
-
-		iptrs := []map[string]interface{}{}
-		for _, iptRule := range data.S(key).Children() {
-
-			iptr := extractMap(iptRule, iptrKeys)
-
-			if iptRule.Exists(statKey) {
-				iptr[statKey] = extractMapArray(iptRule.S(statKey), statKeys)
-			}
-
-			if iptRule.Exists(actorsKey) {
-				iptr[actorsKey] = extractRuleActors(iptRule.S(actorsKey))
-			}
-
-			iptrs = append(iptrs, iptr)
-		}
-
-		d.Set(key, iptrs)
+		d.Set(key, extractResourceRuleSetIPTablesRules(data.S(key)))
+	} else {
+		d.Set(key, nil)
 	}
 
 	return diagnostics

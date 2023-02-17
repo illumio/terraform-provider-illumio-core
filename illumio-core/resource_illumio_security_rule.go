@@ -178,25 +178,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 						Optional:    true,
 						MaxItems:    1,
 						Description: "Label provider filter",
-						Elem: &schema.Resource{
-							Schema: map[string]*schema.Schema{
-								"href": {
-									Type:        schema.TypeString,
-									Required:    true,
-									Description: "Label URI",
-								},
-								"key": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label key",
-								},
-								"value": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label value",
-								},
-							},
-						},
+						Elem:        labelOptionalKeyValue(true),
 					},
 					"label_group": {
 						Type:        schema.TypeSet,
@@ -297,25 +279,7 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 						Optional:    true,
 						MaxItems:    1,
 						Description: "Label consumer filter",
-						Elem: &schema.Resource{
-							Schema: map[string]*schema.Schema{
-								"href": {
-									Type:        schema.TypeString,
-									Required:    true,
-									Description: "Label URI",
-								},
-								"key": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label key",
-								},
-								"value": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label value",
-								},
-							},
-						},
+						Elem:        labelOptionalKeyValue(true),
 					},
 					"label_group": {
 						Type:        schema.TypeSet,

@@ -107,17 +107,23 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Description: "scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scope block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"exclusion": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Boolean to specify whether or not the scope is an exclusion",
+							Default:     false,
+						},
 						"label": {
 							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "Href of Label",
-							Elem:        hrefSchemaRequired("Label", isLabelHref),
+							Elem:        labelOptionalKeyValue(true),
 						},
 						"label_group": {
 							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "Href of Label Group",
-							Elem:        hrefSchemaRequired("Label Group", isLabelGroupHref),
+							Elem:        labelGroupOptionalKeyValue(true),
 						},
 					},
 				},
@@ -186,7 +192,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 										Optional:    true,
 										MaxItems:    1,
 										Description: "Href of Label",
-										Elem:        hrefSchemaRequired("Label", isLabelHref),
+										Elem:        labelOptionalKeyValue(true),
 									},
 									"label_group": {
 										Type:        schema.TypeSet,
@@ -327,6 +333,7 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 
 		scopeObj := scope.(map[string]interface{})
 
+		exclusion := scopeObj["exclusion"].(bool)
 		labels := scopeObj["label"].(*schema.Set).List()
 		labelGroups := scopeObj["label_group"].(*schema.Set).List()
 
@@ -336,16 +343,17 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 				Summary:  "[illumio-core_rule_set] At most 3 blocks of label/label_group are allowed inside scope",
 			})
 		} else {
-
 			for _, label := range labels {
 				s := &models.RuleSetScope{
-					Label: getHrefObj(label),
+					Exclusion: &exclusion,
+					Label:     getHrefObj(label),
 				}
 				sp = append(sp, s)
 			}
 
 			for _, labelGroup := range labelGroups {
 				s := &models.RuleSetScope{
+					Exclusion:  &exclusion,
 					LabelGroup: getHrefObj(labelGroup),
 				}
 				sp = append(sp, s)

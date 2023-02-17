@@ -34,6 +34,10 @@ func TestAccIllumioRS_Read(t *testing.T) {
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				// ignore the field count (%) and rules param in the import
+				// state as rules use the security_rule resource rather
+				// than being added directly to the rule set
+				ImportStateVerifyIgnore: []string{"%", "rules"},
 			},
 		},
 	})

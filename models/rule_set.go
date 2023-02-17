@@ -3,7 +3,7 @@
 package models
 
 type RuleSet struct {
-	Name                  string                 `json:"name"`
+	Name                  string                 `json:"name,omitempty"`
 	Description           string                 `json:"description,omitempty"`
 	ExternalDataSet       string                 `json:"external_data_set,omitempty"`
 	ExternalDataReference string                 `json:"external_data_reference,omitempty"`
@@ -13,6 +13,7 @@ type RuleSet struct {
 }
 
 type RuleSetScope struct {
+	Exclusion  *bool `json:"exclusion,omitempty"`
 	Label      *Href `json:"label,omitempty"`
 	LabelGroup *Href `json:"label_group,omitempty"`
 }

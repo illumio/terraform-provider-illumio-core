@@ -11,6 +11,7 @@ type SecurityRuleResolveLabelAs struct {
 
 type SecurityRuleProvider struct {
 	Actors         string `json:"actors,omitempty"`
+	Exclusion      *bool  `json:"exclusion,omitempty"`
 	Label          *Href  `json:"label,omitempty"`
 	LabelGroup     *Href  `json:"label_group,omitempty"`
 	Workload       *Href  `json:"workload,omitempty"`
@@ -21,6 +22,7 @@ type SecurityRuleProvider struct {
 
 type SecurityRuleConsumer struct {
 	Actors         string `json:"actors,omitempty"`
+	Exclusion      *bool  `json:"exclusion,omitempty"`
 	Label          *Href  `json:"label,omitempty"`
 	LabelGroup     *Href  `json:"label_group,omitempty"`
 	Workload       *Href  `json:"workload,omitempty"`

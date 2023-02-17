@@ -9,77 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-{
-  "href": "string",
-  "enabled": true,
-  "description": "string",
-  "external_data_set": null,
-  "external_data_reference": null,
-  "ingress_services": [
-    {
-      "href": "string"
-    }
-  ],
-  "resolve_labels_as": {
-    "providers": [
-      "workloads"
-    ],
-    "consumers": [
-      "workloads"
-    ]
-  },
-  "sec_connect": true,
-  "stateless": true,
-  "machine_auth": true,
-  "providers": [
-    {
-      "actors": "ams",
-      "label": {
-        "href": "string"
-      },
-      "label_group": {
-        "href": "string"
-      },
-      "workload": {
-        "href": "string"
-      },
-      "virtual_service": {
-        "href": "string"
-      },
-      "virtual_server": {
-        "href": "string"
-      },
-      "ip_list": {
-        "href": "string"
-      }
-    }
-  ],
-  "consumers": [
-    {
-      "actors": "ams",
-      "label": {
-        "href": "string"
-      },
-      "label_group": {
-        "href": "string"
-      },
-      "workload": {
-        "href": "string"
-      },
-      "virtual_service": {
-        "href": "string"
-      },
-      "ip_list": {
-        "href": "string"
-      }
-    }
-  ],
-  "unscoped_consumers": true,
-  "update_type": "string"
-}
-*/
-
 func datasourceIllumioSecurityRule() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioSecurityRuleRead,
@@ -205,25 +134,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 						Type:        schema.TypeSet,
 						Computed:    true,
 						Description: "Label provider filter",
-						Elem: &schema.Resource{
-							Schema: map[string]*schema.Schema{
-								"href": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label URI",
-								},
-								"key": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label key",
-								},
-								"value": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label value",
-								},
-							},
-						},
+						Elem:        labelOptionalKeyValue(false),
 					},
 					"label_group": {
 						Type:        schema.TypeSet,
@@ -314,25 +225,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 						Type:        schema.TypeSet,
 						Computed:    true,
 						Description: "Label consumer filter",
-						Elem: &schema.Resource{
-							Schema: map[string]*schema.Schema{
-								"href": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label URI",
-								},
-								"key": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label key",
-								},
-								"value": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Label value",
-								},
-							},
-						},
+						Elem:        labelOptionalKeyValue(false),
 					},
 					"label_group": {
 						Type:        schema.TypeSet,
@@ -449,6 +342,66 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 		}
 	}
 	return m
+}
+
+func labelOptionalKeyValue(hrefRequired bool) *schema.Resource {
+	s := map[string]*schema.Schema{
+		"key": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label key",
+		},
+		"value": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label value",
+		},
+	}
+
+	hrefBlock := schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Label URI",
+	}
+
+	if hrefRequired {
+		hrefBlock.Required = true
+	} else {
+		hrefBlock.Computed = true
+	}
+
+	s["href"] = &hrefBlock
+
+	return &schema.Resource{Schema: s}
+}
+
+func labelGroupOptionalKeyValue(hrefRequired bool) *schema.Resource {
+	s := map[string]*schema.Schema{
+		"key": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label Group key",
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label Group name",
+		},
+	}
+
+	hrefBlock := schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Label Group URI",
+	}
+
+	if hrefRequired {
+		hrefBlock.Required = true
+	} else {
+		hrefBlock.Computed = true
+	}
+
+	s["href"] = &hrefBlock
+
+	return &schema.Resource{Schema: s}
 }
 
 func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

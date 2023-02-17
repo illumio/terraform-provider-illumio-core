@@ -511,7 +511,7 @@ func extractResourceRuleSetIPTablesRules(data *gabs.Container) []map[string]inte
 
 	for _, ipTableRuleData := range data.Children() {
 		m := extractMap(ipTableRuleData, iptrKeys)
-		m["actors"] = extractResourceRuleActors(ipTableRuleData.S("actors"))
+		m["actors"] = extractRuleActors(ipTableRuleData.S("actors"))
 		m["statements"] = extractMapArray(ipTableRuleData.S("statements"), statKeys)
 
 		ms = append(ms, m)

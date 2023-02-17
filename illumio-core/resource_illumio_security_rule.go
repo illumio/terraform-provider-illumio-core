@@ -164,42 +164,102 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 					"actors": {
 						Type:         schema.TypeString,
 						Optional:     true,
-						Description:  "actors for providers. Allowed value is \"ams\"",
+						Description:  "All workloads provider filter. If specified, must have value \"ams\"",
 						ValidateFunc: validation.StringInSlice(validSRProducerActors, false),
+					},
+					"exclusion": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Boolean to specify whether or not the actor is an exclusion - only for labels and label groups. Requires PCE v22.5+",
+						Default:     false,
 					},
 					"label": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Label",
-						Elem:        hrefSchemaRequired("Label", isLabelHref),
+						Description: "Label provider filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Label URI",
+								},
+								"key": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Label key",
+								},
+								"value": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Label value",
+								},
+							},
+						},
 					},
 					"label_group": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Label Group",
+						Description: "Label Group provider filter",
 						Elem:        hrefSchemaRequired("Label Group", isLabelGroupHref),
 					},
 					"workload": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Workload",
-						Elem:        hrefSchemaRequired("Workload", isWorkloadHref),
+						Description: "Workload provider filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Workload URI",
+								},
+								"name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload name",
+								},
+								"hostname": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload hostname",
+								},
+								"deleted": {
+									Type:        schema.TypeBool,
+									Computed:    true,
+									Description: "Whether the workload has been deleted in the PCE",
+								},
+							},
+						},
 					},
 					"virtual_service": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Virtual Service",
-						Elem:        hrefSchemaRequired("Virtual Service", isVirtualServiceHref),
+						Description: "Virtual Service provider filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Virtual Service URI",
+								},
+								"name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Virtual Service name",
+								},
+							},
+						},
 					},
 					"virtual_server": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Virtual Server",
+						Description: "Virtual Server provider filter",
 						Elem: hrefSchemaRequired("Virtual Server", validation.ToDiagFunc(
 							validation.StringIsNotEmpty,
 						)),
@@ -208,8 +268,8 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of IP List",
-						Elem:        hrefSchemaRequired("IP List", isIPListHref),
+						Description: "IP List provider filter",
+						Elem:        ipListDataSourceSchema(true),
 					},
 				},
 			},
@@ -223,43 +283,90 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 					"actors": {
 						Type:         schema.TypeString,
 						Optional:     true,
-						Description:  "actors for consumers parameter. Allowed values are \"ams\" and \"container_host\"",
+						Description:  "Consumer workloads filter. Allowed values are \"ams\" and \"container_host\"",
 						ValidateFunc: validation.StringInSlice(validSRConsumerActors, false),
+					},
+					"exclusion": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Boolean to specify whether or not the actor is an exclusion - only for labels and label groups. Requires PCE v22.5+",
+						Default:     false,
 					},
 					"label": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Label",
-						Elem:        hrefSchemaRequired("Label", isLabelHref),
+						Description: "Label consumer filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Label URI",
+								},
+								"key": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Label key",
+								},
+								"value": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Label value",
+								},
+							},
+						},
 					},
 					"label_group": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Label Group",
+						Description: "Label Group consumer filter",
 						Elem:        hrefSchemaRequired("Label Group", isLabelGroupHref),
 					},
 					"workload": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Workload",
-						Elem:        hrefSchemaRequired("Workload", isWorkloadHref),
+						Description: "Workload consumer filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Workload URI",
+								},
+								"name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload name",
+								},
+								"hostname": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload hostname",
+								},
+								"deleted": {
+									Type:        schema.TypeBool,
+									Computed:    true,
+									Description: "Whether the workload has been deleted in the PCE",
+								},
+							},
+						},
 					},
 					"virtual_service": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of Virtual Service",
+						Description: "Virtual Service consumer filter",
 						Elem:        hrefSchemaRequired("Virtual Service", isVirtualServiceHref),
 					},
 					"ip_list": {
 						Type:        schema.TypeSet,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Href of IP List",
-						Elem:        hrefSchemaRequired("IP List", isIPListHref),
+						Description: "IP List consumer filter",
+						Elem:        ipListDataSourceSchema(true),
 					},
 				},
 			},
@@ -343,15 +450,21 @@ func resourceIllumioSecurityRuleCreate(ctx context.Context, d *schema.ResourceDa
 
 func expandIllumioSecurityRule(d *schema.ResourceData) (*models.SecurityRule, *diag.Diagnostics) {
 	var diags diag.Diagnostics
+
+	secConnect := d.Get("sec_connect").(bool)
+	stateless := d.Get("stateless").(bool)
+	machineAuth := d.Get("machine_auth").(bool)
+	unscopedConsumers := d.Get("unscoped_consumers").(bool)
+
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
 		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		SecConnect:            d.Get("sec_connect").(bool),
-		Stateless:             d.Get("stateless").(bool),
-		MachineAuth:           d.Get("machine_auth").(bool),
-		UnscopedConsumers:     d.Get("unscoped_consumers").(bool),
+		SecConnect:            &secConnect,
+		Stateless:             &stateless,
+		MachineAuth:           &machineAuth,
+		UnscopedConsumers:     &unscopedConsumers,
 	}
 
 	if secRule.HasConflicts() {
@@ -403,10 +516,10 @@ func expandIllumioSecurityRuleResolveLabelsAs(o interface{}) (*models.SecurityRu
 	return v, diags
 }
 
-func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty bool) ([]map[string]interface{}, diag.Diagnostics) {
+func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty bool) ([]models.IngressService, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	iss := []map[string]interface{}{}
+	iss := []models.IngressService{}
 
 	// Throw error if virtual_services is the only value set in resolve_label_as.provider and ingress_service's resource is non empty
 	if setEmpty && len(inServices) > 0 {
@@ -420,23 +533,21 @@ func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty 
 		for _, service := range inServices {
 			s := service.(map[string]interface{})
 
-			m := make(map[string]interface{})
+			if !isIngressServiceSchemaValid(s, &diags) {
+				continue
+			}
 
-			if isIngressServiceSchemaValid(s, &diags) {
-				if s["href"].(string) != "" {
-					m["href"] = s["href"].(string)
-				}
+			m := models.IngressService{}
 
-				if v, ok := getInt(s["proto"]); ok {
-					m["proto"] = v
-					if vPort, ok := getInt(s["port"]); ok {
-						m["port"] = vPort
-						if vToPort, ok := getInt(s["to_port"]); ok {
-							if vToPort <= vPort {
-								diags = append(diags, diag.Errorf(" [illumio-core_security_rule] Value of to_port can't be less or equal to value of port inside ingress_services")...)
-							} else {
-								m["to_port"] = vToPort
-							}
+			if v, ok := getInt(s["proto"]); ok {
+				m.Proto = &v
+				if vPort, ok := getInt(s["port"]); ok {
+					m.Port = &vPort
+					if vToPort, ok := getInt(s["to_port"]); ok {
+						if vToPort <= vPort {
+							diags = append(diags, diag.Errorf("[illumio-core_security_rule] Value of to_port can't be less or equal to value of port inside ingress_services")...)
+						} else {
+							m.ToPort = &vToPort
 						}
 					}
 				}
@@ -497,7 +608,7 @@ func expandIllumioSecurityRuleProviders(providers []interface{}) ([]*models.Secu
 			VirtualServer:  getHrefObj(p["virtual_server"]),
 			IPList:         getHrefObj(p["ip_list"]),
 		}
-		if !prov.HasOneActor() {
+		if !models.HasOneActor(prov) {
 			return nil, diag.Errorf("[illumio-core_security_rule] Provider block can have only one rule actor")
 		}
 
@@ -521,7 +632,7 @@ func expandIllumioSecurityRuleConsumers(consumers []interface{}) ([]*models.Secu
 			IPList:         getHrefObj(p["ip_list"]),
 		}
 
-		if !con.HasOneActor() {
+		if !models.HasOneActor(con) {
 			return nil, diag.Errorf("[illumio-core_security_rule] Consumer block can have only one rule actor")
 		}
 		cons = append(cons, con)
@@ -573,7 +684,7 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 
 	isKey := "ingress_services"
 	if data.Exists(isKey) {
-		d.Set(isKey, extractResourceSecurityRuleIngressService(data.S(isKey)))
+		d.Set(isKey, extractSecurityRuleIngressService(data.S(isKey)))
 	} else {
 		d.Set(isKey, nil)
 	}
@@ -587,12 +698,12 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 
 	prkey := "providers"
 	if data.Exists(prkey) {
-		d.Set(prkey, extractResourceRuleActors(data.S(prkey)))
+		d.Set(prkey, extractRuleActors(data.S(prkey)))
 	}
 
 	cnKeys := "consumers"
 	if data.Exists(cnKeys) {
-		d.Set(cnKeys, extractResourceRuleActors(data.S(cnKeys)))
+		d.Set(cnKeys, extractRuleActors(data.S(cnKeys)))
 	}
 
 	return diagnostics
@@ -607,7 +718,7 @@ func extractSecurityRuleResolveLabelAs(data *gabs.Container) []interface{} {
 	return []interface{}{m}
 }
 
-func extractResourceSecurityRuleIngressService(data *gabs.Container) []map[string]interface{} {
+func extractSecurityRuleIngressService(data *gabs.Container) []map[string]interface{} {
 	isKeys := []string{
 		"proto",
 		"port",
@@ -624,9 +735,9 @@ func extractResourceSecurityRuleIngressService(data *gabs.Container) []map[strin
 			} else if contains(isKeys, k) {
 				is[k] = strconv.Itoa(int(v.Data().(float64)))
 			}
-
-			iss = append(iss, is)
 		}
+
+		iss = append(iss, is)
 	}
 
 	return iss
@@ -653,15 +764,20 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 	cons, errs := expandIllumioSecurityRuleConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
 
+	secConnect := d.Get("sec_connect").(bool)
+	stateless := d.Get("stateless").(bool)
+	machineAuth := d.Get("machine_auth").(bool)
+	unscopedConsumers := d.Get("unscoped_consumers").(bool)
+
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
 		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		SecConnect:            d.Get("sec_connect").(bool),
-		Stateless:             d.Get("stateless").(bool),
-		MachineAuth:           d.Get("machine_auth").(bool),
-		UnscopedConsumers:     d.Get("unscoped_consumers").(bool),
+		SecConnect:            &secConnect,
+		Stateless:             &stateless,
+		MachineAuth:           &machineAuth,
+		UnscopedConsumers:     &unscopedConsumers,
 		ResolveLabelsAs:       resLabelAs,
 		IngressServices:       ingServs,
 		Providers:             povs,

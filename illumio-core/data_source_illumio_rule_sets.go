@@ -542,12 +542,12 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 
 				providersKey := "providers"
 				if rule.Exists(providersKey) {
-					rl[providersKey] = extractDatasourceActors(rule.S(providersKey))
+					rl[providersKey] = extractRuleActors(rule.S(providersKey))
 				}
 
 				consumerKey := "consumers"
 				if rule.Exists(consumerKey) {
-					rl[consumerKey] = extractDatasourceActors(rule.S(consumerKey))
+					rl[consumerKey] = extractRuleActors(rule.S(consumerKey))
 				}
 
 				rls = append(rls, rl)
@@ -602,7 +602,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 				}
 
 				if iptRule.Exists(actorsKey) {
-					iptr[actorsKey] = extractDatasourceActors(iptRule.S(actorsKey))
+					iptr[actorsKey] = extractRuleActors(iptRule.S(actorsKey))
 				}
 
 				iptrs = append(iptrs, iptr)

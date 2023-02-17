@@ -163,7 +163,7 @@ func getHrefObj(obj interface{}) *models.Href {
 			m := l[0].(map[string]interface{})
 			return &models.Href{Href: m["href"].(string)}
 		} else {
-			return &models.Href{}
+			return nil
 		}
 	case []interface{}: // TypeList
 		l := obj.([]interface{})
@@ -171,14 +171,14 @@ func getHrefObj(obj interface{}) *models.Href {
 			m := l[0].(map[string]interface{})
 			return &models.Href{Href: m["href"].(string)}
 		} else {
-			return &models.Href{}
+			return nil
 		}
 
 	case map[string]interface{}:
 		m := obj.(map[string]interface{})
 		return &models.Href{Href: m["href"].(string)}
 	default:
-		return &models.Href{}
+		return nil
 	}
 }
 
@@ -431,7 +431,7 @@ func handleUnpairAndUpgradeOperationErrors(e error, res *http.Response, op, r st
 	return diags
 }
 
-func extractResourceRuleActors(data *gabs.Container) []map[string]interface{} {
+func extractRuleActors(data *gabs.Container) []map[string]interface{} {
 	actors := []map[string]interface{}{}
 
 	validRuleActors := []string{

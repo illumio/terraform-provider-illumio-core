@@ -5,7 +5,6 @@ package illumiocore
 import (
 	"context"
 
-	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -491,12 +490,12 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 
 			providersKey := "providers"
 			if ruleData.Exists(providersKey) {
-				rl[providersKey] = extractDatasourceActors(ruleData.S(providersKey))
+				rl[providersKey] = extractRuleActors(ruleData.S(providersKey))
 			}
 
 			consumerKey := "consumers"
 			if ruleData.Exists(consumerKey) {
-				rl[consumerKey] = extractDatasourceActors(ruleData.S(consumerKey))
+				rl[consumerKey] = extractRuleActors(ruleData.S(consumerKey))
 			}
 
 			rls = append(rls, rl)
@@ -551,7 +550,7 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 			}
 
 			if iptRule.Exists(actorsKey) {
-				iptr[actorsKey] = extractDatasourceActors(iptRule.S(actorsKey))
+				iptr[actorsKey] = extractRuleActors(iptRule.S(actorsKey))
 			}
 
 			iptrs = append(iptrs, iptr)
@@ -561,32 +560,4 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	return diagnostics
-}
-
-func extractDatasourceActors(data *gabs.Container) []map[string]interface{} {
-	actors := []map[string]interface{}{}
-
-	validRuleActors := []string{
-		"label",
-		"label_group",
-		"workload",
-		"virtual_service",
-		"virtual_server",
-		"ip_list",
-	}
-
-	for _, actorArray := range data.Children() {
-
-		actor := map[string]interface{}{}
-		for k, v := range actorArray.ChildrenMap() {
-			if k == "actors" {
-				actor[k] = v.Data().(string)
-			} else if contains(validRuleActors, k) {
-				actor[k] = v.Data().(map[string]interface{})
-			}
-		}
-		actors = append(actors, actor)
-	}
-
-	return actors
 }

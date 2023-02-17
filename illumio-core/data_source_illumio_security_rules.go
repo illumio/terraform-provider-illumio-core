@@ -168,24 +168,19 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 
 		isKey := "ingress_services"
 		if rule.Exists(isKey) {
-			isKeys := []string{
-				"href",
-				"proto",
-				"port",
-				"to_port",
-			}
-
-			sr[isKey] = extractMapArray(rule.S(isKey), isKeys)
+			sr[isKey] = extractSecurityRuleIngressService(data.S(isKey))
+		} else {
+			sr[isKey] = nil
 		}
 
 		providersKey := "providers"
 		if rule.Exists(providersKey) {
-			sr[providersKey] = extractDatasourceActors(rule.S(providersKey))
+			sr[providersKey] = extractRuleActors(rule.S(providersKey))
 		}
 
 		consumerKey := "consumers"
 		if rule.Exists(consumerKey) {
-			sr[consumerKey] = extractDatasourceActors(rule.S(consumerKey))
+			sr[consumerKey] = extractRuleActors(rule.S(consumerKey))
 		}
 
 		srs = append(srs, sr)

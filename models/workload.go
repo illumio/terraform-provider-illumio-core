@@ -2,50 +2,6 @@
 
 package models
 
-import (
-	"encoding/json"
-)
-
-/* Sample
-{
-  "name": "string",
-  "description": "string",
-  "external_data_set": null,
-  "external_data_reference": null,
-  "hostname": "string",
-  "service_principal_name": null,
-  "public_ip": "string",
-  "interfaces": [
-    {
-      "name": "string",
-      "link_state": "up",
-      "address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
-      "cidr_block": 0,
-      "default_gateway_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
-      "friendly_name": "string"
-    }
-  ],
-  "service_provider": "string",
-  "data_center": "string",
-  "data_center_zone": "string",
-  "os_id": "string",
-  "os_detail": "string",
-  "online": true,
-  "labels": [
-    {
-      "href": "string"
-    }
-  ],
-  "agent": {
-    "config": {
-      "mode": "idle",
-      "log_traffic": true
-    }
-  },
-  "enforcement_mode": "idle"
-}
-*/
-
 type WorkloadLabel struct {
 	Href  string `json:"href"`
 	Key   string `json:"key,omitempty"`
@@ -80,13 +36,5 @@ type Workload struct {
 
 // ToMap - Returns map for Workload model
 func (w *Workload) ToMap() (map[string]interface{}, error) {
-	encodedWorkload, err := json.Marshal(w)
-	if err != nil {
-		return nil, err
-	}
-
-	var result map[string]interface{}
-	json.Unmarshal([]byte(encodedWorkload), &result)
-
-	return result, nil
+	return toMap(w)
 }

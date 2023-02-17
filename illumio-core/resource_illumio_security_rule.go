@@ -565,12 +565,12 @@ func expandIllumioSecurityRuleProviders(providers []interface{}) ([]*models.Secu
 		p := provider.(map[string]interface{})
 		prov := &models.SecurityRuleProvider{
 			Actors:         p["actors"].(string),
-			Label:          getHrefObj(p["label"]),
-			LabelGroup:     getHrefObj(p["label_group"]),
-			Workload:       getHrefObj(p["workload"]),
-			VirtualService: getHrefObj(p["virtual_service"]),
-			VirtualServer:  getHrefObj(p["virtual_server"]),
-			IPList:         getHrefObj(p["ip_list"]),
+			Label:          expandLabelOptionalKeyValue(p["label"]),
+			LabelGroup:     *getHrefObj(p["label_group"]),
+			Workload:       *getHrefObj(p["workload"]),
+			VirtualService: *getHrefObj(p["virtual_service"]),
+			VirtualServer:  *getHrefObj(p["virtual_server"]),
+			IPList:         *getHrefObj(p["ip_list"]),
 		}
 		if !models.HasOneActor(prov) {
 			return nil, diag.Errorf("[illumio-core_security_rule] Provider block can have only one rule actor")
@@ -589,11 +589,11 @@ func expandIllumioSecurityRuleConsumers(consumers []interface{}) ([]*models.Secu
 
 		con := &models.SecurityRuleConsumer{
 			Actors:         p["actors"].(string),
-			Label:          getHrefObj(p["label"]),
-			LabelGroup:     getHrefObj(p["label_group"]),
-			Workload:       getHrefObj(p["workload"]),
-			VirtualService: getHrefObj(p["virtual_service"]),
-			IPList:         getHrefObj(p["ip_list"]),
+			Label:          expandLabelOptionalKeyValue(p["label"]),
+			LabelGroup:     *getHrefObj(p["label_group"]),
+			Workload:       *getHrefObj(p["workload"]),
+			VirtualService: *getHrefObj(p["virtual_service"]),
+			IPList:         *getHrefObj(p["ip_list"]),
 		}
 
 		if !models.HasOneActor(con) {

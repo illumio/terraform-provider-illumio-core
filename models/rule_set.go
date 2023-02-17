@@ -13,9 +13,9 @@ type RuleSet struct {
 }
 
 type RuleSetScope struct {
-	Exclusion  *bool `json:"exclusion,omitempty"`
-	Label      *Href `json:"label,omitempty"`
-	LabelGroup *Href `json:"label_group,omitempty"`
+	Exclusion  *bool                      `json:"exclusion,omitempty"`
+	Label      LabelOptionalKeyValue      `json:"label,omitempty"`
+	LabelGroup LabelGroupOptionalKeyValue `json:"label_group,omitempty"`
 }
 
 type RuleSetIPTablesRulesStatement struct {
@@ -25,10 +25,10 @@ type RuleSetIPTablesRulesStatement struct {
 }
 
 type RuleSetIPTablesRulesActor struct {
-	Actors     string `json:"actors,omitempty"`
-	Label      *Href  `json:"label,omitempty"`
-	LabelGroup *Href  `json:"label_group,omitempty"`
-	Workload   *Href  `json:"workload,omitempty"`
+	Actors     string                `json:"actors,omitempty"`
+	Label      LabelOptionalKeyValue `json:"label,omitempty"`
+	LabelGroup Href                  `json:"label_group,omitempty"`
+	Workload   Href                  `json:"workload,omitempty"`
 }
 
 type RuleSetIPTablesRule struct {

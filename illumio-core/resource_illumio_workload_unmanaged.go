@@ -872,7 +872,7 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 
 func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.Workload {
 	online := d.Get("online").(bool)
-	labels := expandWorkloadLabels(d.Get("labels").(*schema.Set).List())
+	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List())
 	interfaces := expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
@@ -896,19 +896,6 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 		Interfaces:                            interfaces,
 		IgnoredInterfaceNames:                 ignoredInterfaceNames,
 	}
-}
-
-func expandWorkloadLabels(arr []interface{}) []models.WorkloadLabel {
-	wl := make([]models.WorkloadLabel, 0, len(arr))
-	for _, e := range arr {
-		elem := e.(map[string]interface{})
-		wl = append(wl, models.WorkloadLabel{
-			Href:  elem["href"].(string),
-			Key:   elem["key"].(string),
-			Value: elem["value"].(string),
-		})
-	}
-	return wl
 }
 
 func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {

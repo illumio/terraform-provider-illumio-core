@@ -346,7 +346,7 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 			for _, label := range labels {
 				s := &models.RuleSetScope{
 					Exclusion: &exclusion,
-					Label:     getHrefObj(label),
+					Label:     expandLabelOptionalKeyValue(label),
 				}
 				sp = append(sp, s)
 			}
@@ -354,7 +354,7 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 			for _, labelGroup := range labelGroups {
 				s := &models.RuleSetScope{
 					Exclusion:  &exclusion,
-					LabelGroup: getHrefObj(labelGroup),
+					LabelGroup: expandLabelGroupOptionalKeyValue(labelGroup),
 				}
 				sp = append(sp, s)
 			}
@@ -436,9 +436,9 @@ func expandIllumioRuleSetIPTablesRuleActors(actors []interface{}) ([]*models.Rul
 		a := actor.(map[string]interface{})
 		act := &models.RuleSetIPTablesRulesActor{
 			Actors:     a["actors"].(string),
-			Label:      getHrefObj(a["label"]),
-			LabelGroup: getHrefObj(a["label_group"]),
-			Workload:   getHrefObj(a["workload"]),
+			Label:      expandLabelOptionalKeyValue(a["label"]),
+			LabelGroup: *getHrefObj(a["label_group"]),
+			Workload:   *getHrefObj(a["workload"]),
 		}
 
 		acts = append(acts, act)

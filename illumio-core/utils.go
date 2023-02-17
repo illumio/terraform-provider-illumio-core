@@ -507,3 +507,29 @@ func isStringGreaterThanZero() schema.SchemaValidateDiagFunc {
 		return diags
 	}
 }
+
+func expandLabelsOptionalKeyValue(arr []interface{}) []models.LabelOptionalKeyValue {
+	l := make([]models.LabelOptionalKeyValue, 0, len(arr))
+	for _, e := range arr {
+		l = append(l, expandLabelOptionalKeyValue(e))
+	}
+	return l
+}
+
+func expandLabelOptionalKeyValue(i interface{}) models.LabelOptionalKeyValue {
+	elem := i.(map[string]interface{})
+	return models.LabelOptionalKeyValue{
+		Href:  elem["href"].(string),
+		Key:   elem["key"].(string),
+		Value: elem["value"].(string),
+	}
+}
+
+func expandLabelGroupOptionalKeyValue(i interface{}) models.LabelGroupOptionalKeyValue {
+	elem := i.(map[string]interface{})
+	return models.LabelGroupOptionalKeyValue{
+		Href: elem["href"].(string),
+		Key:  elem["key"].(string),
+		Name: elem["name"].(string),
+	}
+}

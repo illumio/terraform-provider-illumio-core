@@ -314,6 +314,8 @@ func getInt(v interface{}) (int, bool) {
 	}
 }
 
+// BoolPtr returns a pointer to a given boolean value.
+// Useful for wrapping value, ok expression results
 func BoolPtr(b bool) *bool {
 	return &b
 }

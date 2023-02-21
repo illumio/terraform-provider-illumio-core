@@ -119,6 +119,25 @@ func datasourceIllumioService() *schema.Resource {
 					},
 				},
 			},
+			"windows_egress_services": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Windows Egress services",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"service_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of Windows Service",
+						},
+						"process_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of running process",
+						},
+					},
+				},
+			},
 			"external_data_set": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -208,7 +227,6 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 		"deleted_by",
 		"update_type",
 	} {
-
 		if data.Exists(key) {
 			d.Set(key, data.S(key).Data())
 		} else {
@@ -216,16 +234,25 @@ func dataSourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 
-	if data.Exists("service_ports") {
-		d.Set("service_ports", extractServicePorts(data))
+	key := "service_ports"
+	if data.Exists(key) {
+		d.Set(key, extractServicePorts(data))
 	} else {
-		d.Set("service_ports", nil)
+		d.Set(key, nil)
 	}
 
-	if data.Exists("windows_services") {
-		d.Set("windows_services", extractWindowsServices(data))
+	key = "windows_services"
+	if data.Exists(key) {
+		d.Set(key, extractWindowsServices(data))
 	} else {
-		d.Set("windows_services", nil)
+		d.Set(key, nil)
+	}
+
+	key = "windows_egress_services"
+	if data.Exists(key) {
+		d.Set(key, extractWindowsEgressServices(data))
+	} else {
+		d.Set(key, nil)
 	}
 
 	return diagnostics

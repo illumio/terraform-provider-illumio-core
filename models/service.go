@@ -7,8 +7,8 @@ type Service struct {
 	Description           string                 `json:"description,omitempty"`
 	ProcessName           string                 `json:"process_name,omitempty"`
 	ServicePorts          []ServicePort          `json:"service_ports,omitempty"`
-	WindowsServices       []WindowsService       `json:"windows_services"`
-	WindowsEgressServices []WindowsEgressService `json:"windows_services"`
+	WindowsServices       []WindowsService       `json:"windows_services,omitempty"`
+	WindowsEgressServices []WindowsEgressService `json:"windows_egress_services,omitempty"`
 	ExternalDataSet       string                 `json:"external_data_set,omitempty"`
 	ExternalDataReference string                 `json:"external_data_reference,omitempty"`
 }

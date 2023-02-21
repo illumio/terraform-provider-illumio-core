@@ -141,6 +141,27 @@ func resourceIllumioService() *schema.Resource {
 					},
 				},
 			},
+			"windows_egress_services": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Windows Egress services",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"service_name": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ValidateDiagFunc: nameValidation,
+							Description:      "Name of Windows Service",
+						},
+						"process_name": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ValidateDiagFunc: nameValidation,
+							Description:      "Name of running process",
+						},
+					},
+				},
+			},
 			"external_data_set": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -240,6 +261,17 @@ func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 
+	if val, exists := d.GetOk("windows_egress_services"); exists {
+		wess, errs := expandIllumioWindowEgressServices(val.(*schema.Set).List())
+
+		if errs.HasError() {
+			diags = append(diags, errs...)
+			return diags
+		} else {
+			service.WindowsEgressServices = wess
+		}
+	}
+
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/services", orgID), service)
 	if err != nil {
 		return diag.FromErr(err)
@@ -322,10 +354,10 @@ func isPortServiceSchemaValid(p map[string]interface{}, diags *diag.Diagnostics)
 	return true
 }
 
-func expandIllumioWindowServices(winServs []interface{}) ([]models.WindowsService, diag.Diagnostics) {
+func expandIllumioWindowServices(weSvcs []interface{}) ([]models.WindowsService, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	winServ := []models.WindowsService{}
-	for _, ws := range winServs {
+	for _, ws := range weSvcs {
 		s := ws.(map[string]interface{})
 		m := models.WindowsService{}
 		serviceNameOk := s["service_name"] != ""
@@ -363,6 +395,26 @@ func expandIllumioWindowServices(winServs []interface{}) ([]models.WindowsServic
 	return winServ, diags
 }
 
+func expandIllumioWindowEgressServices(weSvcs []interface{}) ([]models.WindowsEgressService, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	weSvc := []models.WindowsEgressService{}
+	for _, ws := range weSvcs {
+		s := ws.(map[string]interface{})
+		m := models.WindowsEgressService{}
+		serviceNameOk := s["service_name"] != ""
+		if serviceNameOk {
+			m.ServiceName = s["service_name"].(string)
+		}
+		processNameOk := s["process_name"] != ""
+		if processNameOk {
+			m.ProcessName = s["process_name"].(string)
+		}
+		weSvc = append(weSvc, m)
+	}
+
+	return weSvc, diags
+}
+
 func resourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
@@ -397,16 +449,25 @@ func resourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	if data.Exists("service_ports") {
-		d.Set("service_ports", extractServicePorts(data))
+	key := "service_ports"
+	if data.Exists(key) {
+		d.Set(key, extractServicePorts(data))
 	} else {
-		d.Set("service_ports", nil)
+		d.Set(key, nil)
 	}
 
-	if data.Exists("windows_services") {
-		d.Set("windows_services", extractWindowsServices(data))
+	key = "windows_services"
+	if data.Exists(key) {
+		d.Set(key, extractWindowsServices(data))
 	} else {
-		d.Set("windows_services", nil)
+		d.Set(key, nil)
+	}
+
+	key = "windows_egress_services"
+	if data.Exists(key) {
+		d.Set(key, extractWindowsEgressServices(data))
+	} else {
+		d.Set(key, nil)
 	}
 
 	return diags
@@ -418,7 +479,6 @@ func extractServicePorts(data *gabs.Container) []map[string]interface{} {
 	sps := []map[string]interface{}{}
 
 	for _, serPort := range serPorts {
-
 		sp := serPort.(map[string]interface{})
 
 		for k, v := range serPort.(map[string]interface{}) {
@@ -442,20 +502,39 @@ func extractWindowsServices(data *gabs.Container) []map[string]interface{} {
 		ws := winSer.(map[string]interface{})
 
 		for k, v := range winSer.(map[string]interface{}) {
-
 			if v != nil {
 				if k == "service_name" || k == "process_name" {
 					ws[k] = v.(string)
 				} else {
 					ws[k] = strconv.Itoa(int(v.(float64)))
 				}
-
 			}
+
 			wss = append(wss, ws)
 		}
 	}
 
 	return wss
+}
+
+func extractWindowsEgressServices(data *gabs.Container) []map[string]interface{} {
+	weSvcs := data.S("windows_egress_services").Data().([]interface{})
+
+	wess := []map[string]interface{}{}
+
+	for _, weSvc := range weSvcs {
+		wes := weSvc.(map[string]interface{})
+
+		for k, v := range weSvc.(map[string]interface{}) {
+			if v != nil {
+				wes[k] = v.(string)
+			}
+
+			wess = append(wess, wes)
+		}
+	}
+
+	return wess
 }
 
 func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

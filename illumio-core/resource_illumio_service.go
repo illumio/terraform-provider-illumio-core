@@ -228,48 +228,12 @@ func resourceIllumioService() *schema.Resource {
 func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
-	var diags diag.Diagnostics
 
 	orgID := illumioClient.OrgID
 
-	service := &models.Service{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
-		ProcessName:           d.Get("process_name").(string),
-		ExternalDataSet:       d.Get("external_data_set").(string),
-		ExternalDataReference: d.Get("external_data_reference").(string),
-	}
-
-	if val, exists := d.GetOk("service_ports"); exists {
-		sps, errs := expandIllumioServiceServicePorts(val.(*schema.Set).List())
-		if errs.HasError() {
-			diags = append(diags, errs...)
-			return diags
-		} else {
-			service.ServicePorts = sps
-		}
-	}
-
-	if val, exists := d.GetOk("windows_services"); exists {
-		wss, errs := expandIllumioWindowServices(val.(*schema.Set).List())
-
-		if errs.HasError() {
-			diags = append(diags, errs...)
-			return diags
-		} else {
-			service.WindowsServices = wss
-		}
-	}
-
-	if val, exists := d.GetOk("windows_egress_services"); exists {
-		wess, errs := expandIllumioWindowEgressServices(val.(*schema.Set).List())
-
-		if errs.HasError() {
-			diags = append(diags, errs...)
-			return diags
-		} else {
-			service.WindowsEgressServices = wess
-		}
+	service, diags := populateServiceFromResourceData(d)
+	if diags.HasError() {
+		return diags
 	}
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/services", orgID), service)
@@ -538,47 +502,15 @@ func extractWindowsEgressServices(data *gabs.Container) []map[string]interface{}
 }
 
 func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	service := &models.Service{}
-
-	if d.HasChange("name") {
-		service.Name = d.Get("name").(string)
-	}
+	service, diags := populateServiceFromResourceData(d)
 
 	if d.HasChange("process_name") {
-		service.ProcessName = d.Get("process_name").(string)
 		if isUpdatedToEmptyString(d.GetChange("process_name")) {
 			diags = append(diags, diag.Errorf("[illumio-core_service] Once set, process_name cannot be updated to an empty string")...)
 		}
-	}
-
-	service.Description = d.Get("description").(string)
-	service.ExternalDataSet = d.Get("external_data_set").(string)
-	service.ExternalDataReference = d.Get("external_data_reference").(string)
-
-	if d.HasChange("service_ports") {
-		sps, errs := expandIllumioServiceServicePorts(d.Get("service_ports").(*schema.Set).List())
-		if errs.HasError() {
-			diags = append(diags, errs...)
-		} else {
-			service.ServicePorts = sps
-		}
-	} else {
-		service.ServicePorts = nil
-	}
-
-	if d.HasChange("windows_services") {
-		wss, errs := expandIllumioWindowServices(d.Get("windows_services").(*schema.Set).List())
-		if errs.HasError() {
-			diags = append(diags, errs...)
-		} else {
-			service.WindowsServices = wss
-		}
-	} else {
-		service.WindowsServices = nil
 	}
 
 	if service.ServicePorts != nil && service.WindowsServices != nil {
@@ -590,10 +522,10 @@ func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	_, err := illumioClient.Update(d.Id(), service)
-
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
 	pConfig.StoreHref("services", d.Id())
 	return resourceIllumioServiceRead(ctx, d, m)
 }
@@ -612,4 +544,53 @@ func resourceIllumioServiceDelete(ctx context.Context, d *schema.ResourceData, m
 	pConfig.StoreHref("services", href)
 	d.SetId("")
 	return diags
+}
+
+func populateServiceFromResourceData(d *schema.ResourceData) (*models.Service, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	service := &models.Service{
+		Name:                  d.Get("name").(string),
+		Description:           d.Get("description").(string),
+		ProcessName:           d.Get("process_name").(string),
+		ExternalDataSet:       d.Get("external_data_set").(string),
+		ExternalDataReference: d.Get("external_data_reference").(string),
+		// initialize as empty lists - supports the update case
+		// where we may need a purposefully empty list, so we can't use
+		// omitempty in the model schema
+		ServicePorts:          []models.ServicePort{},
+		WindowsServices:       []models.WindowsService{},
+		WindowsEgressServices: []models.WindowsEgressService{},
+	}
+
+	if val, exists := d.GetOk("service_ports"); exists {
+		sps, errs := expandIllumioServiceServicePorts(val.(*schema.Set).List())
+		if errs.HasError() {
+			diags = append(diags, errs...)
+		} else {
+			service.ServicePorts = sps
+		}
+	}
+
+	if val, exists := d.GetOk("windows_services"); exists {
+		wss, errs := expandIllumioWindowServices(val.(*schema.Set).List())
+
+		if errs.HasError() {
+			diags = append(diags, errs...)
+		} else {
+			service.WindowsServices = wss
+		}
+	}
+
+	if val, exists := d.GetOk("windows_egress_services"); exists {
+		wess, errs := expandIllumioWindowEgressServices(val.(*schema.Set).List())
+
+		if errs.HasError() {
+			diags = append(diags, errs...)
+		} else {
+			service.WindowsEgressServices = wess
+		}
+	}
+
+	return service, diags
 }

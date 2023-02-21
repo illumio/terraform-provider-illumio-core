@@ -136,7 +136,7 @@ func datasourceIllumioLabelType() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Object permissions",
+				Description: "User permissions for the object",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

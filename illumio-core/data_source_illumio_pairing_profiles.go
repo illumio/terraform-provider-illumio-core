@@ -10,50 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample of API response
-[
-	{
-		"href": "string",
-		"name": "string",
-		"description": "string",
-		"enforcement_mode": "idle",
-		"status": "string",
-		"enabled": true,
-		"total_use_count": 0,
-		"allowed_uses_per_key": 1,
-		"key_lifespan": 1,
-		"last_pairing_at": "string",
-		"created_at": "2021-03-02T02:37:59Z",
-		"updated_at": "2021-03-02T02:37:59Z",
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		},
-		"is_default": true,
-		"labels": [
-			{
-			"href": "string"
-			}
-		],
-		"env_label_lock": true,
-		"loc_label_lock": true,
-		"role_label_lock": true,
-		"app_label_lock": true,
-		"enforcement_mode_lock": true,
-		"log_traffic": true,
-		"log_traffic_lock": true,
-		"visibility_level": "string",
-		"visibility_level_lock": true,
-		"status_lock": true,
-		"external_data_set": null,
-		"external_data_reference": null,
-		"agent_software_release": null
-	}
-]
-*/
-
 func datasourceIllumioPairingProfiles() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioPairingProfilesRead,
@@ -230,7 +186,7 @@ func datasourceIllumioPairingProfiles() *schema.Resource {
 						"caps": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "CAP",
+							Description: "User permissions for the object",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

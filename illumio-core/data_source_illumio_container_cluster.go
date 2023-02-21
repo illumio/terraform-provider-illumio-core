@@ -9,36 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-
-/*
-{
-  "href": "string",
-  "name": "string",
-  "description": "string",
-  "nodes": [
-    {
-      "pod_subnet": "string"
-    }
-  ],
-  "container_runtime": "string",
-  "manager_type": "string",
-  "last_connected": "2021-03-02T02:37:59Z",
-  "online": true,
-  "errors": [
-    {
-      "audit_event": {
-        "href": "string"
-      },
-      "duplicate_ids": [],
-      "error_type": "string"
-    }
-  ],
-  "kubelink_version": "string",
-  "pce_fqdn": "string"
-}
-*/
-
 func datasourceIllumioContainerCluster() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioContainerClusterRead,
@@ -139,7 +109,7 @@ func datasourceIllumioContainerCluster() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Permission types",
+				Description: "User permissions for the object",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

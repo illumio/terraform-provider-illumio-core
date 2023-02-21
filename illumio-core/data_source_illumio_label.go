@@ -9,25 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample of API response
-{
-	"href": "string",
-	"deleted": true,
-	"key": "string",
-	"value": "string",
-	"external_data_set": null,
-	"external_data_reference": null,
-	"created_at": "2020-08-19T21:34:26Z",
-	"updated_at": "2020-08-19T21:34:26Z",
-	"created_by": {
-		"href": "string"
-	},
-	"updated_by": {
-		"href": "string"
-	}
-}
-*/
-
 func datasourceIllumioLabel() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioLabelRead,

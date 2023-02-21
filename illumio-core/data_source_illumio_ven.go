@@ -10,114 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-{
-  "href": "string",
-  "name": "string",
-  "description": "string",
-  "hostname": "string",
-  "uid": "string",
-  "os_id": "string",
-  "os_detail": "string",
-  "os_platform": "string",
-  "version": "string",
-  "status": "string",
-  "activation_type": "string",
-  "active_pce_fqdn": "string",
-  "target_pce_fqdn": "string",
-  "labels": [
-    {
-      "href": "string",
-      "key": "string",
-      "value": "string"
-    }
-  ],
-  "interfaces": [
-    {
-      "name": "string",
-      "link_state": "string",
-      "address": "string",
-      "cidr_block": 0,
-      "default_gateway_address": "string",
-      "network": {
-        "href": "string"
-      },
-      "network_detection_mode": "string",
-      "friendly_name": "string"
-    }
-  ],
-  "workloads": [
-    {
-      "href": "string",
-      "name": "string",
-      "hostname": "string",
-      "os_id": "string",
-      "os_detail": "string",
-      "labels": [
-        {
-          "href": "string",
-          "key": "string",
-          "value": "string"
-        }
-      ],
-      "public_ip": "string",
-      "interfaces": [
-        {
-          "name": "string",
-          "link_state": "string",
-          "address": "string",
-          "cidr_block": 0,
-          "default_gateway_address": "string",
-          "network": {
-            "href": "string"
-          },
-          "network_detection_mode": "string",
-          "friendly_name": "string"
-        }
-      ],
-      "security_policy_applied_at": "2021-03-02T02:37:59Z",
-      "security_policy_received_at": "2021-03-02T02:37:59Z",
-      "mode": "idle",
-      "enforcement_mode": "idle",
-      "visibility_level": "string",
-      "online": true
-    }
-  ],
-  "container_cluster": {
-    "href": "string",
-    "name": "string"
-  },
-  "secure_connect": {
-    "matching_issuer_name": "string"
-  },
-  "last_heartbeat_at": null,
-  "last_goodbye_at": "2021-03-02T02:37:59Z",
-  "created_at": "2021-03-02T02:37:59Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_at": "2021-03-02T02:37:59Z",
-  "updated_by": {
-    "href": "string"
-  },
-  "conditions": [
-    {
-      "first_reported_timestamp": "2021-03-02T02:37:59Z",
-      "latest_event": {
-        "notification_type": "string",
-        "severity": "error",
-        "href": "string",
-        "info": {},
-        "timestamp": "2021-03-02T02:37:59Z"
-      }
-    }
-  ],
-  "caps": [
-    "string"
-  ]
-}
-*/
-
 func datasourceIllumioVEN() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: datasourceIllumioVENRead,
@@ -565,7 +457,7 @@ func datasourceIllumioVEN() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Permission types",
+				Description: "User permissions for the object",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

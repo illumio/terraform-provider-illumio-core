@@ -10,33 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-
-/*
-{
-  "workload_disconnected_timeout_seconds": [
-    {
-      "scope": [
-        {
-          "href": "string"
-        }
-      ],
-      "value": -1
-    }
-  ],
-  "workload_goodbye_timeout_seconds": [
-    {
-      "scope": [
-        {
-          "href": "string"
-        }
-      ],
-      "value": -1
-    }
-  ]
-}
-*/
-
 func datasourceIllumioWorkloadSettings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioWorkloadSettingsRead,

@@ -211,7 +211,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "CAPS for Workload",
+				Description: "User permissions for the object",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 		},
@@ -245,6 +245,7 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 		AgentSoftwareRelease:  d.Get("agent_software_release").(string),
 		AllowedUsesPerKey:     d.Get("allowed_uses_per_key").(string),
 		KeyLifespan:           d.Get("key_lifespan").(string),
+		Labels:                []models.Href{},
 	}
 
 	if items, ok := d.GetOk("labels"); ok {
@@ -347,7 +348,6 @@ func resourceIllumioPairingProfileRead(ctx context.Context, d *schema.ResourceDa
 }
 
 func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 	var diags diag.Diagnostics

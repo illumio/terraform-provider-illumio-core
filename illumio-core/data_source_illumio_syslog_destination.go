@@ -10,38 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-{
-    "href": "string",
-    "pce_scope": [
-      "string"
-    ],
-    "type": "string",
-    "description": "string",
-    "audit_event_logger": {
-      "configuration_event_included",: true,
-      "system_event_included",: true,
-      "min_severity",: "error"
-    },
-    "traffic_event_logger": {
-      "traffic_flow_allowed_event_included": true,
-      "traffic_flow_potentially_blocked_event_included": true,
-      "traffic_flow_blocked_event_included": true
-    },
-    "node_status_logger": {
-      "node_status_included": true
-    },
-    "remote_syslog": {
-      "address": "string",
-      "port": 0,
-      "protocol": 0,
-      "tls_enabled": true,
-      "tls_ca_bundle": "string",
-      "tls_verify_cert": true
-    }
-  }
-*/
-
 func datasourceIllumioSyslogDestination() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: datasourceIllumioSyslogDestinationRead,

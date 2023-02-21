@@ -9,42 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-
-/*
-{
-  "href": "string",
-  "name": null,
-  "namespace": null,
-  "description": "string",
-  "assign_labels": [
-    {
-      "href": "string"
-    }
-  ],
-  "labels": [
-    {
-      "key": "string",
-      "assignment": {
-        "href": "string",
-        "value": "string"
-      }
-    }
-  ],
-  "enforcement_mode": "idle",
-  "managed": true,
-  "linked": true,
-  "created_at": "2021-03-02T02:37:59Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "updated_at": "2021-03-02T02:37:59Z"
-}
-*/
-
 func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioContainerClusterWorkloadProfileRead,

@@ -2,14 +2,6 @@
 
 package models
 
-// Sample
-/*
-{
-  "name": "string",
-  "description": "string"
-}
-*/
-
 type ContainerCluster struct {
 	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`

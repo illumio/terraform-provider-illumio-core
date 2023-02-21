@@ -114,7 +114,7 @@ func resourceIllumioContainerCluster() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Permission types",
+				Description: "User permissions for the object",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

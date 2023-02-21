@@ -69,6 +69,7 @@ func hashcode(s string) int {
 
 // for all resource, name attribute has character limit from 1 to 255
 var nameValidation = validation.ToDiagFunc(validation.StringLenBetween(1, 255))
+var portNumberValidation = validation.ToDiagFunc(validation.IntBetween(0, PORT_MAX))
 
 // for all resource, name attribute has character limit from 0 to 255
 var checkStringZerotoTwoHundredAndFiftyFive = validation.ToDiagFunc(validation.StringLenBetween(0, 255))
@@ -78,6 +79,7 @@ const (
 	UUID_V4_REGEX               = "[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}"
 	ORGS_PREFIX                 = "^/orgs/[1-9][0-9]*/"
 	SEC_POLICY_PREFIX           = "sec_policy/(draft|active|[0-9]*)/"
+	PORT_MAX                    = 65535
 )
 
 var (
@@ -310,7 +312,10 @@ func getInt(v interface{}) (int, bool) {
 	default:
 		return 0, false
 	}
+}
 
+func BoolPtr(b bool) *bool {
+	return &b
 }
 
 // validation function for checking "unlimited" or range
@@ -508,28 +513,54 @@ func isStringGreaterThanZero() schema.SchemaValidateDiagFunc {
 	}
 }
 
-func expandLabelsOptionalKeyValue(arr []interface{}) []models.LabelOptionalKeyValue {
-	l := make([]models.LabelOptionalKeyValue, 0, len(arr))
+func expandLabelsOptionalKeyValue(arr []interface{}) []*models.LabelOptionalKeyValue {
+	l := make([]*models.LabelOptionalKeyValue, 0, len(arr))
 	for _, e := range arr {
 		l = append(l, expandLabelOptionalKeyValue(e))
 	}
 	return l
 }
 
-func expandLabelOptionalKeyValue(i interface{}) models.LabelOptionalKeyValue {
-	elem := i.(map[string]interface{})
-	return models.LabelOptionalKeyValue{
-		Href:  elem["href"].(string),
-		Key:   elem["key"].(string),
-		Value: elem["value"].(string),
+func mapFromUnknownType(i interface{}) map[string]interface{} {
+	var m map[string]interface{}
+
+	switch l := i.(type) {
+	case *schema.Set:
+		ll := l.List()
+		if len(ll) > 0 {
+			m = ll[0].(map[string]interface{})
+		} else {
+			return nil
+		}
+	case map[string]interface{}:
+		m = l
+	default:
+		return nil
 	}
+
+	return m
 }
 
-func expandLabelGroupOptionalKeyValue(i interface{}) models.LabelGroupOptionalKeyValue {
-	elem := i.(map[string]interface{})
-	return models.LabelGroupOptionalKeyValue{
-		Href: elem["href"].(string),
-		Key:  elem["key"].(string),
-		Name: elem["name"].(string),
+func expandLabelOptionalKeyValue(i interface{}) *models.LabelOptionalKeyValue {
+	if label := mapFromUnknownType(i); label != nil {
+		return &models.LabelOptionalKeyValue{
+			Href:  label["href"].(string),
+			Key:   label["key"].(string),
+			Value: label["value"].(string),
+		}
 	}
+
+	return nil
+}
+
+func expandLabelGroupOptionalKeyValue(i interface{}) *models.LabelGroupOptionalKeyValue {
+	if labelGroup := mapFromUnknownType(i); labelGroup != nil {
+		return &models.LabelGroupOptionalKeyValue{
+			Href: labelGroup["href"].(string),
+			Key:  labelGroup["key"].(string),
+			Name: labelGroup["name"].(string),
+		}
+	}
+
+	return nil
 }

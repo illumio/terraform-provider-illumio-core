@@ -13,53 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-/* Sample of API response
-[
-	{
-		href": "string",
-		"name": "string",
-		"description": "string",
-		"description_url": "string",
-		"process_name": "string",
-		"service_ports": [
-			{
-			"port": 0,
-			"to_port": 0,
-			"proto": 0,
-			"icmp_type": 0,
-			"icmp_code": 0
-			}
-		],
-		"windows_services": [
-			{
-			"service_name": "string",
-			"process_name": "string",
-			"port": 0,
-			"to_port": 0,
-			"proto": 0,
-			"icmp_type": 0,
-			"icmp_code": 0
-			}
-		],
-		"external_data_set": "string",
-		"external_data_reference": "string",
-		"created_at": "1970-01-01T00:00:00.000Z",
-		"updated_at": "1970-01-01T00:00:00.000Z",
-		"deleted_at": "1970-01-01T00:00:00.000Z",
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		},
-		"deleted_by": {
-			"href": "string"
-		},
-		"update_type": "string"
-	}
-]
-*/
-
 func datasourceIllumioServices() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioServicesRead,

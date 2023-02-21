@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -248,30 +249,30 @@ func resourceIllumioServiceCreate(ctx context.Context, d *schema.ResourceData, m
 	return resourceIllumioServiceRead(ctx, d, m)
 }
 
-func expandIllumioServiceServicePorts(serPorts []interface{}) ([]map[string]interface{}, diag.Diagnostics) {
+func expandIllumioServiceServicePorts(serPorts []interface{}) ([]models.ServicePort, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	ports := []map[string]interface{}{}
+	ports := []models.ServicePort{}
 	for _, serPort := range serPorts {
 		s := serPort.(map[string]interface{})
-		m := make(map[string]interface{})
+		m := models.ServicePort{}
 		if isPortServiceSchemaValid(s, &diags) {
 			if v, ok := getInt(s["proto"]); ok {
-				m["proto"] = v
+				m.Proto = v
 				if vPort, ok := getInt(s["port"]); ok {
-					m["port"] = vPort
+					m.Port = &vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
 							diags = append(diags, diag.Errorf("[illumio-core_service] Value of to_port can't be less or equal to value of port inside service_ports")...)
 						} else {
-							m["to_port"] = vToPort
+							m.ToPort = &vToPort
 						}
 					}
 				}
 				if icmpcode, ok := getInt(s["icmp_code"]); ok {
-					m["icmp_code"] = icmpcode
+					m.ICMPCode = &icmpcode
 				}
 				if icmptype, ok := getInt(s["icmp_type"]); ok {
-					m["icmp_type"] = icmptype
+					m.ICMPType = &icmptype
 				}
 			}
 
@@ -321,38 +322,38 @@ func isPortServiceSchemaValid(p map[string]interface{}, diags *diag.Diagnostics)
 	return true
 }
 
-func expandIllumioWindowServices(winServs []interface{}) ([]map[string]interface{}, diag.Diagnostics) {
+func expandIllumioWindowServices(winServs []interface{}) ([]models.WindowsService, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	winServ := []map[string]interface{}{}
+	winServ := []models.WindowsService{}
 	for _, ws := range winServs {
 		s := ws.(map[string]interface{})
-		m := make(map[string]interface{})
+		m := models.WindowsService{}
 		serviceNameOk := s["service_name"] != ""
 		if serviceNameOk {
-			m["service_name"] = s["service_name"].(string)
+			m.ServiceName = s["service_name"].(string)
 		}
 		processNameOk := s["process_name"] != ""
 		if processNameOk {
-			m["process_name"] = s["process_name"].(string)
+			m.ProcessName = s["process_name"].(string)
 		}
 		if isPortServiceSchemaValid(s, &diags) {
 			if v, ok := getInt(s["proto"]); ok {
-				m["proto"] = v
+				m.Proto = &v
 				if vPort, ok := getInt(s["port"]); ok {
-					m["port"] = vPort
+					m.Port = &vPort
 					if vToPort, ok := getInt(s["to_port"]); ok {
 						if vToPort <= vPort {
 							diags = append(diags, diag.Errorf("[illumio-core_service] Value of to_port can't be less or equal to value of port inside windows_services")...)
 						} else {
-							m["to_port"] = vToPort
+							m.ToPort = &vToPort
 						}
 					}
 				}
 				if icmpcode, ok := getInt(s["icmp_code"]); ok {
-					m["icmp_code"] = icmpcode
+					m.ICMPCode = &icmpcode
 				}
 				if icmptype, ok := getInt(s["icmp_type"]); ok {
-					m["icmp_type"] = icmptype
+					m.ICMPType = &icmptype
 				}
 			}
 		}
@@ -397,55 +398,64 @@ func resourceIllumioServiceRead(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	if data.Exists("service_ports") {
-		serPorts := data.S("service_ports").Data().([]interface{})
-
-		sps := []map[string]interface{}{}
-
-		for _, serPort := range serPorts {
-
-			sp := serPort.(map[string]interface{})
-
-			for k, v := range serPort.(map[string]interface{}) {
-				if v != nil {
-					sp[k] = strconv.Itoa(int(v.(float64)))
-				}
-				sps = append(sps, sp)
-			}
-		}
-
-		d.Set("service_ports", sps)
+		d.Set("service_ports", extractServicePorts(data))
 	} else {
 		d.Set("service_ports", nil)
 	}
 
 	if data.Exists("windows_services") {
-		winSers := data.S("windows_services").Data().([]interface{})
-
-		wss := []map[string]interface{}{}
-
-		for _, winSer := range winSers {
-			ws := winSer.(map[string]interface{})
-
-			for k, v := range winSer.(map[string]interface{}) {
-
-				if v != nil {
-					if k == "service_name" || k == "process_name" {
-						ws[k] = v.(string)
-					} else {
-						ws[k] = strconv.Itoa(int(v.(float64)))
-					}
-
-				}
-				wss = append(wss, ws)
-			}
-		}
-
-		d.Set("windows_services", wss)
+		d.Set("windows_services", extractWindowsServices(data))
 	} else {
 		d.Set("windows_services", nil)
 	}
 
 	return diags
+}
+
+func extractServicePorts(data *gabs.Container) []map[string]interface{} {
+	serPorts := data.S("service_ports").Data().([]interface{})
+
+	sps := []map[string]interface{}{}
+
+	for _, serPort := range serPorts {
+
+		sp := serPort.(map[string]interface{})
+
+		for k, v := range serPort.(map[string]interface{}) {
+			if v != nil {
+				sp[k] = strconv.Itoa(int(v.(float64)))
+			}
+		}
+
+		sps = append(sps, sp)
+	}
+
+	return sps
+}
+
+func extractWindowsServices(data *gabs.Container) []map[string]interface{} {
+	winSers := data.S("windows_services").Data().([]interface{})
+
+	wss := []map[string]interface{}{}
+
+	for _, winSer := range winSers {
+		ws := winSer.(map[string]interface{})
+
+		for k, v := range winSer.(map[string]interface{}) {
+
+			if v != nil {
+				if k == "service_name" || k == "process_name" {
+					ws[k] = v.(string)
+				} else {
+					ws[k] = strconv.Itoa(int(v.(float64)))
+				}
+
+			}
+			wss = append(wss, ws)
+		}
+	}
+
+	return wss
 }
 
 func resourceIllumioServiceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

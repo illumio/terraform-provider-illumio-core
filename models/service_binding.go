@@ -12,12 +12,17 @@ type ServiceBindingPortOverrides struct {
 type ServiceBinding struct {
 	VirtualService        Href                          `json:"virtual_service"`
 	Workload              *Href                         `json:"workload,omitempty"`
-	PortOverrides         []ServiceBindingPortOverrides `json:"port_overrides,omitempty"`
+	PortOverrides         []ServiceBindingPortOverrides `json:"port_overrides"`
 	ExternalDataReference string                        `json:"external_data_reference,omitempty"`
 	ExternalDataSet       string                        `json:"external_data_set,omitempty"`
 	ContainerWorkload     *Href                         `json:"container_workload,omitempty"`
 }
 
 func (sb *ServiceBinding) ToMap() (map[string]interface{}, error) {
-	return toMap(sb)
+	sbAttrMap, err := toMap(sb)
+	if err != nil {
+		return nil, err
+	}
+
+	return map[string]interface{}{"___items___": []interface{}{sbAttrMap}}, nil
 }

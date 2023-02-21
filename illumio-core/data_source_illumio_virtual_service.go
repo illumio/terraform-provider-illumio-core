@@ -4,40 +4,11 @@ package illumiocore
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
-
-// Sample
-/*
-{
-  "name": "string",
-  "description": "string",
-  "external_data_set": null,
-  "external_data_reference": null,
-  "labels": [
-    {
-      "href": "string"
-    }
-  ],
-  "service_ports": [
-    {
-      "port": 0,
-      "to_port": 0,
-      "proto": 0
-    }
-  ],
-  "service": {},
-  "apply_to": "host_only",
-  "ip_overrides": [
-    "string"
-  ],
-  "service_addresses": [
-    {}
-  ]
-}
-*/
 
 func datasourceIllumioVirtualService() *schema.Resource {
 	return &schema.Resource{
@@ -108,17 +79,17 @@ func datasourceIllumioVirtualService() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"port": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Port Number. Also starting port when specifying port range",
 						},
 						"to_port": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Specify port or port range to filter results",
 						},
 						"proto": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Transport Protocol",
 						},
@@ -167,7 +138,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 							Description: "Description for given fqdn",
 						},
 						"port": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Port Number. Also, the starting port when specifying a range",
 						},
@@ -190,7 +161,7 @@ func datasourceIllumioVirtualService() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "CAPS",
+				Description: "User permissions for the object",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"update_type": {
@@ -303,7 +274,7 @@ func dataSourceIllumioVirtualServiceRead(ctx context.Context, d *schema.Resource
 				val["description"] = v.(string)
 			}
 			if v := child.S("port").Data(); v != nil {
-				val["port"] = v
+				val["port"] = strconv.Itoa(int(v.(float64)))
 			}
 			if v := child.S("ip").Data(); v != nil {
 				val["ip"] = v.(string)
@@ -320,23 +291,7 @@ func dataSourceIllumioVirtualServiceRead(ctx context.Context, d *schema.Resource
 
 	key = "service_ports"
 	if data.Exists(key) {
-		sps := []map[string]interface{}{}
-
-		for _, serPort := range data.S(key).Children() {
-			sp := map[string]interface{}{}
-
-			for k, v := range serPort.ChildrenMap() {
-				if k == "proto" {
-					sp[k] = v.Data()
-				} else if k == "port" || k == "to_port" {
-					sp[k] = v.Data()
-				}
-
-				sps = append(sps, sp)
-			}
-		}
-
-		d.Set(key, sps)
+		d.Set(key, extractServicePorts(data))
 	} else {
 		d.Set(key, nil)
 	}

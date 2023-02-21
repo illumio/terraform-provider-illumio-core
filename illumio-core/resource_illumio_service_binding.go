@@ -83,7 +83,7 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"container_workload": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				MaxItems:    1,
 				Description: "Container Workload href",
@@ -158,19 +158,24 @@ func resourceIllumioServiceBindingCreate(ctx context.Context, d *schema.Resource
 	ServiceBinding := &models.ServiceBinding{
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
+		PortOverrides:         []models.ServiceBindingPortOverrides{},
 	}
 
-	item := d.Get("virtual_service").([]interface{})
+	item := d.Get("virtual_service").(*schema.Set).List()
 	ServiceBinding.VirtualService.Href = item[0].(map[string]interface{})["href"].(string)
 
-	item = d.Get("workload").([]interface{})
+	item = d.Get("workload").(*schema.Set).List()
 	if len(item) > 0 {
-		ServiceBinding.Workload.Href = item[0].(map[string]interface{})["href"].(string)
+		ServiceBinding.Workload = &models.Href{
+			Href: item[0].(map[string]interface{})["href"].(string),
+		}
 	}
 
-	item = d.Get("container_workload").([]interface{})
+	item = d.Get("container_workload").(*schema.Set).List()
 	if len(item) > 0 {
-		ServiceBinding.ContainerWorkload.Href = item[0].(map[string]interface{})["href"].(string)
+		ServiceBinding.ContainerWorkload = &models.Href{
+			Href: item[0].(map[string]interface{})["href"].(string),
+		}
 	}
 
 	if items, ok := d.GetOk("port_overrides"); ok {

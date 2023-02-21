@@ -35,15 +35,21 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"virtual_service": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Virtual service href",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"href": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Workload URI",
+						},
+					},
 				},
 			},
 			"workload": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Workload Object for Service Bindings",
 				Elem: &schema.Resource{

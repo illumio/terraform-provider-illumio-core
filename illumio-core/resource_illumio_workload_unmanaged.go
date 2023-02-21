@@ -871,7 +871,6 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 }
 
 func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.Workload {
-	online := d.Get("online").(bool)
 	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List())
 	interfaces := expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
@@ -886,7 +885,7 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 		ExternalDataReference:                 d.Get("external_data_reference").(string),
 		ExternalDataSet:                       d.Get("external_data_set").(string),
 		Hostname:                              d.Get("hostname").(string),
-		Online:                                &online,
+		Online:                                BoolPtr(d.Get("online").(bool)),
 		OsDetail:                              d.Get("os_detail").(string),
 		OsID:                                  d.Get("os_id").(string),
 		PublicIP:                              d.Get("public_ip").(string),
@@ -898,11 +897,11 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 	}
 }
 
-func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {
-	wi := make([]models.WorkloadInterface, 0, len(arr))
+func expandIllumioWorkloadInterface(arr []interface{}) []*models.WorkloadInterface {
+	wi := make([]*models.WorkloadInterface, 0, len(arr))
 	for _, e := range arr {
 		elem := e.(map[string]interface{})
-		wi = append(wi, models.WorkloadInterface{
+		wi = append(wi, &models.WorkloadInterface{
 			Name:                  elem["name"].(string),
 			LinkState:             elem["link_state"].(string),
 			Address:               elem["address"].(string),

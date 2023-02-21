@@ -23,9 +23,9 @@ type Workload struct {
 	Online *bool `json:"online,omitempty"`
 
 	// don't omitempty for lists - an empty array should remove all objects from the workload
-	IgnoredInterfaceNames []string                `json:"ignored_interface_names"`
-	Labels                []LabelOptionalKeyValue `json:"labels"`
-	Interfaces            []WorkloadInterface     `json:"interfaces"`
+	IgnoredInterfaceNames []string                 `json:"ignored_interface_names"`
+	Labels                []*LabelOptionalKeyValue `json:"labels"`
+	Interfaces            []*WorkloadInterface     `json:"interfaces"`
 }
 
 // ToMap - Returns map for Workload model

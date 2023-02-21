@@ -437,8 +437,8 @@ func expandIllumioRuleSetIPTablesRuleActors(actors []interface{}) ([]*models.Rul
 		act := &models.RuleSetIPTablesRulesActor{
 			Actors:     a["actors"].(string),
 			Label:      expandLabelOptionalKeyValue(a["label"]),
-			LabelGroup: *getHrefObj(a["label_group"]),
-			Workload:   *getHrefObj(a["workload"]),
+			LabelGroup: getHrefObj(a["label_group"]),
+			Workload:   getHrefObj(a["workload"]),
 		}
 
 		acts = append(acts, act)

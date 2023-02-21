@@ -37,7 +37,7 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"virtual_service": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				MaxItems:    1,
 				Description: "Virtual service href",
@@ -52,7 +52,7 @@ func resourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"workload": {
-				Type:         schema.TypeList,
+				Type:         schema.TypeSet,
 				Optional:     true,
 				MaxItems:     1,
 				ExactlyOneOf: []string{"workload", "container_workload"},
@@ -107,7 +107,7 @@ func resourceIllumioServiceBinding() *schema.Resource {
 							Type:             schema.TypeInt,
 							Optional:         true,
 							Description:      "Port Number in the original service which to override (integer 0-65535). Starting port when specifying a range",
-							ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(0, 65535)),
+							ValidateDiagFunc: portNumberValidation,
 						},
 						"proto": {
 							Type:             schema.TypeInt,
@@ -119,13 +119,13 @@ func resourceIllumioServiceBinding() *schema.Resource {
 							Type:             schema.TypeInt,
 							Required:         true,
 							Description:      "Overriding port number (or starting point when specifying a range). Allowed range is 0 - 65535",
-							ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(0, 65535)),
+							ValidateDiagFunc: portNumberValidation,
 						},
 						"new_to_port": {
 							Type:             schema.TypeInt,
 							Optional:         true,
 							Description:      "Overriding port range ending port. Allowed range is 0 - 65535",
-							ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(0, 65535)),
+							ValidateDiagFunc: portNumberValidation,
 						},
 					},
 				},
@@ -179,10 +179,10 @@ func resourceIllumioServiceBindingCreate(ctx context.Context, d *schema.Resource
 		for _, po := range pos {
 			poI := models.ServiceBindingPortOverrides{}
 			poMap := po.(map[string]interface{})
-			poI.Port = poMap["port"].(int)
+			poI.Port = poMap["port"].(*int)
 			poI.NewPort = poMap["new_port"].(int)
-			poI.NewToPort = poMap["new_to_port"].(int)
-			poI.Proto = poMap["proto"].(int)
+			poI.NewToPort = poMap["new_to_port"].(*int)
+			poI.Proto = poMap["proto"].(*int)
 			posModel = append(posModel, poI)
 		}
 		ServiceBinding.PortOverrides = posModel

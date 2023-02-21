@@ -10,24 +10,24 @@ type SecurityRuleResolveLabelAs struct {
 }
 
 type SecurityRuleProvider struct {
-	Actors         string                `json:"actors,omitempty"`
-	Exclusion      *bool                 `json:"exclusion,omitempty"`
-	Label          LabelOptionalKeyValue `json:"label,omitempty"`
-	LabelGroup     Href                  `json:"label_group,omitempty"`
-	Workload       Href                  `json:"workload,omitempty"`
-	VirtualService Href                  `json:"virtual_service,omitempty"`
-	VirtualServer  Href                  `json:"virtual_server,omitempty"`
-	IPList         Href                  `json:"ip_list,omitempty"`
+	Actors         string                 `json:"actors,omitempty"`
+	Exclusion      *bool                  `json:"exclusion,omitempty"`
+	Label          *LabelOptionalKeyValue `json:"label,omitempty"`
+	LabelGroup     *Href                  `json:"label_group,omitempty"`
+	Workload       *Href                  `json:"workload,omitempty"`
+	VirtualService *Href                  `json:"virtual_service,omitempty"`
+	VirtualServer  *Href                  `json:"virtual_server,omitempty"`
+	IPList         *Href                  `json:"ip_list,omitempty"`
 }
 
 type SecurityRuleConsumer struct {
-	Actors         string                `json:"actors,omitempty"`
-	Exclusion      *bool                 `json:"exclusion,omitempty"`
-	Label          LabelOptionalKeyValue `json:"label,omitempty"`
-	LabelGroup     Href                  `json:"label_group,omitempty"`
-	Workload       Href                  `json:"workload,omitempty"`
-	VirtualService Href                  `json:"virtual_service,omitempty"`
-	IPList         Href                  `json:"ip_list,omitempty"`
+	Actors         string                 `json:"actors,omitempty"`
+	Exclusion      *bool                  `json:"exclusion,omitempty"`
+	Label          *LabelOptionalKeyValue `json:"label,omitempty"`
+	LabelGroup     *Href                  `json:"label_group,omitempty"`
+	Workload       *Href                  `json:"workload,omitempty"`
+	VirtualService *Href                  `json:"virtual_service,omitempty"`
+	IPList         *Href                  `json:"ip_list,omitempty"`
 }
 
 type IngressService struct {

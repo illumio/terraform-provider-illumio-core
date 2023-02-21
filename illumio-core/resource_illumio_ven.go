@@ -515,8 +515,7 @@ func resourceIllumioVENUpdate(ctx context.Context, d *schema.ResourceData, m int
 	}
 
 	if v, ok := d.GetOk("target_pce_fqdn"); ok {
-		v, _ := v.(string)
-		ven.TargetPCEFqdn = &v
+		ven.TargetPCEFqdn = v.(string)
 	}
 
 	if v, ok := d.GetOk("status"); ok {

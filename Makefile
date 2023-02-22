@@ -1,5 +1,7 @@
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
+TF_INSTALL_PATH?=$${HOME}/.terraform.d/plugins/illumio/illumio-core
+PKG_DISPLAY_NAME?=Illumio Core
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=illumio-core
 
@@ -12,6 +14,8 @@ tools:
 
 build: fmtcheck
 	go install
+	mkdir -p $(TF_INSTALL_PATH)
+	go build -o $(TF_INSTALL_PATH)/terraform-provider-$(PKG_NAME)
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
@@ -45,10 +49,16 @@ vendor-status:
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
 		echo "ERROR: Set TEST to a specific package. For example,"; \
-		echo "  make test-compile TEST=./illumiocore"; \
+		echo "  make test-compile TEST=./illumio-core"; \
 		exit 1; \
 	fi
 	go test -c $(TEST) $(TESTARGS)
+
+docs: fmtcheck
+ifeq (, $(shell which tfplugindocs))
+	$(error "tfplugindocs must be in PATH - see https://github.com/hashicorp/terraform-plugin-docs")
+endif
+	tfplugindocs generate --ignore-deprecated true --provider-name $(PKG_NAME) --rendered-provider-name $(PKG_DISPLAY_NAME)
 
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
@@ -64,4 +74,4 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
-.PHONY: build test testacc vet fmt fmtcheck errcheck vendor-status test-compile website website-test tools
+.PHONY: build test testacc vet fmt fmtcheck errcheck vendor-status test-compile docs website website-test tools

@@ -1,6 +1,6 @@
 module github.com/illumio/terraform-provider-illumio-core
 
-go 1.18
+go 1.20
 
 require (
 	github.com/Jeffail/gabs/v2 v2.6.0

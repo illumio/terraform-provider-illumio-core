@@ -194,7 +194,7 @@ github.com/zclconf/go-cty/cty/function/stdlib
 github.com/zclconf/go-cty/cty/gocty
 github.com/zclconf/go-cty/cty/json
 github.com/zclconf/go-cty/cty/set
-# golang.org/x/crypto v0.6.0
+# golang.org/x/crypto v0.6.0 => golang.org/x/crypto v0.6.0
 ## explicit; go 1.17
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
@@ -212,13 +212,13 @@ golang.org/x/crypto/openpgp/packet
 golang.org/x/crypto/openpgp/s2k
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/mod v0.7.0
+# golang.org/x/mod v0.7.0 => golang.org/x/mod v0.7.0
 ## explicit; go 1.17
 golang.org/x/mod/internal/lazyregexp
 golang.org/x/mod/modfile
 golang.org/x/mod/module
 golang.org/x/mod/semver
-# golang.org/x/net v0.6.0
+# golang.org/x/net v0.6.0 => golang.org/x/net v0.6.0
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -227,11 +227,11 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/sys v0.5.0
+# golang.org/x/sys v0.5.0 => golang.org/x/sys v0.5.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
-# golang.org/x/text v0.7.0
+# golang.org/x/text v0.7.0 => golang.org/x/text v0.7.0
 ## explicit; go 1.17
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
@@ -240,7 +240,7 @@ golang.org/x/text/unicode/norm
 # golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 ## explicit
 golang.org/x/time/rate
-# google.golang.org/appengine v1.6.6
+# google.golang.org/appengine v1.6.6 => google.golang.org/appengine v1.6.6
 ## explicit; go 1.11
 google.golang.org/appengine
 google.golang.org/appengine/datastore
@@ -253,10 +253,10 @@ google.golang.org/appengine/internal/datastore
 google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/remote_api
-# google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d
+# google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d => google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d
 ## explicit; go 1.11
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.51.0
+# google.golang.org/grpc v1.51.0 => google.golang.org/grpc v1.51.0
 ## explicit; go 1.17
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -310,7 +310,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.28.1
+# google.golang.org/protobuf v1.28.1 => google.golang.org/protobuf v1.28.1
 ## explicit; go 1.11
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
@@ -345,3 +345,12 @@ google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
+# golang.org/x/crypto => golang.org/x/crypto v0.6.0
+# golang.org/x/mod => golang.org/x/mod v0.7.0
+# golang.org/x/net => golang.org/x/net v0.6.0
+# golang.org/x/sys => golang.org/x/sys v0.5.0
+# golang.org/x/text => golang.org/x/text v0.7.0
+# google.golang.org/appengine => google.golang.org/appengine v1.6.6
+# google.golang.org/genproto => google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d
+# google.golang.org/grpc => google.golang.org/grpc v1.51.0
+# google.golang.org/protobuf => google.golang.org/protobuf v1.28.1

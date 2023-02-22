@@ -18,7 +18,7 @@ $ cd terraform-provider-illumio-core/examples/
 $ cp .env.example .env
 # update .env with your PCE connection details
 $ source .env
-$ cd enforcement_boundary/
+$ cd resources/illumio-core_enforcement_boundary/
 ```
 
 You can then run each example without setting the provider configuration. If you choose not to use the example env files, you'll be prompted to enter the PCE connection information when you run `terraform plan`.  

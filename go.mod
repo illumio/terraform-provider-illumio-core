@@ -48,7 +48,7 @@ require (
 	github.com/zclconf/go-cty v1.12.1 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/net v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
@@ -60,7 +60,7 @@ require (
 replace (
 	golang.org/x/crypto => golang.org/x/crypto v0.6.0
 	golang.org/x/mod => golang.org/x/mod v0.7.0
-	golang.org/x/net => golang.org/x/net v0.6.0
+	golang.org/x/net => golang.org/x/net v0.7.0
 	golang.org/x/sys => golang.org/x/sys v0.5.0
 	golang.org/x/text => golang.org/x/text v0.7.0
 	google.golang.org/appengine => google.golang.org/appengine v1.6.6

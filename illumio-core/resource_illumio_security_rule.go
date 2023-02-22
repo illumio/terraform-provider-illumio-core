@@ -503,6 +503,12 @@ func expandIllumioSecurityRuleIngressService(inServices []interface{}, setEmpty 
 
 			m := models.IngressService{}
 
+			if href, ok := s["href"].(string); ok {
+				if href != "" {
+					m.Href = href
+				}
+			}
+
 			if v, ok := getInt(s["proto"]); ok {
 				m.Proto = &v
 				if vPort, ok := getInt(s["port"]); ok {

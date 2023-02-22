@@ -21,8 +21,11 @@ The provider can be used to manage policy and objects within the Illumio Policy 
 See [the documentation](https://registry.terraform.io/providers/illumio/illumio-core/latest/docs) for a more comprehensive list.  
 
 The following versions of the Illumio Core Policy Compute Engine are currently supported:  
+
 - PCE v21.2
 - PCE v21.5
+- PCE v22.2
+- SaaS PCEs (v22.5)
 
 ## Getting Started  
 

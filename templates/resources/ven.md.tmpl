@@ -1,0 +1,36 @@
+---
+page_title: "{{ .Name }} {{ .Type }} - {{ .ProviderName }}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Name }} ({{ .Type }})
+
+{{ .Description | trimspace }}
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+!> The `{{ .Name }}` {{ .Type | lower }} cannot be created using Terraform. See the [import](#import) section below for steps to add the remote object to your local Terraform state.
+
+{{ tffile .ExampleFile }}
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+## Import
+
+Import is supported using the following syntax:
+{{ codefile "shell" .ImportFile }}
+{{- end }}
+
+## Limitations
+
+### Lifecycle
+
+The Terraform `destroy` operation will remove the `{{ .Name }}` {{ .Type | lower }} from Terraform state, but will not delete the VEN on the PCE.
+
+The VEN can be removed from the PCE by destroying the associated `managed_workload` resource, through the PCE's VEN unpair API endpoint, or manually on the VEN host.

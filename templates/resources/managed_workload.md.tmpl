@@ -1,0 +1,38 @@
+---
+page_title: "{{ .Name }} {{ .Type }} - {{ .ProviderName }}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Name }} ({{ .Type }})
+
+{{ .Description | trimspace }}
+
+{{ if .HasExample -}}
+
+## Example Usage
+
+!> The `{{ .Name }}` {{ .Type | lower }} cannot be created using Terraform. See the [import](#import) section below for steps to add the remote object to your local Terraform state.
+
+{{ tffile .ExampleFile }}
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+{{ if .HasImport -}}
+## Import
+
+Import is supported using the following syntax:
+{{ codefile "shell" .ImportFile }}
+{{- end }}
+
+## Limitations
+
+### Lifecycle
+
+Managed workload objects are created in the PCE when a VEN is paired.
+
+The `{{ .Name }}` {{ .Type | lower }} `destroy` operation calls the PCE's VEN unpair API endpoint, which will remove the VEN software from the host and both the managed workload and VEN objects on the PCE.
+
+!> Unpairing VENs through Terraform may cause unexpected behaviour on the paired host that may require manual intervention to resolve.

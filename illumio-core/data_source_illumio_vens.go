@@ -361,7 +361,7 @@ func datasourceIllumioVENs() *schema.Resource {
 						"unpair_allowed": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "",
+							Description: "Whether or not the VEN can be unpaired",
 						},
 						"last_heartbeat_at": {
 							Type:        schema.TypeString,
@@ -402,7 +402,7 @@ func datasourceIllumioVENs() *schema.Resource {
 						"conditions": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "",
+							Description: "Resource errors. If there are no errors or warnings, then the array value will be empty",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"first_reported_timestamp": {
@@ -429,7 +429,7 @@ func datasourceIllumioVENs() *schema.Resource {
 												"href": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The href of the event",
+													Description: "URI of the event",
 												},
 												"info": {
 													Type:        schema.TypeList,

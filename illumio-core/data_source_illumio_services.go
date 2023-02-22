@@ -63,7 +63,7 @@ func datasourceIllumioServices() *schema.Resource {
 			"proto": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Protocol to filter on. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.",
+				Description:      "Protocol to filter on. IANA protocol numbers between 0-255 are permitted, and -1 represents all services",
 				ValidateDiagFunc: isStringInRange(-1, 255),
 			},
 			"items": {
@@ -105,7 +105,7 @@ func datasourceIllumioServices() *schema.Resource {
 									"port": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Port Number ( the starting port when specifying a range)",
+										Description: "Port number (the starting port when specifying a range)",
 									},
 									"to_port": {
 										Type:        schema.TypeString,
@@ -134,7 +134,7 @@ func datasourceIllumioServices() *schema.Resource {
 						"windows_services": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "windows_services for Services",
+							Description: "Windows service definitions",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"service_name": {
@@ -178,7 +178,7 @@ func datasourceIllumioServices() *schema.Resource {
 						"windows_egress_services": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							Description: "Windows Egress services",
+							Description: "Windows egress service definitions",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"service_name": {

@@ -49,7 +49,7 @@ func datasourceIllumioService() *schema.Resource {
 						"port": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Port Number ( the starting port when specifying a range)",
+							Description: "Port Number (the starting port when specifying a range)",
 						},
 						"to_port": {
 							Type:        schema.TypeString,
@@ -78,7 +78,7 @@ func datasourceIllumioService() *schema.Resource {
 			"windows_services": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "windows_services for services",
+				Description: "Windows service definitions",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"service_name": {
@@ -122,7 +122,7 @@ func datasourceIllumioService() *schema.Resource {
 			"windows_egress_services": {
 				Type:        schema.TypeSet,
 				Computed:    true,
-				Description: "Windows Egress services",
+				Description: "Windows egress service definitions",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"service_name": {

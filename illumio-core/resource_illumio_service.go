@@ -71,7 +71,7 @@ func resourceIllumioService() *schema.Resource {
 						"proto": {
 							Type:             schema.TypeString,
 							Required:         true,
-							Description:      `Transport protocol. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.`,
+							Description:      `Transport protocol. IANA protocol numbers between 0-255 are permitted, and -1 represents all services`,
 							ValidateDiagFunc: isStringInRange(-1, 255),
 						},
 						"icmp_type": {

@@ -19,9 +19,9 @@ applicable open source license(s), please contact us at opensource-requests@illu
 | -------------------------------------------- | ----------------------------------- | -------------------------- |
 | github.com/Jeffail/gabs                      | 2.6                                 | MIT License                |
 | github.com/hashicorp/go-cty                  | 1.4.1-0.20200414143053-d3edf31b6320 | MIT License                |
-| github.com/hashicorp/hc-install              | 0.4.0                               | Mozilla Public License 2.0 |
-| github.com/hashicorp/terraform-exec          | 0.17.2                              | Mozilla Public License 2.0 |
-| github.com/hashicorp/terraform-plugin-sdk/v2 | 2.19.0                              | Mozilla Public License 2.0 |
+| github.com/hashicorp/hc-install              | 0.5.0                               | Mozilla Public License 2.0 |
+| github.com/hashicorp/terraform-exec          | 0.17.3                              | Mozilla Public License 2.0 |
+| github.com/hashicorp/terraform-plugin-sdk/v2 | 2.25.0                              | Mozilla Public License 2.0 |
 | golang.org/x/time                            | 0.0.0-20210220033141-f8bda1e9f3ba   | BSD-3-Clause               |
 | github.com/brian1917/illumioapi              | 1.56.0                              | MIT License                |
 

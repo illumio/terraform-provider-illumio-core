@@ -466,12 +466,12 @@ func resourceIllumioVirtualServiceV1() *schema.Resource {
 }
 
 func resourceIllumioVirtualServiceStateUpgradeV1(ctx context.Context, rawState map[string]any, meta any) (map[string]any, error) {
-	serviceAddresses := rawState["service_addresses"].([]map[string]any)
+	serviceAddresses := rawState["service_addresses"].([]any)
 	updatedServiceAddresses := make([]map[string]any, 0, len(serviceAddresses))
 
 	for _, sa := range serviceAddresses {
 		ua := map[string]any{}
-		for k, v := range sa {
+		for k, v := range sa.(map[string]any) {
 			if k == "network_href" {
 				if v != "" {
 					ua["network"] = []map[string]any{{"href": v}}
@@ -617,8 +617,11 @@ func expandServiceAddresses(v interface{}) ([]models.ServiceAddress, diag.Diagno
 		} else { // set {ip, network} or {ip, port}
 			sai.IP = samap["ip"].(string)
 			if network := samap["network"]; network != nil {
-				sai.Network = &models.Href{
-					Href: network.([]interface{})[0].(map[string]interface{})["href"].(string),
+				vals := network.(*schema.Set).List()
+				if len(vals) > 0 {
+					sai.Network = &models.Href{
+						Href: vals[0].(map[string]interface{})["href"].(string),
+					}
 				}
 			}
 		}
@@ -696,7 +699,7 @@ func resourceIllumioVirtualServiceRead(ctx context.Context, d *schema.ResourceDa
 			}
 			if v := child.S("network").Data(); v != nil {
 				n := []map[string]string{}
-				n = append(n, map[string]string{"href": data.S("network", "href").Data().(string)})
+				n = append(n, map[string]string{"href": child.S("network", "href").Data().(string)})
 				val["network"] = n
 			}
 			l = append(l, val)

@@ -12,7 +12,7 @@ import (
 func datasourceIllumioPairingProfile() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioPairingProfileRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Pairing Profile",
 
 		Schema: map[string]*schema.Schema{

@@ -22,7 +22,7 @@ func resourceIllumioVEN() *schema.Resource {
 		UpdateContext: resourceIllumioVENUpdate,
 		DeleteContext: resourceIllumioVENDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio VEN",
 
 		Schema: map[string]*schema.Schema{

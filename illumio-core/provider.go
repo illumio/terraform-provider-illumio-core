@@ -31,8 +31,6 @@ const (
 	insecureKey    = "insecure"
 	caFileKey      = "ca_file"
 
-	version = 1
-
 	hrefFilename = "hrefs.csv"
 
 	defaultOrgID = 1

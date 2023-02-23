@@ -19,7 +19,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 		CreateContext: resourceIllumioRuleSetCreate,
 		UpdateContext: resourceIllumioRuleSetUpdate,
 		DeleteContext: resourceIllumioRuleSetDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Ruleset",
 		Schema: map[string]*schema.Schema{
 			"href": {

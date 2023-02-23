@@ -19,7 +19,7 @@ func resourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 		ReadContext:   resourceIllumioContainerClusterWorkloadProfileRead,
 		UpdateContext: resourceIllumioContainerClusterWorkloadProfileUpdate,
 		DeleteContext: resourceIllumioContainerClusterWorkloadProfileDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Container Cluster",
 
 		Schema: map[string]*schema.Schema{

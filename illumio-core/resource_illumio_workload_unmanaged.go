@@ -25,7 +25,7 @@ func resourceIllumioUnmanagedWorkload() *schema.Resource {
 		UpdateContext: resourceIllumioUnmanagedWorkloadUpdate,
 		DeleteContext: resourceIllumioUnmanagedWorkloadDelete,
 		Description:   "Manages Illumio Workload",
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Schema:        unmanagedWorkloadSchema(),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

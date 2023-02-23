@@ -24,7 +24,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 		UpdateContext: resourceIllumioWorkloadSettingsUpdate,
 		DeleteContext: resourceIllumioWorkloadSettingsDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Workload Settings",
 
 		Schema: map[string]*schema.Schema{

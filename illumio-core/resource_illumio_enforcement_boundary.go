@@ -25,7 +25,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 		ReadContext:   resourceIllumioEnforcementBoundaryRead,
 		UpdateContext: resourceIllumioEnforcementBoundaryUpdate,
 		DeleteContext: resourceIllumioEnforcementBoundaryDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Enforcement Boundary",
 
 		Schema: map[string]*schema.Schema{

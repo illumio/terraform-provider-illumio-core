@@ -13,7 +13,7 @@ import (
 func datasourceIllumioSecurityRules() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioSecurityRulesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Security Rules",
 
 		Schema: map[string]*schema.Schema{

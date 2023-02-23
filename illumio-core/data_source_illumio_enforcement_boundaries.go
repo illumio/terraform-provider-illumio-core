@@ -15,7 +15,7 @@ import (
 func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioEnforcementBoundariesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Enforcement Boundaries",
 
 		Schema: map[string]*schema.Schema{

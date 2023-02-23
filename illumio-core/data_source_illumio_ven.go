@@ -14,7 +14,7 @@ func datasourceIllumioVEN() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: datasourceIllumioVENRead,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio VEN",
 
 		Schema: map[string]*schema.Schema{

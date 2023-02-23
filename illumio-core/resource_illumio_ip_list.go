@@ -18,7 +18,7 @@ func resourceIllumioIPList() *schema.Resource {
 		ReadContext:   resourceIllumioIPListRead,
 		UpdateContext: resourceIllumioIPListUpdate,
 		DeleteContext: resourceIllumioIPListDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio IP List",
 
 		Schema: map[string]*schema.Schema{

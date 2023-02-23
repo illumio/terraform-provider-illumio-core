@@ -23,7 +23,7 @@ func resourceIllumioLabel() *schema.Resource {
 		UpdateContext: resourceIllumioLabelUpdate,
 		DeleteContext: resourceIllumioLabelDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Label",
 
 		Schema: map[string]*schema.Schema{

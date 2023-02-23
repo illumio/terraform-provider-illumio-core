@@ -12,7 +12,7 @@ import (
 func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioContainerClusterWorkloadProfileRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Container Cluster Workload Profile",
 
 		Schema: map[string]*schema.Schema{

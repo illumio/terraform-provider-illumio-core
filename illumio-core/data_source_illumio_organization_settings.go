@@ -13,7 +13,7 @@ import (
 func datasourceIllumioOrganizationSettings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioOrganizationSettingsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Organization Settings",
 
 		Schema: map[string]*schema.Schema{

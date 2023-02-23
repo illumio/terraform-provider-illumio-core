@@ -13,7 +13,7 @@ import (
 func datasourceIllumioServiceBindings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioServiceBindingsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Service Bindings",
 
 		Schema: map[string]*schema.Schema{

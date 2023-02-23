@@ -20,7 +20,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 		DeleteContext: resourceIllumioManagedWorkloadDelete,
 		Description:   "Manages Illumio Managed Workload",
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
 			"href": {

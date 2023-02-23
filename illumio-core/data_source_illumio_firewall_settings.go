@@ -13,7 +13,7 @@ import (
 func datasourceIllumioFirewallSettings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioFirewallSettingsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Firewall Settings",
 
 		Schema: map[string]*schema.Schema{

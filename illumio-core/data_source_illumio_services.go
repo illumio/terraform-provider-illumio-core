@@ -16,7 +16,7 @@ import (
 func datasourceIllumioServices() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioServicesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Services",
 		Schema: map[string]*schema.Schema{
 			"pversion": {

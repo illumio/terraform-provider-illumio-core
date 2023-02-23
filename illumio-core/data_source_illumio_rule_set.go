@@ -12,7 +12,7 @@ import (
 func datasourceIllumioRuleSet() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioRuleSetRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Ruleset",
 		Schema: map[string]*schema.Schema{
 			"href": {

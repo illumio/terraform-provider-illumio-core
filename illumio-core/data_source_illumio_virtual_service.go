@@ -13,7 +13,7 @@ import (
 func datasourceIllumioVirtualService() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioVirtualServiceRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Virtual Services",
 
 		Schema: map[string]*schema.Schema{

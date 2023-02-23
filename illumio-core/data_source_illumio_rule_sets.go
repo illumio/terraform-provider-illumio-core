@@ -13,7 +13,7 @@ import (
 func datasourceIllumioRuleSets() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioRuleSetsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Rulesets",
 
 		Schema: map[string]*schema.Schema{

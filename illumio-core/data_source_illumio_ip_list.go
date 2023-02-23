@@ -12,7 +12,7 @@ import (
 func datasourceIllumioIPList() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioIPListRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio IP List",
 
 		Schema: map[string]*schema.Schema{

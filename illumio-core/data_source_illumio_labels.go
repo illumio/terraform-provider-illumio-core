@@ -14,7 +14,7 @@ import (
 func datasourceIllumioLabels() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioLabelsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Labels",
 
 		Schema: map[string]*schema.Schema{

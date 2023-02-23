@@ -29,7 +29,7 @@ func resourceIllumioTrafficCollectorSettings() *schema.Resource {
 		UpdateContext: resourceIllumioTrafficCollectorSettingsUpdate,
 		DeleteContext: resourceIllumioTrafficCollectorSettingsDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Traffic Collector Settings",
 
 		Schema: map[string]*schema.Schema{

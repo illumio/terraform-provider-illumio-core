@@ -12,7 +12,7 @@ import (
 func datasourceIllumioLabel() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioLabelRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Label",
 
 		Schema: map[string]*schema.Schema{

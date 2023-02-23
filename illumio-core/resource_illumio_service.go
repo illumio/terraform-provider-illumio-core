@@ -21,7 +21,7 @@ func resourceIllumioService() *schema.Resource {
 		UpdateContext: resourceIllumioServiceUpdate,
 		DeleteContext: resourceIllumioServiceDelete,
 		Description:   "Manages Illumio Security Service",
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Schema: map[string]*schema.Schema{
 			"href": {
 				Type:        schema.TypeString,

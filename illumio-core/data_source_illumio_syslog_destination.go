@@ -14,7 +14,7 @@ func datasourceIllumioSyslogDestination() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: datasourceIllumioSyslogDestinationRead,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Syslog Destination",
 
 		Schema: map[string]*schema.Schema{

@@ -25,7 +25,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 		UpdateContext: resourceIllumioPairingProfileUpdate,
 		DeleteContext: resourceIllumioPairingProfileDelete,
 		Description:   "Manages Illumio Pairing Profile",
-		SchemaVersion: version,
+		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
 			"href": {

@@ -12,7 +12,7 @@ import (
 func datasourceIllumioContainerCluster() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioContainerClusterRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Container Cluster",
 
 		Schema: map[string]*schema.Schema{

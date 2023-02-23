@@ -27,7 +27,7 @@ func resourceIllumioSecurityRule() *schema.Resource {
 		CreateContext: resourceIllumioSecurityRuleCreate,
 		UpdateContext: resourceIllumioSecurityRuleUpdate,
 		DeleteContext: resourceIllumioSecurityRuleDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Security Rule",
 		Schema:        securityRuleResourceSchemaMap(),
 		Importer: &schema.ResourceImporter{

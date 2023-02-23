@@ -19,7 +19,7 @@ func resourceIllumioServiceBinding() *schema.Resource {
 		UpdateContext: resourceIllumioServiceBindingUpdate,
 		DeleteContext: resourceIllumioServiceBindingDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Service Binding",
 
 		Schema: map[string]*schema.Schema{

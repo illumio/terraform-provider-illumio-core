@@ -13,7 +13,7 @@ import (
 func datasourceIllumioSyslogDestinations() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioSyslogDestinationsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Syslog Destinations",
 
 		Schema: map[string]*schema.Schema{

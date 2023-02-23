@@ -17,7 +17,7 @@ func resourceIllumioContainerCluster() *schema.Resource {
 		ReadContext:   resourceIllumioContainerClusterRead,
 		UpdateContext: resourceIllumioContainerClusterUpdate,
 		DeleteContext: resourceIllumioContainerClusterDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Container Cluster",
 
 		Schema: map[string]*schema.Schema{

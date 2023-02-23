@@ -14,7 +14,7 @@ import (
 func datasourceIllumioLabelTypes() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioLabelTypesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents a list of Illumio Label Types. Requires PCE version 22.5.0 or higher",
 
 		Schema: map[string]*schema.Schema{

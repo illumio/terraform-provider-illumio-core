@@ -19,7 +19,7 @@ func resourceIllumioLabelGroup() *schema.Resource {
 		ReadContext:   resourceIllumioLabelGroupRead,
 		UpdateContext: resourceIllumioLabelGroupUpdate,
 		DeleteContext: resourceIllumioLabelGroupDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Label Group",
 
 		Schema: map[string]*schema.Schema{

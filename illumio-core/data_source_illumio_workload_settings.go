@@ -13,7 +13,7 @@ import (
 func datasourceIllumioWorkloadSettings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioWorkloadSettingsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Workload Settings",
 
 		Schema: map[string]*schema.Schema{

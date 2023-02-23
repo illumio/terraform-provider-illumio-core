@@ -72,7 +72,7 @@ func resourceIllumioPairingKeys() *schema.Resource {
 		UpdateContext: resourceIllumioPairingKeysUpdate,
 		DeleteContext: resourceIllumioPairingKeysDelete,
 		Description:   "Manages Illumio Pairing Keys",
-		SchemaVersion: version,
+		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
 			"pairing_profile_href": {

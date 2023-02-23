@@ -12,7 +12,7 @@ import (
 func datasourceIllumioService() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioServiceRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Service",
 		Schema: map[string]*schema.Schema{
 			"href": {

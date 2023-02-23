@@ -12,7 +12,7 @@ import (
 func datasourceIllumioLabelGroup() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioLabelGroupRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Label Group",
 
 		Schema: map[string]*schema.Schema{

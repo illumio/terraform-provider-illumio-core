@@ -284,7 +284,7 @@ func expandIllumioIPListIPRanges(arr []interface{}) []models.IPRange {
 			Description: elem.(map[string]interface{})["description"].(string),
 			FromIP:      elem.(map[string]interface{})["from_ip"].(string),
 			ToIP:        elem.(map[string]interface{})["to_ip"].(string),
-			Exclusion:   BoolPtr(elem.(map[string]interface{})["exclusion"].(bool)),
+			Exclusion:   PtrTo(elem.(map[string]interface{})["exclusion"].(bool)),
 		})
 	}
 	return ipranges

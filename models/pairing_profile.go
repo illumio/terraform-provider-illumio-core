@@ -7,8 +7,8 @@ type PairingProfile struct {
 	Description           string `json:"description,omitempty"`
 	Enabled               bool   `json:"enabled"`
 	AgentSoftwareRelease  string `json:"agent_software_release,omitempty"`
-	AllowedUsesPerKey     string `json:"allowed_uses_per_key,omitempty"`
-	KeyLifespan           string `json:"key_lifespan,omitempty"`
+	AllowedUsesPerKey     *int   `json:"allowed_uses_per_key,omitempty"`
+	KeyLifespan           *int   `json:"key_lifespan,omitempty"`
 	Labels                []Href `json:"labels"`
 	EnforcementMode       string `json:"enforcement_mode,omitempty"`
 	EnforcementModeLock   *bool  `json:"enforcement_mode_lock,omitempty"`

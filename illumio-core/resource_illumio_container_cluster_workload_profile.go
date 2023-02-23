@@ -193,7 +193,7 @@ func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d
 		Name:            d.Get("name").(string),
 		Description:     d.Get("description").(string),
 		EnforcementMode: d.Get("enforcement_mode").(string),
-		Managed:         BoolPtr(d.Get("managed").(bool)),
+		Managed:         PtrTo(d.Get("managed").(bool)),
 	}
 
 	var isAssignLabelsAvailable bool
@@ -355,7 +355,7 @@ func resourceIllumioContainerClusterWorkloadProfileUpdate(ctx context.Context, d
 		Name:            d.Get("name").(string),
 		Description:     d.Get("description").(string),
 		EnforcementMode: d.Get("enforcement_mode").(string),
-		Managed:         BoolPtr(d.Get("managed").(bool)),
+		Managed:         PtrTo(d.Get("managed").(bool)),
 	}
 
 	if d.HasChange("assign_labels") {

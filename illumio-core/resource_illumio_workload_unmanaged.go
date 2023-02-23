@@ -885,7 +885,7 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 		ExternalDataReference:                 d.Get("external_data_reference").(string),
 		ExternalDataSet:                       d.Get("external_data_set").(string),
 		Hostname:                              d.Get("hostname").(string),
-		Online:                                BoolPtr(d.Get("online").(bool)),
+		Online:                                PtrTo(d.Get("online").(bool)),
 		OsDetail:                              d.Get("os_detail").(string),
 		OsID:                                  d.Get("os_id").(string),
 		PublicIP:                              d.Get("public_ip").(string),

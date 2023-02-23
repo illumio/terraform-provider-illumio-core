@@ -314,10 +314,10 @@ func getInt(v interface{}) (int, bool) {
 	}
 }
 
-// BoolPtr returns a pointer to a given boolean value.
+// PtrTo returns a pointer to a given value.
 // Useful for wrapping value, ok expression results
-func BoolPtr(b bool) *bool {
-	return &b
+func PtrTo[T any](o T) *T {
+	return &o
 }
 
 // validation function for checking "unlimited" or range

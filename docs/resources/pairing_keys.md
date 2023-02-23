@@ -10,6 +10,8 @@ description: |-
 
 Manages Illumio Pairing Keys
 
+!> The `ILLUMIO_AES_GCM_KEY` environment variable must be set for the `illumio-core_pairing_keys` resource to work.
+
 ## Example Usage
 
 ```terraform

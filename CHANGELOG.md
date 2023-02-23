@@ -20,9 +20,9 @@ ENHANCEMENTS:
 
 * Broad refactor to simplify object conversions
 
-BREAKING CHANGES:
+SCHEMA UPDATES:
 
-* The `illumio-core_virtual_service` resource `network_href` attribute has been changed to match the API schema and data source. It is now a nested object with an HREF attribute:
+* `resource.illumio-core_virtual_service` v2 - The `network_href` attribute has been changed to match the API schema and data source. It is now a nested object with an HREF attribute:
 
 ```
 resource "illumio-core_virtual_service" "example" {
@@ -35,8 +35,6 @@ resource "illumio-core_virtual_service" "example" {
 ```
 
 This change was necessary to align the import state with virtual service resource definitions.
-
-A SchemaUpgrader is provided for the transition from v1 to v2 of the resource.
 
 ## 1.0.3 (Dec 16, 2022)
 

@@ -45,6 +45,7 @@ Optional:
 
 - `scope` (Block Set) Assigned labels for Workload Disconnected Timeout Seconds (see [below for nested schema](#nestedblock--workload_disconnected_timeout_seconds--scope))
 - `value` (Number) Property value associated with the scope. Allowed range is 300 - 2147483647 or -1
+- `ven_type` (String) The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE
 
 <a id="nestedblock--workload_disconnected_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_disconnected_timeout_seconds.scope`
@@ -62,6 +63,7 @@ Optional:
 
 - `scope` (Block Set) Assigned labels for Workload Goodbye Timeout Seconds (see [below for nested schema](#nestedblock--workload_goodbye_timeout_seconds--scope))
 - `value` (Number) Property value associated with the scope. Allowed range is 300 - 2147483647 or -1
+- `ven_type` (String) The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE
 
 <a id="nestedblock--workload_goodbye_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_goodbye_timeout_seconds.scope`

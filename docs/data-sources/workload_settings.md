@@ -32,7 +32,8 @@ data "illumio-core_workload_settings" "example" {}
 Read-Only:
 
 - `scope` (List of Object) (see [below for nested schema](#nestedobjatt--workload_disconnected_timeout_seconds--scope))
-- `value` (Number)
+- `value` (Number) Property value associated with the scope
+- `ven_type` (String) The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE
 
 <a id="nestedobjatt--workload_disconnected_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_disconnected_timeout_seconds.scope`
@@ -50,6 +51,7 @@ Read-Only:
 
 - `scope` (List of Object) Assigned labels for Workload Goodbye Timeout Seconds (see [below for nested schema](#nestedobjatt--workload_goodbye_timeout_seconds--scope))
 - `value` (Number) Property value associated with the scope
+- `ven_type` (String) The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE
 
 <a id="nestedobjatt--workload_goodbye_timeout_seconds--scope"></a>
 ### Nested Schema for `workload_goodbye_timeout_seconds.scope`

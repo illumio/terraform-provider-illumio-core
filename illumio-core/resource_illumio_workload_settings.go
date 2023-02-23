@@ -6,11 +6,16 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
+
+const WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT = "server"
+
+var validVENTypes = []string{"server", "endpoint"}
 
 func resourceIllumioWorkloadSettings() *schema.Resource {
 	return &schema.Resource{
@@ -56,6 +61,14 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
 							),
 						},
+						"ven_type": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							Computed:         true,
+							Default:          WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT,
+							Description:      `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
+							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validVENTypes, true)),
+						},
 					},
 				},
 			},
@@ -87,11 +100,18 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
 							),
 						},
+						"ven_type": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							Computed:         true,
+							Default:          WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT,
+							Description:      `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
+							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validVENTypes, true)),
+						},
 					},
 				},
 			},
 		},
-
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -104,7 +124,7 @@ func resourceIllumioWorkloadSettingsCreate(ctx context.Context, d *schema.Resour
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Error,
 		Detail:   "[illumio-core_workload_settings] Cannot use create operation.",
-		Summary:  "Please use terraform import...",
+		Summary:  "Please use terraform import",
 	})
 
 	return diags
@@ -124,84 +144,80 @@ func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resource
 	d.SetId(href)
 	d.Set("href", href)
 
-	if data.Exists("workload_disconnected_timeout_seconds") {
-		wdtsS := data.S("workload_disconnected_timeout_seconds")
-		wdtsI := []map[string]interface{}{}
-
-		for _, wdts := range wdtsS.Children() {
-			wdtsMap := extractMap(wdts, []string{"scope", "value"})
-			if wdts.Exists("scope") {
-				wdtsMap["scope"] = extractMapArray(wdts.S("scope"), []string{"href"})
-			} else {
-				wdtsMap["scope"] = []map[string]interface{}{}
-			}
-			wdtsI = append(wdtsI, wdtsMap)
-		}
-
-		d.Set("workload_disconnected_timeout_seconds", wdtsI)
-	} else {
-		d.Set("workload_disconnected_timeout_seconds", nil)
-	}
-
-	if data.Exists("workload_goodbye_timeout_seconds") {
-		wgtsS := data.S("workload_goodbye_timeout_seconds")
-		wgtsI := []map[string]interface{}{}
-
-		for _, wgts := range wgtsS.Children() {
-			wgtsMap := extractMap(wgts, []string{"scope", "value"})
-			if wgts.Exists("scope") {
-				wgtsMap["scope"] = extractMapArray(wgts.S("scope"), []string{"href"})
-			} else {
-				wgtsMap["scope"] = []map[string]interface{}{}
-			}
-			wgtsI = append(wgtsI, wgtsMap)
-		}
-
-		d.Set("workload_goodbye_timeout_seconds", wgtsI)
-	} else {
-		d.Set("workload_goodbye_timeout_seconds", nil)
+	for _, k := range []string{
+		"workload_disconnected_timeout_seconds",
+		"workload_goodbye_timeout_seconds",
+	} {
+		d.Set(k, extractWorkloadSettingsTimeout(data, k))
 	}
 
 	return diags
+}
+
+func extractWorkloadSettingsTimeout(data *gabs.Container, key string) []map[string]interface{} {
+	if data.Exists(key) {
+		d := data.S(key)
+		m := []map[string]interface{}{}
+
+		for _, v := range d.Children() {
+			vm := extractMap(v, []string{"value", "ven_type"})
+			if v.Exists("scope") {
+				vm["scope"] = extractMapArray(v.S("scope"), []string{"href"})
+			} else {
+				vm["scope"] = []map[string]interface{}{}
+			}
+			m = append(m, vm)
+		}
+
+		return m
+	}
+
+	return nil
 }
 
 func resourceIllumioWorkloadSettingsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	WorkloadSettings := &models.WorkloadSettings{}
-
-	for _, x := range []string{"workload_disconnected_timeout_seconds", "workload_goodbye_timeout_seconds"} {
-
-		if items, ok := d.GetOk(x); ok {
-			wdts := items.(*schema.Set).List()
-			wdtsModel := []models.WorkloadSettingsTimeout{}
-
-			for _, w := range wdts {
-				wdtsI := models.WorkloadSettingsTimeout{}
-				wdtsMap := w.(map[string]interface{})
-				wdtsI.Value = wdtsMap["value"].(int)
-				if wdtsMap["scope"].(*schema.Set).Len() > 0 {
-					wdtsI.Scope = models.GetHrefs(wdtsMap["scope"].(*schema.Set).List())
-				} else {
-					wdtsI.Scope = nil
-				}
-				wdtsModel = append(wdtsModel, wdtsI)
-			}
-			if x == "workload_disconnected_timeout_seconds" {
-				WorkloadSettings.WorkloadDisconnectedTimeoutSeconds = wdtsModel
-			} else {
-				WorkloadSettings.WorkloadGoodbyeTimeoutSeconds = wdtsModel
-			}
-		}
+	workloadSettings := &models.WorkloadSettings{
+		WorkloadDisconnectedTimeoutSeconds: expandWorkloadSettingsTimeout(d, "workload_disconnected_timeout_seconds"),
+		WorkloadGoodbyeTimeoutSeconds:      expandWorkloadSettingsTimeout(d, "workload_goodbye_timeout_seconds"),
 	}
 
-	_, err := illumioClient.Update(d.Id(), WorkloadSettings)
+	_, err := illumioClient.Update(d.Id(), workloadSettings)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	return resourceIllumioWorkloadSettingsRead(ctx, d, m)
+}
+
+func expandWorkloadSettingsTimeout(d *schema.ResourceData, key string) []models.WorkloadSettingsTimeout {
+	var timeoutSettings []models.WorkloadSettingsTimeout
+
+	if items, ok := d.GetOk(key); ok {
+		wts := items.(*schema.Set).List()
+
+		for _, w := range wts {
+			m := models.WorkloadSettingsTimeout{}
+			wMap := w.(map[string]interface{})
+			m.Value = wMap["value"].(int)
+
+			if wMap["scope"].(*schema.Set).Len() > 0 {
+				m.Scope = models.GetHrefs(wMap["scope"].(*schema.Set).List())
+			} else {
+				m.Scope = []models.Href{}
+			}
+
+			if venType, ok := wMap["ven_type"].(string); ok {
+				m.VENType = &venType
+			}
+
+			timeoutSettings = append(timeoutSettings, m)
+		}
+	}
+
+	return timeoutSettings
 }
 
 func resourceIllumioWorkloadSettingsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -210,7 +226,7 @@ func resourceIllumioWorkloadSettingsDelete(ctx context.Context, d *schema.Resour
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Summary:  "[illumio-core_workload_settings] Ignoring Delete Operation...",
+		Summary:  "[illumio-core_workload_settings] Ignoring Delete Operation.",
 	})
 
 	return diags

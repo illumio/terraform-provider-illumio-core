@@ -23,13 +23,13 @@ func datasourceIllumioWorkloadSettings() *schema.Resource {
 				Description: "URI of the Workload Settings",
 			},
 			"workload_disconnected_timeout_seconds": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Workload Disconnected Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"scope": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "Assigned labels for Workload Disconnected Timeout Seconds",
 							Elem: &schema.Resource{
@@ -47,17 +47,22 @@ func datasourceIllumioWorkloadSettings() *schema.Resource {
 							Computed:    true,
 							Description: "Property value associated with the scope",
 						},
+						"ven_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
+						},
 					},
 				},
 			},
 			"workload_goodbye_timeout_seconds": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Workload Goodbye Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"scope": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "Assigned labels for Workload Goodbye Timeout Seconds",
 							Elem: &schema.Resource{
@@ -74,6 +79,11 @@ func datasourceIllumioWorkloadSettings() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Property value associated with the scope",
+						},
+						"ven_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
 						},
 					},
 				},
@@ -98,42 +108,11 @@ func datasourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.Resour
 
 	d.Set("href", data.S("href").Data().(string))
 
-	if data.Exists("workload_disconnected_timeout_seconds") {
-		wdtsS := data.S("workload_disconnected_timeout_seconds")
-		wdtsI := []map[string]interface{}{}
-
-		for _, wdts := range wdtsS.Children() {
-			wdtsMap := extractMap(wdts, []string{"scope", "value"})
-			if wdts.Exists("scope") {
-				wdtsMap["scope"] = extractMapArray(wdts.S("scope"), []string{"href"})
-			} else {
-				wdtsMap["scope"] = nil
-			}
-			wdtsI = append(wdtsI, wdtsMap)
-		}
-
-		d.Set("workload_disconnected_timeout_seconds", wdtsI)
-	} else {
-		d.Set("workload_disconnected_timeout_seconds", nil)
-	}
-
-	if data.Exists("workload_goodbye_timeout_seconds") {
-		wgtsS := data.S("workload_goodbye_timeout_seconds")
-		wgtsI := []map[string]interface{}{}
-
-		for _, wgts := range wgtsS.Children() {
-			wgtsMap := extractMap(wgts, []string{"scope", "value"})
-			if wgts.Exists("scope") {
-				wgtsMap["scope"] = extractMapArray(wgts.S("scope"), []string{"href"})
-			} else {
-				wgtsMap["scope"] = nil
-			}
-			wgtsI = append(wgtsI, wgtsMap)
-		}
-
-		d.Set("workload_goodbye_timeout_seconds", wgtsI)
-	} else {
-		d.Set("workload_goodbye_timeout_seconds", nil)
+	for _, k := range []string{
+		"workload_disconnected_timeout_seconds",
+		"workload_goodbye_timeout_seconds",
+	} {
+		d.Set(k, extractWorkloadSettingsTimeout(data, k))
 	}
 
 	return diagnostics

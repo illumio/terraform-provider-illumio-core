@@ -25,7 +25,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 		UpdateContext: resourceIllumioVirtualServiceUpdate,
 		DeleteContext: resourceIllumioVirtualServiceDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 2,
 		Description:   "Manages Illumio Virtual Service",
 
 		Schema: map[string]*schema.Schema{
@@ -158,7 +158,7 @@ func resourceIllumioVirtualService() *schema.Resource {
 						"port": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Description:      "Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535",
+							Description:      "Port number of the service. Allowed range is -1 - 65535",
 							ValidateDiagFunc: isStringInRange(-1, 65535),
 						},
 						"ip": {
@@ -243,7 +243,249 @@ func resourceIllumioVirtualService() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		// Define upgrade from v1 to v2 to migrate the network_href field
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    resourceIllumioVirtualServiceV1().CoreConfigSchema().ImpliedType(),
+				Upgrade: resourceIllumioVirtualServiceStateUpgradeV1,
+				Version: 1,
+			},
+		},
 	}
+}
+
+// XXX: v1 virtual_service resource schema
+// required for migration from network_href to
+// network.href in service_addresses field
+func resourceIllumioVirtualServiceV1() *schema.Resource {
+	return &schema.Resource{
+		SchemaVersion: 1,
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "Name of the virtual service. The name should be between 1 to 255 characters",
+				ValidateDiagFunc: nameValidation,
+			},
+			"href": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "URI of Virtual Service",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The long description of the virtual service",
+			},
+			"apply_to": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `Name of the virtual service. Allowed values are "host_only" and "internal_bridge_network"`,
+				ValidateDiagFunc: validation.ToDiagFunc(
+					validation.StringInSlice(validApplyToKeys, false)),
+			},
+			"external_data_set": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
+				Description:      "The data source from which a resource originates",
+			},
+			"external_data_reference": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
+				Description:      "A unique identifier within the external data source",
+			},
+			"labels": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Contained labels",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"href": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "URI of label",
+						},
+						"key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Key in key-value pair",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Value in key-value pair",
+						},
+					},
+				},
+			},
+			"service": {
+				Type:         schema.TypeList,
+				Optional:     true,
+				MaxItems:     1,
+				Description:  "Associated service",
+				ExactlyOneOf: []string{"service", "service_ports"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"href": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "URI of associated service",
+						},
+					},
+				},
+			},
+			"service_ports": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "URI of associated service",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"proto": {
+							Type:             schema.TypeString,
+							Required:         true,
+							Description:      "Transport protocol. Allowed values are 6 (TCP) and 17 (UDP)",
+							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"6", "17"}, true)),
+						},
+						"port": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							Description:      "Port Number. Also, the starting port when specifying a range. Allowed range is -1 - 65535",
+							ValidateDiagFunc: isStringInRange(-1, 65535),
+						},
+						"to_port": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							Description:      "High end of port range inclusive if specifying a range. Allowed range is 0 - 65535",
+							ValidateDiagFunc: isStringInRange(1, 65535),
+						},
+					},
+				},
+			},
+			"ip_overrides": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Array of IPs or CIDRs as IP overrides",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"service_addresses": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Description: "List of service address. Specify one of the combination " +
+					"{fqdn, description, port}, {ip, network_href} or {ip, port}",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"fqdn": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
+							Description:      "FQDN to assign to the virtual service.  Allowed formats: hostname, IP, or URI",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Description for given fqdn",
+						},
+						"port": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							Description:      "Port number of the service. Allowed range is -1 - 65535",
+							ValidateDiagFunc: isStringInRange(-1, 65535),
+						},
+						"ip": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IP address to assign to the virtual service",
+						},
+						"network_href": { // Flattened from network.href
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Network URI for this IP address",
+						},
+					},
+				},
+			},
+			"pce_fqdn": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "PCE FQDN for this container cluster. Used in Supercluster only",
+			},
+			"update_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Update type",
+			},
+			"created_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Timestamp when this virtual service was first created",
+			},
+			"updated_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Timestamp when this virtual service was last updated",
+			},
+			"deleted_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Timestamp when this virtual service was last deleted",
+			},
+			"created_by": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "User who created this virtual service",
+			},
+			"updated_by": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "User who last updated this virtual service",
+			},
+			"deleted_by": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "User who deleted this virtual service",
+			},
+			"caps": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "User permissions for the object",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+		},
+	}
+}
+
+func resourceIllumioVirtualServiceStateUpgradeV1(ctx context.Context, rawState map[string]any, meta any) (map[string]any, error) {
+	serviceAddresses := rawState["service_addresses"].([]map[string]any)
+	updatedServiceAddresses := make([]map[string]any, 0, len(serviceAddresses))
+
+	for _, sa := range serviceAddresses {
+		ua := map[string]any{}
+		for k, v := range sa {
+			if k == "network_href" {
+				if v != "" {
+					ua["network"] = []map[string]any{{"href": v}}
+				}
+			} else {
+				ua[k] = v
+			}
+		}
+		updatedServiceAddresses = append(updatedServiceAddresses, ua)
+	}
+
+	rawState["service_addresses"] = updatedServiceAddresses
+
+	return rawState, nil
 }
 
 func validateServiceAddress(v map[string]interface{}) error {

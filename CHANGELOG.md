@@ -36,6 +36,8 @@ resource "illumio-core_virtual_service" "example" {
 
 This change was necessary to align the import state with virtual service resource definitions.
 
+A SchemaUpgrader is provided for the transition from v1 to v2 of the resource.
+
 ## 1.0.3 (Dec 16, 2022)
 
 BUG FIXES:

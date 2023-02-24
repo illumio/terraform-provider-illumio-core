@@ -19,8 +19,8 @@ func testResourceIllumioVirtualServiceStateDataV1() map[string]any {
 		"id":   "/orgs/1/sec_policy/draft/virtual_services/1edaa88f-e905-4682-8623-df55e3d2a966",
 		// other fields omitted for brevity, having name/href/id
 		// shows that other fields are kept as-is
-		"service_addresses": []map[string]any{
-			{
+		"service_addresses": []any{
+			map[string]any{
 				"ip":           "127.0.0.1",
 				"network_href": "/orgs/1/networks/a2f3fdfc-c179-4700-8525-133727c3bab4",
 			},

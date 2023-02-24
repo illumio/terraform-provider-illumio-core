@@ -5,9 +5,11 @@ package illumiocore
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/illumio/terraform-provider-illumio-core/models"
@@ -35,13 +37,15 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 			},
 			"workload_disconnected_timeout_seconds": {
 				Type:        schema.TypeSet,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "Workload Disconnected Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"scope": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							Computed:    true,
 							Description: "Assigned labels for Workload Disconnected Timeout Seconds",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -56,6 +60,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"value": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Property value associated with the scope. Allowed range is 300 - 2147483647 or -1",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
@@ -64,7 +69,6 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"ven_type": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Computed:         true,
 							Default:          WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT,
 							Description:      `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
 							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validVENTypes, true)),
@@ -74,13 +78,15 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 			},
 			"workload_goodbye_timeout_seconds": {
 				Type:        schema.TypeSet,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "Workload Goodbye Timeout Seconds for Workload Settings",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"scope": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							Computed:    true,
 							Description: "Assigned labels for Workload Goodbye Timeout Seconds",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -95,6 +101,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"value": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Property value associated with the scope. Allowed range is 300 - 2147483647 or -1",
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.Any(validation.IntBetween(300, 2147483647), validation.IntInSlice([]int{-1})),
@@ -103,7 +110,6 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"ven_type": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Computed:         true,
 							Default:          WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT,
 							Description:      `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
 							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validVENTypes, true)),
@@ -115,7 +121,87 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: customdiff.Sequence(
+			customizeWorkloadTimeoutSettings("workload_disconnected_timeout_seconds"),
+			customizeWorkloadTimeoutSettings("workload_goodbye_timeout_seconds"),
+		),
 	}
+}
+
+// XXX: The PUT for adding/updating workload settings is a partial
+// update, updating the settings map for each provided setting
+// based on the unique combination of ven type and scopes.
+// Terraform expects an idempotent update, so the plan diff
+// will reflect any unchanged settings as being removed.
+//
+// We work around this by manually updating the diff to add any
+// unchanged remote settings to the update set as-is.
+func customizeWorkloadTimeoutSettings(key string) schema.CustomizeDiffFunc {
+	return func(ctx context.Context, d *schema.ResourceDiff, m any) error {
+		if d.HasChange(key) {
+			state, change := d.GetChange(key)
+			stateMap := mapWorkloadTimeoutSettingsState(state)
+			diffMap := mapWorkloadTimeoutSettingsState(change)
+
+			diff := change.(*schema.Set)
+
+			for k, v := range stateMap {
+				if _, ok := diffMap[k]; !ok {
+					parts := strings.Split(k, ":")
+					scopes := &schema.Set{}
+					if parts[1] != "" {
+						for _, s := range strings.Split(parts[1], "|") {
+							scopes.Add(map[string]any{"href": s})
+						}
+					}
+					setting := map[string]any{
+						"scope":    scopes,
+						"value":    v,
+						"ven_type": parts[0],
+					}
+					diff.Add(setting)
+				}
+			}
+
+			d.SetNew(key, diff)
+		}
+
+		return nil
+	}
+}
+
+// mapWorkloadTimeoutSettingsState converts a given workload
+// timeout settings block into a lookup of the form
+//
+//	{
+//	  "{ven_type}:{scope[0]}|...|{scope[n]}" : {value},
+//	}
+func mapWorkloadTimeoutSettingsState(state any) map[string]int {
+	st := map[string]int{}
+
+	for _, setting := range state.(*schema.Set).List() {
+		settingKey := ""
+		settingVal := 0
+
+		for k, v := range setting.(map[string]any) {
+			switch k {
+			case "scope":
+				for _, scope := range v.(*schema.Set).List() {
+					settingKey = settingKey + scope.(map[string]any)["href"].(string) + "|"
+				}
+			case "ven_type":
+				settingKey = v.(string) + ":" + settingKey
+			case "value":
+				settingVal = v.(int)
+			}
+		}
+
+		// trim trailing | character from scopes
+		settingKey = strings.TrimRight(settingKey, "|")
+		st[settingKey] = settingVal
+	}
+
+	return st
 }
 
 func resourceIllumioWorkloadSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

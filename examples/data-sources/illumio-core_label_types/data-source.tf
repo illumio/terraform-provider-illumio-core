@@ -20,7 +20,7 @@ data "illumio-core_label_types" "example" {
   # explicitly define the dependencies to ensure the resources
   # are created before the data source is populated
   depends_on = [
-    illumio-core_pairing_profile.dev_core_services,
-    illumio-core_pairing_profile.dev_web_db,
+    illumio-core_label_type.os,
+    illumio-core_label_type.device_type,
   ]
 }

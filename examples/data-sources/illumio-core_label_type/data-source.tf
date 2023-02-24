@@ -14,6 +14,6 @@ resource "illumio-core_label" "os_windows" {
   value = "OS_Windows"
 }
 
-data "illumio-core_label_type" "os_windows" {
-  href = illumio-core_label.os_windows.href
+data "illumio-core_label_type" "os" {
+  href = illumio-core_label_type.os.href
 }

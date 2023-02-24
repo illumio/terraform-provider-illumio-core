@@ -10,6 +10,6 @@ resource "illumio-core_label_type" "example" {
 resource "illumio-core_label" "example" {
   # create an implicit dependency on the label type
   # to ensure it's created before the label
-  key   = illumio-core_label_type.os.key
+  key   = illumio-core_label_type.example.key
   value = "OS_Windows"
 }

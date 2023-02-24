@@ -15,10 +15,11 @@ import (
 )
 
 var (
-	validSRResLabelAsValues = []string{"workloads", "virtual_services"}
-	validSRIngSerProtos     = []string{"6", "17"}
-	validSRConsumerActors   = []string{"ams", "container_host"}
-	validSRProducerActors   = []string{"ams"}
+	validSRResLabelAsValues  = []string{"workloads", "virtual_services"}
+	validSRIngSerProtos      = []string{"6", "17"}
+	validSRConsumerActors    = []string{"ams", "container_host"}
+	validSRProducerActors    = []string{"ams"}
+	validSRUseWorkloadSubnet = []string{"providers", "consumers"}
 )
 
 func resourceIllumioSecurityRule() *schema.Resource {
@@ -341,6 +342,15 @@ func securityRuleResourceBaseSchemaMap() map[string]*schema.Schema {
 			Default:     false,
 			Description: "If false (the default), the created Rule will be an intra-scope rule. If true, it will be extra-scope. Default value: false",
 		},
+		"use_workload_subnets": {
+			Type:        schema.TypeSet,
+			Optional:    true,
+			MaxItems:    2,
+			Description: `Whether to use workload subnets instead of IP addresses for providers/consumers. Allowed values are "providers" and/or "consumers"`,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
 		"update_type": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -415,20 +425,21 @@ func resourceIllumioSecurityRuleCreate(ctx context.Context, d *schema.ResourceDa
 func expandIllumioSecurityRule(d *schema.ResourceData) (*models.SecurityRule, *diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	secConnect := d.Get("sec_connect").(bool)
-	stateless := d.Get("stateless").(bool)
-	machineAuth := d.Get("machine_auth").(bool)
-	unscopedConsumers := d.Get("unscoped_consumers").(bool)
+	useWorkloadSubnets := getStringList(d.Get("use_workload_subnets").(*schema.Set).List())
+	if !validateList(useWorkloadSubnets, validSRUseWorkloadSubnet) {
+		diags = append(diags, diag.Errorf(`[illumio-core_security_rule] Invalid value for use_workload_subnets, allowed values are "providers" and "consumers"`)...)
+	}
 
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
 		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		SecConnect:            &secConnect,
-		Stateless:             &stateless,
-		MachineAuth:           &machineAuth,
-		UnscopedConsumers:     &unscopedConsumers,
+		SecConnect:            PtrTo(d.Get("sec_connect").(bool)),
+		Stateless:             PtrTo(d.Get("stateless").(bool)),
+		MachineAuth:           PtrTo(d.Get("machine_auth").(bool)),
+		UnscopedConsumers:     PtrTo(d.Get("unscoped_consumers").(bool)),
+		UseWorkloadSubnets:    useWorkloadSubnets,
 	}
 
 	if secRule.HasConflicts() {
@@ -652,28 +663,35 @@ func resourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData
 		}
 	}
 
-	isKey := "ingress_services"
-	if data.Exists(isKey) {
-		d.Set(isKey, extractSecurityRuleIngressService(data.S(isKey)))
+	key := "ingress_services"
+	if data.Exists(key) {
+		d.Set(key, extractSecurityRuleIngressService(data.S(key)))
 	} else {
-		d.Set(isKey, nil)
+		d.Set(key, nil)
 	}
 
-	rlaKey := "resolve_labels_as"
-	if data.Exists(rlaKey) {
-		d.Set(rlaKey, extractSecurityRuleResolveLabelAs(data.S(rlaKey)))
+	key = "resolve_labels_as"
+	if data.Exists(key) {
+		d.Set(key, extractSecurityRuleResolveLabelAs(data.S(key)))
 	} else {
-		d.Set(rlaKey, nil)
+		d.Set(key, nil)
 	}
 
-	prkey := "providers"
-	if data.Exists(prkey) {
-		d.Set(prkey, extractRuleActors(data.S(prkey)))
+	key = "use_workload_subnets"
+	if data.Exists(key) {
+		d.Set(key, getStringList(data.S(key).Data().([]any)))
+	} else {
+		d.Set(key, nil)
 	}
 
-	cnKeys := "consumers"
-	if data.Exists(cnKeys) {
-		d.Set(cnKeys, extractRuleActors(data.S(cnKeys)))
+	key = "providers"
+	if data.Exists(key) {
+		d.Set(key, extractRuleActors(data.S(key)))
+	}
+
+	key = "consumers"
+	if data.Exists(key) {
+		d.Set(key, extractRuleActors(data.S(key)))
 	}
 
 	return diagnostics
@@ -734,24 +752,25 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 	cons, errs := expandIllumioSecurityRuleConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
 
-	secConnect := d.Get("sec_connect").(bool)
-	stateless := d.Get("stateless").(bool)
-	machineAuth := d.Get("machine_auth").(bool)
-	unscopedConsumers := d.Get("unscoped_consumers").(bool)
+	useWorkloadSubnets := getStringList(d.Get("use_workload_subnets").(*schema.Set).List())
+	if !validateList(useWorkloadSubnets, validSRUseWorkloadSubnet) {
+		diags = append(diags, diag.Errorf(`[illumio-core_security_rule] Invalid value for use_workload_subnets, allowed values are "providers" and "consumers"`)...)
+	}
 
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
 		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		SecConnect:            &secConnect,
-		Stateless:             &stateless,
-		MachineAuth:           &machineAuth,
-		UnscopedConsumers:     &unscopedConsumers,
+		SecConnect:            PtrTo(d.Get("sec_connect").(bool)),
+		Stateless:             PtrTo(d.Get("stateless").(bool)),
+		MachineAuth:           PtrTo(d.Get("machine_auth").(bool)),
+		UnscopedConsumers:     PtrTo(d.Get("unscoped_consumers").(bool)),
 		ResolveLabelsAs:       resLabelAs,
 		IngressServices:       ingServs,
 		Providers:             povs,
 		Consumers:             cons,
+		UseWorkloadSubnets:    useWorkloadSubnets,
 	}
 
 	if secRule.HasConflicts() {

@@ -282,6 +282,14 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Set the scope for rule consumers to All",
 		},
+		"use_workload_subnets": {
+			Type:        schema.TypeSet,
+			Computed:    true,
+			Description: "Whether to use workload subnets instead of IP addresses for providers/consumers",
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
 		"update_type": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -446,22 +454,21 @@ func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceDa
 		}
 	}
 
-	rlaKey := "resolve_labels_as"
-	if data.Exists(rlaKey) {
-		resLableAs := data.S(rlaKey)
-
-		tm := make(map[string][]interface{})
-		tm["providers"] = resLableAs.S("providers").Data().([]interface{})
-		tm["consumers"] = resLableAs.S("consumers").Data().([]interface{})
-
-		d.Set(rlaKey, []interface{}{tm})
+	key := "resolve_labels_as"
+	if data.Exists(key) {
+		d.Set(key, extractSecurityRuleResolveLabelAs(data.S(key)))
 	}
 
-	isKey := "ingress_services"
-	if data.Exists(isKey) {
-		d.Set(isKey, extractSecurityRuleIngressService(data.S(isKey)))
+	key = "ingress_services"
+	if data.Exists(key) {
+		d.Set(key, extractSecurityRuleIngressService(data.S(key)))
 	} else {
-		d.Set(isKey, nil)
+		d.Set(key, nil)
+	}
+
+	key = "use_workload_subnets"
+	if data.Exists(key) {
+		d.Set(key, getStringList(data.S(key).Data().([]any)))
 	}
 
 	for _, key := range []string{"providers", "consumers"} {

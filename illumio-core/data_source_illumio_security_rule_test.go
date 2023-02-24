@@ -45,7 +45,7 @@ func TestAccIllumioSR_Read(t *testing.T) {
 	})
 }
 
-func testAccCheckIllumioSRDataSourceConfig_basic() string {
+func testAccCheckIllumioSRRuleSet() string {
 	rName1 := acctest.RandomWithPrefix(prefixSR)
 	rName2 := acctest.RandomWithPrefix(prefixSR)
 
@@ -86,7 +86,11 @@ resource "illumio-core_rule_set" "sr_test" {
 		}
 	}
 }
+`, rName1, rName2)
+}
 
+func testAccCheckIllumioSRDataSourceConfig_basic() string {
+	return testAccCheckIllumioSRRuleSet() + `
 resource "illumio-core_security_rule" "sr_test" {
 	rule_set_href = illumio-core_rule_set.sr_test.href
 	enabled = true
@@ -115,6 +119,5 @@ resource "illumio-core_security_rule" "sr_test" {
 
 data "illumio-core_security_rule" "sr_test" {
 	href = illumio-core_security_rule.sr_test.href
-}
-`, rName1, rName2)
+}`
 }

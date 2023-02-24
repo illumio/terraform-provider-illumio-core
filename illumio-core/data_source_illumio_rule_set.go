@@ -297,74 +297,7 @@ func datasourceIllumioRuleSetRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if data.Exists("rules") {
-		rls := []map[string]interface{}{}
-
-		rlKeys := []string{
-			"href",
-			"enabled",
-			"description",
-			"external_data_set",
-			"external_data_reference",
-			"sec_connect",
-			"stateless",
-			"machine_auth",
-			"unscoped_consumers",
-			"update_type",
-			"created_at",
-			"updated_at",
-			"deleted_at",
-			"created_by",
-			"updated_by",
-			"deleted_by",
-		}
-
-		for _, ruleData := range data.S("rules").Children() {
-			rl := map[string]interface{}{}
-			for _, key := range rlKeys {
-				if ruleData.Exists(key) && ruleData.S(key).Data() != nil {
-					rl[key] = ruleData.S(key).Data()
-				} else {
-					rl[key] = nil
-				}
-			}
-
-			rlaKey := "resolve_labels_as"
-			if ruleData.Exists(rlaKey) {
-				resLableAs := ruleData.S(rlaKey)
-
-				tm := make(map[string][]interface{})
-				tm["providers"] = resLableAs.S("providers").Data().([]interface{})
-				tm["consumers"] = resLableAs.S("consumers").Data().([]interface{})
-
-				rl[rlaKey] = []interface{}{tm}
-			}
-
-			isKey := "ingress_services"
-			if ruleData.Exists(isKey) {
-				isKeys := []string{
-					"href",
-					"proto",
-					"port",
-					"to_port",
-				}
-
-				rl[isKey] = extractMapArray(ruleData.S(isKey), isKeys)
-			}
-
-			providersKey := "providers"
-			if ruleData.Exists(providersKey) {
-				rl[providersKey] = extractRuleActors(ruleData.S(providersKey))
-			}
-
-			consumerKey := "consumers"
-			if ruleData.Exists(consumerKey) {
-				rl[consumerKey] = extractRuleActors(ruleData.S(consumerKey))
-			}
-
-			rls = append(rls, rl)
-		}
-
-		d.Set("rules", rls)
+		d.Set("rules", extractRules(data.S("rules")))
 	}
 
 	key := "scopes"

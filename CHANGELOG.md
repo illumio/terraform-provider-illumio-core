@@ -36,6 +36,10 @@ resource "illumio-core_virtual_service" "example" {
 
 This change was necessary to align the import state with virtual service resource definitions.
 
+* added `ven_type` nested fields to settings blocks in `illumio-core_workload_settings`
+
+* added `use_workload_subnets` field to `illumio-core_security_rule`
+
 ## 1.0.3 (Dec 16, 2022)
 
 BUG FIXES:

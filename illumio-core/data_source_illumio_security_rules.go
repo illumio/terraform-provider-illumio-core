@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -65,6 +66,12 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 	}
 	d.SetId(fmt.Sprintf("%v", hashcode(paramsString(params))))
 
+	d.Set("items", extractRules(data))
+
+	return diagnostics
+}
+
+func extractRules(data *gabs.Container) []map[string]any {
 	rlKeys := []string{
 		"href",
 		"enabled",
@@ -84,36 +91,40 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 		"deleted_by",
 	}
 
-	srs := []map[string]interface{}{}
+	srs := []map[string]any{}
+
 	for _, rule := range data.Children() {
 		sr := extractMap(rule, rlKeys)
 
-		rlaKey := "resolve_labels_as"
-		if rule.Exists(rlaKey) {
-			sr[rlaKey] = extractSecurityRuleResolveLabelAs(rule.S(rlaKey))
+		key := "resolve_labels_as"
+		if rule.Exists(key) {
+			sr[key] = extractSecurityRuleResolveLabelAs(rule.S(key))
 		}
 
-		isKey := "ingress_services"
-		if rule.Exists(isKey) {
-			sr[isKey] = extractSecurityRuleIngressService(data.S(isKey))
+		key = "ingress_services"
+		if rule.Exists(key) {
+			sr[key] = extractSecurityRuleIngressService(rule.S(key))
 		} else {
-			sr[isKey] = nil
+			sr[key] = nil
 		}
 
-		providersKey := "providers"
-		if rule.Exists(providersKey) {
-			sr[providersKey] = extractRuleActors(rule.S(providersKey))
+		key = "use_workload_subnets"
+		if rule.Exists(key) {
+			sr[key] = getStringList(rule.S(key).Data().([]any))
 		}
 
-		consumerKey := "consumers"
-		if rule.Exists(consumerKey) {
-			sr[consumerKey] = extractRuleActors(rule.S(consumerKey))
+		key = "providers"
+		if rule.Exists(key) {
+			sr[key] = extractRuleActors(rule.S(key))
+		}
+
+		key = "consumers"
+		if rule.Exists(key) {
+			sr[key] = extractRuleActors(rule.S(key))
 		}
 
 		srs = append(srs, sr)
 	}
 
-	d.Set("items", srs)
-
-	return diagnostics
+	return srs
 }

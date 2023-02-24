@@ -356,61 +356,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 
 		key := "rules"
 		if ruleSet.Exists(key) {
-			rls := []map[string]interface{}{}
-
-			rlKeys := []string{
-				"href",
-				"enabled",
-				"description",
-				"external_data_set",
-				"external_data_reference",
-				"sec_connect",
-				"stateless",
-				"machine_auth",
-				"unscoped_consumers",
-				"update_type",
-				"created_at",
-				"updated_at",
-				"deleted_at",
-				"created_by",
-				"updated_by",
-				"deleted_by",
-			}
-
-			for _, rule := range ruleSet.S(key).Children() {
-				rl := extractMap(rule, rlKeys)
-
-				rlaKey := "resolve_labels_as"
-				if rule.Exists(rlaKey) {
-					rl[rlaKey] = extractSecurityRuleResolveLabelAs(rule.S(rlaKey))
-				}
-
-				isKey := "ingress_services"
-				if rule.Exists(isKey) {
-					isKeys := []string{
-						"href",
-						"proto",
-						"port",
-						"to_port",
-					}
-
-					rl[isKey] = extractMapArray(rule.S(isKey), isKeys)
-				}
-
-				providersKey := "providers"
-				if rule.Exists(providersKey) {
-					rl[providersKey] = extractRuleActors(rule.S(providersKey))
-				}
-
-				consumerKey := "consumers"
-				if rule.Exists(consumerKey) {
-					rl[consumerKey] = extractRuleActors(rule.S(consumerKey))
-				}
-
-				rls = append(rls, rl)
-			}
-
-			rs[key] = rls
+			rs[key] = extractRules(data.S("rules"))
 		}
 
 		key = "scopes"

@@ -8,6 +8,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -56,4 +57,28 @@ func testAccPreCheck(t *testing.T) {
 			t.Fatal(err)
 		}
 	})
+}
+
+func skipIfPCEVersionBelow(v string) func() (bool, error) {
+	return func() (bool, error) {
+		checkVersion, err := version.NewVersion(v)
+		if err != nil {
+			return false, err
+		}
+
+		conf := TestAccProvider.Meta().(Config)
+		illumioClient := conf.IllumioClient
+
+		_, data, err := illumioClient.Get("/product_version", nil)
+		if err != nil {
+			return false, err
+		}
+
+		pceVersion, err := version.NewVersion(data.S("version").Data().(string))
+		if err != nil {
+			return false, err
+		}
+
+		return pceVersion.LessThan(checkVersion), nil
+	}
 }

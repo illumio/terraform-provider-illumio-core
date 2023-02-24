@@ -89,6 +89,7 @@ resource "illumio-core_security_rule" "example" {
 - `sec_connect` (Boolean) Determines whether a secure connection is established. Default value: false
 - `stateless` (Boolean) Determines whether packet filtering is stateless for the rule. Default value: false
 - `unscoped_consumers` (Boolean) If false (the default), the created Rule will be an intra-scope rule. If true, it will be extra-scope. Default value: false
+- `use_workload_subnets` (Set of String) Whether to use workload subnets instead of IP addresses for providers/consumers. Allowed values are "providers" and/or "consumers"
 
 ### Read-Only
 

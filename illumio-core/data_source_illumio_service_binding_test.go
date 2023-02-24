@@ -108,7 +108,7 @@ func testAccCheckIllumioSBDataSource_VSExists(resourceName string) resource.Test
 		href := rs.Primary.ID
 
 		if href == "" {
-			return fmt.Errorf("Widget ID is not set")
+			return fmt.Errorf("Virtual Service HREF is not set")
 		}
 
 		conf := TestAccProvider.Meta().(Config)

@@ -48,6 +48,7 @@ type SecurityRule struct {
 	Providers             []*SecurityRuleProvider     `json:"providers"`
 	Consumers             []*SecurityRuleConsumer     `json:"consumers"`
 	UnscopedConsumers     *bool                       `json:"unscoped_consumers,omitempty"`
+	UseWorkloadSubnets    []string                    `json:"use_workload_subnets"`
 	ExternalDataSet       string                      `json:"external_data_set,omitempty"`
 	ExternalDataReference string                      `json:"external_data_reference,omitempty"`
 }

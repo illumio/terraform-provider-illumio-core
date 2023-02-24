@@ -10,76 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-/*
-{
-  "static_policy_scopes": [
-    [
-      {
-        "label": {
-          "href": "string"
-        },
-        "label_group": {
-          "href": "string"
-        }
-      }
-    ]
-  ],
-  "firewall_coexistence": [{"illumio_primary": true,
-                           "scope": [{"href": "string"},
-                                     {"href": "string"},
-                                     {"href": "string"},
-                                     {"href": "string"}],
-                           "workload_mode": "illuminated"},
-                          {"illumio_primary": true,
-                           "scope": [{"href": "string"},
-                                     {"href": "string"},
-                                     {"href": "string"},
-                                     {"href": "string"}]}],
-  "containers_inherit_host_policy_scopes": [
-    [
-      {
-        "label": {
-          "href": "string"
-        },
-        "label_group": {
-          "href": "string"
-        }
-      }
-    ]
-  ],
-  "blocked_connection_reject_scopes": [
-    [
-      {
-        "label": {
-          "href": "string"
-        },
-        "label_group": {
-          "href": "string"
-        }
-      }
-    ]
-  ],
-  "created_at": "2021-03-02T02:37:59Z",
-  "updated_at": "2021-03-02T02:37:59Z",
-  "deleted_at": "2021-03-02T02:37:59Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "deleted_by": {
-    "href": "string"
-  },
-  "update_type": "string"
-}
-*/
-
 func datasourceIllumioFirewallSettings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioFirewallSettingsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Firewall Settings",
 
 		Schema: map[string]*schema.Schema{

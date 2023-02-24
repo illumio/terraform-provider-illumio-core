@@ -22,7 +22,7 @@ func resourceIllumioVEN() *schema.Resource {
 		UpdateContext: resourceIllumioVENUpdate,
 		DeleteContext: resourceIllumioVENDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio VEN",
 
 		Schema: map[string]*schema.Schema{
@@ -466,7 +466,7 @@ func resourceIllumioVEN() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Permission types",
+				Description: "User permissions for the object",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -482,9 +482,9 @@ func resourceIllumioVEN() *schema.Resource {
 func resourceIllumioVENCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	return diag.Diagnostics{
 		diag.Diagnostic{
-			Severity: diag.Warning,
+			Severity: diag.Error,
 			Detail:   "[illumio-core_ven] Cannot use create operation.",
-			Summary:  "Please use terraform import...",
+			Summary:  "Please use terraform import.",
 		},
 	}
 }
@@ -515,8 +515,7 @@ func resourceIllumioVENUpdate(ctx context.Context, d *schema.ResourceData, m int
 	}
 
 	if v, ok := d.GetOk("target_pce_fqdn"); ok {
-		v, _ := v.(string)
-		ven.TargetPCEFqdn = &v
+		ven.TargetPCEFqdn = v.(string)
 	}
 
 	if v, ok := d.GetOk("status"); ok {
@@ -536,7 +535,7 @@ func resourceIllumioVENDelete(ctx context.Context, d *schema.ResourceData, m int
 	return diag.Diagnostics{
 		diag.Diagnostic{
 			Severity: diag.Warning,
-			Summary:  "[illumio-core_ven] Ignoring Delete Operation...",
+			Summary:  "[illumio-core_ven] Ignoring Delete Operation.",
 		},
 	}
 }

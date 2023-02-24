@@ -25,7 +25,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 		UpdateContext: resourceIllumioPairingProfileUpdate,
 		DeleteContext: resourceIllumioPairingProfileDelete,
 		Description:   "Manages Illumio Pairing Profile",
-		SchemaVersion: version,
+		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
 			"href": {
@@ -211,7 +211,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "CAPS for Workload",
+				Description: "User permissions for the object",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 		},
@@ -230,21 +230,28 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 		Name:                  d.Get("name").(string),
 		Description:           d.Get("description").(string),
 		EnforcementMode:       d.Get("enforcement_mode").(string),
-		EnforcementModeLock:   d.Get("enforcement_mode_lock").(bool),
+		EnforcementModeLock:   PtrTo(d.Get("enforcement_mode_lock").(bool)),
 		Enabled:               d.Get("enabled").(bool),
-		EnvLabelLock:          d.Get("env_label_lock").(bool),
-		LocLabelLock:          d.Get("loc_label_lock").(bool),
-		RoleLabelLock:         d.Get("role_label_lock").(bool),
-		AppLabelLock:          d.Get("app_label_lock").(bool),
-		LogTraffic:            d.Get("log_traffic").(bool),
-		LogTrafficLock:        d.Get("log_traffic_lock").(bool),
+		EnvLabelLock:          PtrTo(d.Get("env_label_lock").(bool)),
+		LocLabelLock:          PtrTo(d.Get("loc_label_lock").(bool)),
+		RoleLabelLock:         PtrTo(d.Get("role_label_lock").(bool)),
+		AppLabelLock:          PtrTo(d.Get("app_label_lock").(bool)),
+		LogTraffic:            PtrTo(d.Get("log_traffic").(bool)),
+		LogTrafficLock:        PtrTo(d.Get("log_traffic_lock").(bool)),
 		VisibilityLevel:       d.Get("visibility_level").(string),
-		VisibilityLevelLock:   d.Get("visibility_level_lock").(bool),
+		VisibilityLevelLock:   PtrTo(d.Get("visibility_level_lock").(bool)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		AgentSoftwareRelease:  d.Get("agent_software_release").(string),
-		AllowedUsesPerKey:     d.Get("allowed_uses_per_key").(string),
-		KeyLifespan:           d.Get("key_lifespan").(string),
+		Labels:                []models.Href{},
+	}
+
+	if allowedUsesPerKey, ok := getInt(d.Get("allowed_uses_per_key").(string)); ok {
+		pairingProfile.AllowedUsesPerKey = &allowedUsesPerKey
+	}
+
+	if keyLifespan, ok := getInt(d.Get("key_lifespan").(string)); ok {
+		pairingProfile.KeyLifespan = &keyLifespan
 	}
 
 	if items, ok := d.GetOk("labels"); ok {
@@ -347,21 +354,20 @@ func resourceIllumioPairingProfileRead(ctx context.Context, d *schema.ResourceDa
 }
 
 func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 	var diags diag.Diagnostics
 
 	pairingProfile := &models.PairingProfile{
 		Enabled:               d.Get("enabled").(bool),
-		EnvLabelLock:          d.Get("env_label_lock").(bool),
-		LocLabelLock:          d.Get("loc_label_lock").(bool),
-		RoleLabelLock:         d.Get("role_label_lock").(bool),
-		AppLabelLock:          d.Get("app_label_lock").(bool),
-		LogTraffic:            d.Get("log_traffic").(bool),
-		LogTrafficLock:        d.Get("log_traffic_lock").(bool),
-		VisibilityLevelLock:   d.Get("visibility_level_lock").(bool),
-		EnforcementModeLock:   d.Get("enforcement_mode_lock").(bool),
+		EnvLabelLock:          PtrTo(d.Get("env_label_lock").(bool)),
+		LocLabelLock:          PtrTo(d.Get("loc_label_lock").(bool)),
+		RoleLabelLock:         PtrTo(d.Get("role_label_lock").(bool)),
+		AppLabelLock:          PtrTo(d.Get("app_label_lock").(bool)),
+		LogTraffic:            PtrTo(d.Get("log_traffic").(bool)),
+		LogTrafficLock:        PtrTo(d.Get("log_traffic_lock").(bool)),
+		VisibilityLevelLock:   PtrTo(d.Get("visibility_level_lock").(bool)),
+		EnforcementModeLock:   PtrTo(d.Get("enforcement_mode_lock").(bool)),
 		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
@@ -376,12 +382,12 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 		pairingProfile.EnforcementMode = d.Get("enforcement_mode").(string)
 	}
 
-	if d.HasChange("allowed_uses_per_key") {
-		pairingProfile.AllowedUsesPerKey = d.Get("allowed_uses_per_key").(string)
+	if allowedUsesPerKey, ok := getInt(d.Get("allowed_uses_per_key").(string)); ok {
+		pairingProfile.AllowedUsesPerKey = &allowedUsesPerKey
 	}
 
-	if d.HasChange("key_lifespan") {
-		pairingProfile.KeyLifespan = d.Get("key_lifespan").(string)
+	if keyLifespan, ok := getInt(d.Get("key_lifespan").(string)); ok {
+		pairingProfile.KeyLifespan = &keyLifespan
 	}
 
 	if d.HasChange("visibility_level") {

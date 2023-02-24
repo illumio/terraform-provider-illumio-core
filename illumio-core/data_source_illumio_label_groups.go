@@ -11,56 +11,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-/* Sample of API response
-[
-	{
-		"name": "string",
-		"description": null,
-		"key": "string",
-		"labels": [
-			{
-			"href": "string",
-			"key": "string",
-			"value": "string"
-			}
-		],
-		"sub_groups": [
-			{
-			"href": "string",
-			"name": "string"
-			}
-		],
-		"usage": {
-			"label_group": true,
-			"ruleset": true,
-			"rule": true,
-			"static_policy_scopes": true,
-			"containers_inherit_host_policy_scopes": true,
-			"blocked_connection_reject_scope": true
-		},
-		"external_data_set": null,
-		"external_data_reference": null,
-		"update_type": null,
-		"created_at": "2021-03-02T02:37:59Z",
-		"updated_at": "2021-03-02T02:37:59Z",
-		"deleted_at": null,
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		},
-		"deleted_by": {
-			"href": "string"
-		}
-	}
-]
-*/
-
 func datasourceIllumioLabelGroups() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioLabelGroupsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Label Groups",
 
 		Schema: map[string]*schema.Schema{
@@ -92,9 +46,9 @@ func datasourceIllumioLabelGroups() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ValidateDiagFunc: validation.ToDiagFunc(
-					validation.StringInSlice(validLabelKeys, false),
+					validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 				),
-				Description: `Key in key-value pair of contained labels or label groups. Allowed values for key are "role", "loc", "app" and "env".`,
+				Description: `Key in key-value pair of contained labels or label groups. The value must be a string between 1 and 64 characters long`,
 			},
 			"max_results": {
 				Type:             schema.TypeString,

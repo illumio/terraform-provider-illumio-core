@@ -10,18 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample API Responce
-{
-  "audit_event_retention_seconds": 0,
-  "audit_event_min_severity": "error",
-  "format": "string"
-}
-*/
-
 func datasourceIllumioOrganizationSettings() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioOrganizationSettingsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Organization Settings",
 
 		Schema: map[string]*schema.Schema{

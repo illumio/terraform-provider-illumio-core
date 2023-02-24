@@ -13,7 +13,7 @@ import (
 func datasourceIllumioVulnerabilities() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioVulnerabilitiesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Vulnerabilities",
 
 		Schema: map[string]*schema.Schema{

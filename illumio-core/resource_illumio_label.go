@@ -12,8 +12,8 @@ import (
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
-var (
-	validLabelKeys = []string{"role", "loc", "app", "env"}
+const (
+	LABEL_KEY_LENGTH_MAX = 64
 )
 
 func resourceIllumioLabel() *schema.Resource {
@@ -23,7 +23,7 @@ func resourceIllumioLabel() *schema.Resource {
 		UpdateContext: resourceIllumioLabelUpdate,
 		DeleteContext: resourceIllumioLabelDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Label",
 
 		Schema: map[string]*schema.Schema{
@@ -42,9 +42,9 @@ func resourceIllumioLabel() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 				ValidateDiagFunc: validation.ToDiagFunc(
-					validation.StringInSlice(validLabelKeys, false),
+					validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 				),
-				Description: `Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env".`,
+				Description: `Key in key-value pair. The value must be a string between 1 and 64 characters long`,
 			},
 			"value": {
 				Type:        schema.TypeString,

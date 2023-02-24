@@ -10,83 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-[
-	{
-		"href": "string",
-		"enabled": true,
-		"description": "string",
-		"external_data_set": null,
-		"external_data_reference": null,
-		"ingress_services": [
-			{
-			"href": "string"
-			}
-		],
-		"resolve_labels_as": {
-			"providers": [
-			"workloads"
-			],
-			"consumers": [
-			"workloads"
-			]
-		},
-		"sec_connect": true,
-		"stateless": true,
-		"machine_auth": true,
-		"providers": [
-			{
-			"actors": "ams",
-			"label": {
-				"href": "string"
-			},
-			"label_group": {
-				"href": "string"
-			},
-			"workload": {
-				"href": "string"
-			},
-			"virtual_service": {
-				"href": "string"
-			},
-			"virtual_server": {
-				"href": "string"
-			},
-			"ip_list": {
-				"href": "string"
-			}
-			}
-		],
-		"consumers": [
-			{
-			"actors": "ams",
-			"label": {
-				"href": "string"
-			},
-			"label_group": {
-				"href": "string"
-			},
-			"workload": {
-				"href": "string"
-			},
-			"virtual_service": {
-				"href": "string"
-			},
-			"ip_list": {
-				"href": "string"
-			}
-			}
-		],
-		"unscoped_consumers": true,
-		"update_type": "string"
-	}
-]
-*/
-
 func datasourceIllumioSecurityRules() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioSecurityRulesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Security Rules",
 
 		Schema: map[string]*schema.Schema{
@@ -168,24 +95,19 @@ func datasourceIllumioSecurityRulesRead(ctx context.Context, d *schema.ResourceD
 
 		isKey := "ingress_services"
 		if rule.Exists(isKey) {
-			isKeys := []string{
-				"href",
-				"proto",
-				"port",
-				"to_port",
-			}
-
-			sr[isKey] = extractMapArray(rule.S(isKey), isKeys)
+			sr[isKey] = extractSecurityRuleIngressService(data.S(isKey))
+		} else {
+			sr[isKey] = nil
 		}
 
 		providersKey := "providers"
 		if rule.Exists(providersKey) {
-			sr[providersKey] = extractDatasourceActors(rule.S(providersKey))
+			sr[providersKey] = extractRuleActors(rule.S(providersKey))
 		}
 
 		consumerKey := "consumers"
 		if rule.Exists(consumerKey) {
-			sr[consumerKey] = extractDatasourceActors(rule.S(consumerKey))
+			sr[consumerKey] = extractRuleActors(rule.S(consumerKey))
 		}
 
 		srs = append(srs, sr)

@@ -13,57 +13,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-/* Sample of API response
-[
-	{
-		href": "string",
-		"name": "string",
-		"description": "string",
-		"description_url": "string",
-		"process_name": "string",
-		"service_ports": [
-			{
-			"port": 0,
-			"to_port": 0,
-			"proto": 0,
-			"icmp_type": 0,
-			"icmp_code": 0
-			}
-		],
-		"windows_services": [
-			{
-			"service_name": "string",
-			"process_name": "string",
-			"port": 0,
-			"to_port": 0,
-			"proto": 0,
-			"icmp_type": 0,
-			"icmp_code": 0
-			}
-		],
-		"external_data_set": "string",
-		"external_data_reference": "string",
-		"created_at": "1970-01-01T00:00:00.000Z",
-		"updated_at": "1970-01-01T00:00:00.000Z",
-		"deleted_at": "1970-01-01T00:00:00.000Z",
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		},
-		"deleted_by": {
-			"href": "string"
-		},
-		"update_type": "string"
-	}
-]
-*/
-
 func datasourceIllumioServices() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioServicesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Services",
 		Schema: map[string]*schema.Schema{
 			"pversion": {
@@ -110,7 +63,7 @@ func datasourceIllumioServices() *schema.Resource {
 			"proto": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Protocol to filter on. IANA protocol numbers between 0-255 are permitted, and -1 represents all services.",
+				Description:      "Protocol to filter on. IANA protocol numbers between 0-255 are permitted, and -1 represents all services",
 				ValidateDiagFunc: isStringInRange(-1, 255),
 			},
 			"items": {
@@ -150,27 +103,27 @@ func datasourceIllumioServices() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"port": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Port Number ( the starting port when specifying a range)",
+										Description: "Port number (the starting port when specifying a range)",
 									},
 									"to_port": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "High end of port range",
 									},
 									"proto": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Transport protocol",
 									},
 									"icmp_type": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "ICMP Type",
 									},
 									"icmp_code": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "ICMP Code",
 									},
@@ -181,7 +134,7 @@ func datasourceIllumioServices() *schema.Resource {
 						"windows_services": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "windows_services for Services",
+							Description: "Windows service definitions",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"service_name": {
@@ -195,29 +148,48 @@ func datasourceIllumioServices() *schema.Resource {
 										Description: "Name of running process",
 									},
 									"port": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Port Number, also the starting port when specifying a range",
 									},
 									"to_port": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "High end of port range",
 									},
 									"proto": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Transport protocol",
 									},
 									"icmp_type": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "ICMP Type",
 									},
 									"icmp_code": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "ICMP Code",
+									},
+								},
+							},
+						},
+						"windows_egress_services": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Windows egress service definitions",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"service_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Name of Windows Service",
+									},
+									"process_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Name of running process",
 									},
 								},
 							},
@@ -330,28 +302,25 @@ func dataSourceIllumioServicesRead(ctx context.Context, d *schema.ResourceData, 
 	for _, child := range data.Children() {
 		m := extractMap(child, keys)
 
-		if child.Exists("service_ports") {
-			sps := child.S("service_ports")
-			spI := []map[string]interface{}{}
-
-			for _, sp := range sps.Children() {
-				spI = append(spI, extractMap(sp, []string{"port", "to_port", "proto", "icmp_type", "icmp_code"}))
-			}
-			m["service_ports"] = spI
+		key := "service_ports"
+		if child.Exists(key) {
+			m[key] = extractServicePorts(child)
 		} else {
-			m["service_ports"] = nil
+			m[key] = nil
 		}
 
-		if child.Exists("windows_services") {
-			wss := child.S("windows_services")
-			wsI := []map[string]interface{}{}
-
-			for _, ws := range wss.Children() {
-				wsI = append(wsI, extractMap(ws, []string{"port", "to_port", "proto", "icmp_type", "icmp_code", "service_name", "process_name"}))
-			}
-			m["windows_services"] = wsI
+		key = "windows_services"
+		if child.Exists(key) {
+			m[key] = extractWindowsServices(child)
 		} else {
-			m["windows_services"] = nil
+			m[key] = nil
+		}
+
+		key = "windows_egress_services"
+		if child.Exists(key) {
+			m[key] = extractWindowsEgressServices(child)
+		} else {
+			m[key] = nil
 		}
 
 		dataMap = append(dataMap, m)

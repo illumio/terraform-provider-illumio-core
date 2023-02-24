@@ -52,7 +52,7 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Firewall Settings",
 
 		Schema: map[string]*schema.Schema{

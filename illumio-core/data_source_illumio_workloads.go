@@ -11,181 +11,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-/* Sample of API response
-[
-	{
-		"href": "string",
-		"deleted": true,
-		"delete_type": "string",
-		"name": "string",
-		"description": "string",
-		"hostname": "string",
-		"service_principal_name": "string",
-		"agent_to_pce_certificate_authentication_id": null,
-		"distinguished_name": "string",
-		"public_ip": "string",
-		"external_data_set": null,
-		"external_data_reference": null,
-		"interfaces": {
-			"name": "string",
-			"link_state": "string",
-			"address": "string",
-			"cidr_block": 0,
-			"default_gateway_address": "string",
-			"network": {
-			"href": "string"
-			},
-			"network_detection_mode": "string",
-			"friendly_name": "string"
-		},
-		"service_provider": "string",
-		"data_center": "string",
-		"data_center_zone": "string",
-		"os_id": "string",
-		"os_detail": "string",
-		"online": true,
-		"firewall_coexistence": null,
-		"containers_inherit_host_policy": true,
-		"blocked_connection_action": "drop",
-		"labels": [
-			{
-			"href": "string"
-			}
-		],
-		"services": {
-			"uptime_seconds": 0,
-			"created_at": "2021-03-02T02:37:59Z",
-			"open_service_ports": [
-			{
-				"protocol": 0,
-				"address": "string",
-				"port": 0,
-				"process_name": "string",
-				"user": "string",
-				"package": "string",
-				"win_service_name": "string"
-			}
-			]
-		},
-		"vulnerabilities_summary": {
-			"num_vulnerabilities": 0,
-			"vulnerable_port_exposure": null,
-			"vulnerable_port_wide_exposure": {
-			"any": null,
-			"ip_list": null
-			},
-			"vulnerability_exposure_score": null,
-			"vulnerability_score": 0,
-			"max_vulnerability_score": 0
-		},
-		"detected_vulnerabilities": [
-			{
-			"ip_address": "string",
-			"port": 0,
-			"proto": 0,
-			"port_exposure": null,
-			"port_wide_exposure": {
-				"any": null,
-				"ip_list": null
-			},
-			"workload": {
-				"href": "string"
-			},
-			"vulnerability": {
-				"href": "string",
-				"score": 0,
-				"name": "string"
-			},
-			"vulnerability_report": {
-				"href": "string"
-			}
-			}
-		],
-		"agent": {
-			"config": {
-			"mode": "string",
-			"log_traffic": true,
-			"security_policy_update_mode": "string"
-			},
-			"href": "string",
-			"secure_connect": {
-			"matching_issuer_name": "string"
-			},
-			"status": {
-			"uid": "string",
-			"last_heartbeat_on": null,
-			"uptime_seconds": null,
-			"agent_version": "string",
-			"managed_since": "2021-03-02T02:37:59Z",
-			"fw_config_current": true,
-			"firewall_rule_count": 0,
-			"security_policy_refresh_at": "2021-03-02T02:37:59Z",
-			"security_policy_applied_at": "2021-03-02T02:37:59Z",
-			"security_policy_received_at": "2021-03-02T02:37:59Z",
-			"agent_health_errors": {
-				"errors": [
-				"string"
-				],
-				"warnings": [
-				"string"
-				]
-			},
-			"agent_health": [
-				{
-				"type": "string",
-				"severity": "string",
-				"audit_event": "string"
-				}
-			],
-			"security_policy_sync_state": "string"
-			},
-			"active_pce_fqdn": "string",
-			"target_pce_fqdn": "string",
-			"type": "string"
-		},
-		"ven": {
-			"href": "string",
-			"hostname": "string",
-			"name": "string",
-			"status": "string"
-		},
-		"enforcement_mode": "idle",
-		"selectively_enforced_services": [
-			{
-			"href": "string"
-			}
-		],
-		"created_at": "2021-03-02T02:37:59Z",
-		"updated_at": "2021-03-02T02:37:59Z",
-		"deleted_at": "2021-03-02T02:37:59Z",
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		},
-		"deleted_by": {
-			"href": "string"
-		},
-		"container_cluster": {
-			"href": "string",
-			"name": "string"
-		}
-	}
-]
-*/
-
 func datasourceIllumioWorkloads() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioWorkloadsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Workloads",
 
 		Schema: map[string]*schema.Schema{
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "list of workloads",
+				Description: "List of workloads",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"href": {
@@ -314,7 +150,9 @@ func datasourceIllumioWorkloads() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Ignored Interface Names for Workload",
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"service_provider": {
 							Type:        schema.TypeString,
@@ -364,6 +202,16 @@ func datasourceIllumioWorkloads() *schema.Resource {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "URI of Label",
+									},
+									"key": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Workload Label key",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Workload Label value",
 									},
 								},
 							},
@@ -660,13 +508,17 @@ func datasourceIllumioWorkloads() *schema.Resource {
 							Type:        schema.TypeMap,
 							Computed:    true,
 							Description: "VENS for Workload",
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"caps": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "CAPS for Workload",
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "User permissions for the object",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"created_at": {
 							Type:        schema.TypeString,
@@ -684,28 +536,28 @@ func datasourceIllumioWorkloads() *schema.Resource {
 							Description: "Timestamp when this Workload was deleted",
 						},
 						"created_by": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "User who created this Workload",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who created this Workload",
 						},
 						"updated_by": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "User who last updated this Workload",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who last updated this Workload",
 						},
 						"deleted_by": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "User who deleted this Workload",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "User who deleted this Workload",
 						},
 					},
 				},
@@ -937,7 +789,6 @@ func dataSourceIllumioWorkloadsRead(ctx context.Context, d *schema.ResourceData,
 			"data_center_zone",
 			"os_id", "os_detail",
 			"online",
-			"labels",
 			"containers_inherit_host_policy",
 			"blocked_connection_action",
 			"ven",
@@ -971,6 +822,17 @@ func dataSourceIllumioWorkloadsRead(ctx context.Context, d *schema.ResourceData,
 				"network",
 				"network_detection_mode",
 				"friendly_name",
+			})
+		} else {
+			m[key] = nil
+		}
+
+		key = "labels"
+		if child.Exists(key) {
+			m[key] = extractMapArray(child.S(key), []string{
+				"href",
+				"key",
+				"value",
 			})
 		} else {
 			m[key] = nil

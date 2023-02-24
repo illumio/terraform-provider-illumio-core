@@ -2,12 +2,16 @@
 
 package models
 
+import (
+	"encoding/json"
+)
+
 // Href - Represents href object for Illumio Resource
 type Href struct {
-	Href string `json:"href"`
+	Href string `json:"href,omitempty"`
 }
 
-// GetHrefs - Returns objects of Href from [{"href": "..."}, ...]
+// GetHrefs - Returns HrefObjects from [{"href": "..."}, ...]
 func GetHrefs(arr []interface{}) []Href {
 	hrefs := make([]Href, 0)
 	for _, elem := range arr {
@@ -29,11 +33,24 @@ func GetHrefMaps(hrefs []Href) []map[string]string {
 	return l
 }
 
+func toMap(o interface{}) (map[string]interface{}, error) {
+	encodedObject, err := json.Marshal(o)
+	if err != nil {
+		return nil, err
+	}
+
+	var result map[string]interface{}
+	err = json.Unmarshal([]byte(encodedObject), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 // ToMap - Returns map for Href model
 func (a *Href) ToMap() (map[string]interface{}, error) {
-	hrefAttrMap := make(map[string]interface{})
-	hrefAttrMap["href"] = a.Href
-	return hrefAttrMap, nil
+	return map[string]interface{}{"href": a.Href}, nil
 }
 
 type ScopeObj struct {

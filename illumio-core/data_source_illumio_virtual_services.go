@@ -10,41 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample of API response
-[
-	{
-		"name": "string",
-		"description": "string",
-		"external_data_set": null,
-		"external_data_reference": null,
-		"labels": [
-			{
-			"href": "string"
-			}
-		],
-		"service_ports": [
-			{
-			"port": 0,
-			"to_port": 0,
-			"proto": 0
-			}
-		],
-		"service": {},
-		"apply_to": "host_only",
-		"ip_overrides": [
-			"string"
-		],
-		"service_addresses": [
-			{}
-		]
-	}
-]
-*/
-
 func datasourceIllumioVirtualServices() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioVirtualServicesRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Virtual Services",
 
 		Schema: map[string]*schema.Schema{
@@ -204,7 +173,7 @@ func datasourceIllumioVirtualServices() *schema.Resource {
 						"caps": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "CAPS",
+							Description: "User permissions for the object",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"update_type": {

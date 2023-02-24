@@ -9,46 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-{
-  "href": "string",
-  "name": "string",
-  "description": "sring",
-  "external_data_set": nul,
-  "external_data_reference":null,
-  "ip_ranges": [
-    {
-      "description": "string",
-      "from_ip": "string",
-      "to_ip": "string",
-      "exclusion": true
-    }
-  ],
-  "fdns": [
-    {
-      "fqdn": "string",
-      "description": "sring"
-    }
-  ],
-  "ceated_at": "2021-03-02T02:37:59Z",
-  "updated_at": "2021-03-02T02:37:59Z",
-  "deleted_at": "2021-03-02T02:37:59Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "deleted_by": {
-    "href": "string"
-  }
-}
-*/
-
 func datasourceIllumioIPList() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioIPListRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio IP List",
 
 		Schema: map[string]*schema.Schema{

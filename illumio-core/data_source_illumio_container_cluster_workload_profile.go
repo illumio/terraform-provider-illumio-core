@@ -9,49 +9,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-
-/*
-{
-  "href": "string",
-  "name": null,
-  "namespace": null,
-  "description": "string",
-  "assign_labels": [
-    {
-      "href": "string"
-    }
-  ],
-  "labels": [
-    {
-      "key": "string",
-      "assignment": {
-        "href": "string",
-        "value": "string"
-      }
-    }
-  ],
-  "enforcement_mode": "idle",
-  "managed": true,
-  "linked": true,
-  "created_at": "2021-03-02T02:37:59Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "updated_at": "2021-03-02T02:37:59Z"
-}
-*/
-
 func datasourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioContainerClusterWorkloadProfileRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Container Cluster Workload Profile",
 
 		Schema: map[string]*schema.Schema{
+			"container_cluster_href": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "URI of Container Cluster",
+			},
 			"href": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -196,6 +165,7 @@ func datasourceIllumioContainerClusterWorkloadProfileRead(ctx context.Context, d
 
 	// orgID := pConfig.OrgID
 	href := d.Get("href").(string)
+	d.Set("container_cluster_href", getParentHref(href))
 
 	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {

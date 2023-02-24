@@ -20,7 +20,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 		DeleteContext: resourceIllumioManagedWorkloadDelete,
 		Description:   "Manages Illumio Managed Workload",
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
 			"href": {
@@ -500,7 +500,7 @@ func resourceIllumioManagedWorkload() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "CAPS for Workload",
+				Description: "User permissions for the object",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"external_data_set": {
@@ -578,7 +578,7 @@ func resourceIllumioManagedWorkloadUpdate(ctx context.Context, d *schema.Resourc
 	illumioClient := pConfig.IllumioClient
 
 	var diags diag.Diagnostics
-	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
 	var workload = &models.Workload{

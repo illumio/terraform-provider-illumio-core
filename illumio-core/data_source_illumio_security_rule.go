@@ -9,89 +9,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-{
-  "href": "string",
-  "enabled": true,
-  "description": "string",
-  "external_data_set": null,
-  "external_data_reference": null,
-  "ingress_services": [
-    {
-      "href": "string"
-    }
-  ],
-  "resolve_labels_as": {
-    "providers": [
-      "workloads"
-    ],
-    "consumers": [
-      "workloads"
-    ]
-  },
-  "sec_connect": true,
-  "stateless": true,
-  "machine_auth": true,
-  "providers": [
-    {
-      "actors": "ams",
-      "label": {
-        "href": "string"
-      },
-      "label_group": {
-        "href": "string"
-      },
-      "workload": {
-        "href": "string"
-      },
-      "virtual_service": {
-        "href": "string"
-      },
-      "virtual_server": {
-        "href": "string"
-      },
-      "ip_list": {
-        "href": "string"
-      }
-    }
-  ],
-  "consumers": [
-    {
-      "actors": "ams",
-      "label": {
-        "href": "string"
-      },
-      "label_group": {
-        "href": "string"
-      },
-      "workload": {
-        "href": "string"
-      },
-      "virtual_service": {
-        "href": "string"
-      },
-      "ip_list": {
-        "href": "string"
-      }
-    }
-  ],
-  "unscoped_consumers": true,
-  "update_type": "string"
-}
-*/
-
 func datasourceIllumioSecurityRule() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioSecurityRuleRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Security Rule",
 		Schema:        securityRuleDatasourceSchema(true),
 	}
 }
 
 func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
-
 	m := map[string]*schema.Schema{
+		"rule_set_href": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "URI of the containing Rule Set",
+		},
 		"enabled": {
 			Type:        schema.TypeBool,
 			Computed:    true,
@@ -124,17 +57,17 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 						Description: "URI of service",
 					},
 					"proto": {
-						Type:        schema.TypeInt,
+						Type:        schema.TypeString,
 						Computed:    true,
 						Description: "Protocol number",
 					},
 					"port": {
-						Type:        schema.TypeInt,
+						Type:        schema.TypeString,
 						Computed:    true,
 						Description: "Port number used with protocol. Also, the starting port when specifying a range",
 					},
 					"to_port": {
-						Type:        schema.TypeInt,
+						Type:        schema.TypeString,
 						Computed:    true,
 						Description: "Upper end of port range",
 					},
@@ -182,7 +115,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 			Description: "Determines whether machine authentication is enabled",
 		},
 		"providers": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Computed:    true,
 			Description: "providers for Security Rule",
 			Elem: &schema.Resource{
@@ -190,49 +123,90 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 					"actors": {
 						Type:        schema.TypeString,
 						Computed:    true,
-						Description: "actors for illumio_provider",
+						Description: "All workloads provider filter",
+					},
+					"exclusion": {
+						Type:        schema.TypeBool,
+						Computed:    true,
+						Description: "Boolean to specify whether or not the actor is an exclusion - only for labels and label groups. Requires PCE v22.5+",
 					},
 					"label": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Label",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Label provider filter",
+						Elem:        labelOptionalKeyValue(false),
 					},
 					"label_group": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Label Group",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Label Group provider filter",
+						Elem:        hrefSchemaComputed("Label Group", isLabelGroupHref),
 					},
 					"workload": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Workload",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Workload provider filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload URI",
+								},
+								"name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload name",
+								},
+								"hostname": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload hostname",
+								},
+								"deleted": {
+									Type:        schema.TypeBool,
+									Computed:    true,
+									Description: "Whether the workload has been deleted in the PCE",
+								},
+							},
+						},
 					},
 					"virtual_service": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Virtual Service",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Virtual Service provider filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Virtual Service URI",
+								},
+								"name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Virtual Service name",
+								},
+							},
+						},
 					},
 					"virtual_server": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Virtual Server",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Virtual Server provider filter",
+						Elem:        hrefSchemaComputed("Virtual Server", isVirtualServiceHref),
 					},
 					"ip_list": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of IP List",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "IP List provider filter",
+						Elem:        ipListDataSourceSchema(false),
 					},
 				},
 			},
 		},
 		"consumers": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Computed:    true,
 			Description: "Consumers for Security Rule",
 			Elem: &schema.Resource{
@@ -240,37 +214,65 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 					"actors": {
 						Type:        schema.TypeString,
 						Computed:    true,
-						Description: "actors for consumer",
+						Description: "Workloads consumer filter",
+					},
+					"exclusion": {
+						Type:        schema.TypeBool,
+						Computed:    true,
+						Description: "Boolean to specify whether or not the actor is an exclusion - only for labels and label groups. Requires PCE v22.5+",
 					},
 					"label": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Label",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Label consumer filter",
+						Elem:        labelOptionalKeyValue(false),
 					},
 					"label_group": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Label Group",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Label Group consumer filter",
+						Elem:        hrefSchemaComputed("Label Group", isLabelGroupHref),
 					},
 					"workload": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Workload",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Workload consumer filter",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"href": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload URI",
+								},
+								"name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload name",
+								},
+								"hostname": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Workload hostname",
+								},
+								"deleted": {
+									Type:        schema.TypeBool,
+									Computed:    true,
+									Description: "Whether the workload has been deleted in the PCE",
+								},
+							},
+						},
 					},
 					"virtual_service": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of Virtual Service",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Virtual Service consumer filter",
+						Elem:        hrefSchemaComputed("Virtual Service", isVirtualServiceHref),
 					},
 					"ip_list": {
-						Type:        schema.TypeMap,
+						Type:        schema.TypeSet,
 						Computed:    true,
-						Description: "Href of IP List",
-						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "IP List consumer filter",
+						Elem:        ipListDataSourceSchema(false),
 					},
 				},
 			},
@@ -342,12 +344,73 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 	return m
 }
 
+func labelOptionalKeyValue(hrefRequired bool) *schema.Resource {
+	s := map[string]*schema.Schema{
+		"key": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label key",
+		},
+		"value": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label value",
+		},
+	}
+
+	hrefBlock := schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Label URI",
+	}
+
+	if hrefRequired {
+		hrefBlock.Required = true
+	} else {
+		hrefBlock.Computed = true
+	}
+
+	s["href"] = &hrefBlock
+
+	return &schema.Resource{Schema: s}
+}
+
+func labelGroupOptionalKeyValue(hrefRequired bool) *schema.Resource {
+	s := map[string]*schema.Schema{
+		"key": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label Group key",
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Label Group name",
+		},
+	}
+
+	hrefBlock := schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Label Group URI",
+	}
+
+	if hrefRequired {
+		hrefBlock.Required = true
+	} else {
+		hrefBlock.Computed = true
+	}
+
+	s["href"] = &hrefBlock
+
+	return &schema.Resource{Schema: s}
+}
+
 func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
 	href := d.Get("href").(string)
+	d.Set("rule_set_href", getParentHref(href))
 
 	_, data, err := illumioClient.Get(href, nil)
 	if err != nil {
@@ -396,24 +459,15 @@ func datasourceIllumioSecurityRuleRead(ctx context.Context, d *schema.ResourceDa
 
 	isKey := "ingress_services"
 	if data.Exists(isKey) {
-		isKeys := []string{
-			"href",
-			"proto",
-			"port",
-			"to_port",
+		d.Set(isKey, extractSecurityRuleIngressService(data.S(isKey)))
+	} else {
+		d.Set(isKey, nil)
+	}
+
+	for _, key := range []string{"providers", "consumers"} {
+		if data.Exists(key) {
+			d.Set(key, extractRuleActors(data.S(key)))
 		}
-
-		d.Set(isKey, extractMapArray(data.S(isKey), isKeys))
-	}
-
-	providersKey := "providers"
-	if data.Exists(providersKey) {
-		d.Set(providersKey, extractDatasourceActors(data.S(providersKey)))
-	}
-
-	consumerKey := "consumers"
-	if data.Exists(consumerKey) {
-		d.Set(consumerKey, extractDatasourceActors(data.S(consumerKey)))
 	}
 
 	return diagnostics

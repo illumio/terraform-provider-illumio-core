@@ -10,153 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Sample
-/*
-[
-	{
-		"href": "string",
-		"created_at": "2021-03-02T02:37:59Z",
-		"updated_at": "2021-03-02T02:37:59Z",
-		"deleted_at": "2021-03-02T02:37:59Z",
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		},
-		"deleted_by": {
-			"href": "string"
-		},
-		"update_type": "string",
-		"name": "string",
-		"description": "string",
-		"external_data_set": null,
-		"external_data_reference": null,
-		"enabled": true,
-		"scopes": [
-			[
-			{
-				"label": {
-				"href": "string"
-				},
-				"label_group": {
-				"href": "string"
-				}
-			}
-			]
-		],
-		"rules": [
-			{
-			"href": "string",
-			"enabled": true,
-			"description": "string",
-			"external_data_set": null,
-			"external_data_reference": null,
-			"ingress_services": [
-				{
-				"href": "string"
-				}
-			],
-			"resolve_labels_as": {
-				"providers": [
-				"workloads"
-				],
-				"consumers": [
-				"workloads"
-				]
-			},
-			"sec_connect": true,
-			"stateless": true,
-			"machine_auth": true,
-			"providers": [
-				{
-				"actors": "ams",
-				"label": {
-					"href": "string"
-				},
-				"label_group": {
-					"href": "string"
-				},
-				"workload": {
-					"href": "string"
-				},
-				"virtual_service": {
-					"href": "string"
-				},
-				"virtual_server": {
-					"href": "string"
-				},
-				"ip_list": {
-					"href": "string"
-				}
-				}
-			],
-			"consumers": [
-				{
-				"actors": "ams",
-				"label": {
-					"href": "string"
-				},
-				"label_group": {
-					"href": "string"
-				},
-				"workload": {
-					"href": "string"
-				},
-				"virtual_service": {
-					"href": "string"
-				},
-				"ip_list": {
-					"href": "string"
-				}
-				}
-			],
-			"consuming_security_principals": [
-				{
-				"href": "string"
-				}
-			],
-			"unscoped_consumers": true,
-			"update_type": "string"
-			}
-		],
-		"ip_tables_rules": [
-			{
-			"href": "string",
-			"enabled": true,
-			"description": "string",
-			"statements": [
-				{
-				"table_name": "nat",
-				"chain_name": "PREROUTING",
-				"parameters": "string"
-				}
-			],
-			"actors": [
-				{
-				"actors": "string",
-				"label": {
-					"href": "string"
-				},
-				"label_group": {
-					"href": "string"
-				},
-				"workload": {
-					"href": "string"
-				}
-				}
-			],
-			"ip_version": "4"
-			}
-		]
-	}
-}
-*/
-
 func datasourceIllumioRuleSets() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioRuleSetsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Rulesets",
 
 		Schema: map[string]*schema.Schema{
@@ -542,12 +399,12 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 
 				providersKey := "providers"
 				if rule.Exists(providersKey) {
-					rl[providersKey] = extractDatasourceActors(rule.S(providersKey))
+					rl[providersKey] = extractRuleActors(rule.S(providersKey))
 				}
 
 				consumerKey := "consumers"
 				if rule.Exists(consumerKey) {
-					rl[consumerKey] = extractDatasourceActors(rule.S(consumerKey))
+					rl[consumerKey] = extractRuleActors(rule.S(consumerKey))
 				}
 
 				rls = append(rls, rl)
@@ -602,7 +459,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 				}
 
 				if iptRule.Exists(actorsKey) {
-					iptr[actorsKey] = extractDatasourceActors(iptRule.S(actorsKey))
+					iptr[actorsKey] = extractRuleActors(iptRule.S(actorsKey))
 				}
 
 				iptrs = append(iptrs, iptr)

@@ -25,7 +25,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 		ReadContext:   resourceIllumioEnforcementBoundaryRead,
 		UpdateContext: resourceIllumioEnforcementBoundaryUpdate,
 		DeleteContext: resourceIllumioEnforcementBoundaryDelete,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Enforcement Boundary",
 
 		Schema: map[string]*schema.Schema{
@@ -187,7 +187,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "CAPS for Enforcement Boundary",
+				Description: "User permissions for the object",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 		},
@@ -294,7 +294,7 @@ func expandIllumioEnforcementBoundaryConsumers(consumers []interface{}) ([]*mode
 			IPList:     getHrefObj(p["ip_list"]),
 		}
 
-		if !con.HasOneActor() {
+		if !models.HasOneActor(con) {
 			return nil, diag.Errorf("[illumio-core_enforcement_boundary] Consumer block can have only one rule actor")
 		}
 		cons = append(cons, con)
@@ -314,7 +314,7 @@ func expandIllumioEnforcementBoundaryProviders(providers []interface{}) ([]*mode
 			LabelGroup: getHrefObj(p["label_group"]),
 			IPList:     getHrefObj(p["ip_list"]),
 		}
-		if !prov.HasOneActor() {
+		if !models.HasOneActor(prov) {
 			return nil, diag.Errorf("[illumio-core_enforcement_boundary] Provider block can only have one rule actor")
 		}
 

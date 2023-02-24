@@ -1,0 +1,149 @@
+---
+page_title: "Provider: Illumio Core"
+sidebar_current: "docs-illumio-core-index"
+description: |-
+  The Illumio Core provider is used to interact with and manage resources in the Illumio Policy Compute Engine (PCE).
+---
+
+# {{ .ProviderShortName | upper }} Provider
+
+The Illumio Terraform provider can be used to manage resources and policy objects on the Illumio Policy Compute Engine (PCE). Users can represent their infrastructure and policy as code and manage the PCE state using Terraform. The resulting configuration can be leveraged in a broader security automation pipeline to manage network policy in a flexible, consistent, and reliable way. At a minimum, the PCE URL and API key credentials must be provided to connect the provider to the PCE.
+
+## Provider Configuration
+
+To connect to the PCE, the provider must be configured at minimum with the `pce_host` URL and an `api_username` and `api_secret` for authentication.
+
+{{ tffile "examples/provider/provider.tf" }}
+
+Some attributes can also be specified using environment variables. Refer to the [schema](#schema) for details.
+
+Proxy, TLS, and HTTP timeout configuration for the PCE connection can be specified as necessary:
+
+{{ tffile "examples/provider/provider_with_proxy.tf" }}
+
+## Example Usage
+
+The following HCL (try it out by copying it to a `main.tf` file locally!) sets up an unmanaged workload in the PCE:
+
+{{ tffile "examples/provider/provider_unmanaged_workload.tf" }}
+
+After copying the HCL to a local `.tf` file, you can run it with
+
+```sh
+$ terraform init
+$ terraform plan -out example-plan
+# Answer the prompts to configure the connection to your PCE
+var.pce_api_key
+  Illumio PCE API key username
+
+  Enter a value: api-xxx
+...
+$ terraform apply example-plan
+```
+
+Want to see more detailed examples? Check out the [GitHub repository](https://github.com/illumio/terraform-provider-illumio-core/tree/main/examples) for usage examples for each resource, as well as more detailed end-to-end policy workflows.
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Limitations
+
+### APIs
+
+Not all PCE APIs are implemented as provider resources/data sources.
+
+Some API schema may differ from the associated resource/data source schema.
+
+### Provisioning
+
+Currently, terraform does not support post-processing of resources. As such, in order to accommodate the draft versioning of policy objects in the PCE, a separate binary is provided to provision changes made by Terraform actions as a batch.
+
+-> The provisioning binary is provided with each [release](https://github.com/illumio/terraform-provider-illumio-core/releases). If there are issues with the provisioning binary, file an issue on the [provider GitHub repository](https://github.com/illumio/terraform-provider-illumio-core/issues) or reach out directly to the [Illumio App Integrations team](mailto:app-integrations@illumio.com).
+
+To build from source, clone the provider repo and build the `provision` binary:
+
+```sh
+$ git clone https://github.com/illumio/terraform-provider-illumio-core
+$ cd terraform-provider-illumio-core/cmd/provision
+$ go build -o provision  # provision.exe for windows
+```
+
+Move the `provision` binary to a directory in your PATH or your Terraform working directory.
+
+To use the provision command, the following environment variables must be set: `ILLUMIO_API_KEY_SECRET`, `ILLUMIO_API_KEY_USERNAME`, `ILLUMIO_PCE_HOST`, and optionally `ILLUMIO_PCE_ORG_ID` if using an organization other than the default (1).
+
+The `provision` command can now be run after a Terraform operation to move created and updated policy objects from `draft` to `active` state:
+
+```bash
+$ terraform apply && provision
+```
+
+### Managing Object Dependencies
+
+Many objects in the PCE depend on or are referenced by other objects. These dependencies, coupled with the current approach to provisioning, can lead to situations with hanging objects when running apply or destory operations.
+
+There are two approaches if you want to destroy an object referenced by a versioned resource. You can either unlink or delete the object.
+
+For example, consider the following HCL defining a Label `env_dev` referenced by a Label Group `env_preprod`:
+
+```hcl
+resource "illumio-core_label" "env_dev" {
+  key     = "env"
+  value   = "E-DEV"
+}
+
+resource "illumio-core_label_group" "env_preprod" {
+  key           = "env"
+  name          = "E-LG-PREPROD"
+  description   = "Label group for pre-production environments"
+
+  labels {
+    href = illumio-core_label.env_dev.href
+  }
+}
+```
+
+The dependency here is explicitly defined; the `env_preprod` Label Group must be removed in order to remove the `env_dev` Label. Let's look at unlinking the object first:
+
+```hcl
+resource "illumio-core_label" "env_dev" {
+  key     = "env"
+  value   = "E-DEV"
+}
+
+resource "illumio-core_label_group" "env_preprod" {
+  key           = "env"
+  name          = "E-LG-PREPROD"
+  description   = "Label group for pre-production environments"
+}
+```
+
+Updating the Label Group will now remove the link between the two objects. Once we run `terraform apply` and provision this change, the dependency no longer exists and the `env_dev` label can be removed as normal.
+
+```hcl
+resource "illumio-core_label_group" "env_lg" {
+  key           = "env"
+  name          = "Dev Group"
+  description   = "Label group for dev environments"
+}
+```
+
+Now we can run `terraform apply` again to remove the `env_dev` Label object.
+
+If we want to delete both objects, the same example can be removed with two calls to `terraform destroy`:
+
+```sh
+$ terraform destroy
+# The first call to destroy will stage the deletion of
+# the Label Group in draft mode. The change must then
+# be provisioned to remove it completely.
+$ provision
+# Now, another call to `terraform destroy` will remove the
+# Label object as well.
+$ terraform destroy
+```
+
+Some examples of objects with dependent relationships include, but are not limited to
+
+- Labels within Label Groups
+- Labels and Label Groups defined in a Rule Set scope
+- Services referenced by a Virtual Service, Rule, or Enforcement Boundary

@@ -9,14 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-
- */
-
 func datasourceIllumioServiceBinding() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioServiceBindingRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Service Binding",
 
 		Schema: map[string]*schema.Schema{
@@ -35,15 +31,21 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"virtual_service": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Virtual service href",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"href": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Workload URI",
+						},
+					},
 				},
 			},
 			"workload": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Workload Object for Service Bindings",
 				Elem: &schema.Resource{
@@ -72,15 +74,21 @@ func datasourceIllumioServiceBinding() *schema.Resource {
 				},
 			},
 			"container_workload": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Container Workload href",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"href": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Workload URI",
+						},
+					},
 				},
 			},
 			"port_overrides": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Port Overrides for Service Bindings",
 				Elem: &schema.Resource{
@@ -139,7 +147,6 @@ func datasourceIllumioServiceBindingRead(ctx context.Context, d *schema.Resource
 	for _, key := range []string{
 		"href",
 		"bound_service",
-		"virtual_service",
 		"external_data_set",
 		"external_data_reference",
 	} {
@@ -150,29 +157,39 @@ func datasourceIllumioServiceBindingRead(ctx context.Context, d *schema.Resource
 		}
 	}
 
-	if data.Exists("container_workload") {
-		d.Set("container_workload", map[string]string{"href": data.S("container_workload").S("href").Data().(string)})
+	key := "virtual_service"
+	if data.Exists(key) {
+		d.Set(key, []interface{}{extractMap(data.S(key), []string{"href"})})
 	} else {
-		d.Set("container_workload", nil)
+		d.Set(key, nil)
 	}
 
-	if data.Exists("port_overrides") {
-		poS := data.S("port_overrides")
+	key = "container_workload"
+	if data.Exists(key) {
+		d.Set(key, []interface{}{extractMap(data.S(key), []string{"href"})})
+	} else {
+		d.Set(key, nil)
+	}
+
+	key = "port_overrides"
+	if data.Exists(key) {
+		poS := data.S(key)
 		poI := []map[string]interface{}{}
 
 		for _, po := range poS.Children() {
 			poI = append(poI, extractMap(po, []string{"port", "proto", "new_port", "new_to_port"}))
 		}
 
-		d.Set("port_overrides", poI)
+		d.Set(key, poI)
 	} else {
-		d.Set("port_overrides", nil)
+		d.Set(key, nil)
 	}
 
-	if data.Exists("workload") {
-		d.Set("workload", []interface{}{extractMap(data.S("workload"), []string{"href", "name", "hostname", "deleted"})})
+	key = "workload"
+	if data.Exists(key) {
+		d.Set(key, []interface{}{extractMap(data.S(key), []string{"href", "name", "hostname", "deleted"})})
 	} else {
-		d.Set("workload", nil)
+		d.Set(key, nil)
 	}
 
 	return diagnostics

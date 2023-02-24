@@ -19,7 +19,7 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 		UpdateContext: resourceIllumioOrganizationSettingsUpdate,
 		DeleteContext: resourceIllumioOrganizationSettingsDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Organization Settings",
 
 		Schema: map[string]*schema.Schema{

@@ -9,54 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample of API response
-{
-  "name": "string",
-  "description": null,
-  "key": "string",
-  "labels": [
-    {
-      "href": "string",
-      "key": "string",
-      "value": "string"
-    }
-  ],
-  "sub_groups": [
-    {
-      "href": "string",
-      "name": "string"
-    }
-  ],
-  "usage": {
-    "label_group": true,
-    "ruleset": true,
-    "rule": true,
-    "static_policy_scopes": true,
-    "containers_inherit_host_policy_scopes": true,
-    "blocked_connection_reject_scope": true
-  },
-  "external_data_set": null,
-  "external_data_reference": null,
-  "update_type": null,
-  "created_at": "2021-03-02T02:37:59Z",
-  "updated_at": "2021-03-02T02:37:59Z",
-  "deleted_at": null,
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "deleted_by": {
-    "href": "string"
-  }
-}
-*/
-
 func datasourceIllumioLabelGroup() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioLabelGroupRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Label Group",
 
 		Schema: map[string]*schema.Schema{

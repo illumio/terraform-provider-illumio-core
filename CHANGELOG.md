@@ -1,3 +1,41 @@
+## 1.1.0 (TBD)
+
+BUG FIXES:
+
+* Allow arbitrary string values for label keys to work with label changes introduced in PCE v22.5
+
+**NOTE:** this change, while backwards compatible, removes validation guarantees for older PCE versions. Versions prior to 22.5 still restrict key values to `role`, `app`, `env`, and `loc`.
+
+* Several resources/data sources have been fixed so that import state mirrors the resource schema
+
+NEW FEATURES:
+
+* **New resource:** `label_type`
+
+As of PCE v22.5, new label types can be configured (up to a default hard limit of 20 types). The `illumio-core_label_type` resource has been added to manage these types through the provider.
+
+`illumio-core_label_type` and `illumio-core_label_types` data sources have also been added.
+
+ENHANCEMENTS:
+
+* Broad refactor to simplify object conversions
+
+SCHEMA UPDATES:
+
+* `resource.illumio-core_virtual_service` v2 - The `network_href` attribute has been changed to match the API schema and data source. It is now a nested object with an HREF attribute:
+
+```
+resource "illumio-core_virtual_service" "example" {
+    ...
+
+    network {
+        href = "/orgs/1/networks/..."
+    }
+}
+```
+
+This change was necessary to align the import state with virtual service resource definitions.
+
 ## 1.0.3 (Dec 16, 2022)
 
 BUG FIXES:

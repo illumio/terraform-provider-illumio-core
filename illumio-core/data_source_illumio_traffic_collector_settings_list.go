@@ -10,26 +10,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample API responce
-[
-	{
-		"href": "string",
-		"transmission": "string",
-		"target": {
-			"dst_port": 0,
-			"proto": 0,
-			"dst_ip": "string"
-		},
-		"action": "string"
-	}
-]
-*/
-
 func datasourceIllumioTrafficCollectorSettingsList() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: datasourceIllumioTrafficCollectorSettingsListRead,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents List of Illumio Traffic Collector Settings ",
 
 		Schema: map[string]*schema.Schema{

@@ -19,7 +19,7 @@ func resourceIllumioVulnerabilities() *schema.Resource {
 		UpdateContext: resourceIllumioVulnerabilitiesUpdate,
 		DeleteContext: resourceIllumioVulnerabilitiesDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Vulnerabilities",
 
 		Schema: map[string]*schema.Schema{

@@ -25,7 +25,7 @@ func resourceIllumioUnmanagedWorkload() *schema.Resource {
 		UpdateContext: resourceIllumioUnmanagedWorkloadUpdate,
 		DeleteContext: resourceIllumioUnmanagedWorkloadDelete,
 		Description:   "Manages Illumio Workload",
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Schema:        unmanagedWorkloadSchema(),
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -187,6 +187,16 @@ func unmanagedWorkloadSchema() map[string]*schema.Schema {
 						Type:        schema.TypeString,
 						Required:    true,
 						Description: "URI of label",
+					},
+					"key": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Workload Label key",
+					},
+					"value": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Workload Label value",
 					},
 				},
 			},
@@ -533,7 +543,7 @@ func unmanagedWorkloadSchema() map[string]*schema.Schema {
 		"caps": {
 			Type:        schema.TypeList,
 			Computed:    true,
-			Description: "CAPS for Workload",
+			Description: "User permissions for the object",
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"external_data_set": {
@@ -636,7 +646,6 @@ func resourceIllumioUnmanagedWorkloadRead(ctx context.Context, d *schema.Resourc
 		"os_id",
 		"os_detail",
 		"online",
-		"labels",
 		"containers_inherit_host_policy",
 		"blocked_connection_action",
 		"ven",
@@ -681,7 +690,11 @@ func resourceIllumioUnmanagedWorkloadRead(ctx context.Context, d *schema.Resourc
 		labelI := []map[string]interface{}{}
 
 		for _, l := range labels.Children() {
-			labelI = append(labelI, extractMap(l, []string{"href"}))
+			labelI = append(labelI, extractMap(l, []string{
+				"href",
+				"key",
+				"value",
+			}))
 		}
 
 		d.Set(key, labelI)
@@ -858,8 +871,7 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 }
 
 func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.Workload {
-	online := d.Get("online").(bool)
-	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List())
 	interfaces := expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
@@ -873,7 +885,7 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 		ExternalDataReference:                 d.Get("external_data_reference").(string),
 		ExternalDataSet:                       d.Get("external_data_set").(string),
 		Hostname:                              d.Get("hostname").(string),
-		Online:                                &online,
+		Online:                                PtrTo(d.Get("online").(bool)),
 		OsDetail:                              d.Get("os_detail").(string),
 		OsID:                                  d.Get("os_id").(string),
 		PublicIP:                              d.Get("public_ip").(string),
@@ -885,11 +897,11 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 	}
 }
 
-func expandIllumioWorkloadInterface(arr []interface{}) []models.WorkloadInterface {
-	wi := make([]models.WorkloadInterface, 0, len(arr))
+func expandIllumioWorkloadInterface(arr []interface{}) []*models.WorkloadInterface {
+	wi := make([]*models.WorkloadInterface, 0, len(arr))
 	for _, e := range arr {
 		elem := e.(map[string]interface{})
-		wi = append(wi, models.WorkloadInterface{
+		wi = append(wi, &models.WorkloadInterface{
 			Name:                  elem["name"].(string),
 			LinkState:             elem["link_state"].(string),
 			Address:               elem["address"].(string),

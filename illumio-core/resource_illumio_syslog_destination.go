@@ -26,7 +26,7 @@ func resourceIllumioSyslogDestination() *schema.Resource {
 		UpdateContext: resourceIllumioSyslogDestinationUpdate,
 		DeleteContext: resourceIllumioSyslogDestinationDelete,
 
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Manages Illumio Syslog Destination",
 
 		Schema: map[string]*schema.Schema{

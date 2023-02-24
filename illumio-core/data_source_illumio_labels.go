@@ -11,31 +11,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-/* Sample of API response
-[
-	{
-		"href": "string",
-		"deleted": true,
-		"key": "string",
-		"value": "string",
-		"external_data_set": null,
-		"external_data_reference": null,
-		"created_at": "2020-08-19T21:34:26Z",
-		"updated_at": "2020-08-19T21:34:26Z",
-		"created_by": {
-			"href": "string"
-		},
-		"updated_by": {
-			"href": "string"
-		}
-	}
-]
-*/
-
 func datasourceIllumioLabels() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   dataSourceIllumioLabelsRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Labels",
 
 		Schema: map[string]*schema.Schema{
@@ -61,9 +40,9 @@ func datasourceIllumioLabels() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ValidateDiagFunc: validation.ToDiagFunc(
-					validation.StringInSlice(validLabelKeys, false),
+					validation.StringLenBetween(1, LABEL_KEY_LENGTH_MAX),
 				),
-				Description: `Key in key-value pair. Allowed values for key are "role", "loc", "app" and "env"`,
+				Description: `Key in key-value pair. The value must be a string between 1 and 64 characters long`,
 			},
 			"max_results": {
 				Type:             schema.TypeString,

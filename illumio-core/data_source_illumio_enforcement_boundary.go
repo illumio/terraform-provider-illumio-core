@@ -10,63 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/* Sample
-{
-  "href": "string",
-  "name": "string",
-  "providers": [
-    {
-      "actors": "ams",
-      "label": {
-        "href": "string"
-      },
-      "label_group": {
-        "href": "string"
-      },
-      "ip_list": {
-        "href": "string"
-      }
-    }
-  ],
-  "consumers": [
-    {
-      "actors": "ams",
-      "label": {
-        "href": "string"
-      },
-      "label_group": {
-        "href": "string"
-      },
-      "ip_list": {
-        "href": "string"
-      }
-    }
-  ],
-  "ingress_services": [
-    {
-      "href": "string"
-    }
-  ],
-  "created_at": "1970-01-01T00:00:00.000Z",
-  "updated_at": "1970-01-01T00:00:00.000Z",
-  "deleted_at": "1970-01-01T00:00:00.000Z",
-  "created_by": {
-    "href": "string"
-  },
-  "updated_by": {
-    "href": "string"
-  },
-  "deleted_by": {
-    "href": "string"
-  },
-  "update_type": "string"
-}
-*/
-
 func datasourceIllumioEnforcementBoundary() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   datasourceIllumioEnforcementBoundaryRead,
-		SchemaVersion: version,
+		SchemaVersion: 1,
 		Description:   "Represents Illumio Enforcement Boundary",
 
 		Schema: map[string]*schema.Schema{
@@ -216,7 +163,7 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 			"caps": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "CAPS for Enforcement Boundary",
+				Description: "User permissions for the object",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 		},

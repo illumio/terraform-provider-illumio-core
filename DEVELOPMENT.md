@@ -94,7 +94,13 @@ To analyze code coverage, we can use the standard go tool [cover](https://golang
 To check coverage per function - `go tool cover -func=cover.out`
 To check code lines covered - `go tool cover -html=cover.out`
 
-*Note: Current code coverage artifacts available at [here](.code-coverage/)*
+> **Note:** Current code coverage artifacts are available [here](.code-coverage/)
+
+To run a specific test, you can use the `TEST` and `TESTARGS` vars in the Makefile, for example:
+
+```sh
+TEST=./illumio-core/ TESTARGS="-run TestAccIllumioSR_Read" make testacc
+```
 
 ## Debugging and Troubleshooting  
 
@@ -105,9 +111,10 @@ For more details, see the [Terraform Debugging](https://www.terraform.io/docs/in
 
 ## Documentation  
 
-Once done with changes/development of any resource/datasource, document the changes.  
+Once development of any resource/datasource is completed, make sure to generate its documentation page.  
 
-- Update parameter/description as per the resource changes.
-- If a resource is designed to behave in a specific way that might be strange to the end-user, that should be documented.
-- Add an example usage section and add different examples about how to use it.
-- Document any environment variable on which resource/datasource is dependent in the example usage section or in the argument description itself.
+Documentation is generated using [`tfplugindocs`](https://github.com/hashicorp/terraform-plugin-docs). The `/docs`, `/examples` and `/templates` directories follow the layout expected by the generator. New resources and data sources should have at minimum a working example template that is also reflected in their docs pages.  
+
+Specific limitations such as PCE version dependencies or custom import should be documented in a custom template under the correct `/templates` sub-directory.  
+
+> **Note:** When generating documentation, some nested objects will not have their descriptions reflected in the documentation and need to be updated manually (see [terraform-plugin-docs #28](https://github.com/hashicorp/terraform-plugin-docs/issues/28)).

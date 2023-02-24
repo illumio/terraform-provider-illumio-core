@@ -142,7 +142,7 @@ Read-Only:
 - `sec_connect` (Boolean) Determines whether a secure connection is established
 - `stateless` (Boolean) Determines whether packet filtering is stateless for the rule
 - `unscoped_consumers` (Boolean) Set the scope for rule consumers to All
-- `use_workload_subnets` (Set of String) Whether to use workload subnets instead of IP addresses for providers/consumers. Allowed values are "providers" and/or "consumers"
+- `use_workload_subnets` (Set of String) Whether to use workload subnets instead of IP addresses for providers/consumers
 - `update_type` (String) Type of update
 - `updated_at` (String) Timestamp when this security rule was last updated
 - `updated_by` (Map of String) User who last updated this security rule

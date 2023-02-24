@@ -285,7 +285,7 @@ func securityRuleDatasourceSchema(hrefRequired bool) map[string]*schema.Schema {
 		"use_workload_subnets": {
 			Type:        schema.TypeSet,
 			Computed:    true,
-			Description: `Whether to use workload subnets instead of IP addresses for providers/consumers. Allowed values are "providers" and/or "consumers"`,
+			Description: "Whether to use workload subnets instead of IP addresses for providers/consumers",
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},

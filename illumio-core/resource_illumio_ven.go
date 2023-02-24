@@ -482,9 +482,9 @@ func resourceIllumioVEN() *schema.Resource {
 func resourceIllumioVENCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	return diag.Diagnostics{
 		diag.Diagnostic{
-			Severity: diag.Warning,
+			Severity: diag.Error,
 			Detail:   "[illumio-core_ven] Cannot use create operation.",
-			Summary:  "Please use terraform import...",
+			Summary:  "Please use terraform import.",
 		},
 	}
 }
@@ -535,7 +535,7 @@ func resourceIllumioVENDelete(ctx context.Context, d *schema.ResourceData, m int
 	return diag.Diagnostics{
 		diag.Diagnostic{
 			Severity: diag.Warning,
-			Summary:  "[illumio-core_ven] Ignoring Delete Operation...",
+			Summary:  "[illumio-core_ven] Ignoring Delete Operation.",
 		},
 	}
 }

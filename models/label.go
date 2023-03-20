@@ -6,8 +6,8 @@ package models
 type Label struct {
 	Key                   *string `json:"key,omitempty"`
 	Value                 *string `json:"value,omitempty"`
-	ExternalDataSet       *string `json:"external_data_set,omitempty"`
-	ExternalDataReference *string `json:"external_data_reference,omitempty"`
+	ExternalDataSet       string  `json:"external_data_set,omitempty"`
+	ExternalDataReference string  `json:"external_data_reference,omitempty"`
 }
 
 type LabelOptionalKeyValue struct {

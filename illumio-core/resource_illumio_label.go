@@ -105,8 +105,8 @@ func resourceIllumioLabelCreate(ctx context.Context, d *schema.ResourceData, m i
 	label := &models.Label{
 		Key:                   PtrTo(d.Get("key").(string)),
 		Value:                 PtrTo(d.Get("value").(string)),
-		ExternalDataSet:       PtrTo(d.Get("external_data_set").(string)),
-		ExternalDataReference: PtrTo(d.Get("external_data_reference").(string)),
+		ExternalDataSet:       d.Get("external_data_set").(string),
+		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/labels", orgID), label)
 	if err != nil {
@@ -158,8 +158,8 @@ func resourceIllumioLabelUpdate(ctx context.Context, d *schema.ResourceData, m i
 
 	label := &models.Label{
 		Value:                 PtrTo(d.Get("value").(string)),
-		ExternalDataSet:       PtrTo(d.Get("external_data_set").(string)),
-		ExternalDataReference: PtrTo(d.Get("external_data_reference").(string)),
+		ExternalDataSet:       d.Get("external_data_set").(string),
+		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
 
 	_, err := illumioClient.Update(d.Id(), label)

@@ -3,24 +3,24 @@
 package models
 
 type IPRange struct {
-	Description string `json:"description,omitempty"`
-	FromIP      string `json:"from_ip"`
-	ToIP        string `json:"to_ip,omitempty"`
-	Exclusion   *bool  `json:"exclusion,omitempty"`
+	Description *string `json:"description,omitempty"`
+	FromIP      *string `json:"from_ip"`
+	ToIP        *string `json:"to_ip,omitempty"`
+	Exclusion   *bool   `json:"exclusion,omitempty"`
 }
 
 type FQDN struct {
-	FQDN        string `json:"fqdn"`
-	Description string `json:"description,omitempty"`
+	FQDN        *string `json:"fqdn"`
+	Description *string `json:"description,omitempty"`
 }
 
 type IPList struct {
-	Name                  string    `json:"name"`
-	Description           string    `json:"description,omitempty"`
-	ExternalDataSet       string    `json:"external_data_set,omitempty"`
-	ExternalDataReference string    `json:"external_data_reference,omitempty"`
-	IPRanges              []IPRange `json:"ip_ranges"`
-	FQDNs                 []FQDN    `json:"fqdns"`
+	Name                  *string    `json:"name,omitempty"`
+	Description           *string    `json:"description,omitempty"`
+	IPRanges              *[]IPRange `json:"ip_ranges,omitempty"`
+	FQDNs                 *[]FQDN    `json:"fqdns,omitempty"`
+	ExternalDataSet       string     `json:"external_data_set,omitempty"`
+	ExternalDataReference string     `json:"external_data_reference,omitempty"`
 }
 
 // ToMap - Returns map for IP List model

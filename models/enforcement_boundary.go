@@ -10,10 +10,11 @@ type EnforcementBoundaryProviderConsumer struct {
 }
 
 type EnforcementBoundary struct {
-	Name            string                                 `json:"name,omitempty"`
-	Providers       []*EnforcementBoundaryProviderConsumer `json:"providers"`
-	Consumers       []*EnforcementBoundaryProviderConsumer `json:"consumers"`
-	IngressServices []map[string]interface{}               `json:"ingress_services"`
+	Name            *string                                 `json:"name,omitempty"`
+	Enabled         *bool                                   `json:"enabled,omitempty"`
+	Providers       *[]*EnforcementBoundaryProviderConsumer `json:"providers,omitempty"`
+	Consumers       *[]*EnforcementBoundaryProviderConsumer `json:"consumers,omitempty"`
+	IngressServices *[]map[string]interface{}               `json:"ingress_services,omitempty"`
 }
 
 func (eb *EnforcementBoundary) ToMap() (map[string]interface{}, error) {

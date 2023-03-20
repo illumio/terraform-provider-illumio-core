@@ -6,6 +6,11 @@ import (
 	"encoding/json"
 )
 
+// Model Interface
+type Model interface {
+	ToMap() (map[string]interface{}, error)
+}
+
 // Href - Represents href object for Illumio Resource
 type Href struct {
 	Href string `json:"href,omitempty"`

@@ -547,8 +547,8 @@ func expandLabelOptionalKeyValue(i interface{}) *models.LabelOptionalKeyValue {
 	if label := mapFromUnknownType(i); label != nil {
 		return &models.LabelOptionalKeyValue{
 			Href:  label["href"].(string),
-			Key:   label["key"].(string),
-			Value: label["value"].(string),
+			Key:   PtrTo(label["key"].(string)),
+			Value: PtrTo(label["value"].(string)),
 		}
 	}
 
@@ -559,8 +559,8 @@ func expandLabelGroupOptionalKeyValue(i interface{}) *models.LabelGroupOptionalK
 	if labelGroup := mapFromUnknownType(i); labelGroup != nil {
 		return &models.LabelGroupOptionalKeyValue{
 			Href: labelGroup["href"].(string),
-			Key:  labelGroup["key"].(string),
-			Name: labelGroup["name"].(string),
+			Key:  PtrTo(labelGroup["key"].(string)),
+			Name: PtrTo(labelGroup["name"].(string)),
 		}
 	}
 

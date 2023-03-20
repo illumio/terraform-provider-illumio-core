@@ -4,19 +4,19 @@ package models
 
 // LabelGroup represents label group resource
 type LabelGroup struct {
-	Name                  string `json:"name"`
-	Description           string `json:"description,omitempty"`
-	Key                   string `json:"key"`
-	Labels                []Href `json:"labels"`
-	SubGroups             []Href `json:"sub_groups"`
-	ExternalDataSet       string `json:"external_data_set,omitempty"`
-	ExternalDataReference string `json:"external_data_reference,omitempty"`
+	Name                  *string `json:"name,omitempty"`
+	Description           *string `json:"description,omitempty"`
+	Key                   *string `json:"key,omitempty"`
+	Labels                *[]Href `json:"labels,omitempty"`
+	SubGroups             *[]Href `json:"sub_groups,omitempty"`
+	ExternalDataSet       string  `json:"external_data_set,omitempty"`
+	ExternalDataReference string  `json:"external_data_reference,omitempty"`
 }
 
 type LabelGroupOptionalKeyValue struct {
-	Href string `json:"href"`
-	Key  string `json:"key,omitempty"`
-	Name string `json:"name,omitempty"`
+	Href string  `json:"href"`
+	Key  *string `json:"key,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // ToMap - Returns map for LabelGroup model

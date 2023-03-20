@@ -591,8 +591,8 @@ func resourceIllumioManagedWorkloadUpdate(ctx context.Context, d *schema.Resourc
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ServicePrincipalName:  d.Get("service_principal_name").(string),
 		ServiceProvider:       d.Get("service_provider").(string),
-		Labels:                labels,
-		IgnoredInterfaceNames: ignoredInterfaceNames,
+		Labels:                &labels,
+		IgnoredInterfaceNames: &ignoredInterfaceNames,
 	}
 
 	if diags.HasError() {

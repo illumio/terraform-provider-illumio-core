@@ -891,9 +891,9 @@ func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.W
 		PublicIP:                              d.Get("public_ip").(string),
 		ServicePrincipalName:                  d.Get("service_principal_name").(string),
 		ServiceProvider:                       d.Get("service_provider").(string),
-		Labels:                                labels,
-		Interfaces:                            interfaces,
-		IgnoredInterfaceNames:                 ignoredInterfaceNames,
+		Labels:                                &labels,
+		Interfaces:                            &interfaces,
+		IgnoredInterfaceNames:                 &ignoredInterfaceNames,
 	}
 }
 

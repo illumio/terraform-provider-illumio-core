@@ -432,14 +432,14 @@ func expandIllumioSecurityRule(d *schema.ResourceData) (*models.SecurityRule, *d
 
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
-		Description:           d.Get("description").(string),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		SecConnect:            PtrTo(d.Get("sec_connect").(bool)),
 		Stateless:             PtrTo(d.Get("stateless").(bool)),
 		MachineAuth:           PtrTo(d.Get("machine_auth").(bool)),
 		UnscopedConsumers:     PtrTo(d.Get("unscoped_consumers").(bool)),
-		UseWorkloadSubnets:    useWorkloadSubnets,
+		UseWorkloadSubnets:    &useWorkloadSubnets,
 	}
 
 	if secRule.HasConflicts() {
@@ -759,7 +759,7 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
-		Description:           d.Get("description").(string),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		SecConnect:            PtrTo(d.Get("sec_connect").(bool)),
@@ -770,7 +770,7 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 		IngressServices:       ingServs,
 		Providers:             povs,
 		Consumers:             cons,
-		UseWorkloadSubnets:    useWorkloadSubnets,
+		UseWorkloadSubnets:    &useWorkloadSubnets,
 	}
 
 	if secRule.HasConflicts() {

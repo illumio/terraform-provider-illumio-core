@@ -5,11 +5,15 @@ package illumiocore
 import (
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccResourceIllumioSR_Read(t *testing.T) {
 	resourceName := "illumio-core_security_rule.sr_test"
+
+	ruleSetName := acctest.RandomWithPrefix(prefixSR)
+	labelName := acctest.RandomWithPrefix(prefixSR)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
@@ -17,7 +21,7 @@ func TestAccResourceIllumioSR_Read(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				SkipFunc: skipIfPCEVersionBelow("22.3.0"),
-				Config:   testAccCheckIllumioSRResourceConfig_useWorkloadSubnets(),
+				Config:   testAccCheckIllumioSRResourceConfig_useWorkloadSubnets(ruleSetName, labelName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "use_workload_subnets.#", "2"),
 				),
@@ -26,8 +30,8 @@ func TestAccResourceIllumioSR_Read(t *testing.T) {
 	})
 }
 
-func testAccCheckIllumioSRResourceConfig_useWorkloadSubnets() string {
-	return testAccCheckIllumioSRRuleSet() + `
+func testAccCheckIllumioSRResourceConfig_useWorkloadSubnets(ruleSetName, labelName string) string {
+	return testAccCheckIllumioSRRuleSet(ruleSetName, labelName) + `
 resource "illumio-core_security_rule" "sr_test" {
 	rule_set_href = illumio-core_rule_set.sr_test.href
 	enabled = true

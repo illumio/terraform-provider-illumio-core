@@ -202,7 +202,7 @@ func resourceIllumioContainerClusterWorkloadProfile() *schema.Resource {
 // This requires the fields to be Optional + Computed as the state
 // for one or the other parameter may be set by the PCE. The issue
 // then is that empty Computed fields default to the value of the
-// remote - adding and then removing assign_labels of labels should
+// remote - adding and then removing assign_labels or labels should
 // strip the assigned labels from the profile, but instead defaults
 // to whatever value was set previously.
 //
@@ -226,6 +226,26 @@ func customizeAssignedLabels() schema.CustomizeDiffFunc {
 
 		return nil
 	}
+}
+
+func assignedLabelsRemoved(conf cty.Value, state cty.Value) bool {
+	confMap := conf.AsValueMap()
+
+	if assignLabels, ok := confMap["assign_labels"]; ok {
+		if labels, ok := confMap["labels"]; ok {
+			if len(assignLabels.AsValueSlice()) == 0 && len(labels.AsValueSlice()) == 0 {
+				for _, key := range []string{"assign_labels", "labels"} {
+					if keyState, ok := state.AsValueMap()[key]; ok {
+						if len(keyState.AsValueSlice()) > 0 {
+							return true
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return false
 }
 
 func resourceIllumioContainerClusterWorkloadProfileCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -462,24 +482,4 @@ func resourceIllumioContainerClusterWorkloadProfileDelete(ctx context.Context, d
 
 	d.SetId("")
 	return diagnostics
-}
-
-func assignedLabelsRemoved(conf cty.Value, state cty.Value) bool {
-	confMap := conf.AsValueMap()
-
-	if assignLabels, ok := confMap["assign_labels"]; ok {
-		if labels, ok := confMap["labels"]; ok {
-			if len(assignLabels.AsValueSlice()) == 0 && len(labels.AsValueSlice()) == 0 {
-				for _, key := range []string{"assign_labels", "labels"} {
-					if keyState, ok := state.AsValueMap()[key]; ok {
-						if len(keyState.AsValueSlice()) > 0 {
-							return true
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return false
 }

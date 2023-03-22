@@ -104,7 +104,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				Description: "scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scope block",
+				Description: "Ruleset label scopes. At most 3 blocks of label/label_group can be specified inside each scope block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"exclusion": {
@@ -299,11 +299,11 @@ func expandIllumioRuleSet(d *schema.ResourceData) (*models.RuleSet, *diag.Diagno
 	var diags diag.Diagnostics
 
 	ruleSet := &models.RuleSet{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		Enabled:               d.Get("enabled").(bool),
+		Enabled:               PtrTo(d.Get("enabled").(bool)),
 	}
 
 	scopes, errs := expandIllumioRuleSetScopes(d.Get("scopes").([]interface{}))
@@ -312,7 +312,7 @@ func expandIllumioRuleSet(d *schema.ResourceData) (*models.RuleSet, *diag.Diagno
 
 	ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rules").(*schema.Set).List())
 	diags = append(diags, *errs...)
-	ruleSet.IPTablesRules = ipTableRules
+	ruleSet.IPTablesRules = &ipTableRules
 
 	return ruleSet, &diags
 }
@@ -375,11 +375,11 @@ func expandIllumioRuleSetIPTablesRules(ipTableRules []interface{}) ([]*models.Ru
 		iptr := &models.RuleSetIPTablesRule{}
 
 		if v, ok := i["enabled"]; ok {
-			iptr.Enabled = v.(bool)
+			iptr.Enabled = PtrTo(v.(bool))
 		}
 
 		if v, ok := i["description"]; ok {
-			iptr.Description = v.(string)
+			iptr.Description = PtrTo(v.(string))
 		}
 
 		if v, ok := i["statements"]; ok {
@@ -387,7 +387,7 @@ func expandIllumioRuleSetIPTablesRules(ipTableRules []interface{}) ([]*models.Ru
 			if errs.HasError() {
 				diags = append(diags, *errs...)
 			} else {
-				iptr.Statements = statements
+				iptr.Statements = &statements
 			}
 		}
 
@@ -396,7 +396,7 @@ func expandIllumioRuleSetIPTablesRules(ipTableRules []interface{}) ([]*models.Ru
 			if errs.HasError() {
 				diags = append(diags, *errs...)
 			} else {
-				iptr.Actors = actors
+				iptr.Actors = &actors
 			}
 		}
 
@@ -534,13 +534,12 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 	var diags diag.Diagnostics
 
 	ruleSet := &models.RuleSet{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		Enabled:               d.Get("enabled").(bool),
-		// Rules:                 nil,
-		IPTablesRules: nil,
+		Enabled:               PtrTo(d.Get("enabled").(bool)),
+		IPTablesRules:         nil,
 	}
 
 	scopes, errs := expandIllumioRuleSetScopes(d.Get("scopes").([]interface{}))
@@ -549,7 +548,7 @@ func resourceIllumioRuleSetUpdate(ctx context.Context, d *schema.ResourceData, m
 
 	if d.HasChange("ip_tables_rules") {
 		ipTableRules, errs := expandIllumioRuleSetIPTablesRules(d.Get("ip_tables_rules").(*schema.Set).List())
-		ruleSet.IPTablesRules = ipTableRules
+		ruleSet.IPTablesRules = &ipTableRules
 		diags = append(diags, *errs...)
 	}
 	if diags.HasError() {

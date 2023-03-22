@@ -257,7 +257,7 @@ func resourceIllumioFirewallSettingsDelete(ctx context.Context, d *schema.Resour
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Summary:  "[illumio-core_firewall_settings] Ignoring Delete Operation...",
+		Summary:  "[illumio-core_firewall_settings] Ignoring Delete Operation.",
 	})
 
 	return diags

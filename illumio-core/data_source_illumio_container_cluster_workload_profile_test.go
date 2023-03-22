@@ -16,12 +16,17 @@ func TestAccIllumioCCWP_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_container_cluster_workload_profile.ccwp_test"
 	resourceName := "illumio-core_container_cluster_workload_profile.ccwp_test"
 
+	ccName := acctest.RandomWithPrefix(prefixCCWP)
+	ccwpName := acctest.RandomWithPrefix(prefixCCWP)
+	labelName := acctest.RandomWithPrefix(prefixCCWP)
+	updatedName := acctest.RandomWithPrefix(prefixCCWP)
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioCCWPDataSourceConfig_basic(),
+				Config: testAccCheckIllumioCCWPDataSourceConfig_basic(ccwpName, ccName, labelName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
@@ -34,6 +39,29 @@ func TestAccIllumioCCWP_Read(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccCheckIllumioCCWPResource_updateToLabels(ccwpName, ccName, labelName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "labels.0.key", "role"),
+					resource.TestCheckResourceAttr(resourceName, "labels.0.assignment.0.value", labelName),
+				),
+			},
+			{
+				Config: testAccCheckIllumioCCWPResource_updateNameAndDesc(updatedName, ccName, labelName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", updatedName),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+				),
+			},
+			{
+				Config: testAccCheckIllumioCCWPResource_updateManageStateAndEnforcement(updatedName, ccName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "managed", "false"),
+					resource.TestCheckResourceAttr(resourceName, "enforcement_mode", "idle"),
+					resource.TestCheckResourceAttr(resourceName, "assign_labels.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "labels.#", "0"),
+				),
+			},
+			{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -42,36 +70,120 @@ func TestAccIllumioCCWP_Read(t *testing.T) {
 	})
 }
 
-func testAccCheckIllumioCCWPDataSourceConfig_basic() string {
-	rName1 := acctest.RandomWithPrefix(prefixCCWP)
-	rName2 := acctest.RandomWithPrefix(prefixCCWP)
-	rName3 := acctest.RandomWithPrefix(prefixCCWP)
-
+func ccwpContainerClusterSchema(ccName string) string {
 	return fmt.Sprintf(`
-resource "illumio-core_label" "ccwp_test" {
+resource "illumio-core_container_cluster" "ccwp_test" {
+	name = %[1]q
+	description = "Terraform Container Cluster test"
+}`, ccName)
+}
+
+func ccwpRoleLabelSchema(labelName string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_label" "ccwp_role" {
 	key   = "role"
 	value = %[1]q
+}`, labelName)
 }
 
-resource "illumio-core_container_cluster" "ccwp_test" {
-	name = %[2]q
-	description = "Terraform Container Cluster test"
-}
-
+func testAccCheckIllumioCCWPDataSourceConfig_basic(ccwpName, ccName, labelName string) string {
+	schema := ccwpContainerClusterSchema(ccName) + ccwpRoleLabelSchema(labelName)
+	return schema + fmt.Sprintf(`
 resource "illumio-core_container_cluster_workload_profile" "ccwp_test" {
 	container_cluster_href = illumio-core_container_cluster.ccwp_test.href
-	name = %[3]q
+	name = %[1]q
 	description = "Terraform Container Cluster Workload Profile test"
 	managed = true
 	enforcement_mode = "visibility_only"
 
 	assign_labels {
-		href = illumio-core_label.ccwp_test.href
+		href = illumio-core_label.ccwp_role.href
+	}
+
+	lifecycle {
+		create_before_destroy = true
 	}
 }
 
 data "illumio-core_container_cluster_workload_profile" "ccwp_test" {
 	href = illumio-core_container_cluster_workload_profile.ccwp_test.href
 }
-`, rName1, rName2, rName3)
+`, ccwpName)
+}
+
+func testAccCheckIllumioCCWPResource_updateToLabels(ccwpName, ccName, labelName string) string {
+	appLabelName := acctest.RandomWithPrefix(prefixCCWP)
+
+	schema := ccwpContainerClusterSchema(ccName) + ccwpRoleLabelSchema(labelName)
+	return schema + fmt.Sprintf(`
+resource "illumio-core_label" "ccwp_app" {
+	key   = "app"
+	value = %[1]q
+}
+
+resource "illumio-core_container_cluster_workload_profile" "ccwp_test" {
+	container_cluster_href = illumio-core_container_cluster.ccwp_test.href
+	name = %[2]q
+	description = "Terraform Container Cluster Workload Profile test"
+	managed = true
+	enforcement_mode = "visibility_only"
+
+	labels {
+		key = "role"
+
+		assignment {
+			href = illumio-core_label.ccwp_role.href
+		}
+	}
+
+	labels {
+		key = "app"
+
+		assignment {
+			href = illumio-core_label.ccwp_app.href
+		}
+	}
+
+	lifecycle {
+		create_before_destroy = true
+	}
+}
+`, appLabelName, ccwpName)
+}
+
+func testAccCheckIllumioCCWPResource_updateNameAndDesc(updatedName, ccName, labelName string) string {
+	schema := ccwpContainerClusterSchema(ccName) + ccwpRoleLabelSchema(labelName)
+	return schema + fmt.Sprintf(`
+resource "illumio-core_container_cluster_workload_profile" "ccwp_test" {
+	container_cluster_href = illumio-core_container_cluster.ccwp_test.href
+	name = %[1]q
+	description = ""
+	managed = true
+	enforcement_mode = "visibility_only"
+
+	labels {
+		key = "role"
+
+		assignment {
+			href = illumio-core_label.ccwp_role.href
+		}
+	}
+
+	lifecycle {
+		create_before_destroy = true
+	}
+}
+`, updatedName)
+}
+
+func testAccCheckIllumioCCWPResource_updateManageStateAndEnforcement(updatedName, ccName string) string {
+	return ccwpContainerClusterSchema(ccName) + fmt.Sprintf(`
+resource "illumio-core_container_cluster_workload_profile" "ccwp_test" {
+	container_cluster_href = illumio-core_container_cluster.ccwp_test.href
+	name = %[1]q
+	description = ""
+	managed = false
+	enforcement_mode = "idle"
+}
+`, updatedName)
 }

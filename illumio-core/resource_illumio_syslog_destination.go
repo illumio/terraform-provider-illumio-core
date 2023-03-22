@@ -177,10 +177,9 @@ func resourceIllumioSyslogDestinationCreate(ctx context.Context, d *schema.Resou
 	illumioClient := pConfig.IllumioClient
 	orgID := illumioClient.OrgID
 
-	syslogDest := expandIllumioSyslogdestination(d, &diags)
+	syslogDest := expandIllumioSyslogDestination(d, &diags)
 
-	diags = append(diags, syslogValidation(syslogDest.Type, syslogDest.RemoteSyslog != nil)...)
-
+	diags = append(diags, syslogValidation(*syslogDest.Type, syslogDest.RemoteSyslog != nil)...)
 	if diags.HasError() {
 		return diags
 	}
@@ -194,25 +193,25 @@ func resourceIllumioSyslogDestinationCreate(ctx context.Context, d *schema.Resou
 	return resourceIllumioSyslogDestinationRead(ctx, d, m)
 }
 
-func expandIllumioSyslogdestination(d *schema.ResourceData, diags *diag.Diagnostics) *models.SyslogDestination {
+func expandIllumioSyslogDestination(d *schema.ResourceData, diags *diag.Diagnostics) *models.SyslogDestination {
 	return &models.SyslogDestination{
-		PceScope:           getStringList(d.Get("pce_scope").(*schema.Set).List()),
-		Description:        d.Get("description").(string),
-		Type:               d.Get("type").(string),
-		AuditEventLogger:   expandIllumioSyslogdestinationAuditEventLogger(d, diags),
+		PceScope:           PtrTo(getStringList(d.Get("pce_scope").(*schema.Set).List())),
+		Description:        PtrTo(d.Get("description").(string)),
+		Type:               PtrTo(d.Get("type").(string)),
+		AuditEventLogger:   expandIllumioSyslogDestinationAuditEventLogger(d, diags),
 		TrafficEventLogger: expandIllumioSyslogDestinationTrafficEventLogger(d, diags),
 		NodeStatusLogger:   expandIllumioSyslogDestinationNodeStatusLogger(d, diags),
 		RemoteSyslog:       expandIllumioSyslogDestinationRemoteSyslog(d, diags),
 	}
 }
 
-func expandIllumioSyslogdestinationAuditEventLogger(d *schema.ResourceData, diags *diag.Diagnostics) *models.SyslogDestinationAuditEventLogger {
+func expandIllumioSyslogDestinationAuditEventLogger(d *schema.ResourceData, diags *diag.Diagnostics) *models.SyslogDestinationAuditEventLogger {
 	v := d.Get("audit_event_logger").([]interface{})[0].(map[string]interface{})
 
 	return &models.SyslogDestinationAuditEventLogger{
-		MinSeverity:                v["min_severity"].(string),
-		ConfigurationEventIncluded: v["configuration_event_included"].(bool),
-		SystemEventIncluded:        v["system_event_included"].(bool),
+		MinSeverity:                PtrTo(v["min_severity"].(string)),
+		ConfigurationEventIncluded: PtrTo(v["configuration_event_included"].(bool)),
+		SystemEventIncluded:        PtrTo(v["system_event_included"].(bool)),
 	}
 }
 
@@ -220,9 +219,9 @@ func expandIllumioSyslogDestinationTrafficEventLogger(d *schema.ResourceData, di
 	v := d.Get("traffic_event_logger").([]interface{})[0].(map[string]interface{})
 
 	return &models.SyslogDestinationTrafficEventLogger{
-		TrafficFlowAllowedEventIncluded:            v["traffic_flow_allowed_event_included"].(bool),
-		TrafficFlowPotentiallyBlockedEventIncluded: v["traffic_flow_potentially_blocked_event_included"].(bool),
-		TrafficFlowBlockedEventIncluded:            v["traffic_flow_blocked_event_included"].(bool),
+		TrafficFlowAllowedEventIncluded:            PtrTo(v["traffic_flow_allowed_event_included"].(bool)),
+		TrafficFlowPotentiallyBlockedEventIncluded: PtrTo(v["traffic_flow_potentially_blocked_event_included"].(bool)),
+		TrafficFlowBlockedEventIncluded:            PtrTo(v["traffic_flow_blocked_event_included"].(bool)),
 	}
 }
 
@@ -230,7 +229,7 @@ func expandIllumioSyslogDestinationNodeStatusLogger(d *schema.ResourceData, diag
 	v := d.Get("node_status_logger").([]interface{})[0].(map[string]interface{})
 
 	return &models.SyslogDestinationNodeStatusLogger{
-		NodeStatusIncluded: v["node_status_included"].(bool),
+		NodeStatusIncluded: PtrTo(v["node_status_included"].(bool)),
 	}
 }
 
@@ -244,12 +243,12 @@ func expandIllumioSyslogDestinationRemoteSyslog(d *schema.ResourceData, diags *d
 	v := o.([]interface{})[0].(map[string]interface{})
 
 	return &models.SyslogDestinationRemoteSyslog{
-		Address:       v["address"].(string),
-		Port:          v["port"].(int),
-		Protocol:      v["protocol"].(int),
-		TLSEnabled:    v["tls_enabled"].(bool),
-		TLSCaBundle:   v["tls_ca_bundle"].(string),
-		TLSVerifyCert: v["tls_verify_cert"].(bool),
+		Address:       PtrTo(v["address"].(string)),
+		Port:          PtrTo(v["port"].(int)),
+		Protocol:      PtrTo(v["protocol"].(int)),
+		TLSEnabled:    PtrTo(v["tls_enabled"].(bool)),
+		TLSCaBundle:   PtrTo(v["tls_ca_bundle"].(string)),
+		TLSVerifyCert: PtrTo(v["tls_verify_cert"].(bool)),
 	}
 }
 
@@ -279,19 +278,19 @@ func resourceIllumioSyslogDestinationUpdate(ctx context.Context, d *schema.Resou
 	}
 
 	syslogDest := &models.SyslogDestination{
-		Description: d.Get("description").(string),
+		Description: PtrTo(d.Get("description").(string)),
 	}
 
 	if d.HasChange("pce_scope") {
-		syslogDest.PceScope = getStringList(d.Get("pce_scope").(*schema.Set).List())
+		syslogDest.PceScope = PtrTo(getStringList(d.Get("pce_scope").(*schema.Set).List()))
 	}
 
 	if d.HasChange("type") {
-		syslogDest.Type = d.Get("type").(string)
+		syslogDest.Type = PtrTo(d.Get("type").(string))
 	}
 
 	if d.HasChange("audit_event_logger") {
-		syslogDest.AuditEventLogger = expandIllumioSyslogdestinationAuditEventLogger(d, &diags)
+		syslogDest.AuditEventLogger = expandIllumioSyslogDestinationAuditEventLogger(d, &diags)
 	}
 
 	if d.HasChange("traffic_event_logger") {

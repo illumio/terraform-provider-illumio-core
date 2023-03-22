@@ -19,7 +19,7 @@ func TestAccIllumioSDL_Read(t *testing.T) {
 	// don't parallelize this test as it will conflict with
 	// the syslog_destination test
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
+		PreCheck:          func() { testAccPreCheck(t); testAccPreCheckSaaSPCE(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{

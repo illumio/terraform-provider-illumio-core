@@ -15,8 +15,6 @@ import (
 	"github.com/illumio/terraform-provider-illumio-core/models"
 )
 
-const WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT = "server"
-
 var validVENTypes = []string{"server", "endpoint"}
 
 func resourceIllumioWorkloadSettings() *schema.Resource {
@@ -69,7 +67,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"ven_type": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Default:          WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT,
+							Computed:         true,
 							Description:      `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
 							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validVENTypes, true)),
 						},
@@ -110,7 +108,7 @@ func resourceIllumioWorkloadSettings() *schema.Resource {
 						"ven_type": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							Default:          WORKLOAD_SETTINGS_VEN_TYPE_DEFAULT,
+							Computed:         true,
 							Description:      `The VEN type that this property is applicable to. Must be "server" or "endpoint". An empty or missing value will default to "server" on the PCE`,
 							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validVENTypes, true)),
 						},
@@ -205,15 +203,11 @@ func mapWorkloadTimeoutSettingsState(state any) map[string]int {
 }
 
 func resourceIllumioWorkloadSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
+	pConfig, _ := m.(Config)
+	illumioClient := pConfig.IllumioClient
 
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Detail:   "[illumio-core_workload_settings] Cannot use create operation.",
-		Summary:  "Please use terraform import",
-	})
-
-	return diags
+	d.SetId(fmt.Sprintf("/orgs/%v/settings/workloads", illumioClient.OrgID))
+	return resourceIllumioWorkloadSettingsUpdate(ctx, d, m)
 }
 
 func resourceIllumioWorkloadSettingsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -287,12 +281,12 @@ func expandWorkloadSettingsTimeout(d *schema.ResourceData, key string) []models.
 		for _, w := range wts {
 			m := models.WorkloadSettingsTimeout{}
 			wMap := w.(map[string]interface{})
-			m.Value = wMap["value"].(int)
+			m.Value = PtrTo(wMap["value"].(int))
 
 			if wMap["scope"].(*schema.Set).Len() > 0 {
-				m.Scope = models.GetHrefs(wMap["scope"].(*schema.Set).List())
+				m.Scope = PtrTo(models.GetHrefs(wMap["scope"].(*schema.Set).List()))
 			} else {
-				m.Scope = []models.Href{}
+				m.Scope = &[]models.Href{}
 			}
 
 			if venType, ok := wMap["ven_type"].(string); ok {

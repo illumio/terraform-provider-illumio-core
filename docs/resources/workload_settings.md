@@ -11,10 +11,8 @@ Manages Illumio Workload Settings
 
 ## Example Usage
 
-!> The `illumio-core_workload_settings` resource cannot be created using Terraform. See the [import](#import) section below for steps to add the remote object to your local Terraform state.
-
 ```terraform
-resource "illumio-core_workload_settings" "current" {
+resource "illumio-core_workload_settings" "example" {
   workload_disconnected_timeout_seconds {
     value = 3600
   }
@@ -81,9 +79,3 @@ Import is supported using the following syntax:
 
 terraform import illumio-core_workload_settings.current placeholder
 ```
-
-## Limitations
-
-### Lifecycle
-
-The `illumio-core_workload_settings` resource cannot be created using Terraform.

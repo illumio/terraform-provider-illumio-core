@@ -21,6 +21,7 @@ func schemaScopes(desc string) *schema.Schema {
 	return &schema.Schema{
 		Type:        schema.TypeList,
 		Optional:    true,
+		Computed:    true,
 		Description: fmt.Sprintf("%s. Either label or label_group can be specified", desc),
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -107,7 +108,8 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 			},
 			"ike_authentication_type": {
 				Type:             schema.TypeString,
-				Required:         true,
+				Optional:         true,
+				Computed:         true,
 				Description:      `IKE authentication type to use for IPsec (SecureConnect and Machine Authentication). Allowed values are "psk" and "certificate"`,
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validIKEAuthType, false)),
 			},
@@ -155,13 +157,11 @@ func resourceIllumioFirewallSettings() *schema.Resource {
 }
 
 func resourceIllumioFirewallSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return diag.Diagnostics{
-		diag.Diagnostic{
-			Severity: diag.Error,
-			Detail:   "[illumio-core_firewall_settings] Cannot use create operation.",
-			Summary:  "Please use terraform import...",
-		},
-	}
+	pConfig, _ := m.(Config)
+	illumioClient := pConfig.IllumioClient
+
+	d.SetId(fmt.Sprintf("/orgs/%d/sec_policy/draft/firewall_settings", illumioClient.OrgID))
+	return resourceIllumioFirewallSettingsUpdate(ctx, d, m)
 }
 
 func resourceIllumioFirewallSettingsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

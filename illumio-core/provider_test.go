@@ -4,6 +4,7 @@ package illumiocore
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"sync"
 	"testing"
@@ -57,6 +58,17 @@ func testAccPreCheck(t *testing.T) {
 			t.Fatal(err)
 		}
 	})
+}
+
+func testAccPreCheckSaaSPCE(t *testing.T) {
+	conf := TestAccProvider.Meta().(Config)
+	illumioClient := conf.IllumioClient
+	settingsEndpoint := fmt.Sprintf("/orgs/%d/settings/events", illumioClient.OrgID)
+
+	_, _, err := illumioClient.Get(settingsEndpoint, nil)
+	if err != nil {
+		t.Skipf("skipping acceptance test: %s", err)
+	}
 }
 
 func skipIfPCEVersionBelow(v string) func() (bool, error) {

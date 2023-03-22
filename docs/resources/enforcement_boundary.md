@@ -65,6 +65,10 @@ resource "illumio-core_enforcement_boundary" "example" {
 - `name` (String) Name of the Enforcement Boundary
 - `providers` (Block Set, Min: 1) providers for Enforcement Boundary. Only one actor can be specified in one providers block (see [below for nested schema](#nestedblock--providers))
 
+### Optional
+
+- `enabled` (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not. Default value: "true"
+
 ### Read-Only
 
 - `caps` (List of String) User permissions for the object

@@ -43,6 +43,7 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 			"enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Default:     true,
 				Description: "Enabled flag. Determines whether the rule will be enabled in ruleset or not",
 			},
 			"ingress_services": {

@@ -74,6 +74,7 @@ data "illumio-core_enforcement_boundary" "block_rdp" {
 - `created_by` (Map of String) User who created this Enforcement Boundary
 - `deleted_at` (String) Timestamp when this Enforcement Boundary was last deleted
 - `deleted_by` (Map of String) User who last deleted this Enforcement Boundary
+- `enabled` (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not
 - `id` (String) The ID of this resource
 - `ingress_services` (List of Object) Collection of Ingress Service. Only one of the {"href"} or {"proto", "port", "to_port"} parameter combination is allowed (see [below for nested schema](#nestedatt--ingress_services))
 - `name` (String) Name of the Enforcement Boundary

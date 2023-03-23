@@ -589,8 +589,18 @@ func expandIllumioSecurityRuleProviders(providers []interface{}) ([]*models.Secu
 			VirtualServer:  getHrefObj(p["virtual_server"]),
 			IPList:         getHrefObj(p["ip_list"]),
 		}
+
 		if !models.HasOneActor(prov) {
 			return nil, diag.Errorf("[illumio-core_security_rule] Provider block can have only one rule actor")
+		}
+
+		if excl, ok := p["exclusion"]; ok {
+			if exclusion, ok := excl.(bool); ok && exclusion {
+				if prov.Label == nil && prov.LabelGroup == nil {
+					return nil, diag.Errorf("[illumio-core_security_rule] Provider exclusions can only be applied to Label or Label Group actors")
+				}
+				prov.Exclusion = &exclusion
+			}
 		}
 
 		provs = append(provs, prov)
@@ -602,20 +612,30 @@ func expandIllumioSecurityRuleConsumers(consumers []interface{}) ([]*models.Secu
 	cons := []*models.SecurityRuleConsumer{}
 
 	for _, consumer := range consumers {
-		p := consumer.(map[string]interface{})
+		c := consumer.(map[string]interface{})
 
 		con := &models.SecurityRuleConsumer{
-			Actors:         p["actors"].(string),
-			Label:          expandLabelOptionalKeyValue(p["label"], false),
-			LabelGroup:     getHrefObj(p["label_group"]),
-			Workload:       getHrefObj(p["workload"]),
-			VirtualService: getHrefObj(p["virtual_service"]),
-			IPList:         getHrefObj(p["ip_list"]),
+			Actors:         c["actors"].(string),
+			Label:          expandLabelOptionalKeyValue(c["label"], false),
+			LabelGroup:     getHrefObj(c["label_group"]),
+			Workload:       getHrefObj(c["workload"]),
+			VirtualService: getHrefObj(c["virtual_service"]),
+			IPList:         getHrefObj(c["ip_list"]),
 		}
 
 		if !models.HasOneActor(con) {
 			return nil, diag.Errorf("[illumio-core_security_rule] Consumer block can have only one rule actor")
 		}
+
+		if excl, ok := c["exclusion"]; ok {
+			if exclusion, ok := excl.(bool); ok && exclusion {
+				if con.Label == nil && con.LabelGroup == nil {
+					return nil, diag.Errorf("[illumio-core_security_rule] Consumer exclusions can only be applied to Label or Label Group actors")
+				}
+				con.Exclusion = &exclusion
+			}
+		}
+
 		cons = append(cons, con)
 	}
 

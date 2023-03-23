@@ -26,6 +26,7 @@ The following versions of the Illumio Core Policy Compute Engine are currently s
 - PCE v21.5
 - PCE v22.2
 - SaaS PCEs (v22.5)
+- PCE v23.1 (experimental)
 
 ## Getting Started  
 

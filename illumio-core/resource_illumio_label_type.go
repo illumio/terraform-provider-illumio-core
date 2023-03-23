@@ -260,13 +260,22 @@ func resourceIllumioLabelTypeUpdate(ctx context.Context, d *schema.ResourceData,
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	label := &models.LabelType{
+	labelType := &models.LabelType{
 		DisplayName:           PtrTo(d.Get("display_name").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
 
-	_, err := illumioClient.Update(d.Id(), label)
+	if d.HasChange("display_info") {
+		displayInfo, diags := expandLabelTypeDisplayInfo(d.Get("display_info").([]interface{})[0])
+		if diags.HasError() {
+			return diags
+		}
+
+		labelType.LabelTypeDisplayInfo = displayInfo
+	}
+
+	_, err := illumioClient.Update(d.Id(), labelType)
 	if err != nil {
 		return diag.FromErr(err)
 	}

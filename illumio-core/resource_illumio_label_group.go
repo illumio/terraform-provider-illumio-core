@@ -160,15 +160,19 @@ func resourceIllumioLabelGroupCreate(ctx context.Context, d *schema.ResourceData
 
 	orgID := illumioClient.OrgID
 
+	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	subGroups := models.GetHrefs(d.Get("sub_groups").(*schema.Set).List())
+
 	labelGroup := &models.LabelGroup{
-		Name:                  d.Get("name").(string),
-		Key:                   d.Get("key").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Key:                   PtrTo(d.Get("key").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
+		Labels:                &labels,
+		SubGroups:             &subGroups,
 	}
-	labelGroup.Labels = models.GetHrefs(d.Get("labels").(*schema.Set).List())
-	labelGroup.SubGroups = models.GetHrefs(d.Get("sub_groups").(*schema.Set).List())
+
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/label_groups", orgID), labelGroup)
 	if err != nil {
 		return diag.FromErr(err)
@@ -246,13 +250,16 @@ func resourceIllumioLabelGroupUpdate(ctx context.Context, d *schema.ResourceData
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
+	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	subGroups := models.GetHrefs(d.Get("sub_groups").(*schema.Set).List())
+
 	labelGroup := &models.LabelGroup{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		Labels:                models.GetHrefs(d.Get("labels").(*schema.Set).List()),
-		SubGroups:             models.GetHrefs(d.Get("sub_groups").(*schema.Set).List()),
+		Labels:                &labels,
+		SubGroups:             &subGroups,
 	}
 
 	_, err := illumioClient.Update(d.Id(), labelGroup)

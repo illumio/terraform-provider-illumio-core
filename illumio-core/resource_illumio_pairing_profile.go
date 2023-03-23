@@ -227,8 +227,8 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 	var diags diag.Diagnostics
 
 	pairingProfile := &models.PairingProfile{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		EnforcementMode:       d.Get("enforcement_mode").(string),
 		EnforcementModeLock:   PtrTo(d.Get("enforcement_mode_lock").(bool)),
 		Enabled:               d.Get("enabled").(bool),
@@ -243,7 +243,6 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		AgentSoftwareRelease:  d.Get("agent_software_release").(string),
-		Labels:                []models.Href{},
 	}
 
 	if allowedUsesPerKey, ok := getInt(d.Get("allowed_uses_per_key").(string)); ok {
@@ -255,7 +254,8 @@ func resourceIllumioPairingProfileCreate(ctx context.Context, d *schema.Resource
 	}
 
 	if items, ok := d.GetOk("labels"); ok {
-		pairingProfile.Labels = models.GetHrefs(items.(*schema.Set).List())
+		labels := models.GetHrefs(items.(*schema.Set).List())
+		pairingProfile.Labels = &labels
 	}
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/pairing_profiles", illumioClient.OrgID), pairingProfile)
@@ -358,7 +358,13 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 	illumioClient := pConfig.IllumioClient
 	var diags diag.Diagnostics
 
+	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+
 	pairingProfile := &models.PairingProfile{
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
+		EnforcementMode:       d.Get("enforcement_mode").(string),
+		EnforcementModeLock:   PtrTo(d.Get("enforcement_mode_lock").(bool)),
 		Enabled:               d.Get("enabled").(bool),
 		EnvLabelLock:          PtrTo(d.Get("env_label_lock").(bool)),
 		LocLabelLock:          PtrTo(d.Get("loc_label_lock").(bool)),
@@ -366,20 +372,12 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 		AppLabelLock:          PtrTo(d.Get("app_label_lock").(bool)),
 		LogTraffic:            PtrTo(d.Get("log_traffic").(bool)),
 		LogTrafficLock:        PtrTo(d.Get("log_traffic_lock").(bool)),
+		VisibilityLevel:       d.Get("visibility_level").(string),
 		VisibilityLevelLock:   PtrTo(d.Get("visibility_level_lock").(bool)),
-		EnforcementModeLock:   PtrTo(d.Get("enforcement_mode_lock").(bool)),
-		Description:           d.Get("description").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		Labels:                models.GetHrefs(d.Get("labels").(*schema.Set).List()),
-	}
-
-	if d.HasChange("name") {
-		pairingProfile.Name = d.Get("name").(string)
-	}
-
-	if d.HasChange("enforcement_mode") {
-		pairingProfile.EnforcementMode = d.Get("enforcement_mode").(string)
+		AgentSoftwareRelease:  d.Get("agent_software_release").(string),
+		Labels:                &labels,
 	}
 
 	if allowedUsesPerKey, ok := getInt(d.Get("allowed_uses_per_key").(string)); ok {
@@ -388,14 +386,6 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 
 	if keyLifespan, ok := getInt(d.Get("key_lifespan").(string)); ok {
 		pairingProfile.KeyLifespan = &keyLifespan
-	}
-
-	if d.HasChange("visibility_level") {
-		pairingProfile.VisibilityLevel = d.Get("visibility_level").(string)
-	}
-
-	if d.HasChange("agent_software_release") {
-		pairingProfile.AgentSoftwareRelease = d.Get("agent_software_release").(string)
 	}
 
 	if diags.HasError() {

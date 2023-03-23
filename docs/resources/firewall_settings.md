@@ -11,14 +11,9 @@ Manages Illumio Firewall Settings
 
 ## Example Usage
 
-!> The `illumio-core_firewall_settings` resource cannot be created using Terraform. See the [import](#import) section below for steps to add the remote object to your local Terraform state.
 
 ```terraform
-# NOTE: the `illumio-core_firewall_settings` resource cannot be created.
-# For this example to work, the PCE firewall settings must be imported into terraform with
-#
-# terraform import illumio-core_firewall_settings.current "/orgs/$ILLUMIO_PCE_ORG_ID/sec_policy/draft/firewall_settings"
-resource "illumio-core_firewall_settings" "current" {
+resource "illumio-core_firewall_settings" "example" {
   ike_authentication_type = "psk"
 }
 ```
@@ -178,9 +173,3 @@ Import is supported using the following syntax:
 
 terraform import illumio-core_firewall_settings.current placeholder
 ```
-
-## Limitations
-
-### Lifecycle
-
-The `illumio-core_firewall_settings` resource cannot be created using Terraform.

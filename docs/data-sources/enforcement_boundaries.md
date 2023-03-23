@@ -129,6 +129,7 @@ Read-Only:
 - `created_by` (Map of String) User who created this Enforcement Boundary
 - `deleted_at` (String) Timestamp when this Enforcement Boundary was last deleted
 - `deleted_by` (Map of String) User who last deleted this Enforcement Boundary
+- `enabled` (Boolean) Enabled flag. Determines whether the rule will be enabled in ruleset or not
 - `href` (String) Href of Enforcement Boundary
 - `ingress_service` (List of Object)  Collection of Ingress Service (see [below for nested schema](#nestedobjatt--items--ingress_service))
 - `name` (String) Name of the Enforcement Boundary

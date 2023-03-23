@@ -520,50 +520,7 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	illumioClient := pConfig.IllumioClient
 	orgID := illumioClient.OrgID
 
-	vs := &models.VirtualService{
-		Name:                  d.Get("name").(string),
-		ApplyTo:               d.Get("apply_to").(string),
-		ExternalDataSet:       d.Get("external_data_set").(string),
-		ExternalDataReference: d.Get("external_data_reference").(string),
-		Labels:                []models.Href{},
-		ServicePorts:          []models.ServicePort{},
-		IPOverrides:           []string{},
-		ServiceAddresses:      []models.ServiceAddress{},
-	}
-	if v, ok := d.GetOk("description"); ok {
-		vs.Description = v.(string)
-	}
-
-	if v, ok := d.GetOk("service"); ok {
-		vs.Service = &models.Href{
-			Href: v.([]interface{})[0].(map[string]interface{})["href"].(string),
-		}
-	} else if v, ok := d.GetOk("service_ports"); ok {
-		servicePorts := v.(*schema.Set).List()
-		vs.ServicePorts = expandSimpleServicePorts(servicePorts)
-	}
-
-	if v, ok := d.GetOk("service_addresses"); ok {
-		sas, errs := expandServiceAddresses(v)
-		if diags.HasError() {
-			diags = append(diags, errs...)
-		} else {
-			vs.ServiceAddresses = sas
-		}
-	}
-
-	if v, ok := d.GetOk("labels"); ok {
-		vs.Labels = models.GetHrefs(v.(*schema.Set).List())
-	}
-
-	if v, ok := d.GetOk("ip_overrides"); ok {
-		ips := []string{}
-		for _, i := range v.(*schema.Set).List() {
-			ips = append(ips, i.(string))
-		}
-		vs.IPOverrides = ips
-	}
-
+	vs, diags := expandVirtualService(d, diags)
 	if diags.HasError() {
 		return diags
 	}
@@ -578,6 +535,41 @@ func resourceIllumioVirtualServiceCreate(ctx context.Context, d *schema.Resource
 	pConfig.StoreHref("virtual_services", href)
 	d.SetId(href)
 	return resourceIllumioVirtualServiceRead(ctx, d, m)
+}
+
+func expandVirtualService(d *schema.ResourceData, diags diag.Diagnostics) (*models.VirtualService, diag.Diagnostics) {
+	sas, errs := expandServiceAddresses(d.Get("service_addresses"))
+	if diags.HasError() {
+		return nil, append(diags, errs...)
+	}
+
+	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+	ips := []string{}
+	for _, i := range d.Get("ip_overrides").(*schema.Set).List() {
+		ips = append(ips, i.(string))
+	}
+
+	vs := &models.VirtualService{
+		Name:                  d.Get("name").(string),
+		Description:           PtrTo(d.Get("description").(string)),
+		ApplyTo:               d.Get("apply_to").(string),
+		ExternalDataSet:       d.Get("external_data_set").(string),
+		ExternalDataReference: d.Get("external_data_reference").(string),
+		Labels:                &labels,
+		IPOverrides:           &ips,
+		ServiceAddresses:      &sas,
+	}
+
+	if v, ok := d.GetOk("service"); ok {
+		vs.Service = &models.Href{
+			Href: v.([]interface{})[0].(map[string]interface{})["href"].(string),
+		}
+	} else if v, ok := d.GetOk("service_ports"); ok {
+		servicePorts := expandSimpleServicePorts(v.(*schema.Set).List())
+		vs.ServicePorts = &servicePorts
+	}
+
+	return vs, diags
 }
 
 func expandSimpleServicePorts(servicePorts []interface{}) []models.ServicePort {
@@ -612,7 +604,7 @@ func expandServiceAddresses(v interface{}) ([]models.ServiceAddress, diag.Diagno
 		if samap["fqdn"] != "" { // set fqdn object
 			sai.Fqdn = samap["fqdn"].(string)
 			if samap["description"] != "" {
-				sai.Description = samap["description"].(string)
+				sai.Description = PtrTo(samap["description"].(string))
 			}
 		} else { // set {ip, network} or {ip, port}
 			sai.IP = samap["ip"].(string)
@@ -725,52 +717,11 @@ func resourceIllumioVirtualServiceUpdate(ctx context.Context, d *schema.Resource
 	illumioClient := pConfig.IllumioClient
 	href := d.Id()
 
-	vs := &models.VirtualService{
-		Name:                  d.Get("name").(string),
-		ExternalDataSet:       d.Get("external_data_set").(string),
-		ExternalDataReference: d.Get("external_data_reference").(string),
-		Description:           d.Get("description").(string),
-		Labels:                []models.Href{},
-		ServicePorts:          []models.ServicePort{},
-		IPOverrides:           []string{},
-		ServiceAddresses:      []models.ServiceAddress{},
-	}
-
-	if d.HasChange("") {
-		vs.ApplyTo = d.Get("apply_to").(string)
-	}
-
-	if v, ok := d.GetOk("service"); ok {
-		vs.Service = &models.Href{
-			Href: v.([]interface{})[0].(map[string]interface{})["href"].(string),
-		}
-	} else if v, ok := d.GetOk("service_ports"); ok {
-		servicePorts := v.(*schema.Set).List()
-		vs.ServicePorts = expandSimpleServicePorts(servicePorts)
-	}
-
-	if v, ok := d.GetOk("service_addresses"); ok {
-		sas, errs := expandServiceAddresses(v)
-		if diags.HasError() {
-			diags = append(diags, errs...)
-		} else {
-			vs.ServiceAddresses = sas
-		}
-	}
-
-	if v, ok := d.GetOk("labels"); ok {
-		vs.Labels = models.GetHrefs(v.(*schema.Set).List())
-	}
-	if v, ok := d.GetOk("ip_overrides"); ok {
-		ips := []string{}
-		for _, i := range v.(*schema.Set).List() {
-			ips = append(ips, i.(string))
-		}
-		vs.IPOverrides = ips
-	}
+	vs, diags := expandVirtualService(d, diags)
 	if diags.HasError() {
 		return diags
 	}
+
 	_, err := illumioClient.Update(href, vs)
 	if err != nil {
 		return diag.FromErr(err)

@@ -175,8 +175,8 @@ func resourceIllumioLabelTypeCreate(ctx context.Context, d *schema.ResourceData,
 	orgID := illumioClient.OrgID
 
 	labelType := &models.LabelType{
-		Key:                   d.Get("key").(string),
-		DisplayName:           d.Get("display_name").(string),
+		Key:                   PtrTo(d.Get("key").(string)),
+		DisplayName:           PtrTo(d.Get("display_name").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
@@ -260,13 +260,22 @@ func resourceIllumioLabelTypeUpdate(ctx context.Context, d *schema.ResourceData,
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	label := &models.LabelType{
-		DisplayName:           d.Get("display_name").(string),
+	labelType := &models.LabelType{
+		DisplayName:           PtrTo(d.Get("display_name").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 	}
 
-	_, err := illumioClient.Update(d.Id(), label)
+	if d.HasChange("display_info") {
+		displayInfo, diags := expandLabelTypeDisplayInfo(d.Get("display_info").([]interface{})[0])
+		if diags.HasError() {
+			return diags
+		}
+
+		labelType.LabelTypeDisplayInfo = displayInfo
+	}
+
+	_, err := illumioClient.Update(d.Id(), labelType)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -301,12 +310,12 @@ func expandLabelTypeDisplayInfo(displayInfo interface{}) (*models.LabelTypeDispl
 	}
 
 	prov := &models.LabelTypeDisplayInfo{
-		Initial:           di["initial"].(string),
-		Icon:              di["icon"].(string),
-		BackgroundColor:   di["background_color"].(string),
-		ForegroundColor:   di["foreground_color"].(string),
+		Initial:           PtrTo(di["initial"].(string)),
+		Icon:              PtrTo(di["icon"].(string)),
+		BackgroundColor:   PtrTo(di["background_color"].(string)),
+		ForegroundColor:   PtrTo(di["foreground_color"].(string)),
 		SortOrdinal:       sortOrdinal,
-		DisplayNamePlural: di["display_name_plural"].(string),
+		DisplayNamePlural: PtrTo(di["display_name_plural"].(string)),
 	}
 
 	return prov, diag.Diagnostics{}

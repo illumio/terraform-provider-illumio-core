@@ -15,18 +15,25 @@ var prefixLabelType string = "TF-ACC-LabelType"
 func TestAccIllumioLabelType_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_label_type.label_type_test"
 	resourceName := "illumio-core_label_type.label_type_test"
+	labelTypeKey := acctest.RandomWithPrefix(prefixLabelType)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioLabelTypeDataSourceConfig_basic(),
+				Config: testAccCheckIllumioLabelTypeDataSourceConfig_basic(labelTypeKey),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "key", resourceName, "key"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "display_name", resourceName, "display_name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "display_info", resourceName, "display_info"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioLabelTypeResource_updateInitial(labelTypeKey),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "display_info.0.initial", "UP"),
 				),
 			},
 			{
@@ -38,14 +45,11 @@ func TestAccIllumioLabelType_Read(t *testing.T) {
 	})
 }
 
-func testAccCheckIllumioLabelTypeDataSourceConfig_basic() string {
-	rName1 := acctest.RandomWithPrefix(prefixLabelType)
-	rName2 := acctest.RandomWithPrefix(prefixLabelType)
-
+func testAccCheckIllumioLabelTypeDataSourceConfig_basic(labelTypeKey string) string {
 	return fmt.Sprintf(`
 resource "illumio-core_label_type" "label_type_test" {
 	key          = %[1]q
-	display_name = %[2]q
+	display_name = %[1]q
 
 	display_info {
 		initial = "TS"
@@ -55,5 +59,18 @@ resource "illumio-core_label_type" "label_type_test" {
 data "illumio-core_label_type" "label_type_test" {
 	href = illumio-core_label_type.label_type_test.href
 }
-`, rName1, rName2)
+`, labelTypeKey)
+}
+
+func testAccCheckIllumioLabelTypeResource_updateInitial(labelTypeKey string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_label_type" "label_type_test" {
+	key          = %[1]q
+	display_name = %[1]q
+
+	display_info {
+		initial = "UP"
+	}
+}
+`, labelTypeKey)
 }

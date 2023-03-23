@@ -25,7 +25,8 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"audit_event_retention_seconds": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "The time in seconds an audit event is stored in the database. The value should be between 86400 and 17280000",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.IntBetween(86400, 17280000),
@@ -33,7 +34,8 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 			},
 			"audit_event_min_severity": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "Minimum severity level of audit event messages. Allowed values are \"error\", \"warning\", and \"informational\" ",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice([]string{"error", "warning", "informational"}, false),
@@ -41,14 +43,14 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 			},
 			"format": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "The log format (JSON, CEF, LEEF), which applies to all remote Syslog destinations. Allowed values are \"JSON\", \"CEF\", and \"LEEF\" ",
 				ValidateDiagFunc: validation.ToDiagFunc(
 					validation.StringInSlice([]string{"JSON", "CEF", "LEEF"}, false),
 				),
 			},
 		},
-
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -56,15 +58,11 @@ func resourceIllumioOrganizationSettings() *schema.Resource {
 }
 
 func resourceIllumioOrganizationSettingsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
+	pConfig, _ := m.(Config)
+	illumioClient := pConfig.IllumioClient
 
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Detail:   "[illumio-core_organization_settings] Cannot use create operation.",
-		Summary:  "Please use terraform import...",
-	})
-
-	return diags
+	d.SetId(fmt.Sprintf("/orgs/%v/settings/events", illumioClient.OrgID))
+	return resourceIllumioOrganizationSettingsUpdate(ctx, d, m)
 }
 
 func resourceIllumioOrganizationSettingsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -100,17 +98,17 @@ func resourceIllumioOrganizationSettingsUpdate(ctx context.Context, d *schema.Re
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	OrganizationSettings := &models.OrganizationSettings{}
+	organizationSettings := &models.OrganizationSettings{
+		AuditEventRetentionSeconds: d.Get("audit_event_retention_seconds").(int),
+		AuditEventMinSeverity:      d.Get("audit_event_min_severity").(string),
+		Format:                     d.Get("format").(string),
+	}
 
-	OrganizationSettings.AuditEventRetentionSeconds = d.Get("audit_event_retention_seconds").(int)
-
-	OrganizationSettings.AuditEventMinSeverity = d.Get("audit_event_min_severity").(string)
-
-	OrganizationSettings.Format = d.Get("format").(string)
-
-	_, err := illumioClient.Update(d.Id(), OrganizationSettings)
-	if err != nil {
-		return diag.FromErr(err)
+	if d.HasChanges("audit_event_retention_seconds", "audit_event_min_severity", "format") {
+		_, err := illumioClient.Update(d.Id(), organizationSettings)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
 	return resourceIllumioOrganizationSettingsRead(ctx, d, m)
@@ -122,7 +120,7 @@ func resourceIllumioOrganizationSettingsDelete(ctx context.Context, d *schema.Re
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Summary:  "[illumio-core_organization_settings] Ignoring Delete Operation...",
+		Summary:  "[illumio-core_organization_settings] Ignoring Delete Operation.",
 	})
 
 	return diags

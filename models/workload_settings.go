@@ -3,9 +3,9 @@
 package models
 
 type WorkloadSettingsTimeout struct {
-	Scope   []Href  `json:"scope"`
-	Value   int     `json:"value"`
-	VENType *string `json:"ven_type"`
+	Scope   *[]Href `json:"scope,omitempty"`
+	Value   *int    `json:"value,omitempty"`
+	VENType *string `json:"ven_type,omitempty"`
 }
 
 type WorkloadSettings struct {

@@ -133,8 +133,8 @@ func resourceIllumioContainerClusterCreate(ctx context.Context, d *schema.Resour
 	orgID := illumioClient.OrgID
 
 	cc := &models.ContainerCluster{
-		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
+		Name:        PtrTo(d.Get("name").(string)),
+		Description: PtrTo(d.Get("description").(string)),
 	}
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/container_clusters", orgID), cc)
@@ -223,8 +223,8 @@ func resourceIllumioContainerClusterUpdate(ctx context.Context, d *schema.Resour
 	illumioClient := pConfig.IllumioClient
 
 	cc := &models.ContainerCluster{
-		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
+		Name:        PtrTo(d.Get("name").(string)),
+		Description: PtrTo(d.Get("description").(string)),
 	}
 
 	_, err := illumioClient.Update(d.Id(), cc)

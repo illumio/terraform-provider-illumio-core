@@ -158,15 +158,17 @@ func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m 
 
 	orgID := illumioClient.OrgID
 
+	ipRanges := expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
+	fqdns := expandIllumioIPListFQDNs(d.Get("fqdns").(*schema.Set).List())
+
 	ipList := &models.IPList{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
+		IPRanges:              &ipRanges,
+		FQDNs:                 &fqdns,
 	}
-
-	ipList.IPRanges = expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
-	ipList.FQDNs = expandIllumioIPListFQDNs(d.Get("fqdns").(*schema.Set).List())
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/ip_lists", orgID), ipList)
 	if err != nil {
@@ -242,13 +244,16 @@ func resourceIllumioIPListUpdate(ctx context.Context, d *schema.ResourceData, m 
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
+	ipRanges := expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
+	fqdns := expandIllumioIPListFQDNs(d.Get("fqdns").(*schema.Set).List())
+
 	ipList := &models.IPList{
-		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		IPRanges:              expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List()),
-		FQDNs:                 expandIllumioIPListFQDNs(d.Get("fqdns").(*schema.Set).List()),
+		IPRanges:              &ipRanges,
+		FQDNs:                 &fqdns,
 	}
 
 	_, err := illumioClient.Update(d.Id(), ipList)
@@ -281,9 +286,9 @@ func expandIllumioIPListIPRanges(arr []interface{}) []models.IPRange {
 	var ipranges []models.IPRange
 	for _, elem := range arr {
 		ipranges = append(ipranges, models.IPRange{
-			Description: elem.(map[string]interface{})["description"].(string),
-			FromIP:      elem.(map[string]interface{})["from_ip"].(string),
-			ToIP:        elem.(map[string]interface{})["to_ip"].(string),
+			Description: PtrTo(elem.(map[string]interface{})["description"].(string)),
+			FromIP:      PtrTo(elem.(map[string]interface{})["from_ip"].(string)),
+			ToIP:        PtrTo(elem.(map[string]interface{})["to_ip"].(string)),
 			Exclusion:   PtrTo(elem.(map[string]interface{})["exclusion"].(bool)),
 		})
 	}
@@ -294,8 +299,8 @@ func expandIllumioIPListFQDNs(arr []interface{}) []models.FQDN {
 	var fqdns []models.FQDN
 	for _, elem := range arr {
 		fqdns = append(fqdns, models.FQDN{
-			FQDN:        elem.(map[string]interface{})["fqdn"].(string),
-			Description: elem.(map[string]interface{})["description"].(string),
+			FQDN:        PtrTo(elem.(map[string]interface{})["fqdn"].(string)),
+			Description: PtrTo(elem.(map[string]interface{})["description"].(string)),
 		})
 	}
 	return fqdns

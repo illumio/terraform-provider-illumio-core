@@ -16,6 +16,8 @@ func TestAccIllumioCC_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_container_cluster.cc_test"
 	resourceName := "illumio-core_container_cluster.cc_test"
 
+	ccName := acctest.RandomWithPrefix(prefixCC)
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
@@ -28,6 +30,13 @@ func TestAccIllumioCC_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "manager_type", resourceName, "manager_type"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "online", resourceName, "online"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioCCResource_updateNameAndDesc(ccName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", ccName),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
 			},
 			{
@@ -52,4 +61,13 @@ data "illumio-core_container_cluster" "cc_test" {
 	href = illumio-core_container_cluster.cc_test.href
 }
 `, rName)
+}
+
+func testAccCheckIllumioCCResource_updateNameAndDesc(ccName string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_container_cluster" "cc_test" {
+	name = %[1]q
+	description = ""
+}
+`, ccName)
 }

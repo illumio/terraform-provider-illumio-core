@@ -158,7 +158,6 @@ func resourceIllumioServiceBindingCreate(ctx context.Context, d *schema.Resource
 	ServiceBinding := &models.ServiceBinding{
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		PortOverrides:         []models.ServiceBindingPortOverrides{},
 	}
 
 	item := d.Get("virtual_service").(*schema.Set).List()
@@ -277,7 +276,7 @@ func resourceIllumioServiceBindingUpdate(ctx context.Context, d *schema.Resource
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
 		Detail:   "Cannot Update the Service Binding Resource.",
-		Summary:  "Ignoring the Update...",
+		Summary:  "Ignoring Update.",
 	})
 
 	return diags

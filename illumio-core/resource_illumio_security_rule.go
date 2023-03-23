@@ -432,14 +432,14 @@ func expandIllumioSecurityRule(d *schema.ResourceData) (*models.SecurityRule, *d
 
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
-		Description:           d.Get("description").(string),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		SecConnect:            PtrTo(d.Get("sec_connect").(bool)),
 		Stateless:             PtrTo(d.Get("stateless").(bool)),
 		MachineAuth:           PtrTo(d.Get("machine_auth").(bool)),
 		UnscopedConsumers:     PtrTo(d.Get("unscoped_consumers").(bool)),
-		UseWorkloadSubnets:    useWorkloadSubnets,
+		UseWorkloadSubnets:    &useWorkloadSubnets,
 	}
 
 	if secRule.HasConflicts() {
@@ -582,7 +582,7 @@ func expandIllumioSecurityRuleProviders(providers []interface{}) ([]*models.Secu
 		p := provider.(map[string]interface{})
 		prov := &models.SecurityRuleProvider{
 			Actors:         p["actors"].(string),
-			Label:          expandLabelOptionalKeyValue(p["label"]),
+			Label:          expandLabelOptionalKeyValue(p["label"], false),
 			LabelGroup:     getHrefObj(p["label_group"]),
 			Workload:       getHrefObj(p["workload"]),
 			VirtualService: getHrefObj(p["virtual_service"]),
@@ -606,7 +606,7 @@ func expandIllumioSecurityRuleConsumers(consumers []interface{}) ([]*models.Secu
 
 		con := &models.SecurityRuleConsumer{
 			Actors:         p["actors"].(string),
-			Label:          expandLabelOptionalKeyValue(p["label"]),
+			Label:          expandLabelOptionalKeyValue(p["label"], false),
 			LabelGroup:     getHrefObj(p["label_group"]),
 			Workload:       getHrefObj(p["workload"]),
 			VirtualService: getHrefObj(p["virtual_service"]),
@@ -759,7 +759,7 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 
 	secRule := &models.SecurityRule{
 		Enabled:               d.Get("enabled").(bool),
-		Description:           d.Get("description").(string),
+		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		SecConnect:            PtrTo(d.Get("sec_connect").(bool)),
@@ -770,7 +770,7 @@ func resourceIllumioSecurityRuleUpdate(ctx context.Context, d *schema.ResourceDa
 		IngressServices:       ingServs,
 		Providers:             povs,
 		Consumers:             cons,
-		UseWorkloadSubnets:    useWorkloadSubnets,
+		UseWorkloadSubnets:    &useWorkloadSubnets,
 	}
 
 	if secRule.HasConflicts() {

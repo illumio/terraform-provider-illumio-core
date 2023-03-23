@@ -3,13 +3,13 @@
 package models
 
 type RuleSet struct {
-	Name                  string                 `json:"name,omitempty"`
-	Description           string                 `json:"description,omitempty"`
-	ExternalDataSet       string                 `json:"external_data_set,omitempty"`
-	ExternalDataReference string                 `json:"external_data_reference,omitempty"`
-	Enabled               bool                   `json:"enabled"`
-	Scopes                [][]*RuleSetScope      `json:"scopes"`
-	IPTablesRules         []*RuleSetIPTablesRule `json:"ip_tables_rules"`
+	Name                  *string                 `json:"name,omitempty"`
+	Description           *string                 `json:"description,omitempty"`
+	Enabled               *bool                   `json:"enabled,omitempty"`
+	Scopes                [][]*RuleSetScope       `json:"scopes"`
+	IPTablesRules         *[]*RuleSetIPTablesRule `json:"ip_tables_rules,omitempty"`
+	ExternalDataSet       string                  `json:"external_data_set,omitempty"`
+	ExternalDataReference string                  `json:"external_data_reference,omitempty"`
 }
 
 type RuleSetScope struct {
@@ -32,11 +32,11 @@ type RuleSetIPTablesRulesActor struct {
 }
 
 type RuleSetIPTablesRule struct {
-	Enabled     bool                             `json:"enabled"`
-	Description string                           `json:"description,omitempty"`
-	Statements  []*RuleSetIPTablesRulesStatement `json:"statements"`
-	Actors      []*RuleSetIPTablesRulesActor     `json:"actors"`
-	IPVersion   string                           `json:"ip_version,omitempty"`
+	Enabled     *bool                             `json:"enabled,omitempty"`
+	Description *string                           `json:"description,omitempty"`
+	Statements  *[]*RuleSetIPTablesRulesStatement `json:"statements,omitempty"`
+	Actors      *[]*RuleSetIPTablesRulesActor     `json:"actors,omitempty"`
+	IPVersion   string                            `json:"ip_version,omitempty"`
 }
 
 // ToMap - Returns map for RuleSet model

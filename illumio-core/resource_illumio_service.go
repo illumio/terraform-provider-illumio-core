@@ -367,11 +367,11 @@ func expandIllumioWindowEgressServices(weSvcs []interface{}) ([]models.WindowsEg
 		m := models.WindowsEgressService{}
 		serviceNameOk := s["service_name"] != ""
 		if serviceNameOk {
-			m.ServiceName = s["service_name"].(string)
+			m.ServiceName = PtrTo(s["service_name"].(string))
 		}
 		processNameOk := s["process_name"] != ""
 		if processNameOk {
-			m.ProcessName = s["process_name"].(string)
+			m.ProcessName = PtrTo(s["process_name"].(string))
 		}
 		weSvc = append(weSvc, m)
 	}
@@ -551,18 +551,14 @@ func populateServiceFromResourceData(d *schema.ResourceData) (*models.Service, d
 
 	service := &models.Service{
 		Name:                  d.Get("name").(string),
-		Description:           d.Get("description").(string),
+		Description:           PtrTo(d.Get("description").(string)),
 		ProcessName:           d.Get("process_name").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		// initialize as empty lists - supports the update case
-		// where we may need a purposefully empty list, so we can't use
-		// omitempty in the model schema
-		ServicePorts:          []models.ServicePort{},
-		WindowsServices:       []models.WindowsService{},
-		WindowsEgressServices: []models.WindowsEgressService{},
 	}
 
+	// service definitions can't be empty lists, so no need to
+	// initialize them unless defined in the config
 	if val, exists := d.GetOk("service_ports"); exists {
 		sps, errs := expandIllumioServiceServicePorts(val.(*schema.Set).List())
 		if errs.HasError() {

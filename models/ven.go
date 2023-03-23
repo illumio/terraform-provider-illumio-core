@@ -4,9 +4,9 @@ package models
 
 type VEN struct {
 	Name          string `json:"name"`
-	Description   string `json:"description,omitempty"`
+	Description   string `json:"description"`
 	TargetPCEFqdn string `json:"target_pce_fqdn,omitempty"`
-	Status        string `json:"status"`
+	Status        string `json:"status,omitempty"`
 }
 
 func (ven *VEN) ToMap() (map[string]interface{}, error) {

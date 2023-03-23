@@ -40,6 +40,12 @@ func resourceIllumioEnforcementBoundary() *schema.Resource {
 				Description:      "Name of the Enforcement Boundary",
 				ValidateDiagFunc: nameValidation,
 			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Enabled flag. Determines whether the rule will be enabled in ruleset or not",
+			},
 			"ingress_services": {
 				Type:        schema.TypeSet,
 				Required:    true,
@@ -224,20 +230,21 @@ func resourceIllumioEnforcementBoundaryCreate(ctx context.Context, d *schema.Res
 func expandIllumioEnforcementBoundary(d *schema.ResourceData) (*models.EnforcementBoundary, *diag.Diagnostics) {
 	var diags diag.Diagnostics
 	enB := &models.EnforcementBoundary{
-		Name: d.Get("name").(string),
+		Name:    PtrTo(d.Get("name").(string)),
+		Enabled: PtrTo(d.Get("enabled").(bool)),
 	}
 
 	ingServs, errs := expandIllumioEnforcementBoundaryIngressService(d.Get("ingress_services").(*schema.Set).List())
 	diags = append(diags, errs...)
-	enB.IngressServices = ingServs
+	enB.IngressServices = &ingServs
 
 	povs, errs := expandIllumioEnforcementBoundaryProviders(d.Get("providers").(*schema.Set).List())
 	diags = append(diags, errs...)
-	enB.Providers = povs
+	enB.Providers = &povs
 
 	cons, errs := expandIllumioEnforcementBoundaryConsumers(d.Get("consumers").(*schema.Set).List())
 	diags = append(diags, errs...)
-	enB.Consumers = cons
+	enB.Consumers = &cons
 
 	return enB, &diags
 }
@@ -336,6 +343,7 @@ func resourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Resou
 	for _, key := range []string{
 		"href",
 		"name",
+		"enabled",
 		"created_at",
 		"updated_at",
 		"deleted_at",
@@ -426,10 +434,11 @@ func resourceIllumioEnforcementBoundaryUpdate(ctx context.Context, d *schema.Res
 	diags = append(diags, errs...)
 
 	EB := &models.EnforcementBoundary{
-		Name:            d.Get("name").(string),
-		IngressServices: ingServs,
-		Providers:       povs,
-		Consumers:       cons,
+		Name:            PtrTo(d.Get("name").(string)),
+		Enabled:         PtrTo(d.Get("enabled").(bool)),
+		IngressServices: &ingServs,
+		Providers:       &povs,
+		Consumers:       &cons,
 	}
 
 	if diags.HasError() {

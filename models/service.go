@@ -3,8 +3,8 @@
 package models
 
 type Service struct {
-	Name                  string                 `json:"name"`
-	Description           string                 `json:"description,omitempty"`
+	Name                  string                 `json:"name,omitempty"`
+	Description           *string                `json:"description,omitempty"`
 	ProcessName           string                 `json:"process_name,omitempty"`
 	ServicePorts          []ServicePort          `json:"service_ports,omitempty"`
 	WindowsServices       []WindowsService       `json:"windows_services,omitempty"`
@@ -32,8 +32,8 @@ type WindowsService struct {
 }
 
 type WindowsEgressService struct {
-	ServiceName string `json:"service_name,omitempty"`
-	ProcessName string `json:"process_name,omitempty"`
+	ServiceName *string `json:"service_name,omitempty"`
+	ProcessName *string `json:"process_name,omitempty"`
 }
 
 // ToMap - Returns map for Service model

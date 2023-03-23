@@ -39,7 +39,7 @@ type IngressService struct {
 
 type SecurityRule struct {
 	Enabled               bool                        `json:"enabled"`
-	Description           string                      `json:"description,omitempty"`
+	Description           *string                     `json:"description,omitempty"`
 	IngressServices       []IngressService            `json:"ingress_services"`
 	ResolveLabelsAs       *SecurityRuleResolveLabelAs `json:"resolve_labels_as"`
 	SecConnect            *bool                       `json:"sec_connect,omitempty"`
@@ -48,7 +48,7 @@ type SecurityRule struct {
 	Providers             []*SecurityRuleProvider     `json:"providers"`
 	Consumers             []*SecurityRuleConsumer     `json:"consumers"`
 	UnscopedConsumers     *bool                       `json:"unscoped_consumers,omitempty"`
-	UseWorkloadSubnets    []string                    `json:"use_workload_subnets"`
+	UseWorkloadSubnets    *[]string                   `json:"use_workload_subnets"`
 	ExternalDataSet       string                      `json:"external_data_set,omitempty"`
 	ExternalDataReference string                      `json:"external_data_reference,omitempty"`
 }

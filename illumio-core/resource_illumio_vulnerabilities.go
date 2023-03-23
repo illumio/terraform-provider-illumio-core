@@ -27,7 +27,7 @@ func resourceIllumioVulnerabilities() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				Description: "Collection of Vulenerabilites",
+				Description: "Collection of Vulnerabilites",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"reference_id": {
@@ -159,7 +159,7 @@ func resourceIllumioVulnerabilitiesDelete(ctx context.Context, d *schema.Resourc
 	return diag.Diagnostics{
 		diag.Diagnostic{
 			Severity: diag.Warning,
-			Summary:  "Ignoring delete operation...",
+			Summary:  "Ignoring Delete operation.",
 			Detail:   "Delete operation is not supported for vulnerabilites resource.",
 		},
 	}

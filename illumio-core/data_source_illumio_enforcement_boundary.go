@@ -28,6 +28,11 @@ func datasourceIllumioEnforcementBoundary() *schema.Resource {
 				Computed:    true,
 				Description: "Name of the Enforcement Boundary",
 			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enabled flag. Determines whether this enforcement boundary will be enabled or not",
+			},
 			"ingress_services": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -187,6 +192,7 @@ func datasourceIllumioEnforcementBoundaryRead(ctx context.Context, d *schema.Res
 	for _, key := range []string{
 		"href",
 		"name",
+		"enabled",
 		"created_at",
 		"updated_at",
 		"deleted_at",

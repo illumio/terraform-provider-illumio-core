@@ -3,18 +3,18 @@
 package models
 
 type LabelTypeDisplayInfo struct {
-	Icon              string `json:"icon,omitempty"`
-	Initial           string `json:"initial,omitempty"`
-	BackgroundColor   string `json:"background_color,omitempty"`
-	ForegroundColor   string `json:"foreground_color,omitempty"`
-	SortOrdinal       *int   `json:"sort_ordinal,omitempty"`
-	DisplayNamePlural string `json:"display_name_plural,omitempty"`
+	Icon              *string `json:"icon,omitempty"`
+	Initial           *string `json:"initial,omitempty"`
+	BackgroundColor   *string `json:"background_color,omitempty"`
+	ForegroundColor   *string `json:"foreground_color,omitempty"`
+	SortOrdinal       *int    `json:"sort_ordinal,omitempty"`
+	DisplayNamePlural *string `json:"display_name_plural,omitempty"`
 }
 
 // Label represents label resource
 type LabelType struct {
-	Key                   string `json:"key"`
-	DisplayName           string `json:"display_name"`
+	Key                   *string `json:"key,omitempty"`
+	DisplayName           *string `json:"display_name,omitempty"`
 	*LabelTypeDisplayInfo `json:"display_info,omitempty"`
 	ExternalDataSet       string `json:"external_data_set,omitempty"`
 	ExternalDataReference string `json:"external_data_reference,omitempty"`

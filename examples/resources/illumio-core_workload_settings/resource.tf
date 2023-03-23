@@ -1,4 +1,4 @@
-resource "illumio-core_workload_settings" "current" {
+resource "illumio-core_workload_settings" "example" {
   workload_disconnected_timeout_seconds {
     value = 3600
   }

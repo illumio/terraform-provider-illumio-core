@@ -9,7 +9,7 @@ type PairingProfile struct {
 	AgentSoftwareRelease  string  `json:"agent_software_release,omitempty"`
 	AllowedUsesPerKey     *int    `json:"allowed_uses_per_key,omitempty"`
 	KeyLifespan           *int    `json:"key_lifespan,omitempty"`
-	Labels                *[]Href `json:"labels"`
+	Labels                *[]Href `json:"labels,omitempty"`
 	EnforcementMode       string  `json:"enforcement_mode,omitempty"`
 	EnforcementModeLock   *bool   `json:"enforcement_mode_lock,omitempty"`
 	EnvLabelLock          *bool   `json:"env_label_lock,omitempty"`

@@ -1,3 +1,17 @@
+## 1.1.1 (Mar 23, 2023)
+
+BUG FIXES:
+
+* Fix resource updates broken by model changes
+* Fix bugs and missing fields in several resources
+
+ENHANCEMENTS:
+
+* The following resources now allow create operations, and will "adopt" the remote object rather than returning an error:
+    * illumio-core_firewall_settings
+    * illumio-core_organization_settings
+    * illumio-core_workload_settings
+
 ## 1.1.0 (Feb 24, 2023)
 
 BUG FIXES:

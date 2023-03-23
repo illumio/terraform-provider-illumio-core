@@ -12,7 +12,7 @@ type ServiceBindingPortOverrides struct {
 type ServiceBinding struct {
 	VirtualService        Href                          `json:"virtual_service"`
 	Workload              *Href                         `json:"workload,omitempty"`
-	PortOverrides         []ServiceBindingPortOverrides `json:"port_overrides"`
+	PortOverrides         []ServiceBindingPortOverrides `json:"port_overrides,omitempty"`
 	ExternalDataReference string                        `json:"external_data_reference,omitempty"`
 	ExternalDataSet       string                        `json:"external_data_set,omitempty"`
 	ContainerWorkload     *Href                         `json:"container_workload,omitempty"`

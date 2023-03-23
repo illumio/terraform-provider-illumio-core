@@ -451,11 +451,12 @@ func extractRuleActors(data *gabs.Container) []map[string]interface{} {
 	}
 
 	for _, actorArray := range data.Children() {
-
 		actor := map[string]interface{}{}
 		for k, v := range actorArray.ChildrenMap() {
 			if k == "actors" {
 				actor[k] = v.Data().(string)
+			} else if k == "exclusion" {
+				actor[k] = PtrTo(v.Data().(bool))
 			} else if contains(validRuleActors, k) {
 				vM := v.Data().(map[string]interface{})
 

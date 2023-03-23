@@ -127,6 +127,7 @@ resource "illumio-core_security_rule" "sr_test" {
 		label {
 			href = illumio-core_label.sr_loc.href
 		}
+		exclusion = true
 	}
 
 	ingress_services {

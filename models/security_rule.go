@@ -104,6 +104,9 @@ func HasOneActor(o interface{}) bool {
 					count++
 				}
 			case reflect.Pointer:
+				if f.Elem().Kind() == reflect.Bool {
+					continue // skip exclusion
+				}
 				if !f.IsNil() {
 					count++
 				}

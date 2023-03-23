@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) (0.13+) (to run acceptance tests)
-- [Go](https://golang.org/doc/install) 1.18+ (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) (0.14+) (to run acceptance tests & for dev overrides)
+- [Go](https://golang.org/doc/install) 1.20+ (to build the provider plugin)
 
 ## Quick Start
 
@@ -14,7 +14,7 @@ If you wish to work on the provider, you'll first need [Go](http://www.golang.or
 Clone the repository, then run the following `make` commands to install the necessary tools and build a local version of the provider:  
 
 ```sh
-$ git clone git@github.com:terraform-providers/terraform-provider-illumio-core
+$ git clone git@github.com:illumio/terraform-provider-illumio-core
 $ make tools
 $ make build
 ```

@@ -4,6 +4,7 @@ BUG FIXES:
 
 * Fix resource updates broken by model changes
 * Fix bugs and missing fields in several resources
+* Fix consumer/provider exclusions not being applied for `illumio-core_security_rule` resources
 
 ENHANCEMENTS:
 

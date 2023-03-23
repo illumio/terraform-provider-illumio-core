@@ -871,29 +871,30 @@ func resourceIllumioUnmanagedWorkloadDelete(ctx context.Context, d *schema.Resou
 }
 
 func populateUnmanagedWorkloadFromResourceData(d *schema.ResourceData) *models.Workload {
-	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List())
+	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List(), false)
 	interfaces := expandIllumioWorkloadInterface(d.Get("interfaces").(*schema.Set).List())
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
 	return &models.Workload{
-		Name:                                  d.Get("name").(string),
+		Name:                                  PtrTo(d.Get("name").(string)),
 		AgentToPceCertificateAuthenticationID: d.Get("agent_to_pce_certificate_authentication_id").(string),
-		DataCenter:                            d.Get("data_center").(string),
-		DataCenterZone:                        d.Get("data_center_zone").(string),
-		Description:                           d.Get("description").(string),
+		DataCenter:                            PtrTo(d.Get("data_center").(string)),
+		DataCenterZone:                        PtrTo(d.Get("data_center_zone").(string)),
+		Description:                           PtrTo(d.Get("description").(string)),
+		DistinguishedName:                     PtrTo(d.Get("distinguished_name").(string)),
 		EnforcementMode:                       d.Get("enforcement_mode").(string),
-		ExternalDataReference:                 d.Get("external_data_reference").(string),
-		ExternalDataSet:                       d.Get("external_data_set").(string),
-		Hostname:                              d.Get("hostname").(string),
+		Hostname:                              PtrTo(d.Get("hostname").(string)),
 		Online:                                PtrTo(d.Get("online").(bool)),
-		OsDetail:                              d.Get("os_detail").(string),
-		OsID:                                  d.Get("os_id").(string),
+		OsDetail:                              PtrTo(d.Get("os_detail").(string)),
+		OsID:                                  PtrTo(d.Get("os_id").(string)),
 		PublicIP:                              d.Get("public_ip").(string),
 		ServicePrincipalName:                  d.Get("service_principal_name").(string),
-		ServiceProvider:                       d.Get("service_provider").(string),
+		ServiceProvider:                       PtrTo(d.Get("service_provider").(string)),
 		Labels:                                &labels,
 		Interfaces:                            &interfaces,
 		IgnoredInterfaceNames:                 &ignoredInterfaceNames,
+		ExternalDataReference:                 d.Get("external_data_reference").(string),
+		ExternalDataSet:                       d.Get("external_data_set").(string),
 	}
 }
 

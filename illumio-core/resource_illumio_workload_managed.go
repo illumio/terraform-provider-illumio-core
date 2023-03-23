@@ -578,19 +578,19 @@ func resourceIllumioManagedWorkloadUpdate(ctx context.Context, d *schema.Resourc
 	illumioClient := pConfig.IllumioClient
 
 	var diags diag.Diagnostics
-	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List())
+	labels := expandLabelsOptionalKeyValue(d.Get("labels").(*schema.Set).List(), false)
 	ignoredInterfaceNames := getStringList(d.Get("ignored_interface_names"))
 
 	var workload = &models.Workload{
-		Name:                  d.Get("name").(string),
-		DataCenter:            d.Get("data_center").(string),
-		DataCenterZone:        d.Get("data_center_zone").(string),
-		Description:           d.Get("description").(string),
+		Name:                  PtrTo(d.Get("name").(string)),
+		DataCenter:            PtrTo(d.Get("data_center").(string)),
+		DataCenterZone:        PtrTo(d.Get("data_center_zone").(string)),
+		Description:           PtrTo(d.Get("description").(string)),
 		EnforcementMode:       d.Get("enforcement_mode").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ServicePrincipalName:  d.Get("service_principal_name").(string),
-		ServiceProvider:       d.Get("service_provider").(string),
+		ServiceProvider:       PtrTo(d.Get("service_provider").(string)),
 		Labels:                &labels,
 		IgnoredInterfaceNames: &ignoredInterfaceNames,
 	}

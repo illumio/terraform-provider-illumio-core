@@ -16,12 +16,16 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_workload.wl_test"
 	resourceName := "illumio-core_unmanaged_workload.wl_test"
 
+	wkldName := acctest.RandomWithPrefix(prefixWorkload)
+	labelName := acctest.RandomWithPrefix(prefixWorkload)
+	updatedName := acctest.RandomWithPrefix(prefixWorkload)
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioWorkloadDataSourceConfig_basic(),
+				Config: testAccCheckIllumioWorkloadDataSourceConfig_basic(wkldName, labelName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "href", resourceName, "href"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
@@ -43,6 +47,28 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccCheckIllumioWorkloadResource_updateRemoveLabels(wkldName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "labels.#", "0"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioWorkloadResource_updateRemoveInterfaces(wkldName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "interfaces.#", "0"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioWorkloadResource_updateNameAndEmptyStringFields(updatedName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", updatedName),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+					resource.TestCheckResourceAttr(resourceName, "hostname", ""),
+					resource.TestCheckResourceAttr(resourceName, "distinguished_name", ""),
+					resource.TestCheckResourceAttr(resourceName, "service_provider", ""),
+				),
+			},
+			{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -51,21 +77,22 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 	})
 }
 
-func testAccCheckIllumioWorkloadDataSourceConfig_basic() string {
-	rName1 := acctest.RandomWithPrefix(prefixWorkload)
-	rName2 := acctest.RandomWithPrefix(prefixWorkload)
-
+func workloadRoleLabel(labelName string) string {
 	return fmt.Sprintf(`
 resource "illumio-core_label" "wl_test" {
 	key   = "role"
 	value = %[1]q
 }
+`, labelName)
+}
 
+func testAccCheckIllumioWorkloadDataSourceConfig_basic(wkldName, labelName string) string {
+	return workloadRoleLabel(labelName) + fmt.Sprintf(`
 resource "illumio-core_unmanaged_workload" "wl_test" {
-	name               = %[2]q
+	name               = %[1]q
 	description        = "Terraform Workload test"
 	hostname           = "example.workload"
-	distinguished_name = ""
+	distinguished_name = "cn=Terraform Lab,ou=integrations,o=Illumio,c=CA"
 	service_provider   = "SPN"
 
 	interfaces {
@@ -83,10 +110,62 @@ resource "illumio-core_unmanaged_workload" "wl_test" {
 	labels {
 		href = illumio-core_label.wl_test.href
 	}
+
+	lifecycle {
+		create_before_destroy = true
+	}
 }
 
 data "illumio-core_workload" "wl_test" {
 	href = illumio-core_unmanaged_workload.wl_test.href
 }
-`, rName1, rName2)
+`, wkldName)
+}
+
+func testAccCheckIllumioWorkloadResource_updateRemoveLabels(wkldName string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_unmanaged_workload" "wl_test" {
+	name               = %[1]q
+	description        = "Terraform Workload test"
+	hostname           = "example.workload"
+	distinguished_name = "cn=Terraform Lab,ou=integrations,o=Illumio,c=CA"
+	service_provider   = "SPN"
+
+	interfaces {
+		name       = "lo0"
+		link_state = "unknown"
+		address    = "127.0.0.1"
+	}
+
+	interfaces {
+		name       = "lo0"
+		link_state = "unknown"
+		address    = "::ffff:127.0.0.1"
+	}
+}
+`, wkldName)
+}
+
+func testAccCheckIllumioWorkloadResource_updateRemoveInterfaces(wkldName string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_unmanaged_workload" "wl_test" {
+	name               = %[1]q
+	description        = "Terraform Workload test"
+	hostname           = "example.workload"
+	distinguished_name = "cn=Terraform Lab,ou=integrations,o=Illumio,c=CA"
+	service_provider   = "SPN"
+}
+`, wkldName)
+}
+
+func testAccCheckIllumioWorkloadResource_updateNameAndEmptyStringFields(updatedName string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_unmanaged_workload" "wl_test" {
+	name               = %[1]q
+	description        = ""
+	hostname           = ""
+	distinguished_name = ""
+	service_provider   = ""
+}
+`, updatedName)
 }

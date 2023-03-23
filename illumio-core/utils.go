@@ -515,10 +515,10 @@ func isStringGreaterThanZero() schema.SchemaValidateDiagFunc {
 	}
 }
 
-func expandLabelsOptionalKeyValue(arr []interface{}) []*models.LabelOptionalKeyValue {
+func expandLabelsOptionalKeyValue(arr []interface{}, includeKVPairs bool) []*models.LabelOptionalKeyValue {
 	l := make([]*models.LabelOptionalKeyValue, 0, len(arr))
 	for _, e := range arr {
-		l = append(l, expandLabelOptionalKeyValue(e))
+		l = append(l, expandLabelOptionalKeyValue(e, includeKVPairs))
 	}
 	return l
 }
@@ -543,25 +543,35 @@ func mapFromUnknownType(i interface{}) map[string]interface{} {
 	return m
 }
 
-func expandLabelOptionalKeyValue(i interface{}) *models.LabelOptionalKeyValue {
+func expandLabelOptionalKeyValue(i interface{}, includeKVPair bool) *models.LabelOptionalKeyValue {
 	if label := mapFromUnknownType(i); label != nil {
-		return &models.LabelOptionalKeyValue{
-			Href:  label["href"].(string),
-			Key:   PtrTo(label["key"].(string)),
-			Value: PtrTo(label["value"].(string)),
+		o := models.LabelOptionalKeyValue{
+			Href: label["href"].(string),
 		}
+
+		if includeKVPair {
+			o.Key = PtrTo(label["key"].(string))
+			o.Value = PtrTo(label["value"].(string))
+		}
+
+		return &o
 	}
 
 	return nil
 }
 
-func expandLabelGroupOptionalKeyValue(i interface{}) *models.LabelGroupOptionalKeyValue {
+func expandLabelGroupOptionalKeyValue(i interface{}, includeKVPair bool) *models.LabelGroupOptionalKeyValue {
 	if labelGroup := mapFromUnknownType(i); labelGroup != nil {
-		return &models.LabelGroupOptionalKeyValue{
+		o := models.LabelGroupOptionalKeyValue{
 			Href: labelGroup["href"].(string),
-			Key:  PtrTo(labelGroup["key"].(string)),
-			Name: PtrTo(labelGroup["name"].(string)),
 		}
+
+		if includeKVPair {
+			o.Key = PtrTo(labelGroup["key"].(string))
+			o.Name = PtrTo(labelGroup["value"].(string))
+		}
+
+		return &o
 	}
 
 	return nil

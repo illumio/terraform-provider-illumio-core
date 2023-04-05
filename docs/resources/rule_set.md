@@ -44,7 +44,7 @@ resource "illumio-core_rule_set" "example" {
 ### Required
 
 - `name` (String) Name of Ruleset. Valid name should be between 1 to 255 characters
-- `scopes` (Block List, Min: 1) scopes for Ruleset. At most 3 blocks of label/label_group can be specified inside each scope block (see [below for nested schema](#nestedblock--scopes))
+- `scopes` (Block List, Min: 1) Ruleset scopes (see [below for nested schema](#nestedblock--scopes))
 
 ### Optional
 

@@ -104,7 +104,7 @@ func resourceIllumioRuleSet() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				Description: "Ruleset label scopes. At most 3 blocks of label/label_group can be specified inside each scope block",
+				Description: "Ruleset label scopes",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"exclusion": {
@@ -337,27 +337,20 @@ func expandIllumioRuleSetScopes(scopes []interface{}) ([][]*models.RuleSetScope,
 		labels := scopeObj["label"].(*schema.Set).List()
 		labelGroups := scopeObj["label_group"].(*schema.Set).List()
 
-		if len(labels)+len(labelGroups) > 3 {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "[illumio-core_rule_set] At most 3 blocks of label/label_group are allowed inside scope",
-			})
-		} else {
-			for _, label := range labels {
-				s := &models.RuleSetScope{
-					Exclusion: &exclusion,
-					Label:     expandLabelOptionalKeyValue(label, false),
-				}
-				sp = append(sp, s)
+		for _, label := range labels {
+			s := &models.RuleSetScope{
+				Exclusion: &exclusion,
+				Label:     expandLabelOptionalKeyValue(label, false),
 			}
+			sp = append(sp, s)
+		}
 
-			for _, labelGroup := range labelGroups {
-				s := &models.RuleSetScope{
-					Exclusion:  &exclusion,
-					LabelGroup: expandLabelGroupOptionalKeyValue(labelGroup, false),
-				}
-				sp = append(sp, s)
+		for _, labelGroup := range labelGroups {
+			s := &models.RuleSetScope{
+				Exclusion:  &exclusion,
+				LabelGroup: expandLabelGroupOptionalKeyValue(labelGroup, false),
 			}
+			sp = append(sp, s)
 		}
 
 		sps = append(sps, sp)

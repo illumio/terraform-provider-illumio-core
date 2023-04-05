@@ -1,3 +1,9 @@
+## 1.1.2 (Apr 5, 2023)
+
+BUG FIXES:
+
+* Fix `illumio-core_rule_set` resource to allow more than 3 label/label group refs in each scope
+
 ## 1.1.1 (Mar 23, 2023)
 
 BUG FIXES:

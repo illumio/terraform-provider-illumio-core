@@ -110,7 +110,7 @@ Please set ILLUMIO_PCE_HOST, ILLUMIO_API_KEY_USERNAME, ILLUMIO_API_KEY_SECRET`)
 	}
 
 	// populates pending href set
-	setPendingHref(cont)
+	setHrefs(cont)
 	for index, href := range hrefs {
 		if _, ok := pendingHrefSet[href]; !ok {
 			log.Printf("[WARNING] HREF not present in pending changes - skipping Href: %s", href)
@@ -141,14 +141,23 @@ Please set ILLUMIO_PCE_HOST, ILLUMIO_API_KEY_USERNAME, ILLUMIO_API_KEY_SECRET`)
 	}
 }
 
-// setPendingHref - Helper function to populate pending href set
-func setPendingHref(data *gabs.Container) {
+// setHrefs - Helper function to populate pending href set
+func setHrefs(data *gabs.Container) {
 	for _, key := range resourceTypeKeys {
 		for _, child := range data.S(key).Children() {
-			pendingHrefSet[child.S("href").Data().(string)] = true
+			setPendingHref(child)
 		}
 	}
 	if data.Exists("firewall_settings") {
-		pendingHrefSet[data.S("firewall_settings", "href").Data().(string)] = true
+		setPendingHref(data.S("firewall_settings"))
+	}
+}
+
+func setPendingHref(data *gabs.Container) {
+	if data.Exists("href") {
+		href := data.S("href").Data()
+		if href != nil {
+			pendingHrefSet[href.(string)] = true
+		}
 	}
 }

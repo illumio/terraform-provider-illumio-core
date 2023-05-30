@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/illumio/terraform-provider-illumio-core/models"
@@ -112,6 +113,7 @@ func resourceIllumioLabelType() *schema.Resource {
 			"deleted": {
 				Type:        schema.TypeBool,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Flag to indicate whether the label type has been deleted or not",
 			},
 			"created_at": {
@@ -165,6 +167,9 @@ func resourceIllumioLabelType() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: customdiff.Sequence(
+			recreateDeleted(),
+		),
 	}
 }
 

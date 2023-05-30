@@ -96,12 +96,15 @@ func resourceIllumioLabel() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 		CustomizeDiff: customdiff.Sequence(
-			recreateDeletedLabel(),
+			recreateDeleted(),
 		),
 	}
 }
 
-func recreateDeletedLabel() schema.CustomizeDiffFunc {
+// recreateDeleted checks for changes to the resource's deleted flag, indicating
+// the object has been removed from the remote. If the flag is set, it prompts
+// a re-create of the resource.
+func recreateDeleted() schema.CustomizeDiffFunc {
 	return func(ctx context.Context, d *schema.ResourceDiff, m any) error {
 		_, newDeletedVal := d.GetChange("deleted")
 		if newDeletedVal.(bool) == true {

@@ -96,6 +96,20 @@ func skipIfPCEVersionBelow(v string) func() (bool, error) {
 	}
 }
 
+// deleteFromPCE removes the label with the given HREF
+// via the API to test Terraform drift behaviour
+func deleteFromPCE(href *string, t *testing.T) func() {
+	return func() {
+		conf := TestAccProvider.Meta().(Config)
+		illumioClient := conf.IllumioClient
+
+		_, err := illumioClient.Delete(*href)
+		if err != nil {
+			t.Fatal("Failed to delete object with HREF " + *href + " from PCE")
+		}
+	}
+}
+
 // testAccCheckResourceExists checks if a resource exists and assigns
 // the corresponding HREF to the given pointer
 func testAccCheckResourceExists(n string, href *string) resource.TestCheckFunc {

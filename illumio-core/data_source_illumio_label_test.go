@@ -44,7 +44,7 @@ func TestAccIllumioLabel_Read(t *testing.T) {
 	})
 }
 
-func TestAccIllumioLabelResource_Delete(t *testing.T) {
+func TestAccIllumioLabel_Delete(t *testing.T) {
 	labelHref := new(string)
 	newLabelHref := new(string)
 	resourceName := "illumio-core_label.label_test"
@@ -65,7 +65,7 @@ func TestAccIllumioLabelResource_Delete(t *testing.T) {
 			{
 				// check that an apply called after a label has been deleted
 				// correctly destroys and recreates the resource
-				PreConfig: deleteLabelFromPCE("app", labelValue, t),
+				PreConfig: deleteFromPCE(labelHref, t),
 				Config:    testAccCheckIllumioLabelResourceConfig_basic(labelValue),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckResourceExists(resourceName, newLabelHref),
@@ -77,7 +77,7 @@ func TestAccIllumioLabelResource_Delete(t *testing.T) {
 			{
 				// check that a destroy called after a label has been deleted
 				// doesn't throw an error
-				PreConfig: deleteLabelFromPCE("app", labelValue, t),
+				PreConfig: deleteFromPCE(labelHref, t),
 				Destroy:   true,
 				Config:    testAccCheckIllumioLabelResourceConfig_basic(labelValue),
 			},
@@ -110,29 +110,4 @@ resource "illumio-core_label" "label_test" {
 	value = %[1]q
 }
 `, updatedValue)
-}
-
-// deleteLabelFromPCE removes the label with the given key/value
-// via the API to test Terraform drift behaviour
-func deleteLabelFromPCE(key, value string, t *testing.T) func() {
-	return func() {
-		conf := TestAccProvider.Meta().(Config)
-		illumioClient := conf.IllumioClient
-
-		endpoint := fmt.Sprintf("/orgs/%d/labels", illumioClient.OrgID)
-		_, data, err := illumioClient.Get(endpoint, &map[string]string{
-			"key":   key,
-			"value": value,
-		})
-		if err != nil {
-			t.Fatal("Failed to get label from PCE")
-		}
-
-		href := data.S("0", "href").Data().(string)
-
-		_, err = illumioClient.Delete(href)
-		if err != nil {
-			t.Fatal("Failed to delete label from PCE")
-		}
-	}
 }

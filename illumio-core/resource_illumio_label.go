@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/illumio/terraform-provider-illumio-core/models"
@@ -35,6 +36,7 @@ func resourceIllumioLabel() *schema.Resource {
 			"deleted": {
 				Type:        schema.TypeBool,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Flag to indicate whether deleted or not",
 			},
 			"key": {
@@ -93,6 +95,21 @@ func resourceIllumioLabel() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: customdiff.Sequence(
+			recreateDeletedLabel(),
+		),
+	}
+}
+
+func recreateDeletedLabel() schema.CustomizeDiffFunc {
+	return func(ctx context.Context, d *schema.ResourceDiff, m any) error {
+		_, newDeletedVal := d.GetChange("deleted")
+		if newDeletedVal.(bool) == true {
+			// if the label is being deleted, then recreate it
+			d.SetNewComputed("deleted")
+		}
+
+		return nil
 	}
 }
 

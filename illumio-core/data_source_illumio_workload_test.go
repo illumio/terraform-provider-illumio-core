@@ -77,6 +77,49 @@ func TestAccIllumioWorkload_Read(t *testing.T) {
 	})
 }
 
+func TestAccIllumioWorkload_Delete(t *testing.T) {
+	workloadHref := new(string)
+	newWorkloadHref := new(string)
+
+	resourceName := "illumio-core_unmanaged_workload.wl_test"
+	workloadName := acctest.RandomWithPrefix(prefixLabel)
+	labelName := acctest.RandomWithPrefix(prefixWorkload)
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCheckIllumioWorkloadResourceConfig_basic(workloadName, labelName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckResourceExists(resourceName, workloadHref),
+					resource.TestCheckResourceAttr(resourceName, "hostname", "example.workload"),
+					resource.TestCheckResourceAttr(resourceName, "name", workloadName),
+				),
+			},
+			{
+				// check that an apply called after a workload has been deleted
+				// correctly destroys and recreates the resource
+				PreConfig: deleteFromPCE(workloadHref, t),
+				Config:    testAccCheckIllumioWorkloadResourceConfig_basic(workloadName, labelName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckResourceExists(resourceName, newWorkloadHref),
+					testAccCheckCompareRefs(workloadHref, newWorkloadHref, false),
+					resource.TestCheckResourceAttr(resourceName, "hostname", "example.workload"),
+					resource.TestCheckResourceAttr(resourceName, "name", workloadName),
+				),
+			},
+			{
+				// check that a destroy called after a workload has been deleted
+				// doesn't throw an error
+				PreConfig: deleteFromPCE(workloadHref, t),
+				Destroy:   true,
+				Config:    testAccCheckIllumioWorkloadResourceConfig_basic(workloadName, labelName),
+			},
+		},
+	})
+}
+
 func workloadRoleLabel(labelName string) string {
 	return fmt.Sprintf(`
 resource "illumio-core_label" "wl_test" {
@@ -86,7 +129,7 @@ resource "illumio-core_label" "wl_test" {
 `, labelName)
 }
 
-func testAccCheckIllumioWorkloadDataSourceConfig_basic(wkldName, labelName string) string {
+func testAccCheckIllumioWorkloadResourceConfig_basic(wkldName, labelName string) string {
 	return workloadRoleLabel(labelName) + fmt.Sprintf(`
 resource "illumio-core_unmanaged_workload" "wl_test" {
 	name               = %[1]q
@@ -115,11 +158,14 @@ resource "illumio-core_unmanaged_workload" "wl_test" {
 		create_before_destroy = true
 	}
 }
+`, wkldName)
+}
 
+func testAccCheckIllumioWorkloadDataSourceConfig_basic(wkldName, labelName string) string {
+	return testAccCheckIllumioWorkloadResourceConfig_basic(wkldName, labelName) + `
 data "illumio-core_workload" "wl_test" {
 	href = illumio-core_unmanaged_workload.wl_test.href
-}
-`, wkldName)
+}`
 }
 
 func testAccCheckIllumioWorkloadResource_updateRemoveLabels(wkldName string) string {

@@ -1,3 +1,16 @@
+## 1.1.3 (TBD)
+
+BUG FIXES:
+
+* update client to not pass an error back if a DELETE returns a 406 `already-deleted` response
+
+ENHANCEMENTS:
+
+* set `ForceNew` on the deleted flag for the following resources and add customizers to ensure a remote deletion prompts Terraform to recreate the resource
+    * `illumio-core_label`
+    * `illumio-core_label_type`
+    * `illumio-core_unmanaged_workload`
+
 ## 1.1.2 (Apr 5, 2023)
 
 BUG FIXES:

@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Jeffail/gabs/v2"
@@ -172,7 +173,16 @@ func (c *V2) Delete(endpoint string) (*http.Response, error) {
 		return nil, err
 	}
 
-	return c.Do(req)
+	response, err := c.Do(req)
+	// some objects in the PCE are marked as deleted but not removed;
+	// when Terraform tries to delete the object again, the PCE
+	// returns a 406 not-acceptable error which we treat as a noop
+	// in order to remove it from state
+	if err != nil && strings.Contains(err.Error(), "already_deleted") {
+		return response, nil
+	}
+
+	return response, err
 }
 
 // GetContainer parses HTTP Response and returns *gabs.Container

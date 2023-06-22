@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
@@ -30,6 +31,9 @@ func resourceIllumioUnmanagedWorkload() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: customdiff.Sequence(
+			recreateDeleted(),
+		),
 	}
 }
 
@@ -213,6 +217,7 @@ func unmanagedWorkloadSchema() map[string]*schema.Schema {
 		"deleted": {
 			Type:        schema.TypeBool,
 			Computed:    true,
+			ForceNew:    true,
 			Description: "This indicates that the workload has been deleted",
 		},
 		"agent_to_pce_certificate_authentication_id": {

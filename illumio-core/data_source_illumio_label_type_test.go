@@ -45,7 +45,48 @@ func TestAccIllumioLabelType_Read(t *testing.T) {
 	})
 }
 
-func testAccCheckIllumioLabelTypeDataSourceConfig_basic(labelTypeKey string) string {
+func TestAccIllumioLabelType_Delete(t *testing.T) {
+	labelTypeHref := new(string)
+	newLabelTypeHref := new(string)
+	resourceName := "illumio-core_label_type.label_type_test"
+	labelTypeKey := acctest.RandomWithPrefix(prefixLabelType)
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCheckIllumioLabelTypeResourceConfig_basic(labelTypeKey),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckResourceExists(resourceName, labelTypeHref),
+					resource.TestCheckResourceAttr(resourceName, "key", labelTypeKey),
+					resource.TestCheckResourceAttr(resourceName, "display_name", labelTypeKey),
+				),
+			},
+			{
+				// check that an apply called after a label type has been deleted
+				// correctly destroys and recreates the resource
+				PreConfig: deleteFromPCE(labelTypeHref, t),
+				Config:    testAccCheckIllumioLabelTypeResourceConfig_basic(labelTypeKey),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckResourceExists(resourceName, newLabelTypeHref),
+					testAccCheckCompareRefs(labelTypeHref, newLabelTypeHref, false),
+					resource.TestCheckResourceAttr(resourceName, "key", labelTypeKey),
+					resource.TestCheckResourceAttr(resourceName, "display_name", labelTypeKey),
+				),
+			},
+			{
+				// check that a destroy called after a label type has been deleted
+				// doesn't throw an error
+				PreConfig: deleteFromPCE(labelTypeHref, t),
+				Destroy:   true,
+				Config:    testAccCheckIllumioLabelTypeResourceConfig_basic(labelTypeKey),
+			},
+		},
+	})
+}
+
+func testAccCheckIllumioLabelTypeResourceConfig_basic(labelTypeKey string) string {
 	return fmt.Sprintf(`
 resource "illumio-core_label_type" "label_type_test" {
 	key          = %[1]q
@@ -55,11 +96,14 @@ resource "illumio-core_label_type" "label_type_test" {
 		initial = "TS"
 	}
 }
+`, labelTypeKey)
+}
 
+func testAccCheckIllumioLabelTypeDataSourceConfig_basic(labelTypeKey string) string {
+	return testAccCheckIllumioLabelTypeResourceConfig_basic(labelTypeKey) + `
 data "illumio-core_label_type" "label_type_test" {
 	href = illumio-core_label_type.label_type_test.href
-}
-`, labelTypeKey)
+}`
 }
 
 func testAccCheckIllumioLabelTypeResource_updateInitial(labelTypeKey string) string {

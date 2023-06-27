@@ -61,7 +61,7 @@ resource "illumio-core_pairing_profile" "example" {
 
 ### Optional
 
-- `agent_software_release` (String) Agent software release associated with this paring profile. Default value: "Default ()"
+- `agent_software_release` (String) Agent software release associated with this paring profile
 - `allowed_uses_per_key` (String) The number of times pairing profile keys can be usedd. Allowed values are range(1-2147483647) and "unlimited". Default value: "unlimited"
 - `app_label_lock` (Boolean) Flag that controls whether app label can be overridden from pairing script. Default value: true
 - `description` (String) The long description of the pairing profile

@@ -114,6 +114,11 @@ func datasourceIllumioContainerCluster() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"container_cluster_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Convenience variable for the cluster UUID contained in the HREF",
+			},
 		},
 	}
 }
@@ -123,7 +128,6 @@ func datasourceIllumioContainerClusterRead(ctx context.Context, d *schema.Resour
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	// orgID := pConfig.OrgID
 	href := d.Get("href").(string)
 
 	_, data, err := illumioClient.Get(href, nil)
@@ -131,63 +135,7 @@ func datasourceIllumioContainerClusterRead(ctx context.Context, d *schema.Resour
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
-
-	for _, key := range []string{
-		"href",
-		"name",
-		"description",
-		"container_runtime",
-		"manager_type",
-		"last_connected",
-		"online",
-		"kubelink_version",
-		"pce_fqdn",
-		"caps",
-	} {
-		if data.Exists(key) {
-			d.Set(key, data.S(key).Data())
-		} else {
-			d.Set(key, nil)
-		}
-	}
-
-	if data.Exists("nodes") {
-		nodeKeys := []string{"pod_subnet"}
-		nodes := data.S("nodes")
-		nodeI := []map[string]interface{}{}
-
-		for _, node := range nodes.Children() {
-			nodeI = append(nodeI, extractMap(node, nodeKeys))
-		}
-
-		d.Set("nodes", nodeI)
-	} else {
-		d.Set("nodes", nil)
-	}
-
-	if data.Exists("errors") {
-		errorKeys := []string{
-			"audit_event",
-			"duplicate_ids",
-			"error_type",
-		}
-		errors := data.S("errors")
-		errorI := []map[string]interface{}{}
-
-		for _, error := range errors.Children() {
-			errorMap := extractMap(error, errorKeys)
-			if error.Exists("audit_events") {
-				errorMap["audit_events"] = extractMap(error.S("audit_events"), []string{"href"})
-			} else {
-				errorMap["audit_events"] = nil
-			}
-			errorI = append(errorI, errorMap)
-		}
-		d.Set("errors", errorI)
-	} else {
-		d.Set("errors", nil)
-	}
+	resourceIllumioContainerClusterReadResult(d, data)
 
 	return diagnostics
 }

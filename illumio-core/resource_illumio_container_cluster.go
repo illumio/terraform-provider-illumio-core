@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/illumio/terraform-provider-illumio-core/models"
@@ -119,6 +120,17 @@ func resourceIllumioContainerCluster() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"container_cluster_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Convenience variable for the cluster UUID contained in the HREF",
+			},
+			"container_cluster_token": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "The pairing token for the cluster. Only returned when a cluster is first created",
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -127,6 +139,7 @@ func resourceIllumioContainerCluster() *schema.Resource {
 }
 
 func resourceIllumioContainerClusterCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diagnostics diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
@@ -142,8 +155,15 @@ func resourceIllumioContainerClusterCreate(ctx context.Context, d *schema.Resour
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
-	return resourceIllumioContainerClusterRead(ctx, d, m)
+	clusterTokenKey := "container_cluster_token"
+	if !data.Exists(clusterTokenKey) {
+		return append(diagnostics, diag.Errorf("Container cluster create response did not contain the expected container_cluster_token")...)
+	}
+
+	d.Set(clusterTokenKey, data.S(clusterTokenKey).Data())
+	resourceIllumioContainerClusterReadResult(d, data)
+
+	return diagnostics
 }
 
 func resourceIllumioContainerClusterRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -158,9 +178,19 @@ func resourceIllumioContainerClusterRead(ctx context.Context, d *schema.Resource
 		return diag.FromErr(err)
 	}
 
-	d.SetId(data.S("href").Data().(string))
+	resourceIllumioContainerClusterReadResult(d, data)
+
+	return diagnostics
+}
+
+func resourceIllumioContainerClusterReadResult(d *schema.ResourceData, data *gabs.Container) {
+	href := data.S("href").Data().(string)
+
+	d.SetId(href)
+	d.Set("href", href)
+	d.Set("container_cluster_id", getIDFromHref(href))
+
 	for _, key := range []string{
-		"href",
 		"name",
 		"description",
 		"container_runtime",
@@ -214,8 +244,6 @@ func resourceIllumioContainerClusterRead(ctx context.Context, d *schema.Resource
 	} else {
 		d.Set("errors", nil)
 	}
-
-	return diagnostics
 }
 
 func resourceIllumioContainerClusterUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

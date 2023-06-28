@@ -6,7 +6,7 @@ BUG FIXES:
 
 ENHANCEMENTS:
 
-* add `container_cluster_id` and `container_cluster_token` vars to `illumio-core_pairing_profile` resource
+* add `container_cluster_id` and `container_cluster_token` vars to `illumio-core_container_cluster` resource
     * `container_cluster_id` is a convenience var containing the cluster UUID (also present in the HREF)
     * `container_cluster_token` is only returned when the resource is first created and is needed to pair with the remote container cluster
 

@@ -4,9 +4,11 @@ package illumiocore
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccIllumioWS_Read(t *testing.T) {
@@ -30,16 +32,18 @@ func TestAccIllumioWS_Read(t *testing.T) {
 			{
 				Config: testAccCheckIllumioWSResource_updateSettings(discTimeoutSecs, goodbyeTimeoutSecs),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "workload_disconnected_timeout_seconds.0.value", discTimeoutSecs),
-					resource.TestCheckResourceAttr(resourceName, "workload_goodbye_timeout_seconds.0.value", goodbyeTimeoutSecs),
+					testAccCheckIllumioWSResource_valueSet(resourceName, "server", "workload_disconnected_timeout_seconds", discTimeoutSecs),
+					testAccCheckIllumioWSResource_valueSet(resourceName, "server", "workload_goodbye_timeout_seconds", goodbyeTimeoutSecs),
 				),
 			},
 			{
 				SkipFunc: skipIfPCEVersionBelow("23.1.0"),
 				Config:   testAccCheckIllumioWSResource_updateWithVENTypes(discTimeoutSecs, goodbyeTimeoutSecs),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "workload_disconnected_timeout_seconds.0.value", discTimeoutSecs),
-					resource.TestCheckResourceAttr(resourceName, "workload_goodbye_timeout_seconds.0.value", goodbyeTimeoutSecs),
+					testAccCheckIllumioWSResource_valueSet(resourceName, "server", "workload_disconnected_timeout_seconds", discTimeoutSecs),
+					testAccCheckIllumioWSResource_valueSet(resourceName, "server", "workload_goodbye_timeout_seconds", goodbyeTimeoutSecs),
+					testAccCheckIllumioWSResource_valueSet(resourceName, "endpoint", "workload_disconnected_timeout_seconds", discTimeoutSecs),
+					testAccCheckIllumioWSResource_valueSet(resourceName, "endpoint", "workload_goodbye_timeout_seconds", goodbyeTimeoutSecs),
 				),
 			},
 		},
@@ -92,4 +96,32 @@ resource "illumio-core_workload_settings" "ws_test" {
 	}
 }
 `, discTimeoutSecs, goodbyeTimeoutSecs)
+}
+
+func testAccCheckIllumioWSResource_valueSet(resourceName, venType, setting, expectedValue string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("Not found: %s", resourceName)
+		}
+
+		settingCount, err := strconv.Atoi(rs.Primary.Attributes[setting+".#"])
+		if err != nil {
+			return err
+		}
+
+		for i := 0; i < settingCount; i++ {
+			key := fmt.Sprintf("%s.%d", setting, i)
+			if rs.Primary.Attributes[key+".ven_type"] == venType {
+				value := rs.Primary.Attributes[key+".value"]
+				if value != expectedValue {
+					return fmt.Errorf(`Attribute '%s' expected "%s" got "%s"`, key+".value", expectedValue, value)
+				}
+
+				return nil
+			}
+		}
+
+		return fmt.Errorf(`Couldn't find value for setting '%s' with ven_type '%s'`, setting, venType)
+	}
 }

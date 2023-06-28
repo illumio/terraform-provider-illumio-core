@@ -112,13 +112,19 @@ func testAccCheckIllumioWSResource_valueSet(resourceName, venType, setting, expe
 
 		for i := 0; i < settingCount; i++ {
 			key := fmt.Sprintf("%s.%d", setting, i)
-			if rs.Primary.Attributes[key+".ven_type"] == venType {
-				value := rs.Primary.Attributes[key+".value"]
-				if value != expectedValue {
-					return fmt.Errorf(`Attribute '%s' expected "%s" got "%s"`, key+".value", expectedValue, value)
-				}
 
-				return nil
+			if vt, ok := rs.Primary.Attributes[key+".ven_type"]; ok {
+				// PCE versions before 23.1 don't have the ven_type field
+				// so if it's empty, just check the value. otherwise,
+				// only check the value if the ven_type matches what we expect
+				if vt == "" || vt == venType {
+					value := rs.Primary.Attributes[key+".value"]
+					if value != expectedValue {
+						return fmt.Errorf(`Attribute '%s' expected "%s" got "%s"`, key+".value", expectedValue, value)
+					}
+
+					return nil
+				}
 			}
 		}
 

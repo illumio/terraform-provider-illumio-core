@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -299,6 +300,7 @@ func resourceIllumioPairingProfileRead(ctx context.Context, d *schema.ResourceDa
 		"updated_by",
 		"is_default",
 		"key_lifespan",
+		"labels",
 		"allowed_uses_per_key",
 		"env_label_lock",
 		"loc_label_lock",
@@ -344,12 +346,6 @@ func resourceIllumioPairingProfileRead(ctx context.Context, d *schema.ResourceDa
 		d.Set(key, nil)
 	}
 
-	if data.Exists("labels") {
-		d.Set("labels", data.S("labels").Data())
-	} else {
-		d.Set("labels", nil)
-	}
-
 	return diagnostics
 }
 
@@ -359,6 +355,12 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 	var diags diag.Diagnostics
 
 	labels := models.GetHrefs(d.Get("labels").(*schema.Set).List())
+
+	venVersion := d.Get("agent_software_release").(string)
+	// if set to the default, ignore the version in the update
+	if strings.Contains(venVersion, "Default") {
+		venVersion = ""
+	}
 
 	pairingProfile := &models.PairingProfile{
 		Name:                  PtrTo(d.Get("name").(string)),
@@ -376,7 +378,7 @@ func resourceIllumioPairingProfileUpdate(ctx context.Context, d *schema.Resource
 		VisibilityLevelLock:   PtrTo(d.Get("visibility_level_lock").(bool)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		AgentSoftwareRelease:  d.Get("agent_software_release").(string),
+		AgentSoftwareRelease:  venVersion,
 		Labels:                &labels,
 	}
 

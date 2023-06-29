@@ -30,6 +30,8 @@ resource "illumio-core_container_cluster" "example" {
 ### Read-Only
 
 - `caps` (List of String) User permissions for the object
+- `container_cluster_id` (String) Convenience variable for the cluster UUID contained in the HREF
+- `container_cluster_token` (String, Sensitive) The pairing token for the cluster. Only returned when a cluster is first created
 - `container_runtime` (String) The Container Runtime used in this Cluster
 - `errors` (List of Object) Errors for Cluster (see [below for nested schema](#nestedatt--errors))
 - `href` (String) URI of the Cluster

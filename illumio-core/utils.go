@@ -192,6 +192,12 @@ func getParentHref(href string) string {
 	return re.FindString(href)
 }
 
+// Returns the object UUID from the end of an HREF
+func getIDFromHref(href string) string {
+	hrefParts := strings.Split(href, "/")
+	return hrefParts[len(hrefParts)-1]
+}
+
 // Returns string list from interface type
 func getStringList(o interface{}) []string {
 	i := o.([]interface{})

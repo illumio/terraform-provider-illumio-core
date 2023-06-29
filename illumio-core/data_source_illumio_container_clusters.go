@@ -120,6 +120,11 @@ func datasourceIllumioContainerClusters() *schema.Resource {
 								Type: schema.TypeString,
 							},
 						},
+						"container_cluster_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Convenience variable for the cluster UUID contained in the HREF",
+						},
 					},
 				},
 			},
@@ -175,6 +180,7 @@ func datasourceIllumioContainerClustersRead(ctx context.Context, d *schema.Resou
 
 	for _, child := range data.Children() {
 		m := extractMap(child, keys)
+		m["container_cluster_id"] = getIDFromHref(m["href"].(string))
 
 		for key, value := range map[string][]string{
 			"nodes":  {"pod_subnet"},

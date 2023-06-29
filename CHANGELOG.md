@@ -1,3 +1,15 @@
+## 1.1.4 (TBD)
+
+BUG FIXES:
+
+* Fix `illumio-core_pairing_profile` `agent_software_release` default to work when VEN library is not empty
+
+ENHANCEMENTS:
+
+* add `container_cluster_id` and `container_cluster_token` vars to `illumio-core_container_cluster` resource
+    * `container_cluster_id` is a convenience var containing the cluster UUID (also present in the HREF)
+    * `container_cluster_token` is only returned when the resource is first created and is needed to pair with the remote container cluster
+
 ## 1.1.3 (Jun 21, 2023)
 
 BUG FIXES:

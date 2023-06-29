@@ -33,6 +33,7 @@ data "illumio-core_container_cluster" "kube" {
 ### Read-Only
 
 - `caps` (List of String) User permissions for the object
+- `container_cluster_id` (String) Convenience variable for the cluster UUID contained in the HREF
 - `container_runtime` (String) The Container Runtime used in this Cluster
 - `description` (String) Description of the Cluster
 - `errors` (List of Object) Errors for Cluster (see [below for nested schema](#nestedatt--errors))

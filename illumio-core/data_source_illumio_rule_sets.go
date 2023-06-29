@@ -356,7 +356,7 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 
 		key := "rules"
 		if ruleSet.Exists(key) {
-			rs[key] = extractRules(data.S("rules"))
+			rs[key] = extractRules(data.S(key))
 		}
 
 		key = "scopes"

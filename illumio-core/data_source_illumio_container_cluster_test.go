@@ -30,6 +30,8 @@ func TestAccIllumioCC_Read(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "description", resourceName, "description"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "manager_type", resourceName, "manager_type"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "online", resourceName, "online"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "container_cluster_id", resourceName, "container_cluster_id"),
+					resource.TestCheckResourceAttrSet(resourceName, "container_cluster_token"),
 				),
 			},
 			{
@@ -40,9 +42,10 @@ func TestAccIllumioCC_Read(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"container_cluster_token"},
 			},
 		},
 	})

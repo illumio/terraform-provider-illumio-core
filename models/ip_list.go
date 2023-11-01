@@ -15,12 +15,12 @@ type FQDN struct {
 }
 
 type IPList struct {
-	Name                  *string    `json:"name,omitempty"`
-	Description           *string    `json:"description,omitempty"`
-	IPRanges              *[]IPRange `json:"ip_ranges,omitempty"`
-	FQDNs                 *[]FQDN    `json:"fqdns,omitempty"`
-	ExternalDataSet       string     `json:"external_data_set,omitempty"`
-	ExternalDataReference string     `json:"external_data_reference,omitempty"`
+	Name                  *string   `json:"name,omitempty"`
+	Description           *string   `json:"description,omitempty"`
+	IPRanges              []IPRange `json:"ip_ranges"`
+	FQDNs                 []FQDN    `json:"fqdns"`
+	ExternalDataSet       string    `json:"external_data_set,omitempty"`
+	ExternalDataReference string    `json:"external_data_reference,omitempty"`
 }
 
 // ToMap - Returns map for IP List model

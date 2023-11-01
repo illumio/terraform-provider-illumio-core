@@ -43,7 +43,7 @@ resource "illumio-core_traffic_collector_settings" "tcs_test" {
 	target {
 		dst_ip   = "127.0.0.1"
 		dst_port = 65535
-		proto    = 6
+		proto    = 17
 	}
 }
 

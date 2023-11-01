@@ -40,6 +40,12 @@ func TestAccIllumioIP_Read(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccCheckIllumioIPResource_removeIPRanges(ipListName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "ip_ranges.#", "0"),
+				),
+			},
+			{
 				Config: testAccCheckIllumioIPResource_emptyDescription(ipListName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "description", ""),
@@ -93,16 +99,23 @@ resource "illumio-core_ip_list" "ip_test" {
 `, ipListName)
 }
 
+func testAccCheckIllumioIPResource_removeIPRanges(ipListName string) string {
+	return fmt.Sprintf(`
+resource "illumio-core_ip_list" "ip_test" {
+	name        = %[1]q
+	description = "Terraform IP List test"
+	fqdns {
+		fqdn = "app.example.com"
+	}
+}
+`, ipListName)
+}
+
 func testAccCheckIllumioIPResource_emptyDescription(ipListName string) string {
 	return fmt.Sprintf(`
 resource "illumio-core_ip_list" "ip_test" {
 	name        = %[1]q
 	description = ""
-	ip_ranges {
-		from_ip = "10.1.0.0/16"
-		description = ""
-		exclusion = false
-	}
 	fqdns {
 		fqdn = "app.example.com"
 	}

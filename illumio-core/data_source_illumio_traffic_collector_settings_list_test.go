@@ -38,7 +38,7 @@ resource "illumio-core_traffic_collector_settings" "tcsl_test" {
 	target {
 		dst_ip   = "192.168.0.1"
 		dst_port = 22
-		proto    = 6
+		proto    = 17
 	}
 }
 

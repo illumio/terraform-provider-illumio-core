@@ -22,7 +22,7 @@ func TestAccIllumioIPL_Read(t *testing.T) {
 			{
 				Config: testAccCheckIllumioIPLDataSourceConfig_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "3"),
 				),
 			},
 		},
@@ -32,6 +32,7 @@ func TestAccIllumioIPL_Read(t *testing.T) {
 func testAccCheckIllumioIPLDataSourceConfig_basic() string {
 	rName1 := acctest.RandomWithPrefix(prefixIPL)
 	rName2 := acctest.RandomWithPrefix(prefixIPL)
+	rName3 := acctest.RandomWithPrefix(prefixIPL)
 
 	return fmt.Sprintf(`
 resource "illumio-core_ip_list" "ipl_test1" {
@@ -62,15 +63,24 @@ resource "illumio-core_ip_list" "ipl_test2" {
 	}
 }
 
+resource "illumio-core_ip_list" "ipl_test3" {
+	name        = %[3]q
+	description = "Terraform IP Lists test"
+	fqdns {
+		fqdn = "*.example.com"
+	}
+}
+
 data "illumio-core_ip_lists" "ipl_test" {
 	# lookup based on partial match
-	name = %[3]q
+	name = %[4]q
 
 	# enforce dependencies
 	depends_on = [
 		illumio-core_ip_list.ipl_test1,
 		illumio-core_ip_list.ipl_test2,
+		illumio-core_ip_list.ipl_test3,
 	]
 }
-`, rName1, rName2, prefixIPL)
+`, rName1, rName2, rName3, prefixIPL)
 }

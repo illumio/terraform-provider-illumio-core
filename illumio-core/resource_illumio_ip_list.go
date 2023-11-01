@@ -166,8 +166,8 @@ func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m 
 		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		IPRanges:              &ipRanges,
-		FQDNs:                 &fqdns,
+		IPRanges:              ipRanges,
+		FQDNs:                 fqdns,
 	}
 
 	_, data, err := illumioClient.Create(fmt.Sprintf("/orgs/%d/sec_policy/draft/ip_lists", orgID), ipList)
@@ -252,8 +252,8 @@ func resourceIllumioIPListUpdate(ctx context.Context, d *schema.ResourceData, m 
 		Description:           PtrTo(d.Get("description").(string)),
 		ExternalDataSet:       d.Get("external_data_set").(string),
 		ExternalDataReference: d.Get("external_data_reference").(string),
-		IPRanges:              &ipRanges,
-		FQDNs:                 &fqdns,
+		IPRanges:              ipRanges,
+		FQDNs:                 fqdns,
 	}
 
 	_, err := illumioClient.Update(d.Id(), ipList)
@@ -283,7 +283,7 @@ func resourceIllumioIPListDelete(ctx context.Context, d *schema.ResourceData, m 
 }
 
 func expandIllumioIPListIPRanges(arr []interface{}) []models.IPRange {
-	var ipranges []models.IPRange
+	ipranges := make([]models.IPRange, 0, len(arr))
 	for _, elem := range arr {
 		ipranges = append(ipranges, models.IPRange{
 			Description: PtrTo(elem.(map[string]interface{})["description"].(string)),
@@ -296,7 +296,7 @@ func expandIllumioIPListIPRanges(arr []interface{}) []models.IPRange {
 }
 
 func expandIllumioIPListFQDNs(arr []interface{}) []models.FQDN {
-	var fqdns []models.FQDN
+	fqdns := make([]models.FQDN, 0, len(arr))
 	for _, elem := range arr {
 		fqdns = append(fqdns, models.FQDN{
 			FQDN:        PtrTo(elem.(map[string]interface{})["fqdn"].(string)),

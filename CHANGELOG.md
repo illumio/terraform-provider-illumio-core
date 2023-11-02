@@ -12,8 +12,9 @@ ENHANCEMENTS:
     * `container_cluster_token` is only returned when the resource is first created and is needed to pair with the remote container cluster
 * add `match_type` optional parameter allowing users to specify exact or partial name matching to the following data sources:
     * `illumio-core_rule_sets`
-    * `illumio-core_workloads`
+    * `illumio-core_vens`
     * `illumio-core_virtual_services`
+    * `illumio-core_workloads`
 
 ## 1.1.3 (Jun 21, 2023)
 

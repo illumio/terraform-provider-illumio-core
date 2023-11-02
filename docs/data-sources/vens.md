@@ -35,6 +35,7 @@ data "illumio-core_vens" "example" {}
 - `last_goodbye_at_lte` (String) Greater than or equal to value for last goodbye at timestamp
 - `last_heartbeat_at_gte` (String) Greater than or equal to value for last heartbeat timestamp
 - `last_heartbeat_at_lte` (String) Less than or equal to value for last heartbeat timestamp
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of VENs to return. The integer should be a non-zero positive integer
 - `name` (String) Name of VEN(s) to return. Supports partial matches
 - `os` (String) Operating System of VEN(s) to return. Supports partial matches

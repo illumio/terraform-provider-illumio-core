@@ -709,6 +709,13 @@ func datasourceIllumioWorkloads() *schema.Resource {
 				ValidateDiagFunc: isStringANumber(),
 				Description:      "Less than or equal to value for vulnerability_exposure_score",
 			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
+			},
 		},
 	}
 }
@@ -769,6 +776,13 @@ func dataSourceIllumioWorkloadsRead(ctx context.Context, d *schema.ResourceData,
 	dataMap := []map[string]interface{}{}
 
 	for _, child := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("name", d, child) {
+				continue
+			}
+		}
+
 		m := map[string]interface{}{}
 
 		for _, key := range []string{

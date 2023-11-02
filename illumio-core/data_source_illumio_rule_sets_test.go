@@ -15,29 +15,7 @@ var prefixRSL string = "TF-ACC-RSL"
 func init() {
 	resource.AddTestSweepers("rule_sets", &resource.Sweeper{
 		Name: "rule_sets",
-		F: func(region string) error {
-			conf := TestAccProvider.Meta().(Config)
-			illumioClient := conf.IllumioClient
-
-			endpoint := fmt.Sprintf("/orgs/%d/sec_policy/draft/rule_sets", illumioClient.OrgID)
-			_, data, err := illumioClient.Get(endpoint, &map[string]string{
-				"name": prefixWLL,
-			})
-
-			if err != nil {
-				return fmt.Errorf("Error getting rule sets: %s", err)
-			}
-
-			for _, ruleSet := range data.Children() {
-				href := ruleSet.S("href").Data().(string)
-				_, err := illumioClient.Delete(href)
-				if err != nil {
-					fmt.Printf("Failed to sweep rule set with HREF: %s", href)
-				}
-			}
-
-			return nil
-		},
+		F:    sweep("rule set", "name", prefixRSL, "/orgs/%d/sec_policy/draft/rule_sets"),
 	})
 }
 

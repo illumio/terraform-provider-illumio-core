@@ -15,29 +15,7 @@ var prefixWLL string = "TF-ACC-WLL"
 func init() {
 	resource.AddTestSweepers("workloads", &resource.Sweeper{
 		Name: "workloads",
-		F: func(region string) error {
-			conf := TestAccProvider.Meta().(Config)
-			illumioClient := conf.IllumioClient
-
-			endpoint := fmt.Sprintf("/orgs/%d/workloads", illumioClient.OrgID)
-			_, data, err := illumioClient.Get(endpoint, &map[string]string{
-				"name": prefixWLL,
-			})
-
-			if err != nil {
-				return fmt.Errorf("Error getting workloads: %s", err)
-			}
-
-			for _, workload := range data.Children() {
-				href := workload.S("href").Data().(string)
-				_, err := illumioClient.Delete(href)
-				if err != nil {
-					fmt.Printf("Failed to sweep workload with HREF: %s", href)
-				}
-			}
-
-			return nil
-		},
+		F:    sweep("workload", "name", prefixWLL, "/orgs/%d/workloads"),
 	})
 }
 

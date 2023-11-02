@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func datasourceIllumioRuleSets() *schema.Resource {
@@ -270,7 +271,7 @@ func datasourceIllumioRuleSets() *schema.Resource {
 				Optional:         true,
 				Default:          "draft",
 				ValidateDiagFunc: isValidPversion(),
-				Description:      `pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
+				Description:      `Security policy version. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -301,7 +302,14 @@ func datasourceIllumioRuleSets() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of Ruleset(s) to return. Supports partial matches",
+				Description: "Name of Ruleset(s) to return. Matches based on match_type",
+			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
 			},
 		},
 	}
@@ -352,6 +360,13 @@ func datasourceIllumioRuleSetsRead(ctx context.Context, d *schema.ResourceData, 
 	rss := []map[string]interface{}{}
 
 	for _, ruleSet := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("name", d, ruleSet) {
+				continue
+			}
+		}
+
 		rs := extractMap(ruleSet, rsKeys)
 
 		key := "rules"

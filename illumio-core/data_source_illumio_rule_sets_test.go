@@ -14,25 +14,31 @@ var prefixRSL string = "TF-ACC-RSL"
 
 func TestAccIllumioRSL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_rule_sets.rsl_test"
+	ruleSetName := acctest.RandomWithPrefix(prefixRSL)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioRSLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioRSLDataSourceConfig_basic(ruleSetName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioRSLDataSourceConfig_exactMatch(ruleSetName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "1"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioRSLDataSourceConfig_basic() string {
+func rslConfig(ruleSetName string) string {
 	rName1 := acctest.RandomWithPrefix(prefixRSL)
 	rName2 := acctest.RandomWithPrefix(prefixRSL)
-	rName3 := acctest.RandomWithPrefix(prefixRSL)
 
 	return fmt.Sprintf(`
 resource "illumio-core_label" "rsl_test" {
@@ -61,10 +67,14 @@ resource "illumio-core_rule_set" "rsl_test2" {
 		}
 	}
 }
+`, rName1, rName2, ruleSetName)
+}
 
+func testAccCheckIllumioRSLDataSourceConfig_basic(ruleSetName string) string {
+	return rslConfig(ruleSetName) + fmt.Sprintf(`
 data "illumio-core_rule_sets" "rsl_test" {
 	# lookup based on partial match
-	name = %[4]q
+	name = %[1]q
 
 	# enforce dependencies
 	depends_on = [
@@ -72,5 +82,21 @@ data "illumio-core_rule_sets" "rsl_test" {
 		illumio-core_rule_set.rsl_test2,
 	]
 }
-`, rName1, rName2, rName3, prefixRSL)
+`, prefixRSL)
+}
+
+func testAccCheckIllumioRSLDataSourceConfig_exactMatch(ruleSetName string) string {
+	return rslConfig(ruleSetName) + fmt.Sprintf(`
+data "illumio-core_rule_sets" "rsl_test" {
+	# lookup using exact match
+	name       = %[1]q
+	match_type = "exact"
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_rule_set.rsl_test1,
+		illumio-core_rule_set.rsl_test2,
+	]
+}
+`, ruleSetName)
 }

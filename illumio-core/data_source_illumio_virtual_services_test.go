@@ -12,26 +12,40 @@ import (
 
 var prefixVSL string = "TF-ACC-VSL"
 
+func init() {
+	resource.AddTestSweepers("virtual_services", &resource.Sweeper{
+		Name: "virtual_services",
+		F:    sweep("virtual service", "name", prefixVSL, "/orgs/%d/sec_policy/draft/virtual_services"),
+	})
+}
+
 func TestAccIllumioVSL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_virtual_services.vsl_test"
+	virtualServiceName := acctest.RandomWithPrefix(prefixVSL)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioVSLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioVSLDataSourceConfig_basic(virtualServiceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioVSLDataSourceConfig_exactMatch(virtualServiceName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "1"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.0.name", virtualServiceName),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioVSLDataSourceConfig_basic() string {
-	rName1 := acctest.RandomWithPrefix(prefixVSL)
-	rName2 := acctest.RandomWithPrefix(prefixVSL)
+func vslConfig(virtualServiceName string) string {
+	rName := acctest.RandomWithPrefix(prefixVSL)
 
 	return fmt.Sprintf(`
 resource "illumio-core_virtual_service" "vsl_test1" {
@@ -55,10 +69,14 @@ resource "illumio-core_virtual_service" "vsl_test2" {
 		port = 8443
 	}
 }
+`, rName, virtualServiceName)
+}
 
+func testAccCheckIllumioVSLDataSourceConfig_basic(virtualServiceName string) string {
+	return vslConfig(virtualServiceName) + fmt.Sprintf(`
 data "illumio-core_virtual_services" "vsl_test" {
 	# lookup based on partial match
-	name = %[3]q
+	name = %[1]q
 
 	# enforce dependencies
 	depends_on = [
@@ -66,5 +84,21 @@ data "illumio-core_virtual_services" "vsl_test" {
 		illumio-core_virtual_service.vsl_test2,
 	]
 }
-`, rName1, rName2, prefixVSL)
+`, prefixVSL)
+}
+
+func testAccCheckIllumioVSLDataSourceConfig_exactMatch(virtualServiceName string) string {
+	return vslConfig(virtualServiceName) + fmt.Sprintf(`
+data "illumio-core_virtual_services" "vsl_test" {
+	# lookup using exact match
+	name       = %[1]q
+	match_type = "exact"
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_virtual_service.vsl_test1,
+		illumio-core_virtual_service.vsl_test2,
+	]
+}
+`, virtualServiceName)
 }

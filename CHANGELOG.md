@@ -13,6 +13,7 @@ ENHANCEMENTS:
 * add `match_type` optional parameter allowing users to specify exact or partial name matching to the following data sources:
     * `illumio-core_rule_sets`
     * `illumio-core_workloads`
+    * `illumio-core_virtual_services`
 
 ## 1.1.3 (Jun 21, 2023)
 

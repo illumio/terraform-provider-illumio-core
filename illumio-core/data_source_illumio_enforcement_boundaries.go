@@ -202,7 +202,7 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Filter by name supports partial matching",
+				Description: "Name of enforcement boundary to return. Supports partial matches",
 			},
 			"service": {
 				Type:        schema.TypeString,
@@ -220,6 +220,13 @@ func datasourceIllumioEnforcementBoundaries() *schema.Resource {
 				Optional:         true,
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(validENIngSerProtos, true)),
 				Description:      "Protocol to filter on. Allowed values are 6 and 17",
+			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
 			},
 		},
 	}
@@ -268,6 +275,13 @@ func dataSourceIllumioEnforcementBoundariesRead(ctx context.Context, d *schema.R
 		"caps",
 	}
 	for _, child := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("name", d, child) {
+				continue
+			}
+		}
+
 		m := extractMap(child, keys)
 
 		if child.Exists("ingress_services") {

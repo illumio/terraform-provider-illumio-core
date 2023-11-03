@@ -15,7 +15,7 @@ var prefixSL string = "TF-ACC-SL"
 func init() {
 	resource.AddTestSweepers("services", &resource.Sweeper{
 		Name: "services",
-		F:    sweep("service", "name", prefixVSL, "/orgs/%d/sec_policy/draft/services"),
+		F:    sweep("service", "name", prefixSL, "/orgs/%d/sec_policy/draft/services"),
 	})
 }
 

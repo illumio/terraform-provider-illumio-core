@@ -16,6 +16,10 @@ func init() {
 	resource.AddTestSweepers("virtual_services", &resource.Sweeper{
 		Name: "virtual_services",
 		F:    sweep("virtual service", "name", prefixVSL, "/orgs/%d/sec_policy/draft/virtual_services"),
+		Dependencies: []string{
+			"enforcement_boundaries",
+			"rule_sets",
+		},
 	})
 }
 

@@ -14,8 +14,9 @@ var prefixLTL string = "TF-ACC-LTL"
 
 func init() {
 	resource.AddTestSweepers("label_types", &resource.Sweeper{
-		Name: "label_types",
-		F:    sweep("label type", "display_name", prefixLTL, "/orgs/%d/label_dimensions"),
+		Name:         "label_types",
+		F:            sweep("label type", "display_name", prefixLTL, "/orgs/%d/label_dimensions"),
+		Dependencies: []string{"labels"},
 	})
 }
 

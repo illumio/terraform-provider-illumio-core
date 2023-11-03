@@ -16,6 +16,15 @@ func init() {
 	resource.AddTestSweepers("labels", &resource.Sweeper{
 		Name: "labels",
 		F:    sweep("label", "value", prefixLL, "/orgs/%d/labels"),
+		Dependencies: []string{
+			"container_clusters",
+			"enforcement_boundaries",
+			"label_groups",
+			"pairing_profiles",
+			"rule_sets",
+			"virtual_services",
+			"workloads",
+		},
 	})
 }
 

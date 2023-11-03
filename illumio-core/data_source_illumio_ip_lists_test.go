@@ -16,6 +16,11 @@ func init() {
 	resource.AddTestSweepers("ip_lists", &resource.Sweeper{
 		Name: "ip_lists",
 		F:    sweep("IP list", "name", prefixIPL, "/orgs/%d/sec_policy/draft/ip_lists"),
+		Dependencies: []string{
+			"enforcement_boundaries",
+			"rule_sets",
+			"virtual_services",
+		},
 	})
 }
 

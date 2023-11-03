@@ -11,6 +11,7 @@ ENHANCEMENTS:
     * `container_cluster_id` is a convenience var containing the cluster UUID (also present in the HREF)
     * `container_cluster_token` is only returned when the resource is first created and is needed to pair with the remote container cluster
 * add `match_type` parameter allowing users to specify exact or partial name matching to the following data sources:
+    * `illumio-core_ip_lists`
     * `illumio-core_label_groups`
     * `illumio-core_label_types`
     * `illumio-core_labels`

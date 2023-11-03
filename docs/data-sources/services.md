@@ -62,6 +62,7 @@ data "illumio-core_services" "windows_services" {
 - `description` (String) Long description of the Service
 - `external_data_reference` (String) External data reference identifier
 - `external_data_set` (String) External data set identifier
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of Services to return. The integer should be a non-zero positive integer
 - `name` (String) Name of the Service (does not need to be unique)
 - `port` (String) Specify port or port range to filter results. The range is from -1 to 65535 (0 is not supported)

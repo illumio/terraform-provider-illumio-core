@@ -199,12 +199,12 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name string to match.Supports partial matches",
+				Description: "Name string to match. Supports partial matches",
 			},
 			"namespace": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Namespace string to match.Supports partial matches",
+				Description: "Namespace string to match. Supports partial matches",
 			},
 			"visibility_level": {
 				Type:     schema.TypeString,
@@ -213,6 +213,13 @@ func datasourceIllumioContainerClusterWorkloadProfiles() *schema.Resource {
 					validation.StringInSlice(validVisibilityLevels, false),
 				),
 				Description: `Filter by visibility level. Allowed values are "flow_full_detail", "flow_summary", "flow_drops", "flow_off" and "enhanced_data_collection"`,
+			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
 			},
 		},
 	}
@@ -260,6 +267,13 @@ func dataSourceIllumioContainerClusterWorkloadProfilesRead(ctx context.Context, 
 	}
 
 	for _, child := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("name", d, child) {
+				continue
+			}
+		}
+
 		m := extractMap(child, keys)
 
 		key := "assign_labels"

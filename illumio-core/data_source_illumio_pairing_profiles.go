@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func datasourceIllumioPairingProfiles() *schema.Resource {
@@ -230,6 +231,13 @@ func datasourceIllumioPairingProfiles() *schema.Resource {
 				Optional:    true,
 				Description: "Name of Pairing Profile(s) to return. Supports partial matches",
 			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
+			},
 		},
 	}
 }
@@ -295,6 +303,13 @@ func dataSourceIllumioPairingProfilesRead(ctx context.Context, d *schema.Resourc
 	pps := []map[string]interface{}{}
 
 	for _, child := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("name", d, child) {
+				continue
+			}
+		}
+
 		pp := extractMap(child, ppKeys)
 
 		key := "labels"

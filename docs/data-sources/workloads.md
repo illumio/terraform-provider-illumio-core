@@ -146,6 +146,7 @@ data "illumio-core_workloads" "jenkins" {
 - `last_heartbeat_on_lte` (String) Less than or equal to value for last heartbeat on timestamp
 - `log_traffic` (String) Whether we want to log traffic events from this workload
 - `managed` (String) Return managed or unmanaged workloads using this filter
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of workloads to return. The integer should be a non-zero positive integer
 - `name` (String) Name of workload(s) to return. Supports partial matches
 - `online` (String) Return online/offline workloads using this filter

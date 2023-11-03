@@ -55,6 +55,13 @@ func datasourceIllumioLabelTypes() *schema.Resource {
 				ValidateDiagFunc: isStringGreaterThanZero(),
 				Description:      "Maximum number of Labels to return. The integer should be a non-zero positive integer",
 			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching display names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
+			},
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -238,6 +245,13 @@ func dataSourceIllumioLabelTypesRead(ctx context.Context, d *schema.ResourceData
 	}
 
 	for _, child := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("display_name", d, child) {
+				continue
+			}
+		}
+
 		m := extractMap(child, keys)
 
 		if child.Exists("display_info") {

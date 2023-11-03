@@ -3,12 +3,27 @@
 BUG FIXES:
 
 * Fix `illumio-core_pairing_profile` `agent_software_release` default to work when VEN library is not empty
+* Fix `illumio-core_ip_list` resource to work properly when `ip_ranges` or `fqdns` blocks are not specified or removed from an existing resource
 
 ENHANCEMENTS:
 
 * add `container_cluster_id` and `container_cluster_token` vars to `illumio-core_container_cluster` resource
     * `container_cluster_id` is a convenience var containing the cluster UUID (also present in the HREF)
     * `container_cluster_token` is only returned when the resource is first created and is needed to pair with the remote container cluster
+* add `match_type` parameter allowing users to specify exact or partial name matching to the following data sources:
+    * `illumio-core_container_cluster_workload_profiles`
+    * `illumio-core_container_clusters`
+    * `illumio-core_enforcement_boundaries`
+    * `illumio-core_ip_lists`
+    * `illumio-core_label_groups`
+    * `illumio-core_label_types`
+    * `illumio-core_labels`
+    * `illumio-core_pairing_profiles`
+    * `illumio-core_rule_sets`
+    * `illumio-core_services`
+    * `illumio-core_vens`
+    * `illumio-core_virtual_services`
+    * `illumio-core_workloads`
 
 ## 1.1.3 (Jun 21, 2023)
 

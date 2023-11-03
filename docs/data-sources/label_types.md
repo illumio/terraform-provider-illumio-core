@@ -50,6 +50,7 @@ data "illumio-core_label_types" "example" {
 - `external_data_set` (String) The data source from which a resource originates
 - `include_deleted` (String) Include deleted labels
 - `key` (String) Label type key to filter by. The value must be a string between 1 and 64 characters long
+- `match_type` (String) Indicates whether to return all partially-matching display names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of Labels to return. The integer should be a non-zero positive integer
 
 ### Read-Only

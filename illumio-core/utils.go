@@ -79,7 +79,9 @@ const (
 	UUID_V4_REGEX               = "[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}"
 	ORGS_PREFIX                 = "^/orgs/[1-9][0-9]*/"
 	SEC_POLICY_PREFIX           = "sec_policy/(draft|active|[0-9]*)/"
-	PORT_MAX                    = 65535
+	EXACT_MATCH                 = "exact"
+	PARTIAL_MATCH               = "partial"
+	PORT_MAX             int    = 65535
 )
 
 var (
@@ -401,6 +403,10 @@ func extractResourceScopes(data *gabs.Container) []map[string]interface{} {
 		ms = append(ms, m)
 	}
 	return ms
+}
+
+func isExactMatch(key string, d *schema.ResourceData, o *gabs.Container) bool {
+	return o.S(key).Data().(string) == d.Get(key).(string)
 }
 
 func paramsString(p map[string]string) string {

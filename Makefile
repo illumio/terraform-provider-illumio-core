@@ -22,8 +22,13 @@ test: fmtcheck
 	echo $(TEST) | \
 		xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4
 
-testacc: fmtcheck
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -parallel=$(TEST_PARALLELISM) -timeout 120m
+testacc: fmtcheck _testacc sweep
+
+_testacc:
+	-TF_ACC=1 go test $(TEST) -v $(TESTARGS) -parallel=$(TEST_PARALLELISM) -timeout 120m
+
+sweep:
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -sweep=all
 
 vet:
 	@echo "go vet ."
@@ -74,4 +79,4 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
-.PHONY: build test testacc vet fmt fmtcheck errcheck vendor-status test-compile docs website website-test tools
+.PHONY: build test testacc _testacc sweep vet fmt fmtcheck errcheck vendor-status test-compile docs website website-test tools

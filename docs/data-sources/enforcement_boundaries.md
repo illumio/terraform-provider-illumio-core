@@ -106,6 +106,7 @@ data "illumio-core_enforcement_boundaries" "block_windows_services" {
 ### Optional
 
 - `labels` (String) List of lists of label URIs, encoded as a JSON string
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of enforcement boundaries to return. The integer should be a non-zero positive integer
 - `name` (String) Filter by name supports partial matching
 - `pversion` (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"

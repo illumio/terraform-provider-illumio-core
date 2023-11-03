@@ -12,29 +12,43 @@ import (
 
 var prefixEBL string = "TF-ACC-EBL"
 
+func init() {
+	resource.AddTestSweepers("enforcement_boundaries", &resource.Sweeper{
+		Name: "enforcement_boundaries",
+		F:    sweep("enforcement boundary", "name", prefixEBL, "/orgs/%d/sec_policy/draft/enforcement_boundaries"),
+	})
+}
+
 func TestAccIllumioEBL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_enforcement_boundaries.ebl_test"
+	boundaryName := acctest.RandomWithPrefix(prefixEBL)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioEBLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioEBLDataSourceConfig_basic(boundaryName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioEBLDataSourceConfig_exactMatch(boundaryName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "1"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.0.name", boundaryName),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioEBLDataSourceConfig_basic() string {
-	rName1 := acctest.RandomWithPrefix(prefixEBL)
-	rName2 := acctest.RandomWithPrefix(prefixEBL)
-	rName3 := acctest.RandomWithPrefix(prefixEBL)
-	rName4 := acctest.RandomWithPrefix(prefixEBL)
-	rName5 := acctest.RandomWithPrefix(prefixEBL)
+func eblConfig(boundaryName string) string {
+	serviceName := acctest.RandomWithPrefix(prefixSL)
+	ipListName := acctest.RandomWithPrefix(prefixIPL)
+	labelName := acctest.RandomWithPrefix(prefixLL)
+	rName := acctest.RandomWithPrefix(prefixEBL)
 
 	return fmt.Sprintf(`
 resource "illumio-core_service" "ebl_test" {
@@ -103,10 +117,14 @@ resource "illumio-core_enforcement_boundary" "ebl_test2" {
 		}
 	}
 }
+`, serviceName, ipListName, labelName, rName, boundaryName)
+}
 
+func testAccCheckIllumioEBLDataSourceConfig_basic(boundaryName string) string {
+	return eblConfig(boundaryName) + fmt.Sprintf(`
 data "illumio-core_enforcement_boundaries" "ebl_test" {
 	# lookup based on partial match
-	name = %[6]q
+	name = %[1]q
 
 	# enforce dependencies
 	depends_on = [
@@ -114,5 +132,21 @@ data "illumio-core_enforcement_boundaries" "ebl_test" {
 		illumio-core_enforcement_boundary.ebl_test2,
 	]
 }
-`, rName1, rName2, rName3, rName4, rName5, prefixEBL)
+`, prefixEBL)
+}
+
+func testAccCheckIllumioEBLDataSourceConfig_exactMatch(boundaryName string) string {
+	return eblConfig(boundaryName) + fmt.Sprintf(`
+data "illumio-core_enforcement_boundaries" "ebl_test" {
+	# lookup using exact match
+	name       = %[1]q
+	match_type = "exact"
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_enforcement_boundary.ebl_test1,
+		illumio-core_enforcement_boundary.ebl_test2,
+	]
+}
+`, boundaryName)
 }

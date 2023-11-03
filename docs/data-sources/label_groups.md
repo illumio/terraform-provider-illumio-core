@@ -86,6 +86,7 @@ data "illumio-core_label_groups" "env_groups" {
 - `external_data_reference` (String) A unique identifier within the external data source
 - `external_data_set` (String) The data source from which a resource originates
 - `key` (String) Key in key-value pair of contained labels or label groups. The value must be a string between 1 and 64 characters long
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of Labels to return. The integer should be a non-zero positive integer
 - `name` (String) Name of Label Group(s) to return. Supports partial matches
 - `pversion` (String) pversion of the security policy. Allowed values are "draft", "active", and numbers greater than 0. Default value: "draft"

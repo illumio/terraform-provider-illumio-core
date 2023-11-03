@@ -43,6 +43,7 @@ data "illumio-core_container_clusters" "kube_clusters" {
 
 ### Optional
 
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `max_results` (String) Maximum number of container clusters to return. The integer should be a non-zero positive integer
 - `name` (String) Name of the container cluster(s) to return. Supports partial matches
 

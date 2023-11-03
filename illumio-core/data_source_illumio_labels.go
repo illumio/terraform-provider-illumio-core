@@ -61,6 +61,13 @@ func datasourceIllumioLabels() *schema.Resource {
 				Optional:    true,
 				Description: "Value on which to filter. Supports partial matches",
 			},
+			"match_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      PARTIAL_MATCH,
+				ValidateFunc: validation.StringInSlice([]string{PARTIAL_MATCH, EXACT_MATCH}, true),
+				Description:  `Indicates whether to return all partially-matching label values or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"`,
+			},
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -169,7 +176,20 @@ func dataSourceIllumioLabelsRead(ctx context.Context, d *schema.ResourceData, m 
 		"updated_by",
 	}
 
-	d.Set("items", extractMapArray(data, keys))
+	labels := []map[string]interface{}{}
+
+	for _, child := range data.Children() {
+		// if exact matching is enabled, skip the object if it's a partial match
+		if d.Get("match_type").(string) == EXACT_MATCH {
+			if !isExactMatch("value", d, child) {
+				continue
+			}
+		}
+
+		labels = append(labels, extractMap(child, keys))
+	}
+
+	d.Set("items", labels)
 
 	return diagnostics
 }

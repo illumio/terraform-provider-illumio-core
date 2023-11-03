@@ -74,6 +74,7 @@ func sweep(objectType, matchKey, prefix, endpoint string) resource.SweeperFunc {
 			return fmt.Errorf("Error fetching objects for %s sweeper: %s", objectType, err)
 		}
 
+		// XXX: currently this will not remove objects that have been provisioned
 		for _, o := range data.Children() {
 			href := o.S("href").Data().(string)
 			_, err := illumioClient.Delete(href)

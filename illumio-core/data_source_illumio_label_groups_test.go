@@ -12,26 +12,41 @@ import (
 
 var prefixLGL string = "TF-ACC-LGL"
 
+func init() {
+	resource.AddTestSweepers("label_groups", &resource.Sweeper{
+		Name: "label_groups",
+		F:    sweep("label group", "name", prefixLGL, "/orgs/%d/sec_policy/draft/label_groups"),
+	})
+}
+
 func TestAccIllumioLGL_Read(t *testing.T) {
 	dataSourceName := "data.illumio-core_label_groups.lgl_test"
+	labelGroupName := acctest.RandomWithPrefix(prefixLGL)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckIllumioLGLDataSourceConfig_basic(),
+				Config: testAccCheckIllumioLGLDataSourceConfig_basic(labelGroupName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
+				),
+			},
+			{
+				Config: testAccCheckIllumioLGLDataSourceConfig_exactMatch(labelGroupName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "items.#", "1"),
+					resource.TestCheckResourceAttr(dataSourceName, "items.0.name", labelGroupName),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckIllumioLGLDataSourceConfig_basic() string {
-	rName1 := acctest.RandomWithPrefix(prefixLGL)
-	rName2 := acctest.RandomWithPrefix(prefixLGL)
+func lglConfig(labelGroupName string) string {
+	labelName := acctest.RandomWithPrefix(prefixLL)
+	rName := acctest.RandomWithPrefix(prefixLGL)
 
 	return fmt.Sprintf(`
 resource "illumio-core_label" "lgl_test" {
@@ -56,10 +71,14 @@ resource "illumio-core_label_group" "lgl_test2" {
 		href = illumio-core_label_group.lgl_test1.href
 	}
 }
+`, labelName, rName, labelGroupName)
+}
 
+func testAccCheckIllumioLGLDataSourceConfig_basic(labelGroupName string) string {
+	return lglConfig(labelGroupName) + fmt.Sprintf(`
 data "illumio-core_label_groups" "lgl_test" {
 	# lookup based on partial match
-	name = %[3]q
+	name = %[1]q
 
 	# enforce dependencies
 	depends_on = [
@@ -67,5 +86,21 @@ data "illumio-core_label_groups" "lgl_test" {
 		illumio-core_label_group.lgl_test2,
 	]
 }
-`, rName1, rName2, prefixLGL)
+`, prefixLGL)
+}
+
+func testAccCheckIllumioLGLDataSourceConfig_exactMatch(labelGroupName string) string {
+	return lglConfig(labelGroupName) + fmt.Sprintf(`
+data "illumio-core_label_groups" "lgl_test" {
+	# lookup using exact match
+	name       = %[1]q
+	match_type = "exact"
+
+	# enforce dependencies
+	depends_on = [
+		illumio-core_label_group.lgl_test1,
+		illumio-core_label_group.lgl_test2,
+	]
+}
+`, labelGroupName)
 }

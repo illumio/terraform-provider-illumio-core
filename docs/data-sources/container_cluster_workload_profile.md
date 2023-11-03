@@ -68,6 +68,7 @@ data "illumio-core_container_cluster_workload_profile" "kube_core_services" {
 - `labels` (List of Object) Labels to assign to the workload that matches the namespace (see [below for nested schema](#nestedatt--labels))
 - `linked` (Boolean) True if the namespace exists in the cluster and is reported by Kubelink
 - `managed` (Boolean) If the namespace is managed or not
+- `match_type` (String) Indicates whether to return all partially-matching names or only exact matches. Allowed values are "partial" and "exact". Default value: "partial"
 - `name` (String) A friendly name given to a profile if the namespace is not user-friendly
 - `namespace` (String) Namespace name of the container workload profile
 - `updated_at` (String) Timestamp when this label group was last updated

@@ -79,7 +79,7 @@ func sweep(objectType, matchKey, prefix, endpoint string) resource.SweeperFunc {
 			href := o.S("href").Data().(string)
 			_, err := illumioClient.Delete(href)
 			if err != nil {
-				fmt.Printf("Failed to sweep %s with HREF: %s", objectType, href)
+				fmt.Printf("Failed to sweep %s with HREF %s: %s\n", objectType, href, err)
 			}
 		}
 

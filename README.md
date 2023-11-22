@@ -22,11 +22,11 @@ See [the documentation](https://registry.terraform.io/providers/illumio/illumio-
 
 The following versions of the Illumio Core Policy Compute Engine are currently supported:  
 
-- PCE v21.2
 - PCE v21.5
 - PCE v22.2
-- SaaS PCEs (v22.5)
-- PCE v23.1 (experimental)
+- PCE v22.5
+- PCE v23.2
+- SaaS PCEs (v23.5)
 
 ## Getting Started  
 

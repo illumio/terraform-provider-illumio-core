@@ -110,7 +110,7 @@ resource "illumio-core_ip_list" "ip_test" {
 `, ipListName)
 }
 
-func testAccCheckIllumioIPResource_IPRangeConsolidation(ipListName string) string {
+func testAccCheckIllumioIPResource_IPRangeNormalization(ipListName string) string {
 	return fmt.Sprintf(`
 resource "illumio-core_ip_list" "ip_test" {
 	name        = %[1]q
@@ -126,7 +126,7 @@ resource "illumio-core_ip_list" "ip_test" {
 		description = ""
 		exclusion = false
 	}
-	# test consolidation of identical subnets
+	# test merger of identical subnets
 	# and change to network address
 	ip_ranges {
 		from_ip = "10.1.0.10/14"
@@ -138,6 +138,9 @@ resource "illumio-core_ip_list" "ip_test" {
 		description = ""
 		exclusion = false
 	}
+	# test that duplicate subnets with
+	# different description/exclusion
+	# fields are retained
 	ip_ranges {
 		from_ip = "10.0.0.10/14"
 		description = "test desc"

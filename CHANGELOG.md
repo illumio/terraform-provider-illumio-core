@@ -1,3 +1,11 @@
+## 1.1.6 (TBD)
+
+BUG FIXES:
+
+* Fix errors caused by customdiff functions when plan/apply is run with a null state on the following resources:
+    * `illumio-core_ip_list`
+    * `illumio-core_container_cluster_workload_profile`
+
 ## 1.1.5 (Dec 7, 2023)
 
 ENHANCEMENTS:

@@ -40,7 +40,7 @@ func TestAccIllumioIP_Read(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckIllumioIPResource_IPRangeConsolidation(ipListName),
+				Config: testAccCheckIllumioIPResource_IPRangeNormalization(ipListName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "ip_ranges.#", "5"),
 					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "ip_ranges.*", map[string]string{"from_ip": "10.1.0.0"}),

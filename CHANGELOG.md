@@ -1,3 +1,9 @@
+## 1.1.5 (Dec 7, 2023)
+
+ENHANCEMENTS:
+
+* Normalize CIDR notation `ip_ranges` in the `illumio-core_ip_list` resource on create/update to avoid plan diff between HCL and PCE from_ip values
+
 ## 1.1.4 (Nov 3, 2023)
 
 BUG FIXES:

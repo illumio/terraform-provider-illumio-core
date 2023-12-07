@@ -229,6 +229,10 @@ func customizeAssignedLabels() schema.CustomizeDiffFunc {
 }
 
 func assignedLabelsRemoved(conf cty.Value, state cty.Value) bool {
+	if conf.IsNull() || state.IsNull() {
+		return false
+	}
+
 	confMap := conf.AsValueMap()
 
 	if assignLabels, ok := confMap["assign_labels"]; ok {

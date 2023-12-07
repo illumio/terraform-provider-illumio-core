@@ -188,6 +188,10 @@ func customizeIPRanges() schema.CustomizeDiffFunc {
 }
 
 func ipRangesRemoved(conf cty.Value, state cty.Value) bool {
+	if conf.IsNull() || state.IsNull() {
+		return false
+	}
+
 	confMap := conf.AsValueMap()
 
 	if ipranges, ok := confMap["ip_ranges"]; ok {

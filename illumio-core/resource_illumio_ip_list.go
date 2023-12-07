@@ -5,8 +5,12 @@ package illumiocore
 import (
 	"context"
 	"fmt"
+	"net"
+	"strconv"
 
+	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/illumio/terraform-provider-illumio-core/models"
@@ -41,6 +45,7 @@ func resourceIllumioIPList() *schema.Resource {
 			"ip_ranges": {
 				Type:         schema.TypeSet,
 				Optional:     true,
+				Computed:     true,
 				AtLeastOneOf: []string{"ip_ranges", "fqdns"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -52,7 +57,7 @@ func resourceIllumioIPList() *schema.Resource {
 						"from_ip": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "IP address or a low end of IP range. Might be specified with CIDR notation. The IP given should be in CIDR format example \"0.0.0.0/0\"",
+							Description: `IP address or a low end of IP range. Might be specified with CIDR notation. The IP given should be in CIDR format example "0.0.0.0/0"`,
 							ValidateDiagFunc: validation.ToDiagFunc(
 								validation.Any(validation.IsIPAddress, validation.IsCIDR),
 							),
@@ -149,7 +154,119 @@ func resourceIllumioIPList() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: customdiff.Sequence(
+			customizeIPRanges(),
+		),
 	}
+}
+
+// XXX: The PCE automatically performs several actions when IP ranges
+// are uploaded that we need to manually recreate in the diff:
+//
+// * single address CIDR /32 (IPv4) and /128 (IPv6) notations are stripped
+// * CIDR ranges are updated so that the IP matches the range's network address
+// * identical ranges are merged
+//
+// To accommodate this, we normalize the HCL ip_ranges to avoid always
+// presenting a diff when planning. As with container cluster workloads,
+// this means the ip_ranges block needs to be Optional + Computed and we
+// need to check the raw HCL against the state here and in the update
+// function so the change behaves correctly when ip_ranges is cleared.
+func customizeIPRanges() schema.CustomizeDiffFunc {
+	return func(ctx context.Context, d *schema.ResourceDiff, m any) error {
+		if d.HasChange("ip_ranges") {
+			_, change := d.GetChange("ip_ranges")
+			diff := change.(*schema.Set)
+			normalized, _ := normalizeIPRanges(diff.List())
+			d.SetNew("ip_ranges", schema.NewSet(diff.F, normalized))
+		} else if ipRangesRemoved(d.GetRawConfig(), d.GetRawState()) {
+			d.SetNewComputed("ip_ranges")
+		}
+
+		return nil
+	}
+}
+
+func ipRangesRemoved(conf cty.Value, state cty.Value) bool {
+	confMap := conf.AsValueMap()
+
+	if ipranges, ok := confMap["ip_ranges"]; ok {
+		if len(ipranges.AsValueSlice()) == 0 {
+			if keyState, ok := state.AsValueMap()["ip_ranges"]; ok {
+				if len(keyState.AsValueSlice()) > 0 {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}
+
+func normalizeIPRanges(ipranges []any) ([]any, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	normalized := make([]any, 0, len(ipranges))
+	subnets := map[string][]string{}
+
+	for _, r := range ipranges {
+		iprange := r.(map[string]interface{})
+		fromip := iprange["from_ip"].(string)
+		ip, ipnet, err := net.ParseCIDR(fromip)
+
+		// if there's no parse error, perform consolidation checks
+		if err == nil {
+			ones, _ := ipnet.Mask.Size()
+			singleAddrOnes := net.IPv4len * 8
+			if ip.To4() == nil {
+				singleAddrOnes = net.IPv6len * 8
+			}
+
+			// check if this is a /32 or /128 range
+			if ones == singleAddrOnes {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Warning,
+					Summary: fmt.Sprintf("[illumio-core_ip_list] Detected single-address range (CIDR /32 for IPv4 or /128 for IPv6). "+
+						"IP range %s will be converted to %s on the PCE.", fromip, ip.String()),
+				})
+				fromip = ip.String()
+			}
+
+			// the ipnet IP is the network address
+			if !ip.Equal(ipnet.IP) {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Warning,
+					Summary: fmt.Sprintf("[illumio-core_ip_list] Detected CIDR notation address range with host bits set: "+
+						"IP range %s will be converted to %s on the PCE.", fromip, ipnet.String()),
+				})
+				fromip = ipnet.String()
+			}
+
+			// the PCE only merges subnets that are identical after normalization;
+			// if the description or exclusion values are different, both are kept
+			stringified := fromip + iprange["description"].(string) + strconv.FormatBool(iprange["exclusion"].(bool))
+			if ips, ok := subnets[stringified]; ok {
+				subnets[stringified] = append(ips, iprange["from_ip"].(string))
+				continue
+			} else {
+				subnets[stringified] = []string{iprange["from_ip"].(string)}
+			}
+		}
+
+		iprange["from_ip"] = fromip
+		normalized = append(normalized, iprange)
+	}
+
+	for _, ranges := range subnets {
+		if len(ranges) > 1 {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Warning,
+				Summary: fmt.Sprintf("[illumio-core_ip_list] Detected multiple identical address ranges: "+
+					"IP ranges %v will be merged on the PCE.", ranges),
+			})
+		}
+	}
+
+	return normalized, diags
 }
 
 func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -158,7 +275,7 @@ func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m 
 
 	orgID := illumioClient.OrgID
 
-	ipRanges := expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
+	ipRanges, diags := expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
 	fqdns := expandIllumioIPListFQDNs(d.Get("fqdns").(*schema.Set).List())
 
 	ipList := &models.IPList{
@@ -176,7 +293,8 @@ func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 	pConfig.StoreHref("ip_lists", data.S("href").Data().(string))
 	d.SetId(data.S("href").Data().(string))
-	return resourceIllumioIPListRead(ctx, d, m)
+
+	return append(diags, resourceIllumioIPListRead(ctx, d, m)...)
 }
 
 func resourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -241,10 +359,18 @@ func resourceIllumioIPListRead(ctx context.Context, d *schema.ResourceData, m in
 }
 
 func resourceIllumioIPListUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
 	pConfig, _ := m.(Config)
 	illumioClient := pConfig.IllumioClient
 
-	ipRanges := expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
+	var ipRanges []models.IPRange
+
+	if ipRangesRemoved(d.GetRawConfig(), d.GetRawState()) {
+		ipRanges = []models.IPRange{}
+	} else {
+		ipRanges, diags = expandIllumioIPListIPRanges(d.Get("ip_ranges").(*schema.Set).List())
+	}
+
 	fqdns := expandIllumioIPListFQDNs(d.Get("fqdns").(*schema.Set).List())
 
 	ipList := &models.IPList{
@@ -262,7 +388,7 @@ func resourceIllumioIPListUpdate(ctx context.Context, d *schema.ResourceData, m 
 	}
 	pConfig.StoreHref("ip_lists", d.Id())
 
-	return resourceIllumioIPListRead(ctx, d, m)
+	return append(diags, resourceIllumioIPListRead(ctx, d, m)...)
 }
 
 func resourceIllumioIPListDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -282,17 +408,21 @@ func resourceIllumioIPListDelete(ctx context.Context, d *schema.ResourceData, m 
 	return diagnostics
 }
 
-func expandIllumioIPListIPRanges(arr []interface{}) []models.IPRange {
+func expandIllumioIPListIPRanges(arr []interface{}) ([]models.IPRange, diag.Diagnostics) {
 	ipranges := make([]models.IPRange, 0, len(arr))
-	for _, elem := range arr {
+
+	normalized, diags := normalizeIPRanges(arr)
+	for _, elem := range normalized {
+		iprange := elem.(map[string]any)
 		ipranges = append(ipranges, models.IPRange{
-			Description: PtrTo(elem.(map[string]interface{})["description"].(string)),
-			FromIP:      PtrTo(elem.(map[string]interface{})["from_ip"].(string)),
-			ToIP:        PtrTo(elem.(map[string]interface{})["to_ip"].(string)),
-			Exclusion:   PtrTo(elem.(map[string]interface{})["exclusion"].(bool)),
+			Description: PtrTo(iprange["description"].(string)),
+			FromIP:      PtrTo(iprange["from_ip"].(string)),
+			ToIP:        PtrTo(iprange["to_ip"].(string)),
+			Exclusion:   PtrTo(iprange["exclusion"].(bool)),
 		})
 	}
-	return ipranges
+
+	return ipranges, diags
 }
 
 func expandIllumioIPListFQDNs(arr []interface{}) []models.FQDN {

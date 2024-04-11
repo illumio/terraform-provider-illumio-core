@@ -210,7 +210,7 @@ func ipRangesRemoved(conf cty.Value, state cty.Value) bool {
 func normalizeIPRanges(ipranges []any) ([]any, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	normalized := make([]any, 0, len(ipranges))
-	subnets := map[string][]string{}
+	subnets := map[string]bool{}
 
 	for _, r := range ipranges {
 		iprange := r.(map[string]interface{})
@@ -219,14 +219,7 @@ func normalizeIPRanges(ipranges []any) ([]any, diag.Diagnostics) {
 
 		// if there's no parse error, perform consolidation checks
 		if err == nil {
-			ones, _ := ipnet.Mask.Size()
-			singleAddrOnes := net.IPv4len * 8
-			if ip.To4() == nil {
-				singleAddrOnes = net.IPv6len * 8
-			}
-
-			// check if this is a /32 or /128 range
-			if ones == singleAddrOnes {
+			if isSingleAddressRange(ip, ipnet) {
 				diags = append(diags, diag.Diagnostic{
 					Severity: diag.Warning,
 					Summary: fmt.Sprintf("[illumio-core_ip_list] Detected single-address range (CIDR /32 for IPv4 or /128 for IPv6). "+
@@ -235,8 +228,7 @@ func normalizeIPRanges(ipranges []any) ([]any, diag.Diagnostics) {
 				fromip = ip.String()
 			}
 
-			// the ipnet IP is the network address
-			if !ip.Equal(ipnet.IP) {
+			if !ip.Equal(ipnet.IP) { // the ipnet IP is the network address
 				diags = append(diags, diag.Diagnostic{
 					Severity: diag.Warning,
 					Summary: fmt.Sprintf("[illumio-core_ip_list] Detected CIDR notation address range with host bits set: "+
@@ -248,11 +240,19 @@ func normalizeIPRanges(ipranges []any) ([]any, diag.Diagnostics) {
 			// the PCE only merges subnets that are identical after normalization;
 			// if the description or exclusion values are different, both are kept
 			stringified := fromip + iprange["description"].(string) + strconv.FormatBool(iprange["exclusion"].(bool))
-			if ips, ok := subnets[stringified]; ok {
-				subnets[stringified] = append(ips, iprange["from_ip"].(string))
-				continue
+			if warned, ok := subnets[stringified]; ok {
+				// only send one warning for each set of identical subnets
+				if !warned {
+					subnets[stringified] = true
+					diags = append(diags, diag.Diagnostic{
+						Severity: diag.Warning,
+						Summary: fmt.Sprintf("[illumio-core_ip_list] Detected multiple identical address ranges: "+
+							"IP ranges matching %s will be merged on the PCE.", fromip),
+					})
+				}
+				continue // continue here so we don't add duplicates to the normalized set
 			} else {
-				subnets[stringified] = []string{iprange["from_ip"].(string)}
+				subnets[stringified] = false
 			}
 		}
 
@@ -260,17 +260,19 @@ func normalizeIPRanges(ipranges []any) ([]any, diag.Diagnostics) {
 		normalized = append(normalized, iprange)
 	}
 
-	for _, ranges := range subnets {
-		if len(ranges) > 1 {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Warning,
-				Summary: fmt.Sprintf("[illumio-core_ip_list] Detected multiple identical address ranges: "+
-					"IP ranges %v will be merged on the PCE.", ranges),
-			})
-		}
+	return normalized, diags
+}
+
+// isSingleAddressRange checks if a given CIDR range is a single-address range.
+// specifically, /32 for IPv4, /128 for IPv6
+func isSingleAddressRange(ip net.IP, ipnet *net.IPNet) bool {
+	ones, _ := ipnet.Mask.Size()
+	singleAddrOnes := net.IPv4len * 8
+	if ip.To4() == nil {
+		singleAddrOnes = net.IPv6len * 8
 	}
 
-	return normalized, diags
+	return ones == singleAddrOnes
 }
 
 func resourceIllumioIPListCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

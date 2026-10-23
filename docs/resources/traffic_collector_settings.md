@@ -39,7 +39,7 @@ resource "illumio-core_traffic_collector_settings" "drop_local_tcp" {
 
 ### Read-Only
 
-- `href` (String) URI of traffic collecter settings
+- `href` (String) URI of traffic collector settings
 - `id` (String) The ID of this resource
 
 <a id="nestedblock--target"></a>

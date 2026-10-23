@@ -36,7 +36,7 @@ func resourceIllumioTrafficCollectorSettings() *schema.Resource {
 			"href": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "URI of traffic collecter settings",
+				Description: "URI of traffic collector settings",
 			},
 			"transmission": {
 				Type:        schema.TypeString,
@@ -217,7 +217,7 @@ func resourceIllumioTrafficCollectorSettingsUpdate(ctx context.Context, d *schem
 		return diag.Diagnostics{
 			diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "[illumio-core_traffic_collector_settings] Unexpectade update: action attribute is not updatable",
+				Summary:  "[illumio-core_traffic_collector_settings] Unexpected update: action attribute is not updatable",
 			},
 		}
 	}

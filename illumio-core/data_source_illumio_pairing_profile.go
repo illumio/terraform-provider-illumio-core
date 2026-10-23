@@ -175,7 +175,7 @@ func datasourceIllumioPairingProfile() *schema.Resource {
 			"agent_software_release": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Agent software release associated with this paring profile",
+				Description: "Agent software release associated with this pairing profile",
 			},
 			"caps": {
 				Type:        schema.TypeList,

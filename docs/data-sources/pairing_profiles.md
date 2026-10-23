@@ -127,7 +127,7 @@ data "illumio-core_pairing_profiles" "dev" {
 
 Read-Only:
 
-- `agent_software_release` (String) Agent software release associated with this paring profile
+- `agent_software_release` (String) Agent software release associated with this pairing profile
 - `allowed_uses_per_key` (String) The number of times the pairing profile can be used
 - `app_label_lock` (Boolean) Flag that controls whether app label can be overridden from pairing script
 - `caps` (List of String) User permissions for the object

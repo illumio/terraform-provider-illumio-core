@@ -35,7 +35,7 @@ data "illumio-core_traffic_collector_settings" "example" {
 
 ### Required
 
-- `href` (String) URI of traffic collecter settings
+- `href` (String) URI of traffic collector settings
 
 ### Read-Only
 

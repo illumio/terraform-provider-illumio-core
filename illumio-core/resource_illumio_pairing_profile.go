@@ -156,7 +156,7 @@ func resourceIllumioPairingProfile() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: `Agent software release associated with this paring profile`,
+				Description: `Agent software release associated with this pairing profile`,
 			},
 			"created_at": {
 				Type:        schema.TypeString,
